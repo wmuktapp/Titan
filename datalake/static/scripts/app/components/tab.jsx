@@ -2,16 +2,9 @@ import React from 'react';
 
 class Tab extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      selected: props.selected
-    };
-  }
-
   render() {
     return (
-      <span className="tab">
+      <span className={'tab' + (!!this.props.selected ? ' tab-selected' : '')}>
         <a onClick={this.props.onSelect}>{this.props.name}</a>
       </span>
     );

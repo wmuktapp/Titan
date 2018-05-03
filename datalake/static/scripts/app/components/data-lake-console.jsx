@@ -32,7 +32,7 @@ class DataLakeConsole extends React.Component {
   render() {
     return (
       <div>
-        <TabCollection selected={this.state.tab} onSelectTab={this.selectSection} />
+        <TabCollection selectedTab={this.state.tab} onSelectTab={this.selectSection} />
         <div>
           {this.renderChosenSection()}
         </div>

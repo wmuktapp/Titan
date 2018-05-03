@@ -53,3 +53,11 @@ a {
     border-radius: .5em;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, .08);
 }
+
+.tab {
+    padding: 0 1em;
+}
+
+.tab-selected {
+    font-weight: bold;
+}
