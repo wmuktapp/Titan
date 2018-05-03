@@ -9,20 +9,33 @@ class DataLakeConsole extends React.Component {
       tab: 'monitoring'
     };
 
-    this.onSelectTab = this.onSelectTab.bind(this);
+    this.selectSection = this.selectSection.bind(this);
   }
 
-  onSelectTab(tab) {
+  selectSection(tab) {
     this.setState({
       tab: tab
     });
   }
 
+  renderChosenSection() {
+    if (this.state.tab === 'monitoring') {
+      return <p>Monitoring</p>;
+    } else if (this.state.tab === 'config') {
+      return <p>Config</p>;
+    } else if (this.state.tab === 'adhoc') {
+      return <p>Ad Hoc</p>;
+    }
+    return <p>Select a tab</p>;
+  }
+
   render() {
     return (
       <div>
-        <TabCollection selected={this.state.tab} onSelectTab={this.onSelectTab} />
-        <div>{this.state.tab}</div>
+        <TabCollection selected={this.state.tab} onSelectTab={this.selectSection} />
+        <div>
+          {this.renderChosenSection()}
+        </div>
       </div>
     );
   }
