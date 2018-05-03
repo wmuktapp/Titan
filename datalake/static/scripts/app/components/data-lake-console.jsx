@@ -2,7 +2,7 @@ import React from 'react';
 import TabCollection from './tab-collection.jsx';
 import AdHocForm from './ad-hoc-form.jsx';
 import ConfigForm from './config-form.jsx';
-import MonitoringGrid from './monitoring-grid.jsx';
+import MonitoringGrid from './monitoring-grid/grid.jsx';
 
 class DataLakeConsole extends React.Component {
 
