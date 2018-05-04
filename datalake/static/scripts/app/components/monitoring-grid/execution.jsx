@@ -6,19 +6,14 @@ class MonitoringGridExecution extends React.Component {
 
   constructor(props) {
     super(props);
-
-    // TODO get task statuses from server
-    this.state = {
-      acquireStatus: Math.random() > .3 ? 'success' : 'failure',
-      extractStatus: Math.random() > .4 ? 'success' : 'failure',
-    }
   }
 
   render() {
+    let execution = this.props.data;
     return (
         <span className="execution-cell">
-            <MonitoringGridExecutionAcquire status={this.state.acquireStatus} />
-            <MonitoringGridExecutionExtract status={this.state.extractStatus} />
+            <MonitoringGridExecutionAcquire status={execution.acquire} />
+            <MonitoringGridExecutionExtract status={execution.extract} />
         </span>
       );
   }

@@ -2,8 +2,13 @@ import React from 'react';
 
 class MonitoringGridLabel extends React.Component {
 
+    constructor(props) {
+        super(props);
+    }
+
+    // TODO include hierarchy
     render() {
-        return <label>Execution Name</label>;
+        return <label>{this.props.label}</label>;
     }
 
 }
