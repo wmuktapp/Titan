@@ -17,7 +17,7 @@ class MonitoringGridExecutionExtract extends React.Component {
 
   render() {
     return (
-      <span className={'execution-partial ' + this.statusClass}>E</span>
+      <span className={'execution-partial ' + this.statusClass()}>E</span>
     );
   }
 
