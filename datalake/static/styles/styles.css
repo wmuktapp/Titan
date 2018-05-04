@@ -68,6 +68,11 @@ a {
     background-color: #f6f6f6;
 }
 
+.monitoring-grid-loading {
+    margin: 1em;
+    text-align: center;
+}
+
 .execution-partial {
     display: inline-block;
     height: 1em;
