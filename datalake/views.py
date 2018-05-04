@@ -1,6 +1,6 @@
 
-from datetime import datetime, timedelta
-from flask import Flask, jsonify, render_template
+from datetime import datetime
+from flask import Flask, jsonify, render_template, request
 from random import random
 
 
@@ -15,18 +15,18 @@ def monitoring():
 
     # TODO
     # - Return list of executions
-    # - Response should be based on the date range and page number(s) provided
+
+    start_date = request.args.get('start')
+    end_date = request.args.get('end')
+    row_count = int(request.args.get('rows'))
+
+    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+    end_date = datetime.strptime(end_date, '%Y-%m-%d')
 
     # Sample data
     tasks = []
-    results = 5
-    date_range = 5
 
-    today = datetime.now().date()
-    start_date = today - timedelta(days=date_range - 1)
-    end_date = today
-
-    for i in range(1, results + 1):
+    for i in range(1, row_count + 1):
 
         task = {
             'name': 'Task-%s' % i,
