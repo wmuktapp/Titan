@@ -4,33 +4,26 @@ import MonitoringGridExecution from './execution.jsx';
 
 class MonitoringGridRow extends React.Component {
 
-  // TODO get list of executions for the given task
-
   constructor(props) {
     super(props);
   }
 
-  getCells() {
-    let cells = [];
-    for (let i in this.props.data) {
-      let datum = this.props.data[i];
-      let key = 'grid-execution-' + this.props.name + '-' + datum.date;
-      cells.push(
-        <td key={key + '-row'}>
-          <MonitoringGridExecution key={key} data={datum} />
+  render() {
+
+    const cells = this.props.data.map((datum, index) => {
+      return (
+        <td key={'grid-execution-' + this.props.name + '-' + index}>
+          <MonitoringGridExecution data={datum} />
         </td>
       );
-    }
-    return cells;
-  }
+    });
 
-  render() {
     return (
       <tr>
         <td>
           <MonitoringGridLabel label={this.props.name} />
         </td>
-        {this.getCells()}
+        {cells}
       </tr>
     );
   }
