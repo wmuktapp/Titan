@@ -2,7 +2,7 @@ import React from 'react';
 import TabCollection from './tab-collection.jsx';
 import AdHocForm from './ad-hoc-form.jsx';
 import ConfigForm from './config-form.jsx';
-import MonitoringGrid from './monitoring-grid/grid.jsx';
+import Monitor from './monitor.jsx';
 
 class DataLakeConsole extends React.Component {
 
@@ -23,7 +23,7 @@ class DataLakeConsole extends React.Component {
 
   renderChosenSection() {
     if (this.state.tab === 'monitoring') {
-      return <MonitoringGrid />;
+      return <Monitor />;
     } else if (this.state.tab === 'config') {
       return <ConfigForm />;
     } else if (this.state.tab === 'adhoc') {
