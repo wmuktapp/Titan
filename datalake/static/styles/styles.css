@@ -67,3 +67,28 @@ a {
 .tab-selected {
     background-color: #f6f6f6;
 }
+
+.execution-partial {
+    display: inline-block;
+    height: 1em;
+    width: 2em;
+    padding: .2em 0;
+    font-size: 24px;
+    line-height: 1;
+    text-align: center;
+}
+
+.execution-success {
+    background-color: #548235;
+    color: #fff;
+}
+
+.execution-failure {
+    background-color: #9e323a;
+    color: #fff;
+}
+
+.execution-running {
+    background-color: #f9ae42;
+    color: #fff;
+}
