@@ -20,9 +20,10 @@ def monitoring():
     # Sample data
     tasks = []
     results = 5
+    date_range = 5
 
     today = datetime.now().date()
-    start_date = today - timedelta(days=3)
+    start_date = today - timedelta(days=date_range - 1)
     end_date = today
 
     for i in range(1, results + 1):
@@ -36,9 +37,9 @@ def monitoring():
         while temp_date <= end_date:
 
             task['executions'].append({
-                'date': temp_date.strftime('%Y-%m-%d'),
-                'acquire': 'success',
-                'extract': 'failure'
+                'date': temp_date.strftime('%d-%m-%Y'),
+                'acquire': get_state(),
+                'extract': get_state()
             })
 
             temp_date += timedelta(days=1)
@@ -46,3 +47,15 @@ def monitoring():
         tasks.append(task)
 
     return jsonify(tasks)
+
+
+# State randomiser
+def get_state():
+
+    n = random()
+    if n > .5:
+        return 'success'
+    if n > .2:
+        return 'failure'
+
+    return 'running'
