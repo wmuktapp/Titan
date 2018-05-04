@@ -11,11 +11,11 @@ class MonitoringGridExecution extends React.Component {
   render() {
     let execution = this.props.data;
     return (
-        <span className="execution-cell">
-            <MonitoringGridExecutionAcquire status={execution.acquire} />
-            <MonitoringGridExecutionExtract status={execution.extract} />
-        </span>
-      );
+      <span className="execution-cell">
+        <MonitoringGridExecutionAcquire status={execution.acquire} />
+        <MonitoringGridExecutionExtract status={execution.extract} />
+      </span>
+    );
   }
 
 }
