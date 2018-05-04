@@ -10,7 +10,7 @@ class MonitoringGridExecution extends React.Component {
     // TODO get task statuses from server
     this.state = {
       acquireStatus: Math.random() > .3 ? 'success' : 'failure',
-      extractStatus: Math.random() > .4 ? 'success' : 'failure'
+      extractStatus: Math.random() > .4 ? 'success' : 'failure',
     }
   }
 
