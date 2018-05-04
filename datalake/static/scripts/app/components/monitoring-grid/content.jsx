@@ -1,24 +1,23 @@
 import React from 'react';
 import MonitoringGridRow from './row.jsx';
 
-class MonitoringGridContents extends React.Component {
-
-  constructor(props) {
-    super(props);
-  }
+class MonitoringGridContent extends React.Component {
 
   render() {
+
+    const contents = this.props.loading
+      ? <tr><td>Loading data...</td></tr>
+      : this.props.data.map((datum) => {
+          return <MonitoringGridRow key={'grid-row-' + datum.name} name={datum.name} data={datum.executions} />;
+        });
+
     return (
       <tbody>
-        {
-          this.props.data.map((datum) => {
-            return <MonitoringGridRow key={'grid-row-' + datum.name} name={datum.name} data={datum.executions} />;
-          })
-        }
+        {contents}
       </tbody>
     );
   }
 
 }
 
-export default MonitoringGridContents;
+export default MonitoringGridContent;

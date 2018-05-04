@@ -17,20 +17,18 @@ class Monitor extends React.Component {
     today.setMilliseconds(0);
 
     this.state = {
-      startDate: new Date(today - days * (24 * 60 * 60 * 1000)),
-      endDate: new Date(today),
+      start: new Date(today - (days - 1) * (24 * 60 * 60 * 1000)),
+      end: new Date(today),
       rows: rows,
-      loading: true,
       data: []
     };
   }
 
-
   componentDidMount() {
 
     const url = '/monitoring'
-      + '?start=' + this.state.startDate.toISOString().substr(0, 10)
-      + '&end=' + this.state.endDate.toISOString().substr(0, 10)
+      + '?start=' + this.state.start.toISOString().substr(0, 10)
+      + '&end=' + this.state.end.toISOString().substr(0, 10)
       + '&rows=' + this.state.rows;
 
     // Request data
@@ -39,7 +37,6 @@ class Monitor extends React.Component {
       .then(
         (result) => {
           this.setState({
-            loading: false,
             data: result
           });
         },
@@ -47,11 +44,25 @@ class Monitor extends React.Component {
           // TODO error handling
           console.log('Error retrieving data');
         }
-      )
+      );
+  }
+
+  showNext() {
+    // TODO
+  }
+
+  showPrevious() {
+    // TODO
+  }
+
+  showMore() {
+    this.setState({
+      rows: this.state.rows + 10
+    });
   }
 
   render() {
-    return <MonitoringGrid data={this.state.data} loading={this.state.loading} />;
+    return <MonitoringGrid start={this.state.start} end={this.state.end} data={this.state.data} />;
   }
 }
 
