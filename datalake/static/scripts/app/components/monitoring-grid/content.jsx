@@ -7,19 +7,14 @@ class MonitoringGridContents extends React.Component {
     super(props);
   }
 
-  getRows() {
-    let rows = [];
-    for (let i in this.props.data) {
-      let datum = this.props.data[i];
-      rows.push(<MonitoringGridRow key={'grid-row-' + datum.name} name={datum.name} data={datum.executions} />)
-    }
-    return rows;
-  }
-
   render() {
     return (
         <tbody>
-          {this.getRows()}
+          {
+            this.props.data.map((datum) => {
+              return <MonitoringGridRow key={'grid-row-' + datum.name} name={datum.name} data={datum.executions} />;
+            })
+          }
         </tbody>
       );
   }
