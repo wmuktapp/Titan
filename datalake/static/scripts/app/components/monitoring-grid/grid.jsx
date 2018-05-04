@@ -13,6 +13,8 @@ class MonitoringGrid extends React.Component {
   }
 
   componentDidMount() {
+
+    // TODO define date range and paging here?
     // Request data
     fetch('/monitoring')
       .then(res => res.json())
