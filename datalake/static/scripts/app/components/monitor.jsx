@@ -55,7 +55,8 @@ class Monitor extends React.Component {
 
     this.setState({
       start: start,
-      end: end
+      end: end,
+      data: []
     });
 
     const callback = (result) => {
@@ -76,7 +77,8 @@ class Monitor extends React.Component {
 
     this.setState({
       start: start,
-      end: end
+      end: end,
+      data: []
     });
 
     const callback = (result) => {
