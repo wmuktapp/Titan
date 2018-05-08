@@ -53,23 +53,30 @@ class Monitor extends React.Component {
       );
   }
 
-  showNext() {
-    // TODO
-  }
-
   showPrevious() {
     // TODO
+    console.log('Show previous');
+  }
+
+  showNext() {
+    // TODO
+    console.log('Show next');
   }
 
   showMore() {
-    this.setState({
-      rows: this.state.rows + 10
-    });
+    console.log('Show more');
+    // this.setState({
+    //   rows: this.state.rows + 10
+    // });
     // TODO send request
   }
 
   render() {
-    return <MonitoringGrid start={this.state.start} end={this.state.end} data={this.state.data} loading={this.state.loading} />;
+    return (
+      <MonitoringGrid start={this.state.start} end={this.state.end}
+        data={this.state.data} loading={this.state.loading}
+        showPrevious={this.showPrevious} showNext={this.showNext} showMore={this.showMore} />
+    );
   }
 }
 

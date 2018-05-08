@@ -7,10 +7,19 @@ class MonitoringGrid extends React.Component {
   render() {
     return (
       // TODO add controls (previous, next, more)
-      <table className="monitoring-grid">
-        <MonitoringGridHeader start={this.props.start} end={this.props.end} />
-        <MonitoringGridContent data={this.props.data} loading={this.props.loading} />
-      </table>
+      <div className="monitoring-grid">
+        <div className="monitoring-controls u-cf">
+          <a onClick={this.props.showPrevious} className="monitoring-control-previous">Previous</a>
+          <a onClick={this.props.showNext} className="monitoring-control-next">Next</a>
+        </div>
+        <table className="monitoring-table">
+          <MonitoringGridHeader start={this.props.start} end={this.props.end} />
+          <MonitoringGridContent data={this.props.data} loading={this.props.loading} />
+        </table>
+        <div className="monitoring-controls-footer">
+          <a onClick={this.props.showMore} className="monitoring-control-more">Show more...</a>
+        </div>
+      </div>
     );
   }
 
