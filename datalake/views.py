@@ -40,10 +40,13 @@ def monitoring():
         temp_date = start_date
         while temp_date <= end_date:
 
+            acquire_state = get_state(prev_state=None)
+            extract_state = get_state(prev_state=acquire_state)
+
             task['executions'].append({
                 'date': temp_date.strftime('%d-%m-%Y'),
-                'acquire': get_state(),
-                'extract': get_state()
+                'acquire': acquire_state,
+                'extract': extract_state
             })
 
             temp_date += timedelta(days=1)
@@ -54,12 +57,22 @@ def monitoring():
 
 
 # State randomiser
-def get_state():
+def get_state(prev_state):
+
+    SUCCESS = 'success'
+    FAILURE = 'failure'
+    RUNNING = 'running'
+    WAITING = 'waiting'
+
+    if prev_state == FAILURE:
+        return FAILURE
+    if prev_state == RUNNING:
+        return WAITING
 
     n = random()
-    if n > .5:
-        return 'success'
-    if n > .2:
-        return 'failure'
+    if n > .3:
+        return SUCCESS
+    if n > .1:
+        return FAILURE
 
-    return 'running'
+    return RUNNING
