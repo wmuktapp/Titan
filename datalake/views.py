@@ -14,18 +14,25 @@ def index():
 @app.route('/monitoring')
 def monitoring():
 
-    # TODO
-    # - Return list of executions
-
-    # Small delay, for testing purposes
-    sleep(1)
-
     start_date = request.args.get('start')
     end_date = request.args.get('end')
     row_count = int(request.args.get('rows'))
 
     start_date = datetime.strptime(start_date, '%Y-%m-%d')
     end_date = datetime.strptime(end_date, '%Y-%m-%d')
+
+    # TODO
+    # - Return list of executions
+    return get_monitor_data(start_date, end_date, row_count)
+
+
+
+# SAMPLE DATA
+
+def get_monitor_data(start_date, end_date, row_count):
+
+    # Small delay, for testing purposes
+    sleep(1)
 
     # Sample data
     tasks = []
