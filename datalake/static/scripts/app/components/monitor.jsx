@@ -23,12 +23,14 @@ class Monitor extends React.Component {
     this.state = {
       start: start,
       end: end,
-      // rows: rows,
       loading: true,
-      data: []
+      data: [],
+      retryList: []
     };
 
     // Bind events
+    this.selectExecution = this.selectExecution.bind(this);
+    this.retryExecutions = this.retryExecutions.bind(this);
     this.showPrevious = this.showPrevious.bind(this);
     this.showNext = this.showNext.bind(this);
     this.showMore = this.showMore.bind(this);
@@ -124,11 +126,50 @@ class Monitor extends React.Component {
       );
   }
 
+  selectExecution(id, date, add) {
+
+    // Add or remove execution from list
+
+    let list = this.state.retryList;
+
+    if (add) {
+      // Add to list
+      list.push({
+        id: id,
+        date: date
+      });
+    } else {
+      // Remove from list
+      for (let i in list) {
+        if (list[i].id === id && list[i].date === date) {
+          list.splice(i, 1);
+          break;
+        }
+      }
+    }
+
+    this.setState({
+      retryList: list
+    });
+  }
+
+  retryExecutions() {
+
+    if (this.state.retryList.length === 0) {
+      return;
+    }
+
+    // TODO send a request to the server
+    console.log('RETRY!');
+  }
+
   render() {
     // TODO enable / disable controls based on available data
     return (
       <MonitoringGrid start={this.state.start} end={this.state.end}
         data={this.state.data} loading={this.state.loading}
+        selectExecution={this.selectExecution}
+        retryEnabled={!!this.state.retryList.length} retry={this.retryExecutions}
         showPrevious={this.showPrevious} showNext={this.showNext} showMore={this.showMore} />
     );
   }
