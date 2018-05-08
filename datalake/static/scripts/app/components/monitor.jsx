@@ -23,7 +23,7 @@ class Monitor extends React.Component {
     this.state = {
       start: start,
       end: end,
-      rows: rows,
+      // rows: rows,
       loading: true,
       data: []
     };
@@ -35,7 +35,15 @@ class Monitor extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchData(this.state.start, this.state.end);
+
+    const callback = (result) => {
+      this.setState({
+        loading: false,
+        data: result
+      });
+    };
+
+    this.fetchData(this.state.start, this.state.end, callback);
   }
 
   showPrevious() {
@@ -50,7 +58,14 @@ class Monitor extends React.Component {
       end: end
     });
 
-    this.fetchData(start, end);
+    const callback = (result) => {
+      this.setState({
+        loading: false,
+        data: result
+      });
+    };
+
+    this.fetchData(start, end, callback);
   }
 
   showNext() {
@@ -64,17 +79,27 @@ class Monitor extends React.Component {
       end: end
     });
 
-    this.fetchData(start, end);
+    const callback = (result) => {
+      this.setState({
+        loading: false,
+        data: result
+      });
+    };
+
+    this.fetchData(start, end, callback);
   }
 
   showMore() {
-    this.setState({
-      rows: this.state.rows + 10
-    });
-    // TODO send request and append rows
+    const callback = (result) => {
+      this.setState({
+        loading: false,
+        data: this.state.data.concat(result)
+      });
+    };
+    this.fetchData(this.state.start, this.state.end, callback)
   }
 
-  fetchData(start, end) {
+  fetchData(start, end, callback) {
 
     this.setState({
       loading: true
@@ -83,18 +108,13 @@ class Monitor extends React.Component {
     const url = '/monitoring'
       + '?start=' + start.toISOString().substr(0, 10)
       + '&end=' + end.toISOString().substr(0, 10)
-      + '&rows=' + this.state.rows;
+      + '&rows=' + 10;
 
     // Request data
     fetch(url)
       .then(res => res.json())
       .then(
-        (result) => {
-          this.setState({
-            loading: false,
-            data: result
-          });
-        },
+        callback,
         (error) => {
           // TODO error handling
           console.log('Error retrieving data');

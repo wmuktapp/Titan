@@ -8,8 +8,8 @@ class MonitoringGridContent extends React.Component {
     // TODO append loading onto the end of contents, for when we're loading more?
     const contents = this.props.loading
       ? <tr><td className="monitoring-grid-loading" colSpan="6">Loading data...</td></tr>
-      : this.props.data.map((datum) => {
-          return <MonitoringGridRow key={'grid-row-' + datum.name} name={datum.name} data={datum.executions} />;
+      : this.props.data.map((datum, index) => {
+          return <MonitoringGridRow key={'grid-row-' + index} name={datum.name} data={datum.executions} />;
         });
 
     return (
