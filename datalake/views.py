@@ -2,6 +2,7 @@
 from datetime import datetime, timedelta
 from flask import Flask, jsonify, render_template, request
 from random import random
+from time import sleep
 
 
 app = Flask(__name__)
@@ -15,6 +16,9 @@ def monitoring():
 
     # TODO
     # - Return list of executions
+
+    # Small delay, for testing purposes
+    sleep(1)
 
     start_date = request.args.get('start')
     end_date = request.args.get('end')
