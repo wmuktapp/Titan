@@ -10,7 +10,8 @@ class MonitoringGridExecutionAcquire extends React.Component {
     const classes = {
       'success': 'execution-success',
       'failure': 'execution-failure',
-      'running': 'execution-running'
+      'running': 'execution-running',
+      'waiting': 'execution-waiting'
     }
     return classes[this.props.status];
   }

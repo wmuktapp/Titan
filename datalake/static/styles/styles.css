@@ -118,3 +118,7 @@ a {
     background-color: #f9ae42;
     color: #fff;
 }
+
+.execution-waiting {
+    color: #aaa;
+}
