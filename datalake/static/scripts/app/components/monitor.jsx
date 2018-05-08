@@ -16,9 +16,13 @@ class Monitor extends React.Component {
     today.setSeconds(0);
     today.setMilliseconds(0);
 
+    let start = new Date(today);
+    start.setDate(start.getDate() - days + 1);
+    let end = new Date(today);
+
     this.state = {
-      start: new Date(today - (days - 1) * (24 * 60 * 60 * 1000)),
-      end: new Date(today),
+      start: start,
+      end: end,
       rows: rows,
       loading: true,
       data: []
@@ -36,8 +40,10 @@ class Monitor extends React.Component {
 
   showPrevious() {
 
-    const start = new Date(this.state.start - 5 * (24 * 60 * 60 * 1000)),
-      end = new Date(this.state.end - 5 * (24 * 60 * 60 * 1000));
+    let end = new Date(this.state.start);
+    end.setDate(end.getDate() - 1);
+    let start = new Date(end);
+    start.setDate(start.getDate() - 5);
 
     this.setState({
       start: start,
@@ -48,8 +54,10 @@ class Monitor extends React.Component {
   }
 
   showNext() {
-    const start = new Date(this.state.start + 5 * (24 * 60 * 60 * 1000)),
-      end = new Date(this.state.end + 5 * (24 * 60 * 60 * 1000));
+    let start = new Date(this.state.end);
+    start.setDate(start.getDate() + 1);
+    let end = new Date(start);
+    end.setDate(end.getDate() + 5);
 
     this.setState({
       start: start,
@@ -95,6 +103,7 @@ class Monitor extends React.Component {
   }
 
   render() {
+    // TODO enable / disable controls based on available data
     return (
       <MonitoringGrid start={this.state.start} end={this.state.end}
         data={this.state.data} loading={this.state.loading}
