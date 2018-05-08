@@ -9,8 +9,8 @@ class MonitoringGrid extends React.Component {
       // TODO add controls (previous, next, more)
       <div className="monitoring-grid">
         <div className="monitoring-controls u-cf">
-          <a onClick={this.props.showPrevious} className="monitoring-control-previous">Previous</a>
-          <a onClick={this.props.showNext} className="monitoring-control-next">Next</a>
+          <a onClick={this.props.showPrevious} className="monitoring-control-previous">&lt; Previous</a>
+          <a onClick={this.props.showNext} className="monitoring-control-next">Next &gt;</a>
         </div>
         <table className="monitoring-table">
           <MonitoringGridHeader start={this.props.start} end={this.props.end} />
