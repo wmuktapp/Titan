@@ -5,10 +5,12 @@ var BUILD_DIR = path.resolve(__dirname, 'datalake/static/scripts/public');
 var APP_DIR = path.resolve(__dirname, 'datalake/static/scripts/app');
 
 var config = {
-  entry: APP_DIR + '/index.jsx',
+  entry: {
+    monitoring: APP_DIR + '/monitoring.jsx'
+  },
   output: {
     path: BUILD_DIR,
-    filename: 'bundle.js'
+    filename: '[name].js'
   },
   module : {
     rules : [
