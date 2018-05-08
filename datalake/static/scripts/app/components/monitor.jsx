@@ -159,8 +159,28 @@ class Monitor extends React.Component {
       return;
     }
 
+    this.setState({
+      loading: true
+    });
+
     // TODO send a request to the server
-    console.log('RETRY!');
+    fetch('/retry', {
+      method: 'post',
+      body: JSON.stringify({
+        'executions': this.state.retryList
+      })
+    }).then(res => res.json())
+      .then((result) => {
+          this.setState({
+            loading: false,
+            data: result
+          })
+        },
+        (error) => {
+          // TODO error handling
+          console.log('Error retrieving data');
+        }
+      );
   }
 
   render() {

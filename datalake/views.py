@@ -26,6 +26,21 @@ def monitoring():
     return get_monitor_data(start_date, end_date, row_count)
 
 
+@app.route('/retry', methods=['POST'])
+def retry():
+
+    data = request.get_data('executions')
+
+    # Get the data
+    # print(data)
+
+    # TODO
+    start_date = datetime.strptime('2018-05-04', '%Y-%m-%d')
+    end_date = datetime.strptime('2018-05-08', '%Y-%m-%d')
+    row_count = 10
+    return get_monitor_data(start_date, end_date, row_count)
+
+
 
 # SAMPLE DATA
 
