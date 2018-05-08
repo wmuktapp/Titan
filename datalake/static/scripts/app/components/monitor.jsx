@@ -23,17 +23,58 @@ class Monitor extends React.Component {
       loading: true,
       data: []
     };
+
+    // Bind events
+    this.showPrevious = this.showPrevious.bind(this);
+    this.showNext = this.showNext.bind(this);
+    this.showMore = this.showMore.bind(this);
   }
 
   componentDidMount() {
+    this.fetchData(this.state.start, this.state.end);
+  }
+
+  showPrevious() {
+
+    const start = new Date(this.state.start - 5 * (24 * 60 * 60 * 1000)),
+      end = new Date(this.state.end - 5 * (24 * 60 * 60 * 1000));
+
+    this.setState({
+      start: start,
+      end: end
+    });
+
+    this.fetchData(start, end);
+  }
+
+  showNext() {
+    const start = new Date(this.state.start + 5 * (24 * 60 * 60 * 1000)),
+      end = new Date(this.state.end + 5 * (24 * 60 * 60 * 1000));
+
+    this.setState({
+      start: start,
+      end: end
+    });
+
+    this.fetchData(start, end);
+  }
+
+  showMore() {
+    this.setState({
+      rows: this.state.rows + 10
+    });
+    // TODO send request and append rows
+  }
+
+  fetchData(start, end) {
 
     this.setState({
       loading: true
     });
 
     const url = '/monitoring'
-      + '?start=' + this.state.start.toISOString().substr(0, 10)
-      + '&end=' + this.state.end.toISOString().substr(0, 10)
+      + '?start=' + start.toISOString().substr(0, 10)
+      + '&end=' + end.toISOString().substr(0, 10)
       + '&rows=' + this.state.rows;
 
     // Request data
@@ -51,24 +92,6 @@ class Monitor extends React.Component {
           console.log('Error retrieving data');
         }
       );
-  }
-
-  showPrevious() {
-    // TODO
-    console.log('Show previous');
-  }
-
-  showNext() {
-    // TODO
-    console.log('Show next');
-  }
-
-  showMore() {
-    console.log('Show more');
-    // this.setState({
-    //   rows: this.state.rows + 10
-    // });
-    // TODO send request
   }
 
   render() {
