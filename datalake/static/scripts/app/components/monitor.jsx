@@ -51,7 +51,7 @@ class Monitor extends React.Component {
     let end = new Date(this.state.start);
     end.setDate(end.getDate() - 1);
     let start = new Date(end);
-    start.setDate(start.getDate() - 5);
+    start.setDate(start.getDate() - 4);
 
     this.setState({
       start: start,
@@ -73,7 +73,7 @@ class Monitor extends React.Component {
     let start = new Date(this.state.end);
     start.setDate(start.getDate() + 1);
     let end = new Date(start);
-    end.setDate(end.getDate() + 5);
+    end.setDate(end.getDate() + 4);
 
     this.setState({
       start: start,
