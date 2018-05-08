@@ -9,16 +9,10 @@ class MonitoringGridContent extends React.Component {
     const contents = this.props.data.map((datum, index) => {
           return <MonitoringGridRow key={'grid-row-' + index} name={datum.name} data={datum.executions} />;
         })
-    
-    // Loading row
-    const loadingRow = this.props.loading
-        ? <tr><td className="monitoring-grid-loading" colSpan="6">Loading data...</td></tr>
-        : [];
 
     return (
       <tbody>
         {contents}
-        {loadingRow}
       </tbody>
     );
   }

@@ -89,11 +89,6 @@ a {
     width: 100%;
 }
 
-.monitoring-grid-loading {
-    padding: 1em;
-    text-align: center;
-}
-
 .execution-partial {
     display: inline-block;
     height: 1em;

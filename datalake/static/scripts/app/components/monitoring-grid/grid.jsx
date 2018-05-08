@@ -16,7 +16,11 @@ class MonitoringGrid extends React.Component {
           <MonitoringGridContent data={this.props.data} loading={this.props.loading} />
         </table>
         <div className="monitoring-controls-footer">
-          <a onClick={this.props.showMore} className="monitoring-control-more">Show more...</a>
+          {
+            this.props.loading
+              ? <p>Loading...</p>
+              : <a onClick={this.props.showMore} className="monitoring-control-more">Show more</a>
+          }
         </div>
       </div>
     );
