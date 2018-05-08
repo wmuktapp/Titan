@@ -6,7 +6,6 @@ class MonitoringGrid extends React.Component {
 
   render() {
     return (
-      // TODO add controls (previous, next, more)
       <div className="monitoring-grid">
         <div className="monitoring-controls u-cf">
           <a onClick={this.props.showPrevious} className="monitoring-control-previous">&lt; Previous</a>
