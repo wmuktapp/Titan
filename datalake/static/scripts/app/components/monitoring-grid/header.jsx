@@ -4,9 +4,7 @@ class MonitoringGridHeader extends React.Component {
 
   render() {
 
-    let cells = [];
-    let temp = new Date(this.props.start);
-    let i = 1;
+    let cells = [], i = 1, temp = new Date(this.props.start);
 
     while (temp <= this.props.end) {
       temp.setDate(temp.getDate() + 1)
