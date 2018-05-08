@@ -154,6 +154,11 @@ input[type=checkbox]:checked:after {
     margin-left: .2em;
 }
 
+.loading-message {
+    text-align: center;
+    color: #aaa;
+}
+
 .btn-retry {
     float: right;
 }

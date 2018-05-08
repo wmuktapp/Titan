@@ -28,7 +28,7 @@ class MonitoringGrid extends React.Component {
         </table>
         {
           this.props.loading
-            ? <p>Loading...</p>
+            ? <p className="loading-message">Loading...</p>
             : <div className="monitoring-controls-footer">
                 <a onClick={this.props.showMore} className="monitoring-control-more">Show more</a>
                 <a onClick={this.retry} className={'btn-retry' + (this.props.retryEnabled ? '' : ' btn-disabled')}>Retry</a>
