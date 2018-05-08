@@ -20,11 +20,16 @@ class Monitor extends React.Component {
       start: new Date(today - (days - 1) * (24 * 60 * 60 * 1000)),
       end: new Date(today),
       rows: rows,
+      loading: true,
       data: []
     };
   }
 
   componentDidMount() {
+
+    this.setState({
+      loading: true
+    });
 
     const url = '/monitoring'
       + '?start=' + this.state.start.toISOString().substr(0, 10)
@@ -37,6 +42,7 @@ class Monitor extends React.Component {
       .then(
         (result) => {
           this.setState({
+            loading: false,
             data: result
           });
         },
@@ -59,10 +65,11 @@ class Monitor extends React.Component {
     this.setState({
       rows: this.state.rows + 10
     });
+    // TODO send request
   }
 
   render() {
-    return <MonitoringGrid start={this.state.start} end={this.state.end} data={this.state.data} />;
+    return <MonitoringGrid start={this.state.start} end={this.state.end} data={this.state.data} loading={this.state.loading} />;
   }
 }
 

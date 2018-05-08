@@ -9,7 +9,7 @@ class MonitoringGrid extends React.Component {
       // TODO add controls (previous, next, more)
       <table className="monitoring-grid">
         <MonitoringGridHeader start={this.props.start} end={this.props.end} />
-        <MonitoringGridContent data={this.props.data} />
+        <MonitoringGridContent data={this.props.data} loading={this.props.loading} />
       </table>
     );
   }
