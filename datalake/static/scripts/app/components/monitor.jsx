@@ -1,4 +1,5 @@
 import React from 'react';
+import MonitoringControls from './monitoring/controls.jsx';
 import MonitoringGrid from './monitoring/grid.jsx';
 
 class Monitor extends React.Component {
@@ -32,8 +33,7 @@ class Monitor extends React.Component {
     // Bind events
     this.selectExecution = this.selectExecution.bind(this);
     this.retryExecutions = this.retryExecutions.bind(this);
-    this.showPrevious = this.showPrevious.bind(this);
-    this.showNext = this.showNext.bind(this);
+    this.showDates = this.showDates.bind(this);
     this.showMore = this.showMore.bind(this);
   }
 
@@ -49,12 +49,7 @@ class Monitor extends React.Component {
     this.fetchData(this.state.dates, callback);
   }
 
-  showPrevious() {
-
-    let end = new Date(this.state.dates.start);
-    end.setDate(end.getDate() - 1);
-    let start = new Date(end);
-    start.setDate(start.getDate() - 4);
+  showDates(start, end) {
 
     this.setState({
       dates: {
@@ -69,31 +64,7 @@ class Monitor extends React.Component {
         loading: false,
         data: result
       });
-    };
-
-    this.fetchData({ start: start, end: end }, callback);
-  }
-
-  showNext() {
-    let start = new Date(this.state.dates.end);
-    start.setDate(start.getDate() + 1);
-    let end = new Date(start);
-    end.setDate(end.getDate() + 4);
-
-    this.setState({
-      dates: {
-        start: start,
-        end: end
-      },
-      data: []
-    });
-
-    const callback = (result) => {
-      this.setState({
-        loading: false,
-        data: result
-      });
-    };
+    }
 
     this.fetchData({ start: start, end: end }, callback);
   }
@@ -187,14 +158,9 @@ class Monitor extends React.Component {
   }
 
   render() {
-    // TODO enable / disable controls based on available data
     return (
-
       <div className="monitoring-grid">
-        <div className="monitoring-controls u-cf">
-          <a onClick={this.showPrevious} className="monitoring-control-previous">&lt; Previous</a>
-          <a onClick={this.showNext} className="monitoring-control-next">Next &gt;</a>
-        </div>
+        <MonitoringControls dates={this.state.dates} selectDates={this.showDates} />
         <MonitoringGrid dates={this.state.dates} data={this.state.data} select={this.selectExecution} />
         {
           this.state.loading
