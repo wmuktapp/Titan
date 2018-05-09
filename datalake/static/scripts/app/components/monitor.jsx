@@ -163,7 +163,6 @@ class Monitor extends React.Component {
       loading: true
     });
 
-    // TODO send a request to the server
     fetch('/retry', {
       method: 'post',
       body: JSON.stringify({
@@ -174,7 +173,7 @@ class Monitor extends React.Component {
           this.setState({
             loading: false,
             data: result
-          })
+          });
         },
         (error) => {
           // TODO error handling
