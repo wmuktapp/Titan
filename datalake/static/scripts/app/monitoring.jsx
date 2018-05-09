@@ -1,11 +1,11 @@
 import React from 'react';
 import {render} from 'react-dom';
-import DataLakeConsole from './components/data-lake-console.jsx';
+import Monitor from './components/monitor.jsx';
 
-class App extends React.Component {
+class MonitoringApp extends React.Component {
   render () {
-    return <DataLakeConsole />;
+    return <Monitor />;
   }
 }
 
-render(<App />, document.getElementById('app'));
+render(<MonitoringApp />, document.getElementById('monitoring'));

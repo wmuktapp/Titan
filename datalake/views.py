@@ -7,22 +7,33 @@ from time import sleep
 
 app = Flask(__name__)
 
+
+# Page URLs
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # TODO redirect to /monitoring
+    return render_template('monitoring.html')
 
-
-# TODO URLs for each tab
-# /monitoring
-# /schedules
-# /adhoc
-# ...and sub-pages?
+@app.route('/monitoring')
+def monitoring():
+    return render_template('monitoring.html')
 
 @app.route('/monitoring/executions/<int:execution_key>')
-def execution(execution_key):
+def monitoring_execution(execution_key):
     # TODO add execution to parameters
     return render_template('execution.html')
 
+@app.route('/schedules')
+def schedules():
+    return render_template('schedules.html')
+
+@app.route('/adhoc')
+def adhoc():
+    return render_template('adhoc.html')
+
+
+# API URLs
 
 @app.route('/api/executions')
 def executions():
@@ -36,18 +47,6 @@ def executions():
 
     # TODO
     # - Return list of executions
-    return get_monitor_data(start_date, end_date, row_count)
-
-
-@app.route('/api/executions/retry', methods=['POST'])
-def retry():
-
-    data = request.get_data('executions')
-
-    # TODO
-    start_date = datetime.strptime('2018-05-05', '%Y-%m-%d')
-    end_date = datetime.strptime('2018-05-09', '%Y-%m-%d')
-    row_count = 10
     return get_monitor_data(start_date, end_date, row_count)
 
 
@@ -65,6 +64,19 @@ def execution_details(execution_key):
     }
 
     return jsonify(data)
+
+
+@app.route('/api/executions/retry', methods=['POST'])
+def retry():
+
+    data = request.get_data('executions')
+
+    # TODO
+    start_date = datetime.strptime('2018-05-05', '%Y-%m-%d')
+    end_date = datetime.strptime('2018-05-09', '%Y-%m-%d')
+    row_count = 10
+    return get_monitor_data(start_date, end_date, row_count)
+
 
 
 # ENDPOINTS
