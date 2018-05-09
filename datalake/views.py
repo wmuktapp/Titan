@@ -11,6 +11,12 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+# TODO add execution date / other details to URL
+@app.route('/execution/<int:task_id>')
+def execution(task_id):
+    # TODO add execution to parameters
+    return render_template('execution.html')
+
 @app.route('/monitoring')
 def monitoring():
 
@@ -30,9 +36,6 @@ def monitoring():
 def retry():
 
     data = request.get_data('executions')
-
-    # Get the data
-    # print(data)
 
     # TODO
     start_date = datetime.strptime('2018-05-04', '%Y-%m-%d')
@@ -62,7 +65,7 @@ def get_monitor_data(start_date, end_date, row_count):
         temp_date = start_date
         while temp_date <= end_date:
 
-            acquire_state = get_state(prev_state=None)
+            acquire_state = get_state()
             extract_state = get_state(prev_state=acquire_state)
 
             task['executions'].append({
@@ -79,7 +82,7 @@ def get_monitor_data(start_date, end_date, row_count):
 
 
 # State randomiser
-def get_state(prev_state):
+def get_state(prev_state=None):
 
     SUCCESS = 'success'
     FAILURE = 'failure'
