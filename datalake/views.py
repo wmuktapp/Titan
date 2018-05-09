@@ -40,14 +40,13 @@ def executions():
 
     start_date = request.args.get('start')
     end_date = request.args.get('end')
-    row_count = int(request.args.get('rows'))
 
     start_date = datetime.strptime(start_date, '%Y-%m-%d')
     end_date = datetime.strptime(end_date, '%Y-%m-%d')
 
     # TODO
     # - Return list of executions
-    return get_monitor_data(start_date, end_date, row_count)
+    return get_monitor_data(start_date, end_date)
 
 
 # TODO add load date to URL
@@ -74,8 +73,8 @@ def retry():
     # TODO
     start_date = datetime.strptime('2018-05-05', '%Y-%m-%d')
     end_date = datetime.strptime('2018-05-09', '%Y-%m-%d')
-    row_count = 10
-    return get_monitor_data(start_date, end_date, row_count)
+
+    return get_monitor_data(start_date, end_date)
 
 
 
@@ -113,13 +112,14 @@ def retry():
 
 # SAMPLE DATA
 
-def get_monitor_data(start_date, end_date, row_count):
+def get_monitor_data(start_date, end_date):
 
     # Small delay, for testing purposes
     sleep(1)
 
     # Sample data
     tasks = []
+    row_count = 10
 
     for i in range(1, row_count + 1):
 
