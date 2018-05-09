@@ -1,6 +1,7 @@
 
 from datetime import datetime, timedelta
 from flask import Flask, jsonify, redirect, render_template, request
+from markupsafe import Markup
 from random import random, randint
 from time import sleep
 
@@ -20,8 +21,9 @@ def monitoring():
 
 @app.route('/monitoring/executions/<int:execution_key>')
 def monitoring_execution(execution_key):
-    # TODO add execution to parameters
-    return render_template('execution.html')
+    # TODO return full set of data for execution?
+    data = Markup({ 'executionKey': execution_key })
+    return render_template('execution.html', data=data)
 
 @app.route('/schedules')
 def schedules():
