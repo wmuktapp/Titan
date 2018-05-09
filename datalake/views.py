@@ -49,24 +49,18 @@ def executions():
     return get_monitor_data(start_date, end_date)
 
 
-# TODO add load date to URL
 @app.route('/api/executions/<int:execution_key>')
 def execution_details(execution_key):
 
-    # TODO get this data from somewhere
     data = {
-        'execution': {
-            'name': 'Task %i' % execution_key,
-            'id': execution_key,
-            'date': datetime.now()
-        }
+        'execution': get_execution(execution_key)
     }
 
     return jsonify(data)
 
 
 @app.route('/api/executions/retry', methods=['POST'])
-def retry():
+def execution_retry():
 
     data = request.get_data('executions')
 
@@ -131,21 +125,32 @@ def get_monitor_data(start_date, end_date):
         temp_date = start_date
         while temp_date <= end_date:
 
-            acquire_state = get_state()
-            extract_state = get_state(prev_state=acquire_state)
+            execution = get_execution(randint(1, 1000), temp_date)
 
-            task['executions'].append({
-                'id': randint(1, 1000),
-                'date': temp_date.strftime('%d-%m-%Y'),
-                'acquire': acquire_state,
-                'extract': extract_state
-            })
+            task['executions'].append(execution)
 
             temp_date += timedelta(days=1)
 
         tasks.append(task)
 
     return jsonify(tasks)
+
+
+def get_execution(id, temp_date=None):
+
+    if not temp_date:
+        temp_date = datetime.now()
+
+    acquire_state = get_state()
+    extract_state = get_state(prev_state=acquire_state)
+
+    return {
+        'id': id,
+        'name': 'Task-%i' % id,
+        'date': temp_date.strftime('%d-%m-%Y'),
+        'acquire': acquire_state,
+        'extract': extract_state
+    }
 
 
 # State randomiser
@@ -160,11 +165,15 @@ def get_state(prev_state=None):
         return FAILURE
     if prev_state == RUNNING:
         return WAITING
+    if prev_state == WAITING:
+        return WAITING
 
     n = random()
     if n > .3:
         return SUCCESS
     if n > .1:
         return FAILURE
+    if n > .05:
+        return RUNNING
 
-    return RUNNING
+    return WAITING
