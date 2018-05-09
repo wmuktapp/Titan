@@ -6,7 +6,6 @@ class MonitoringGridExecution extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.selectorChange = this.selectorChange.bind(this);
   }
 
@@ -17,13 +16,29 @@ class MonitoringGridExecution extends React.Component {
 
   render() {
 
-    const execution = this.props.data;
-    const showSelector = execution.acquire === 'failure' || execution.extract === 'failure';
+    const SUCCESS = 'success', FAILURE = 'failure';
+    const execution = this.props.data,
+      acquireStatus = execution.acquire,
+      extractStatus = execution.extract;
+    const showSelector = acquireStatus === FAILURE || extractStatus === FAILURE;
+    const showLink = acquireStatus === SUCCESS
+      || acquireStatus === FAILURE
+      || extractStatus === SUCCESS
+      || extractStatus === FAILURE;
+
+    const status = showLink
+      ? <a href={'/monitoring/executions/' + execution.id}>
+          <MonitoringGridExecutionAcquire status={execution.acquire} />
+          <MonitoringGridExecutionExtract status={execution.extract} />
+        </a>
+      : <span>
+          <MonitoringGridExecutionAcquire status={execution.acquire} />
+          <MonitoringGridExecutionExtract status={execution.extract} />
+        </span>;
 
     return (
       <span className="execution-cell">
-        <MonitoringGridExecutionAcquire status={execution.acquire} />
-        <MonitoringGridExecutionExtract status={execution.extract} />
+        {status}
         {
           showSelector
             ? <input type="checkbox" checked={execution.selected} className="execution-selector" onChange={this.selectorChange} />

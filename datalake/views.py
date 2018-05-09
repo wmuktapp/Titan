@@ -1,7 +1,7 @@
 
 from datetime import datetime, timedelta
 from flask import Flask, jsonify, render_template, request
-from random import random
+from random import random, randint
 from time import sleep
 
 
@@ -135,6 +135,7 @@ def get_monitor_data(start_date, end_date):
             extract_state = get_state(prev_state=acquire_state)
 
             task['executions'].append({
+                'id': randint(1, 1000),
                 'date': temp_date.strftime('%d-%m-%Y'),
                 'acquire': acquire_state,
                 'extract': extract_state
