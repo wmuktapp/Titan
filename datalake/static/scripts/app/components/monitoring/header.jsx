@@ -4,12 +4,14 @@ class MonitoringGridHeader extends React.Component {
 
   render() {
 
-    let cells = [], i = 1, temp = new Date(this.props.start);
+    const start = this.props.dates.start, end = this.props.dates.end;
 
-    while (temp <= this.props.end) {
+    let cells = [], i = 1, temp = new Date(start);
+
+    while (temp <= end) {
       temp.setDate(temp.getDate() + 1)
       let isoString = temp.toISOString().substr(0, 10);
-      // TODO display in clearer format (dd-mm-yyyy)
+      // TODO display in clearer format (dd-mm-yyyy?)
       cells.push(<th key={'th-' + isoString + '-' + i++}>{isoString}</th>);
     }
 

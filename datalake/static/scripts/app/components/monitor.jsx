@@ -1,5 +1,5 @@
 import React from 'react';
-import MonitoringGrid from './monitoring-grid/grid.jsx';
+import MonitoringGrid from './monitoring/grid.jsx';
 
 class Monitor extends React.Component {
 
@@ -8,7 +8,6 @@ class Monitor extends React.Component {
     super();
 
     const days = 5;
-    const rows = 10;
 
     let today = new Date();
     today.setHours(0);
@@ -21,8 +20,10 @@ class Monitor extends React.Component {
     let end = new Date(today);
 
     this.state = {
-      start: start,
-      end: end,
+      dates: {
+        start: start,
+        end: end
+      },
       loading: true,
       data: [],
       retryList: []
@@ -45,19 +46,21 @@ class Monitor extends React.Component {
       });
     };
 
-    this.fetchData(this.state.start, this.state.end, callback);
+    this.fetchData(this.state.dates, callback);
   }
 
   showPrevious() {
 
-    let end = new Date(this.state.start);
+    let end = new Date(this.state.dates.start);
     end.setDate(end.getDate() - 1);
     let start = new Date(end);
     start.setDate(start.getDate() - 4);
 
     this.setState({
-      start: start,
-      end: end,
+      dates: {
+        start: start,
+        end: end
+      },
       data: []
     });
 
@@ -68,18 +71,20 @@ class Monitor extends React.Component {
       });
     };
 
-    this.fetchData(start, end, callback);
+    this.fetchData({ start: start, end: end }, callback);
   }
 
   showNext() {
-    let start = new Date(this.state.end);
+    let start = new Date(this.state.dates.end);
     start.setDate(start.getDate() + 1);
     let end = new Date(start);
     end.setDate(end.getDate() + 4);
 
     this.setState({
-      start: start,
-      end: end,
+      dates: {
+        start: start,
+        end: end
+      },
       data: []
     });
 
@@ -90,7 +95,7 @@ class Monitor extends React.Component {
       });
     };
 
-    this.fetchData(start, end, callback);
+    this.fetchData({ start: start, end: end }, callback);
   }
 
   showMore() {
@@ -100,19 +105,18 @@ class Monitor extends React.Component {
         data: this.state.data.concat(result)
       });
     };
-    this.fetchData(this.state.start, this.state.end, callback)
+    this.fetchData(this.state.dates, callback)
   }
 
-  fetchData(start, end, callback) {
+  fetchData(dates, callback) {
 
     this.setState({
       loading: true
     });
 
     const url = '/api/executions'
-      + '?start=' + start.toISOString().substr(0, 10)
-      + '&end=' + end.toISOString().substr(0, 10)
-      + '&rows=' + 10;
+      + '?start=' + dates.start.toISOString().substr(0, 10)
+      + '&end=' + dates.end.toISOString().substr(0, 10);
 
     // Request data
     fetch(url)
@@ -185,11 +189,22 @@ class Monitor extends React.Component {
   render() {
     // TODO enable / disable controls based on available data
     return (
-      <MonitoringGrid start={this.state.start} end={this.state.end}
-        data={this.state.data} loading={this.state.loading}
-        selectExecution={this.selectExecution}
-        retryEnabled={!!this.state.retryList.length} retry={this.retryExecutions}
-        showPrevious={this.showPrevious} showNext={this.showNext} showMore={this.showMore} />
+
+      <div className="monitoring-grid">
+        <div className="monitoring-controls u-cf">
+          <a onClick={this.showPrevious} className="monitoring-control-previous">&lt; Previous</a>
+          <a onClick={this.showNext} className="monitoring-control-next">Next &gt;</a>
+        </div>
+        <MonitoringGrid dates={this.state.dates} data={this.state.data} select={this.selectExecution} />
+        {
+          this.state.loading
+            ? <p className="loading-message">Loading...</p>
+            : <div className="monitoring-controls-footer">
+                <a onClick={this.showMore} className="monitoring-control-more">Show more</a>
+                <a onClick={this.retryExecutions} className={'btn-retry' + (!!this.state.retryList.length ? '' : ' btn-disabled')}>Retry</a>
+              </div>
+        }
+      </div>
     );
   }
 }
