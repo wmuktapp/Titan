@@ -5,8 +5,8 @@ class ExecutionDetails extends React.Component {
   render() {
     return (
       <div className="execution-details">
-        <p>Task Name: {this.props.execution.taskName}</p>
-        <p>Task ID: {this.props.execution.taskId}</p>
+        <p>Task Name: {this.props.execution.name}</p>
+        <p>Task ID: {this.props.execution.id}</p>
       </div>
     );
   }

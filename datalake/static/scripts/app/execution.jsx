@@ -1,21 +1,12 @@
 import React from 'react';
 import {render} from 'react-dom';
-import ExecutionDetails from './components/execution-details.jsx';
+import Execution from './components/execution.jsx';
 
 class ExecutionApp extends React.Component {
 
-  constructor() {
-    super();
-    this.state = {
-      execution: {
-        taskName: 'Task 1',
-        taskId: 1
-      }
-    }
-  }
-
   render() {
-    return <ExecutionDetails execution={this.state.execution} />;
+    const taskId = 1; // TODO get from page
+    return <Execution taskId={taskId} />;
   }
 }
 
