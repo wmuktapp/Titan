@@ -1,6 +1,6 @@
 
 from datetime import datetime, timedelta
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, redirect, render_template, request
 from random import random, randint
 from time import sleep
 
@@ -12,8 +12,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    # TODO redirect to /monitoring
-    return render_template('monitoring.html')
+    return redirect('/monitoring')
 
 @app.route('/monitoring')
 def monitoring():
