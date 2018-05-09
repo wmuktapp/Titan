@@ -11,12 +11,13 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-# TODO add execution date / other details to URL
+# TODO get details
 @app.route('/execution/<int:task_id>')
 def execution(task_id):
     # TODO add execution to parameters
     return render_template('execution.html')
 
+# TODO rename this endpoint to /executions
 @app.route('/monitoring')
 def monitoring():
 
@@ -32,16 +33,64 @@ def monitoring():
     return get_monitor_data(start_date, end_date, row_count)
 
 
+# TODO rename this to /executions
 @app.route('/retry', methods=['POST'])
 def retry():
 
     data = request.get_data('executions')
 
     # TODO
-    start_date = datetime.strptime('2018-05-04', '%Y-%m-%d')
-    end_date = datetime.strptime('2018-05-08', '%Y-%m-%d')
+    start_date = datetime.strptime('2018-05-05', '%Y-%m-%d')
+    end_date = datetime.strptime('2018-05-09', '%Y-%m-%d')
     row_count = 10
     return get_monitor_data(start_date, end_date, row_count)
+
+
+# TODO add load date to URL
+@app.route('/execution-details/<int:task_id>')
+def execution_details(task_id):
+
+    # TODO get this data from somewhere
+    data = {
+        'execution': {
+            'name': 'Task %i' % task_id,
+            'id': task_id,
+            'date': datetime.now()
+        }
+    }
+
+    return jsonify(data)
+
+
+# ENDPOINTS
+
+# Execution endpoints
+# /executions
+#   POST: create execution (we know this is adhoc)
+#   GET: list all
+# /executions/<execution_key>
+#   GET: retrieve individual
+#   PATCH/PUT: partial update/overwrite
+# /executions/retry
+#   POST: retry existing execution(s)
+
+# Schedule endpoints
+# /schedules
+#   POST: create new schedule
+#   GET: list schedules, supports filtering by querystring
+# /schedules/<schedule_key>
+#   GET: retrieve individual item
+#   PATCH/PUT: partial update/overwrite
+# Optional:
+# /schedules/distinct/<col>
+#   GET: retrieve distinct column values (for filtering)
+
+# AcquirePrograms endpoints
+# /acquireprograms
+#   GET: list all
+# Optional
+# /acquireprograms/<key>
+#   GET: retrieve individual instance
 
 
 
