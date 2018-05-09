@@ -4,11 +4,7 @@ import DataLakeConsole from './components/data-lake-console.jsx';
 
 class App extends React.Component {
   render () {
-    return (
-      <div className="panel">
-        <DataLakeConsole />
-      </div>
-    );
+    return <DataLakeConsole />;
   }
 }
 

@@ -15,12 +15,7 @@ class ExecutionApp extends React.Component {
   }
 
   render() {
-    return (
-      <div className="panel">
-        <h3>Execution Details</h3>
-        <ExecutionDetails execution={this.state.execution} />
-      </div>
-    );
+    return <ExecutionDetails execution={this.state.execution} />;
   }
 }
 
