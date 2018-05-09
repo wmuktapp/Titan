@@ -82,6 +82,10 @@ input[type=checkbox]:checked:after {
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, .08);
 }
 
+.tabs {
+    margin: 0 0 1em;
+}
+
 .tab {
     display: inline-block;
     border-radius: .5em;
@@ -90,6 +94,8 @@ input[type=checkbox]:checked:after {
 .tab a {
     display: inline-block;
     padding: .5em 1em;
+    color: #aaa;
+    text-decoration: none;
 }
 
 .tab-selected {

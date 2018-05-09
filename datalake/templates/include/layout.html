@@ -1,3 +1,17 @@
+{% macro tabs(selected='') -%}
+    <div class="tabs">
+        <span class="{{ 'tab tab-selected' if selected == 'monitoring' else 'tab' }}">
+            <a href="/monitoring">Monitoring</a>
+        </span>
+        <span class="{{ 'tab tab-selected' if selected == 'schedules' else 'tab' }}">
+            <a href="/schedules">Schedules</a>
+        </span>
+        <span class="{{ 'tab tab-selected' if selected == 'adhoc' else 'tab' }}">
+            <a href="/adhoc">Ad Hoc</a>
+        </span>
+    </div>
+{%- endmacro %}
+
 <!DOCTYPE html>
 <html>
     <head>
