@@ -18,6 +18,11 @@ def index():
 # /adhoc
 # ...and sub-pages?
 
+@app.route('/monitoring/executions/<int:execution_key>')
+def execution(execution_key):
+    # TODO add execution to parameters
+    return render_template('execution.html')
+
 
 @app.route('/executions')
 def executions():
@@ -33,14 +38,8 @@ def executions():
     # - Return list of executions
     return get_monitor_data(start_date, end_date, row_count)
 
-@app.route('/executions/<int:execution_key>')
-def execution(execution_key):
-    # TODO add execution to parameters
-    return render_template('execution.html')
 
-
-# TODO rename this to /executions
-@app.route('/retry', methods=['POST'])
+@app.route('/executions/retry', methods=['POST'])
 def retry():
 
     data = request.get_data('executions')

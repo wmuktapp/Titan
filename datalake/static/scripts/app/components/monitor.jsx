@@ -163,7 +163,7 @@ class Monitor extends React.Component {
       loading: true
     });
 
-    fetch('/retry', {
+    fetch('/executions/retry', {
       method: 'post',
       body: JSON.stringify({
         'executions': this.state.retryList
