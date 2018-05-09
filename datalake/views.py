@@ -45,9 +45,7 @@ def executions():
     start_date = datetime.strptime(start_date, '%Y-%m-%d')
     end_date = datetime.strptime(end_date, '%Y-%m-%d')
 
-    # TODO
-    # - Return list of executions
-    return get_monitor_data(start_date, end_date)
+    return get_execution_data(start_date, end_date)
 
 
 @app.route('/api/executions/<int:execution_key>')
@@ -69,7 +67,7 @@ def execution_retry():
     start_date = datetime.strptime('2018-05-05', '%Y-%m-%d')
     end_date = datetime.strptime('2018-05-09', '%Y-%m-%d')
 
-    return get_monitor_data(start_date, end_date)
+    return get_execution_data(start_date, end_date)
 
 
 
@@ -107,7 +105,7 @@ def execution_retry():
 
 # SAMPLE DATA
 
-def get_monitor_data(start_date, end_date):
+def get_execution_data(start_date, end_date):
 
     # Small delay, for testing purposes
     sleep(1)
