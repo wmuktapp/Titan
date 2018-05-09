@@ -24,7 +24,7 @@ def execution(execution_key):
     return render_template('execution.html')
 
 
-@app.route('/executions')
+@app.route('/api/executions')
 def executions():
 
     start_date = request.args.get('start')
@@ -39,7 +39,7 @@ def executions():
     return get_monitor_data(start_date, end_date, row_count)
 
 
-@app.route('/executions/retry', methods=['POST'])
+@app.route('/api/executions/retry', methods=['POST'])
 def retry():
 
     data = request.get_data('executions')
@@ -52,14 +52,14 @@ def retry():
 
 
 # TODO add load date to URL
-@app.route('/execution-details/<int:task_id>')
-def execution_details(task_id):
+@app.route('/api/executions/<int:execution_key>')
+def execution_details(execution_key):
 
     # TODO get this data from somewhere
     data = {
         'execution': {
-            'name': 'Task %i' % task_id,
-            'id': task_id,
+            'name': 'Task %i' % execution_key,
+            'id': execution_key,
             'date': datetime.now()
         }
     }

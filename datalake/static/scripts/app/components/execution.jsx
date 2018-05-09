@@ -13,7 +13,7 @@ class Execution extends React.Component {
 
   componentDidMount() {
 
-    fetch('/executions/' + this.props.executionKey)
+    fetch('/api/executions/' + this.props.executionKey)
       .then(res => res.json())
       .then((result) => {
         this.setState({

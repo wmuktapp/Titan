@@ -109,7 +109,7 @@ class Monitor extends React.Component {
       loading: true
     });
 
-    const url = '/executions'
+    const url = '/api/executions'
       + '?start=' + start.toISOString().substr(0, 10)
       + '&end=' + end.toISOString().substr(0, 10)
       + '&rows=' + 10;
@@ -163,7 +163,7 @@ class Monitor extends React.Component {
       loading: true
     });
 
-    fetch('/executions/retry', {
+    fetch('/api/executions/retry', {
       method: 'post',
       body: JSON.stringify({
         'executions': this.state.retryList
