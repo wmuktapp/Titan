@@ -11,15 +11,16 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-# TODO get details
-@app.route('/execution/<int:task_id>')
-def execution(task_id):
-    # TODO add execution to parameters
-    return render_template('execution.html')
 
-# TODO rename this endpoint to /executions
-@app.route('/monitoring')
-def monitoring():
+# TODO URLs for each tab
+# /monitoring
+# /schedules
+# /adhoc
+# ...and sub-pages?
+
+
+@app.route('/executions')
+def executions():
 
     start_date = request.args.get('start')
     end_date = request.args.get('end')
@@ -31,6 +32,11 @@ def monitoring():
     # TODO
     # - Return list of executions
     return get_monitor_data(start_date, end_date, row_count)
+
+@app.route('/executions/<int:execution_key>')
+def execution(execution_key):
+    # TODO add execution to parameters
+    return render_template('execution.html')
 
 
 # TODO rename this to /executions

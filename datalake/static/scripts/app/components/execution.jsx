@@ -13,9 +13,7 @@ class Execution extends React.Component {
 
   componentDidMount() {
 
-    // TODO add load date
-
-    fetch('/execution-details/' + this.props.taskId)
+    fetch('/executions/' + this.props.executionKey)
       .then(res => res.json())
       .then((result) => {
         this.setState({

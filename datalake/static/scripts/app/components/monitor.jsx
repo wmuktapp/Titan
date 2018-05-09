@@ -109,7 +109,7 @@ class Monitor extends React.Component {
       loading: true
     });
 
-    const url = '/monitoring'
+    const url = '/executions'
       + '?start=' + start.toISOString().substr(0, 10)
       + '&end=' + end.toISOString().substr(0, 10)
       + '&rows=' + 10;
