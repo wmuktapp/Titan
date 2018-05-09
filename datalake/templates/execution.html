@@ -3,3 +3,7 @@
 {% block main %}
     <div id="execution"></div>
 {% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/public/execution.js') }}"></script>
+{% endblock %}
