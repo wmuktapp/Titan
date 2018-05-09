@@ -37,7 +37,7 @@ class MonitoringGridExecution extends React.Component {
         </span>;
 
     return (
-      <span className="execution-cell">
+      <span className="execution-cell" title={'Date: ' + execution.date}>
         {status}
         {
           showSelector
