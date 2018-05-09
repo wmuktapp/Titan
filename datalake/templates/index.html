@@ -3,3 +3,7 @@
 {% block main %}
     <div id="app"></div>
 {% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ url_for('static', filename='scripts/public/monitoring.js') }}"></script>
+{% endblock %}
