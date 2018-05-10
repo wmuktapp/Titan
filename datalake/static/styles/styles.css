@@ -199,3 +199,12 @@ input[type=checkbox]:checked:after {
 .schedule-link {
     float: right;
 }
+
+.filter-menu {
+    position: fixed;
+    width: 200px;
+    height: 200px;
+    background: #fff;
+    border: 1px solid #aaa;
+    border-radius: .5em;
+}
