@@ -220,7 +220,7 @@ def get_schedule(id):
         'interval': get_interval(),
         'client': 'Client %i' % id,
         'dataset': 'Dataset %i' % id,
-        'loadDate': '23-05-2018',
+        'loadDate': get_load_date(),
         'enabled': random() > .2
     }
 
@@ -229,3 +229,7 @@ def get_interval():
     if random() > .5:
         return 'Daily'
     return 'Weekly'
+
+def get_load_date():
+
+    return datetime.now() - timedelta(days=randint(0,7))
