@@ -1,4 +1,5 @@
 import React from 'react';
+import ScheduleTable from './table.jsx';
 
 class ScheduleList extends React.Component {
 
@@ -17,7 +18,6 @@ class ScheduleList extends React.Component {
     fetch('/api/schedules')
       .then(res => res.json())
       .then((results) => {
-        console.log(results)
         this.setState({
           schedules: results
         })
@@ -26,17 +26,7 @@ class ScheduleList extends React.Component {
   }
 
   render() {
-
-    // TODO move to child component
-    const items = this.state.schedules.map((schedule, index) => {
-      return <li key={index}>{schedule.name}</li>
-    });
-
-    return (
-      <ul>
-        {items}
-      </ul>
-    );
+    return <ScheduleTable schedules={this.state.schedules} />;
   }
 
 }
