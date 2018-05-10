@@ -189,6 +189,9 @@ def get_state(prev_state=None):
 
 def get_schedules():
 
+    # Small delay
+    sleep(1)
+
     schedules = []
 
     row_count = 10
@@ -209,5 +212,11 @@ def get_schedule(id):
     return {
         'id': id,
         'name': 'Schedule %i' % id,
-        'interval': 'Daily'
+        'interval': get_interval()
     }
+
+def get_interval():
+
+    if random() > .5:
+        return 'Daily'
+    return 'Weekly'
