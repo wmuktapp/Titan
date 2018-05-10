@@ -182,3 +182,11 @@ input[type=checkbox]:checked:after {
     opacity: .5;
     cursor: default;
 }
+
+.schedule-loading {
+    text-align: center;
+}
+
+.schedule-table {
+    width: 100%;
+}

@@ -9,8 +9,12 @@ class ScheduleList extends React.Component {
   constructor() {
     super();
     this.state = {
-      schedules: []
+      schedules: [],
+      loading: true,
+      page: 1
     };
+
+    this.loadMore = this.loadMore.bind(this);
   }
 
   componentDidMount() {
@@ -19,20 +23,51 @@ class ScheduleList extends React.Component {
       .then(res => res.json())
       .then((results) => {
         this.setState({
-          schedules: results
+          schedules: results,
+          loading: false
         });
       });
 
   }
 
+  loadMore() {
+    
+    let page = this.state.page;
+    page++;
+
+    this.setState({
+      loading: true,
+      page: page
+    });
+
+    fetch('/api/schedules?page=' + page)
+      .then(res => res.json())
+      .then((results) => {
+        this.setState({
+          schedules: this.state.schedules.concat(results),
+          loading: false
+        });
+      });
+  }
+
   render() {
 
     // TODO
-    // - 'load more' button
     // - Expandability?
     // - Other interactivity?
 
-    return <ScheduleTable schedules={this.state.schedules} />;
+    return (
+      <div className="schedule-list">
+        <ScheduleTable schedules={this.state.schedules} />
+        <div className="schedule-loading">
+          {
+            this.state.loading
+              ? <p className="loading-message">Loading...</p>
+              : <a onClick={this.loadMore}>Load more</a>
+          }
+        </div>
+      </div>
+    );
   }
 
 }
