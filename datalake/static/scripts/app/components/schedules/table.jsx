@@ -8,6 +8,9 @@ class ScheduleTable extends React.Component {
       <tr>
         <th>Schedule</th>
         <th>Interval</th>
+        <th>Client</th>
+        <th>Dataset</th>
+        <th>Load date</th>
         <th>Enabled?</th>
       </tr>
     );
@@ -17,6 +20,9 @@ class ScheduleTable extends React.Component {
         <tr key={index}>
           <td>{schedule.name}</td>
           <td>{schedule.interval}</td>
+          <td>{schedule.client}</td>
+          <td>{schedule.dataset}</td>
+          <td>{schedule.loadDate}</td>
           <td>
             <input type="checkbox" disabled={true} checked={schedule.enabled} />
           </td>

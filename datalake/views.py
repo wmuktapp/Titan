@@ -213,6 +213,9 @@ def get_schedule(id):
         'id': id,
         'name': 'Schedule %i' % id,
         'interval': get_interval(),
+        'client': 'Client %i' % id,
+        'dataset': 'Dataset %i' % id,
+        'loadDate': '23-05-2018',
         'enabled': random() > .2
     }
 
