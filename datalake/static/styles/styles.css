@@ -15,6 +15,11 @@ h1, h2, h3, h4, h5, h6 {
     text-transform: uppercase;
 }
 
+a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
 header {
     height: 4em;
     background-color: #ed6b31;
@@ -32,6 +37,14 @@ header h1 {
     line-height: 3;
 }
 
+header a {
+    color: inherit;
+}
+
+header a:hover {
+    color: inherit;
+}
+
 main {
     max-width: 60em;
     margin: 0 auto;
@@ -40,10 +53,6 @@ main {
 footer {
     text-align: center;
     font-size: .8em;
-}
-
-a {
-    cursor: pointer;
 }
 
 input[type=checkbox] {
