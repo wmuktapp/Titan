@@ -1,9 +1,10 @@
 import React from 'react';
 import {render} from 'react-dom';
+import ScheduleList from './components/schedules/list.jsx';
 
 class SchedulesApp extends React.Component {
   render() {
-    return <p>Schedules go here</p>;
+    return <ScheduleList />;
   }
 }
 
