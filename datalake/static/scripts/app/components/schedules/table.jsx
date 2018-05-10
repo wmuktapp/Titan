@@ -18,8 +18,8 @@ class ScheduleTable extends React.Component {
     );
 
     const body = this.props.schedules.map((schedule, index) => {
-      const href = '/schedules/' + schedule.id;
 
+      const href = '/schedules/' + schedule.id;
       const loadDate = dateUtils.dateToString(new Date(schedule.loadDate));
 
       return (
