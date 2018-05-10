@@ -20,7 +20,7 @@ class ScheduleList extends React.Component {
       .then((results) => {
         this.setState({
           schedules: results
-        })
+        });
       });
 
   }
