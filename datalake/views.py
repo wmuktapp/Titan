@@ -29,6 +29,11 @@ def monitoring_execution(execution_key):
 def schedules():
     return render_template('schedules.html')
 
+@app.route('/schedules/<int:schedule_key>')
+def schedule_details(schedule_key):
+    # TODO
+    return render_template('schedules.html')
+
 @app.route('/adhoc')
 def adhoc():
     return render_template('adhoc.html')

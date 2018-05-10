@@ -12,10 +12,12 @@ class ScheduleTable extends React.Component {
         <th>Dataset</th>
         <th>Load date</th>
         <th>Enabled?</th>
+        <th></th>
       </tr>
     );
 
     const body = this.props.schedules.map((schedule, index) => {
+      const href = '/schedules/' + schedule.id;
       return (
         <tr key={index}>
           <td>{schedule.name}</td>
@@ -25,6 +27,9 @@ class ScheduleTable extends React.Component {
           <td>{schedule.loadDate}</td>
           <td>
             <input type="checkbox" disabled={true} checked={schedule.enabled} />
+          </td>
+          <td>
+            <a className="schedule-link" href={href}>Details &gt;</a>
           </td>
         </tr>
       );

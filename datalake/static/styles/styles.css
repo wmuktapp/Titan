@@ -195,3 +195,7 @@ input[type=checkbox]:checked:after {
 .schedule-table {
     width: 100%;
 }
+
+.schedule-link {
+    float: right;
+}
