@@ -37,7 +37,7 @@ def adhoc():
 # API URLs
 
 @app.route('/api/executions')
-def executions():
+def executions_list():
 
     start_date = request.args.get('start')
     end_date = request.args.get('end')
@@ -49,7 +49,7 @@ def executions():
 
 
 @app.route('/api/executions/<int:execution_key>')
-def execution_details(execution_key):
+def execution_get(execution_key):
 
     data = {
         'execution': get_execution(execution_key)
@@ -68,6 +68,11 @@ def execution_retry():
     end_date = datetime.strptime('2018-05-09', '%Y-%m-%d')
 
     return get_execution_data(start_date, end_date)
+
+
+@app.route('/api/schedules')
+def schedules_list():
+    return get_schedules()
 
 
 
@@ -104,6 +109,8 @@ def execution_retry():
 
 
 # SAMPLE DATA
+
+# Executions
 
 def get_execution_data(start_date, end_date):
 
@@ -176,3 +183,31 @@ def get_state(prev_state=None):
         return RUNNING
 
     return WAITING
+
+
+# Schedules
+
+def get_schedules():
+
+    schedules = []
+
+    row_count = 10
+
+    for i in range(1, row_count + 1):
+
+        id = randint(1, 1000)
+
+        schedule = get_schedule(id)
+
+        schedules.append(schedule)
+
+    return jsonify(schedules)
+
+
+def get_schedule(id):
+
+    return {
+        'id': id,
+        'name': 'Schedule %i' % id,
+        'interval': 'Daily'
+    }
