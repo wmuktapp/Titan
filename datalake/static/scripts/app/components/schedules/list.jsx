@@ -26,6 +26,12 @@ class ScheduleList extends React.Component {
   }
 
   render() {
+
+    // TODO
+    // - 'load more' button
+    // - Expandability?
+    // - Other interactivity?
+
     return <ScheduleTable schedules={this.state.schedules} />;
   }
 
