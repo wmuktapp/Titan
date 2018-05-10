@@ -7,9 +7,9 @@ class MonitoringGridContent extends React.Component {
 
     // Table contents
     const contents = this.props.data.map((datum, index) => {
-          return <MonitoringGridRow key={'grid-row-' + index} name={datum.name}
-            data={datum.executions} selectExecution={this.props.selectExecution} />;
-        })
+      return <MonitoringGridRow key={'grid-row-' + index} name={datum.name}
+        data={datum.executions} selectExecution={this.props.selectExecution} />;
+    });
 
     return (
       <tbody>
