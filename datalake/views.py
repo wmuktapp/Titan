@@ -34,6 +34,11 @@ def schedule_details(schedule_key):
     # TODO
     return render_template('schedules.html')
 
+@app.route('/schedules/add')
+def schedule_add():
+    # TODO
+    return render_template('schedules.html')
+
 @app.route('/adhoc')
 def adhoc():
     return render_template('adhoc.html')
@@ -217,7 +222,7 @@ def get_schedule(id):
     return {
         'id': id,
         'name': 'Schedule %i' % id,
-        'interval': get_interval(),
+        'nextDate': get_next_date(),
         'client': 'Client %i' % id,
         'dataset': 'Dataset %i' % id,
         'loadDate': get_load_date(),
@@ -230,6 +235,8 @@ def get_interval():
         return 'Daily'
     return 'Weekly'
 
-def get_load_date():
+def get_next_date():
+    return datetime.now() + timedelta(days=randint(0,7))
 
+def get_load_date():
     return datetime.now() - timedelta(days=randint(0,7))

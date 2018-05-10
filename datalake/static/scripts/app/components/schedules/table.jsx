@@ -8,32 +8,31 @@ class ScheduleTable extends React.Component {
     const head = (
       <tr>
         <th>Schedule</th>
-        <th>Interval</th>
+        <th>Next scheduled date</th>
         <th>Client</th>
         <th>Dataset</th>
         <th>Load date</th>
         <th>Enabled?</th>
-        <th></th>
       </tr>
     );
 
     const body = this.props.schedules.map((schedule, index) => {
 
       const href = '/schedules/' + schedule.id;
+      const nextDate = dateUtils.dateToString(new Date(schedule.nextDate))
       const loadDate = dateUtils.dateToString(new Date(schedule.loadDate));
 
       return (
         <tr key={index}>
-          <td>{schedule.name}</td>
-          <td>{schedule.interval}</td>
+          <td>
+            <a href={href}>{schedule.name}</a>
+          </td>
+          <td>{nextDate}</td>
           <td>{schedule.client}</td>
           <td>{schedule.dataset}</td>
           <td>{loadDate}</td>
           <td>
             <input type="checkbox" disabled={true} checked={schedule.enabled} />
-          </td>
-          <td>
-            <a className="schedule-link" href={href}>Details &gt;</a>
           </td>
         </tr>
       );
