@@ -212,7 +212,8 @@ def get_schedule(id):
     return {
         'id': id,
         'name': 'Schedule %i' % id,
-        'interval': get_interval()
+        'interval': get_interval(),
+        'enabled': random() > .2
     }
 
 def get_interval():
