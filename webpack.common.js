@@ -7,7 +7,9 @@ var APP_DIR = path.resolve(__dirname, 'datalake/static/scripts/app');
 var config = {
   entry: {
     monitoring: APP_DIR + '/monitoring.jsx',
-    execution: APP_DIR + '/execution.jsx'
+    execution: APP_DIR + '/execution.jsx',
+    schedules: APP_DIR + '/schedules.jsx',
+    adhoc: APP_DIR + '/adhoc.jsx'
   },
   output: {
     path: BUILD_DIR,
