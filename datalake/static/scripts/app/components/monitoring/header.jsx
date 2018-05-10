@@ -1,4 +1,5 @@
 import React from 'react';
+import dateUtils from '../../utils/date-utils';
 
 class MonitoringGridHeader extends React.Component {
 
@@ -8,11 +9,14 @@ class MonitoringGridHeader extends React.Component {
 
     let cells = [], i = 1, temp = new Date(start);
 
+    // Iterate from start to end dates
     while (temp <= end) {
+
+      // Add header cell with (formatted) date
+      cells.push(<th key={i++}>{dateUtils.dateToString(temp)}</th>);
+      
+      // Next date
       temp.setDate(temp.getDate() + 1)
-      let isoString = temp.toISOString().substr(0, 10);
-      // TODO display in clearer format (dd-mm-yyyy?)
-      cells.push(<th key={'th-' + isoString + '-' + i++}>{isoString}</th>);
     }
 
     return (

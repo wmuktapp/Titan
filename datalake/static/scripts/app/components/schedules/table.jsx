@@ -1,4 +1,5 @@
 import React from 'react';
+import dateUtils from '../../utils/date-utils';
 
 class ScheduleTable extends React.Component {
 
@@ -18,13 +19,16 @@ class ScheduleTable extends React.Component {
 
     const body = this.props.schedules.map((schedule, index) => {
       const href = '/schedules/' + schedule.id;
+
+      const loadDate = dateUtils.dateToString(new Date(schedule.loadDate));
+
       return (
         <tr key={index}>
           <td>{schedule.name}</td>
           <td>{schedule.interval}</td>
           <td>{schedule.client}</td>
           <td>{schedule.dataset}</td>
-          <td>{schedule.loadDate}</td>
+          <td>{loadDate}</td>
           <td>
             <input type="checkbox" disabled={true} checked={schedule.enabled} />
           </td>
