@@ -84,6 +84,11 @@ def schedules_list():
     return get_schedules()
 
 
+@app.route('/api/schedules/<int:schedule_key>')
+def schedules_get(schedule_key):
+    return get_schedule(schedule_key)
+
+
 @app.route('/api/acquireprograms')
 def acquire_programs_list():
     return get_acquire_programs()
@@ -239,10 +244,10 @@ def get_interval():
     return 'Weekly'
 
 def get_next_date():
-    return datetime.now() + timedelta(days=randint(0,7))
+    return datetime.now() + timedelta(days=randint(0, 7))
 
 def get_load_date():
-    return datetime.now() - timedelta(days=randint(0,7))
+    return datetime.now() - timedelta(days=randint(0, 7))
 
 
 def get_acquire_programs():
