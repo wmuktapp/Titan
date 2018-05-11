@@ -94,6 +94,15 @@ def acquire_programs_list():
     return get_acquire_programs()
 
 
+@app.route('/api/clients')
+def clients_list():
+    return get_clients()
+
+@app.route('/api/datasets')
+def datasets_list():
+    return get_datasets()
+
+
 # ENDPOINTS
 
 # Execution endpoints
@@ -250,6 +259,8 @@ def get_load_date():
     return datetime.now() - timedelta(days=randint(0, 7))
 
 
+# Acquire Programs
+
 def get_acquire_programs():
 
     data = []
@@ -262,3 +273,32 @@ def get_acquire_programs():
 def get_acquire_program(id):
     return { 'id': id, 'name': 'Program %i' % id }
 
+
+# Clients
+
+def get_clients():
+
+    data = []
+
+    for i in range(1, 11):
+        data.append(get_client(i))
+
+    return jsonify(data)
+
+def get_client(id):
+    return { 'id': id, 'name': 'Client %i' % id }
+
+
+# Datasets
+
+def get_datasets():
+
+    data = []
+
+    for i in range(1, 21):
+        data.append(get_dataset(i))
+
+    return jsonify(data)
+
+def get_dataset(id):
+    return { 'id': id, 'name': 'Dataset %i' % id }
