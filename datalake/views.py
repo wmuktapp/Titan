@@ -84,6 +84,10 @@ def schedules_list():
     return get_schedules()
 
 
+@app.route('/api/acquireprograms')
+def acquire_programs_list():
+    return get_acquire_programs()
+
 
 # ENDPOINTS
 
@@ -239,3 +243,17 @@ def get_next_date():
 
 def get_load_date():
     return datetime.now() - timedelta(days=randint(0,7))
+
+
+def get_acquire_programs():
+
+    data = []
+
+    for i in range(1, 6):
+        data.append(get_acquire_program(i))
+
+    return jsonify(data)
+
+def get_acquire_program(id):
+    return { 'id': id, 'name': 'Program %i' % id }
+

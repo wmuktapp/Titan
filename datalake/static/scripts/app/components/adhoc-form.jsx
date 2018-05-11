@@ -18,10 +18,28 @@ class AdhocForm extends React.Component {
       client: '',
       dataset: '',
       user: '',
-      parameters: []
+      parameters: [],
+      availablePrograms: [],
+      availableClients: [],
+      availableDatasets: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+
+    // Get available acquire programs
+    fetch('/api/acquireprograms')
+      .then(res => res.json())
+      .then((results) => {
+        this.setState({
+          availablePrograms: results
+        });
+      });
+
+    // TODO get clients and datasets
+
   }
 
   handleChange(event) {
@@ -44,11 +62,19 @@ class AdhocForm extends React.Component {
   }
 
   render() {
+
+    const programOptions = this.state.availablePrograms.map((program, index) => {
+      return <option key={index} value={program.id}>{program.name}</option>;
+    });
+
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="row">
           <label>Program</label>
-          <input type="text" name="program" value={this.state.program} onChange={this.handleChange} />
+          <select value={this.state.program} name="program" onChange={this.handleChange}>
+            <option value=""></option>
+            { programOptions }
+          </select>
         </div>
         <div className="row">
           <label>Load date</label>
