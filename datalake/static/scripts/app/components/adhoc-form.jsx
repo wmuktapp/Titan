@@ -5,36 +5,65 @@ class AdhocForm extends React.Component {
   // Form values
   // - Program
   // - Load date
-  // - Client name
-  // - Dataset name
+  // - Client
+  // - Dataset
   // - User
   // - Parameters?
 
   constructor() {
     super();
+    this.state = {};
     this.state = {
-      name: 'test'
+      program: '',
+      loadDate: '',
+      client: '',
+      dataset: '',
+      user: '',
+      parameters: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(e) {
+  handleChange(event) {
+
+    const target = event.target,
+      value = target.value,
+      name = target.name;
+
     this.setState({
-      name: e.target.value
+      [name]: value
     });
   }
 
   handleSubmit(e) {
-    console.log('Form submitted');
+    console.log(this.state);
     e.preventDefault();
   }
 
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <label>Name</label>
-        <input type="text" value={this.state.name} onChange={this.handleChange} />
+        <div className="row">
+          <label>Program</label>
+          <input type="text" name="program" value={this.state.program} onChange={this.handleChange} />
+        </div>
+        <div className="row">
+          <label>Load date</label>
+          <input type="text" name="loadDate" value={this.state.loadDate} onChange={this.handleChange} />
+        </div>
+        <div className="row">
+          <label>Client</label>
+          <input type="text" name="client" value={this.state.client} onChange={this.handleChange} />
+        </div>
+        <div className="row">
+          <label>Dataset</label>
+          <input type="text" name="dataset" value={this.state.dataset} onChange={this.handleChange} />
+        </div>
+        <div className="row">
+          <label>User</label>
+          <input type="text" name="user" value={this.state.user} onChange={this.handleChange} />
+        </div>
         <input type="submit" value="Submit" />
       </form>
     );
