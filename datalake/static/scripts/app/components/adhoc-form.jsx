@@ -2,6 +2,14 @@ import React from 'react';
 
 class AdhocForm extends React.Component {
   
+  // Form values
+  // - Program
+  // - Load date
+  // - Client name
+  // - Dataset name
+  // - User
+  // - Parameters?
+
   constructor() {
     super();
     this.state = {
