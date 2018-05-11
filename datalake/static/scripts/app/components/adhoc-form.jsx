@@ -38,13 +38,27 @@ class AdhocForm extends React.Component {
         });
       });
 
-    // TODO get clients and datasets
+    // Get available clients
+    fetch('/api/clients')
+      .then(res => res.json())
+      .then((results) => {
+        this.setState({
+          availableClients: results
+        });
+      });
+
+    // Get available datasets
+    fetch('/api/datasets')
+      .then(res => res.json())
+      .then((results) => {
+        this.setState({
+          availableDatasets: results
+        });
+      });
 
   }
 
   handleChange(event) {
-
-    // TODO form validation?
 
     const target = event.target,
       value = target.value,
@@ -67,11 +81,19 @@ class AdhocForm extends React.Component {
       return <option key={index} value={program.id}>{program.name}</option>;
     });
 
+    const clientOptions = this.state.availableClients.map((client, index) => {
+      return <option key={index} value={client.id}>{client.name}</option>;
+    });
+
+    const datasetOptions = this.state.availableDatasets.map((dataset, index) => {
+      return <option key={index} value={dataset.id}>{dataset.name}</option>;
+    });
+
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="row">
           <label>Program</label>
-          <select value={this.state.program} name="program" onChange={this.handleChange}>
+          <select name="program" value={this.state.program} onChange={this.handleChange}>
             <option value=""></option>
             { programOptions }
           </select>
@@ -82,11 +104,17 @@ class AdhocForm extends React.Component {
         </div>
         <div className="row">
           <label>Client</label>
-          <input type="text" name="client" value={this.state.client} onChange={this.handleChange} />
+          <select name="client" value={this.state.client} onChange={this.handleChange}>
+            <option value=""></option>
+            { clientOptions }
+          </select>
         </div>
         <div className="row">
           <label>Dataset</label>
-          <input type="text" name="dataset" value={this.state.dataset} onChange={this.handleChange} />
+          <select name="dataset" value={this.state.dataset} onChange={this.handleChange}>
+            <option value=""></option>
+            { datasetOptions }
+          </select>
         </div>
         <div className="row">
           <label>User</label>
