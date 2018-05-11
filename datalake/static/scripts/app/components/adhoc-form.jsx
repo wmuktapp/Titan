@@ -69,10 +69,10 @@ class AdhocForm extends React.Component {
     });
   }
 
-  handleSubmit(e) {
+  handleSubmit(event) {
     // TODO handle submission, send to server
     console.log(this.state);
-    e.preventDefault();
+    event.preventDefault();
   }
 
   render() {
