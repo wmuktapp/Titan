@@ -1,9 +1,10 @@
 import React from 'react';
 import {render} from 'react-dom';
+import AdhocForm from './components/adhoc-form.jsx';
 
 class AdhocApp extends React.Component {
   render() {
-    return <p>Adhoc form goes here</p>;
+    return <AdhocForm />;
   }
 }
 
