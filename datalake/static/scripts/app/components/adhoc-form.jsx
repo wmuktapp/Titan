@@ -89,6 +89,8 @@ class AdhocForm extends React.Component {
       return <option key={index} value={dataset.id}>{dataset.name}</option>;
     });
 
+    // TODO add datepicker (try https://reactdatepicker.com/)
+
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="row">
