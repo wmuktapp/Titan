@@ -98,6 +98,7 @@ def acquire_programs_list():
 def clients_list():
     return get_clients()
 
+
 @app.route('/api/datasets')
 def datasets_list():
     return get_datasets()
