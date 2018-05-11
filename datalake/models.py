@@ -21,41 +21,54 @@ def _wrap_stored_proc_text(sql_text, params):
 def _insert_acquire_program_options(transaction, acquire_program_key, options):
     acquire_program_option_keys = []
     for name, required in options.items():
-        insert_option_text = _wrap_stored_proc_text(sqlalchemy.text(
+        text = _wrap_stored_proc_text(sqlalchemy.text(
             "EXEC config.SP_InsertAcquireProgramOption :acquire_program_key :name :required"
         ), {"AcquireProgramOptionKey": "INT"})
-        insert_option_result = transaction.execute(insert_option_text, acquire_program_key=acquire_program_key,
-                                                   name=name, required=required)
-        acquire_program_option_keys.append(insert_option_result[0]["AcquireProgramOptionKey"])
+        result = transaction.execute(text, acquire_program_key=acquire_program_key, name=name,
+                                                   required=required)
+        acquire_program_option_keys.append(result[0]["AcquireProgramOptionKey"])
     return acquire_program_option_keys
 
 
 def insert_acquire_program(python_name="", friendly_name="", data_source_name="", author="", enabled=False,
                            options=None):
     with db.engine.begin() as transaction:
-        insert_text = _wrap_stored_proc_text(sqlalchemy.text(
+        text = _wrap_stored_proc_text(sqlalchemy.text(
             "EXEC config.SP_InsertAcquireProgram :python_name, :friendly_name, :data_source_name, :author, :enabled"
         ), {"AcquireProgramKey": "INT"})
-        insert_result = transaction.execute(insert_text, python_name=python_name, friendly_name=friendly_name,
-                                            data_source_name=data_source_name, author=author, enabled=enabled)
-        acquire_program_key = insert_result[0]["AcquireProgramKey"]
-        acquire_program_option_keys = _insert_acquire_program_options(transaction, acquire_program_key, options)
+        result = transaction.execute(text, python_name=python_name, friendly_name=friendly_name,
+                                     data_source_name=data_source_name, author=author, enabled=enabled)
+        key = result[0]["AcquireProgramKey"]
+        keys = _insert_acquire_program_options(transaction, key, options)
     # TO DO: log and return something useful
 
 
-def update_acquire_program(acquire_program_key, python_name="", friendly_name="", data_source_name="", author="",
-                           enabled=False, options=None):
+def start_job_execution(scheduled_execution_key=None, acquire_program_key=None, client_name="", data_set_name="",
+                        load_date=None, ad_hoc_user=""):
+    with db.engine() as transaction:
+        text = _wrap_stored_proc_text(sqlalchemy.text(
+            "EXEC log.SP_StartExecutionLog :scheduled_execution_key, :acquire_program_key, :client_name, "
+            ":data_set_name, :load_date, :ad_hoc_user"
+        ), {"ExecutionKey": "INT"})
+        result = transaction.execute(text, scheduled_execution_key=scheduled_execution_key,
+                                     acquire_program_key=acquire_program_key, client_name=client_name,
+                                     data_set_name=data_set_name, load_date=load_date, ad_hoc_user=ad_hoc_user)
+        key = result[0]["ExecutionKey"]
+    # TO DO: log and return something useful
+
+
+def update_acquire_program(key, python_name="", friendly_name="", data_source_name="", author="", enabled=False,
+                           options=None):
     with db.engine() as transaction:
         update_text = _wrap_stored_proc_text(sqlalchemy.text(
-            "EXEC config.SP_UpdateAcquireProgram :acquire_program_key :python_name, :friendly_name, :data_source_name, "
-            ":author, :enabled"
+            "EXEC config.SP_UpdateAcquireProgram :key :python_name, :friendly_name, :data_source_name, :author, "
+            ":enabled"
         ), {"UpdateRowCount": "INT", "DisabledScheduledExecutionsCount": "INT"})
-        update_result = transaction.execute(update_text, acquire_program_key=acquire_program_key,
-                                            python_name=python_name, friendly_name=friendly_name,
+        update_result = transaction.execute(update_text, key=key, python_name=python_name, friendly_name=friendly_name,
                                             data_source_name=data_source_name, author=author, enabled=enabled)
         delete_text = _wrap_stored_proc_text(sqlalchemy.text(
             "EXEC config.SP_DeleteAcquireProgramOptions :acquire_program_key",
         {"DeleteRowCount": "INT"}))
-        delete_result = transaction.execute(delete_text, acquire_program_key=acquire_program_key)
-        acquire_program_option_keys = _insert_acquire_program_options(transaction, acquire_program_key, options)
+        delete_result = transaction.execute(delete_text, key=key)
+        keys = _insert_acquire_program_options(transaction, key, options)
     # TO DO: log and return something useful
