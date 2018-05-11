@@ -12,7 +12,6 @@ class AdhocForm extends React.Component {
 
   constructor() {
     super();
-    this.state = {};
     this.state = {
       program: '',
       loadDate: '',
@@ -27,6 +26,8 @@ class AdhocForm extends React.Component {
 
   handleChange(event) {
 
+    // TODO form validation?
+
     const target = event.target,
       value = target.value,
       name = target.name;
@@ -37,6 +38,7 @@ class AdhocForm extends React.Component {
   }
 
   handleSubmit(e) {
+    // TODO handle submission, send to server
     console.log(this.state);
     e.preventDefault();
   }
