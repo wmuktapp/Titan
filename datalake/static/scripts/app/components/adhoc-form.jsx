@@ -35,9 +35,11 @@ class AdhocForm extends React.Component {
 
       showSubmit: false
     };
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleLoadDateChange = this.handleLoadDateChange.bind(this);
+    this.addAcquire = this.addAcquire.bind(this);
   }
 
   componentDidMount() {
@@ -104,6 +106,27 @@ class AdhocForm extends React.Component {
     event.preventDefault();
   }
 
+  addAcquire() {
+
+    let acquires = this.state.acquires;
+
+    acquires.push({
+      fields: {
+        property1: '',
+        property2: '',
+        property3: ''
+      }
+    });
+
+    this.setState({
+      acquires: acquires
+    });
+  }
+
+  removeAcquire() {
+    // TODO
+  }
+
   render() {
 
     const programOptions = this.state.availablePrograms.map((program, index) => {
@@ -135,7 +158,7 @@ class AdhocForm extends React.Component {
           <label>User</label>
           <input type="text" name="user" value={this.state.user} onChange={this.handleChange} />
         </div>
-        <AcquireForm acquires={this.state.acquires} />
+        <AcquireForm acquires={this.state.acquires} addAnother={this.addAcquire} />
         {
           this.state.showSubmit
             ? <input type="submit" value="Submit" />
