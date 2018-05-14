@@ -15,7 +15,7 @@ class AdhocForm extends React.Component {
   // - User
 
   // TODO add:
-  // - Define zero or more acquires
+  // - Define zero or more acquires (name-value pairs)
   // - Extract details - same as above, but with destination and data source name
 
   constructor() {
@@ -26,8 +26,13 @@ class AdhocForm extends React.Component {
       client: '',
       dataset: '',
       user: '',
-      parameters: [],
-      availablePrograms: []
+      availablePrograms: [],
+
+      // Handled by sub-forms
+      acquires: [],
+      extracts: [],
+
+      showSubmit: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -66,6 +71,8 @@ class AdhocForm extends React.Component {
     });
   }
 
+  // TODO handle changes in sub-components, show / hide submit button
+
   handleSubmit(event) {
     // TODO handle submission, send to server
     console.log(this.state);
@@ -103,7 +110,11 @@ class AdhocForm extends React.Component {
           <label>User</label>
           <input type="text" name="user" value={this.state.user} onChange={this.handleChange} />
         </div>
-        <input type="submit" value="Submit" />
+        {
+          this.state.showSubmit
+            ? <input type="submit" value="Submit" />
+            : null
+        }
       </form>
     );
   }
