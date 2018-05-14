@@ -19,7 +19,7 @@ class AdhocForm extends React.Component {
     super();
     this.state = {
       program: '',
-      loadDate: '',
+      loadDate: null,
       client: '',
       dataset: '',
       user: '',
@@ -28,6 +28,7 @@ class AdhocForm extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDateChange = this.handleDateChange.bind(this);
   }
 
   componentDidMount() {
@@ -54,6 +55,18 @@ class AdhocForm extends React.Component {
     });
   }
 
+  // Special case - merge with handleChange?
+  handleDateChange(event) {
+    // const value = event.target.value;
+
+    console.log(event);
+
+    // TODO date formatting?
+    this.setState({
+      loadDate: event
+    });
+  }
+
   handleSubmit(event) {
     // TODO handle submission, send to server
     console.log(this.state);
@@ -66,16 +79,8 @@ class AdhocForm extends React.Component {
       return <option key={index} value={program.id}>{program.name}</option>;
     });
 
-    // TODO add datepicker (try https://reactdatepicker.com/)
-
     return (
       <form onSubmit={this.handleSubmit}>
-
-        <div className="row">
-          <label>Test date</label>
-          <DatePicker />
-        </div>
-
         <div className="row">
           <label>Program</label>
           <select name="program" value={this.state.program} onChange={this.handleChange}>
@@ -85,7 +90,7 @@ class AdhocForm extends React.Component {
         </div>
         <div className="row">
           <label>Load date</label>
-          <input type="text" name="loadDate" value={this.state.loadDate} onChange={this.handleChange} />
+          <DatePicker selected={this.state.loadDate} dateFormat="DD/MM/YYYY" onChange={this.handleDateChange} />
         </div>
         <div className="row">
           <label>Client</label>
