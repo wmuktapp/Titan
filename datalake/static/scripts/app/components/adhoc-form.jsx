@@ -1,5 +1,6 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
+import AcquireForm from './adhoc/acquire-form.jsx';
 
 // Datepicker styles
 require('react-datepicker/dist/react-datepicker.css');
@@ -58,6 +59,30 @@ class AdhocForm extends React.Component {
       value = target.value,
       name = target.name;
 
+    // TODO is there a better way of catching this event?
+    if (name === 'program') {
+
+      if (value) {
+        // TODO get the property names asynchronously
+        this.setState({
+          acquires: [{
+            // TODO add name?
+            fields: {
+              property1: '',
+              property2: '',
+              property3: ''
+            }
+          }],
+          extracts: []
+        });
+      } else {
+        this.setState({
+          acquires: [],
+          extracts: []
+        });
+      }
+    }
+
     this.setState({
       [name]: value
     });
@@ -110,6 +135,7 @@ class AdhocForm extends React.Component {
           <label>User</label>
           <input type="text" name="user" value={this.state.user} onChange={this.handleChange} />
         </div>
+        <AcquireForm acquires={this.state.acquires} />
         {
           this.state.showSubmit
             ? <input type="submit" value="Submit" />
