@@ -219,6 +219,11 @@ input[type=checkbox]:checked:after {
     border-top: 1px solid #eee;
 }
 
+.acquire-entry label {
+    display: inline-block;
+    min-width: 8em;
+}
+
 .extract-form {
     border-top: 1px solid #aaa;
 }
