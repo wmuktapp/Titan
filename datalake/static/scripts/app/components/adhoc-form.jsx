@@ -28,7 +28,7 @@ class AdhocForm extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDateChange = this.handleDateChange.bind(this);
+    this.handleLoadDateChange = this.handleLoadDateChange.bind(this);
   }
 
   componentDidMount() {
