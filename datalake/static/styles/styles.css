@@ -218,3 +218,7 @@ input[type=checkbox]:checked:after {
 .acquire-entry + .acquire-entry {
     border-top: 1px solid #eee;
 }
+
+.extract-form {
+    border-top: 1px solid #aaa;
+}
