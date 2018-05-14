@@ -22,6 +22,7 @@ def monitoring():
 @app.route('/monitoring/executions/<int:execution_key>')
 def monitoring_execution(execution_key):
     # TODO return full set of data for execution?
+    # TODO add link to related schedule page, if applicable
     data = Markup({ 'executionKey': execution_key })
     return render_template('execution.html', data=data)
 
@@ -32,6 +33,7 @@ def schedules():
 @app.route('/schedules/<int:schedule_key>')
 def schedule_details(schedule_key):
     # TODO
+    # NOTE: 'run now' button, links to the adhoc page pre-filled (if possible)
     return render_template('schedules.html')
 
 @app.route('/schedules/add')
@@ -93,12 +95,12 @@ def schedules_get(schedule_key):
 def acquire_programs_list():
     return get_acquire_programs()
 
-
+# REMOVE - make this user-entry
 @app.route('/api/clients')
 def clients_list():
     return get_clients()
 
-
+# REMOVE - make this user-entry
 @app.route('/api/datasets')
 def datasets_list():
     return get_datasets()
