@@ -208,3 +208,13 @@ input[type=checkbox]:checked:after {
     border: 1px solid #aaa;
     border-radius: .5em;
 }
+
+/* Adhoc */
+
+.acquire-form {
+    border-top: 1px solid #aaa;
+}
+
+.acquire-entry + .acquire-entry {
+    border-top: 1px solid #eee;
+}
