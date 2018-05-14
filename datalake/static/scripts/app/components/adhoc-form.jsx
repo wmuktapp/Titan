@@ -65,16 +65,8 @@ class AdhocForm extends React.Component {
     if (name === 'program') {
 
       if (value) {
-        // TODO get the property names asynchronously
+        this.addAcquire();
         this.setState({
-          acquires: [{
-            // TODO add name?
-            fields: {
-              property1: '',
-              property2: '',
-              property3: ''
-            }
-          }],
           extracts: []
         });
       } else {
@@ -110,8 +102,10 @@ class AdhocForm extends React.Component {
 
     let acquires = this.state.acquires;
 
+    // TODO get property names dynamically
     acquires.push({
       fields: {
+        // TODO add ID / name here?
         property1: '',
         property2: '',
         property3: ''
