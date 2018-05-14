@@ -22,7 +22,7 @@ class AcquireForm extends React.Component {
 
     return (
       <div className="acquire-form">
-        <h4>Acquires</h4>
+        <h5>Acquires</h5>
         { acquireEntries }
         { this.props.acquires.length ? addAnother : emptyMessage }
       </div>
