@@ -32,7 +32,10 @@ class AdhocForm extends React.Component {
 
       // Handled by sub-forms
       acquires: [],
-      extracts: [],
+
+      extractDestination: '',
+      extractDataSource: '',
+      extractFields: [],
 
       showSubmit: false
     };
@@ -42,6 +45,8 @@ class AdhocForm extends React.Component {
     this.handleLoadDateChange = this.handleLoadDateChange.bind(this);
     this.onAddAnotherAcquire = this.onAddAnotherAcquire.bind(this);
     this.onSelectExtractDestination = this.onSelectExtractDestination.bind(this);
+    this.onUpdateExtractDataSource = this.onUpdateExtractDataSource.bind(this);
+    this.onUpdateExtractField = this.onUpdateExtractField.bind(this);
   }
 
   componentDidMount() {
@@ -69,12 +74,12 @@ class AdhocForm extends React.Component {
       if (value) {
         this.addAcquire();
         this.setState({
-          extracts: []
+          extractFields: []
         });
       } else {
         this.setState({
           acquires: [],
-          extracts: []
+          extractFields: []
         });
       }
     }
@@ -129,7 +134,26 @@ class AdhocForm extends React.Component {
 
   onSelectExtractDestination(destination) {
     this.setState({
-      extractDestination: destination
+      extractDestination: destination,
+      extractFields: {
+        'Extract field 1': '',
+        'Extract field 2': '',
+        'Extract field 3': ''
+      }
+    });
+  }
+
+  onUpdateExtractDataSource(dataSource) {
+    this.setState({
+      extractDataSource: dataSource
+    });
+  }
+
+  onUpdateExtractField(name, value) {
+    const extractFields = this.state.extractFields;
+    extractFields[name] = value;
+    this.setState({
+      extractFields: extractFields
     });
   }
 
@@ -165,7 +189,10 @@ class AdhocForm extends React.Component {
           <input type="text" name="user" value={this.state.user} onChange={this.handleChange} />
         </div>
         <AcquireForm acquires={this.state.acquires} addAnother={this.onAddAnotherAcquire} />
-        <ExtractForm showForm={!!this.state.program} destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination} />
+        <ExtractForm showForm={!!this.state.program}
+          destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination}
+          dataSource={this.state.extractDataSource} updateDataSource={this.onUpdateExtractDataSource}
+          fields={this.state.extractFields} updateField={this.onUpdateExtractField} />
         {
           this.state.showSubmit
             ? <input type="submit" value="Submit" />

@@ -5,10 +5,21 @@ class ExtractForm extends React.Component {
   constructor(props) {
     super(props);
     this.onDestinationChange = this.onDestinationChange.bind(this);
+    this.onDataSourceChange = this.onDataSourceChange.bind(this);
+    this.onFieldChange = this.onFieldChange.bind(this);
   }
 
   onDestinationChange(e) {
     this.props.selectDestination(e.target.value);
+  }
+
+  onDataSourceChange(e) {
+    this.props.updateDataSource(e.target.value);
+  }
+
+  onFieldChange(e) {
+    const target = e.target;
+    this.props.updateField(target.name, target.value);
   }
 
   render() {
@@ -39,23 +50,21 @@ class ExtractForm extends React.Component {
       );
 
       if (this.props.destination) {
+        
+        // Data source
         rows.push(
           <div key="datasource" className="row">
             <label>Data source name</label>
-            <input type="text" />
+            <input type="text" name="datasource" value={this.props.dataSource} onChange={this.onDataSourceChange} />
           </div>
         );
-        rows.push(<h6 key="subtitle">Dynamic fields</h6>);
-        const dynamicFields = [ // TODO get these from props
-          'Dynamic field 1',
-          'Dynamic field 2',
-          'Dynamic field 3'
-        ];
-        const dynamicFieldRows = dynamicFields.map((field, index) => {
+
+        // Dynamic fields        
+        const dynamicFieldRows = Object.entries(this.props.fields).map((field, index) => {
           return (
             <div key={'df-' + index} className="row">
               <label>{field}</label>
-              <input type="text" />
+              <input type="text" name={field[0]} value={field[1]} onChange={this.onFieldChange} />
             </div>
           );
         });
