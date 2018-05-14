@@ -56,14 +56,10 @@ class AdhocForm extends React.Component {
   }
 
   // Special case - merge with handleChange?
-  handleDateChange(event) {
-    // const value = event.target.value;
-
-    console.log(event);
-
-    // TODO date formatting?
+  // TODO only permit dates in the past?
+  handleLoadDateChange(date) {
     this.setState({
-      loadDate: event
+      loadDate: date
     });
   }
 
@@ -90,7 +86,7 @@ class AdhocForm extends React.Component {
         </div>
         <div className="row">
           <label>Load date</label>
-          <DatePicker selected={this.state.loadDate} dateFormat="DD/MM/YYYY" onChange={this.handleDateChange} />
+          <DatePicker selected={this.state.loadDate} dateFormat="DD/MM/YYYY" onChange={this.handleLoadDateChange} />
         </div>
         <div className="row">
           <label>Client</label>
