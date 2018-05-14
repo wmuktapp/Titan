@@ -70,6 +70,9 @@ def execution_get(execution_key):
     return jsonify(data)
 
 
+# TODO /api/executions
+
+
 @app.route('/api/executions/retry', methods=['POST'])
 def execution_retry():
 
@@ -91,6 +94,7 @@ def schedules_get(schedule_key):
     return get_schedule(schedule_key)
 
 
+# Change to /acquire-programs
 @app.route('/api/acquireprograms')
 def acquire_programs_list():
     return get_acquire_programs()
