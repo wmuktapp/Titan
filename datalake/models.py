@@ -100,11 +100,11 @@ def get_executions(page_number=1, page_size=100):
                              page_number=page_number, page_size=page_size)
 
 
-def get_schedule(key):
+def get_scheduled_execution(key):
     return db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetSchedule(:key)"), key=key)
 
 
-def get_schedules(page_number=1, page_size=100):
+def get_scheduled_executions(page_number=1, page_size=100):
     return db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetSchedules(:page_number, :page_size)"),
                              page_number=page_number, page_size=page_size)
 
