@@ -8,6 +8,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "click",
+        "dotenv",
         "flask",
         "flask_sqlalchemy",
         "sqlalchemy"
