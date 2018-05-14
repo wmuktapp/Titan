@@ -47,7 +47,7 @@ class AdhocForm extends React.Component {
   componentDidMount() {
 
     // Get available acquire programs
-    fetch('/api/acquireprograms')
+    fetch('/api/acquire-programs')
       .then(res => res.json())
       .then((results) => {
         this.setState({

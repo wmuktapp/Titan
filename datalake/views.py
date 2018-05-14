@@ -94,8 +94,7 @@ def schedules_get(schedule_key):
     return get_schedule(schedule_key)
 
 
-# Change to /acquire-programs
-@app.route('/api/acquireprograms')
+@app.route('/api/acquire-programs')
 def acquire_programs_list():
     return get_acquire_programs()
 
