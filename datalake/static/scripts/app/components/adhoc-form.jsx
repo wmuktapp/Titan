@@ -13,7 +13,10 @@ class AdhocForm extends React.Component {
   // - Client
   // - Dataset
   // - User
-  // - Parameters?
+
+  // TODO add:
+  // - Define zero or more acquires
+  // - Extract details - same as above, but with destination and data source name
 
   constructor() {
     super();
