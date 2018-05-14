@@ -95,16 +95,6 @@ def schedules_get(schedule_key):
 def acquire_programs_list():
     return get_acquire_programs()
 
-# REMOVE - make this user-entry
-@app.route('/api/clients')
-def clients_list():
-    return get_clients()
-
-# REMOVE - make this user-entry
-@app.route('/api/datasets')
-def datasets_list():
-    return get_datasets()
-
 
 # ENDPOINTS
 
@@ -275,33 +265,3 @@ def get_acquire_programs():
 
 def get_acquire_program(id):
     return { 'id': id, 'name': 'Program %i' % id }
-
-
-# Clients
-
-def get_clients():
-
-    data = []
-
-    for i in range(1, 11):
-        data.append(get_client(i))
-
-    return jsonify(data)
-
-def get_client(id):
-    return { 'id': id, 'name': 'Client %i' % id }
-
-
-# Datasets
-
-def get_datasets():
-
-    data = []
-
-    for i in range(1, 21):
-        data.append(get_dataset(i))
-
-    return jsonify(data)
-
-def get_dataset(id):
-    return { 'id': id, 'name': 'Dataset %i' % id }
