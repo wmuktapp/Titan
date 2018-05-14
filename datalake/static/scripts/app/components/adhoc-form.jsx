@@ -1,6 +1,9 @@
 import React from 'react';
-// import DatePicker from 'react-datepicker';
-// import 'react-datepicker.css';
+import DatePicker from 'react-datepicker';
+
+// Datepicker styles
+require('react-datepicker/dist/react-datepicker.css');
+
 
 class AdhocForm extends React.Component {
   
@@ -67,6 +70,12 @@ class AdhocForm extends React.Component {
 
     return (
       <form onSubmit={this.handleSubmit}>
+
+        <div className="row">
+          <label>Test date</label>
+          <DatePicker />
+        </div>
+
         <div className="row">
           <label>Program</label>
           <select name="program" value={this.state.program} onChange={this.handleChange}>
