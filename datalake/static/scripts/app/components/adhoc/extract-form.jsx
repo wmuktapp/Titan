@@ -2,9 +2,18 @@ import React from 'react';
 
 class ExtractForm extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.onDestinationChange = this.onDestinationChange.bind(this);
+  }
+
+  onDestinationChange(e) {
+    this.props.selectDestination(e.target.value);
+  }
+
   render() {
 
-    const rows = [];
+    let rows = [];
     const destinations = [ // TODO get these from props
       'FTP',
       'Database',
@@ -16,12 +25,13 @@ class ExtractForm extends React.Component {
       // Destination
       const destinationOptions = destinations.map((source, index) => {
         return <option key={index} value={source}>{source}</option>;
-      })
+      });
+
       rows.push(
         // How are input values restricted in child components?
         <div key="destination" className="row">
           <label>Destination</label>
-          <select>
+          <select value={this.props.destination} onChange={this.onDestinationChange}>
             <option value=""></option>
             { destinationOptions }
           </select>
@@ -49,7 +59,7 @@ class ExtractForm extends React.Component {
             </div>
           );
         });
-        rows.concat(dynamicFieldRows);
+        rows = rows.concat(dynamicFieldRows);
       }
 
     } else {  // Don't show form

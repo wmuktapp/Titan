@@ -41,6 +41,7 @@ class AdhocForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleLoadDateChange = this.handleLoadDateChange.bind(this);
     this.onAddAnotherAcquire = this.onAddAnotherAcquire.bind(this);
+    this.onSelectExtractDestination = this.onSelectExtractDestination.bind(this);
   }
 
   componentDidMount() {
@@ -164,7 +165,7 @@ class AdhocForm extends React.Component {
           <input type="text" name="user" value={this.state.user} onChange={this.handleChange} />
         </div>
         <AcquireForm acquires={this.state.acquires} addAnother={this.onAddAnotherAcquire} />
-        <ExtractForm showForm={!!this.state.program} destination={this.state.extractDestination} />
+        <ExtractForm showForm={!!this.state.program} destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination} />
         {
           this.state.showSubmit
             ? <input type="submit" value="Submit" />
