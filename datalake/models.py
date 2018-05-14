@@ -7,10 +7,10 @@ _DEFAULT = object()
 db = flask_sqlalchemy.SQLAlchemy()
 
 
-def _execute_stored_procedure(transaction, name, params, output_params=None):
+def _execute_stored_procedure(transaction, name, params=None, output_params=None):
     sql_text = "EXEC %s " % name
     sql_text += ", ".join("@%s=:%s" % (param, param) for param in params)
-    sql_text += "; "
+    sql_text += ";"
     if output_params:
         name_types = output_params.items()
         sql_text_prefix = "DECLARE "
@@ -85,6 +85,34 @@ def end_extract_log(key, error_message=None):
                                            {"ExtractKey": key, "ExtractErrorMessage": error_message},
                                            {"UpdateRowCount": "INT"})
     return result
+
+
+def get_acquire_programs():
+    return db.engine.execute("SELECT * FROM config.VWAcquirePrograms")
+
+
+def get_execution(key):
+    return db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetExecution(:key)"), key=key)
+
+
+def get_executions(page_number=1, page_size=100):
+    return db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetExecutions(:page_number, :page_size)"),
+                             page_number=page_number, page_size=page_size)
+
+
+def get_schedule(key):
+    return db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetSchedule(:key)"), key=key)
+
+
+def get_schedules(page_number=1, page_size=100):
+    return db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetSchedules(:page_number, :page_size)"),
+                             page_number=page_number, page_size=page_size)
+
+
+def get_queue(max_items=None):
+    with db.engine() as transaction:
+        params = {"MaxItems": max_items} if max_items is not None else None
+        return _execute_stored_procedure(transaction, "dbo.SP_GetQueue", params)
 
 
 def insert_acquire_program(python_name=None, friendly_name=None, data_source_name=None, author=None, enabled=False,
