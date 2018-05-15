@@ -200,7 +200,7 @@ class AdhocForm extends React.Component {
           fields={this.state.extractFields} updateField={this.onUpdateExtractField} />
         {
           this.state.showSubmit
-            ? <input type="submit" value="Submit" />
+            ? <input type="submit" value="Execute" />
             : null
         }
       </form>
