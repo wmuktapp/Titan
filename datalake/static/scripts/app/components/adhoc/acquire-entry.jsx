@@ -27,7 +27,7 @@ class AcquireEntry extends React.Component {
       : <a onClick={this.remove} className="acquire-entry-remove">Remove</a>
 
     return (
-      <div className="acquire-entry">
+      <div className="acquire-entry u-cf">
         {rows}
         {removeButton}
       </div>
