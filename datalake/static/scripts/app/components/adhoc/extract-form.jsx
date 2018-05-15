@@ -59,15 +59,16 @@ class ExtractForm extends React.Component {
           </div>
         );
 
-        // Dynamic fields        
-        const dynamicFieldRows = Object.entries(this.props.fields).map((field, index) => {
+        // Dynamic fields
+        const dynamicFields = Object.keys(this.props.fields).map((key, index) => {
           return (
             <div key={'df-' + index} className="row">
-              <label>{field}</label>
-              <input type="text" name={field[0]} value={field[1]} onChange={this.onFieldChange} />
+              <label>{key}</label>
+              <input type="text" name={key} value={this.props.fields[key]} onChange={this.onFieldChange} />
             </div>
           );
         });
+
         rows = rows.concat(dynamicFieldRows);
       }
 
