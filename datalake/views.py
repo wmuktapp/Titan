@@ -60,6 +60,14 @@ def executions_list():
     return get_execution_data(start_date, end_date)
 
 
+@app.route('/api/executions', methods=['POST'])
+def execute():
+
+    # TODO handle adhoc execution
+
+    return jsonify([])
+
+
 @app.route('/api/executions/<int:execution_key>')
 def execution_get(execution_key):
 
