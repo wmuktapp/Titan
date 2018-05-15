@@ -78,7 +78,12 @@ def execution_get(execution_key):
     return jsonify(data)
 
 
-# TODO /api/executions POST
+@app.route('/api/executions/<int:execution_key>', methods=['PUT'])
+def execution_update(execution_key):
+
+    # TODO update execution
+
+    return jsonify([])
 
 
 @app.route('/api/executions/retry', methods=['POST'])
@@ -115,7 +120,7 @@ def acquire_programs_list():
 #   GET: list all
 # /executions/<execution_key>
 #   GET: retrieve individual
-#   PATCH/PUT: partial update/overwrite
+#   PUT: partial update/overwrite
 # /executions/retry
 #   POST: retry existing execution(s)
 
@@ -131,10 +136,10 @@ def acquire_programs_list():
 #   GET: retrieve distinct column values (for filtering)
 
 # AcquirePrograms endpoints
-# /acquireprograms
+# /acquire-programs
 #   GET: list all
 # Optional
-# /acquireprograms/<key>
+# /acquire-programs/<key>
 #   GET: retrieve individual instance
 
 
