@@ -10,6 +10,7 @@ setup(
         "click",
         "flask",
         "flask_sqlalchemy",
+        "pyodbc",
         "python-dotenv",
         "sqlalchemy",
         "wrapt"
