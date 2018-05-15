@@ -1,6 +1,6 @@
 import React from 'react';
 
-class AcquireExtry extends React.Component {
+class AcquireEntry extends React.Component {
 
   render() {
 
@@ -21,4 +21,4 @@ class AcquireExtry extends React.Component {
   }
 }
 
-export default AcquireExtry;
+export default AcquireEntry;
