@@ -168,6 +168,9 @@ class AdhocForm extends React.Component {
       return <option key={index} value={program.id}>{program.name}</option>;
     });
 
+    // TODO calculate showSubmit based on other values
+    // TODO calculate extractFields based on other values?
+
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="row">
