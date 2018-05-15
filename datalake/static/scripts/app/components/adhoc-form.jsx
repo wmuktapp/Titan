@@ -35,7 +35,9 @@ class AdhocForm extends React.Component {
 
       extractDestination: '',
       extractDataSource: '',
-      extractFields: []
+      extractFields: [],
+
+      submitted: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -156,6 +158,10 @@ class AdhocForm extends React.Component {
 
   handleSubmit(event) {
 
+    this.setState({
+      submitted: true
+    });
+
     fetch('/api/executions', {
       method: 'POST',
       data: JSON.stringify(this.state)
@@ -176,6 +182,11 @@ class AdhocForm extends React.Component {
     // TODO calculate whether to show Execute button based on other values
 
     // TODO calculate extractFields based on other values?
+
+    if (this.state.submitted) {
+      // TODO update this to contain status of execution (requires result from server)
+      return <p>Adhoc execution triggered</p>;
+    }
 
     return (
       <form onSubmit={this.handleSubmit}>
