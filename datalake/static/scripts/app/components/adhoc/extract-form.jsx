@@ -60,7 +60,7 @@ class ExtractForm extends React.Component {
         );
 
         // Dynamic fields
-        const dynamicFields = Object.keys(this.props.fields).map((key, index) => {
+        const dynamicFieldRows = Object.keys(this.props.fields).map((key, index) => {
           return (
             <div key={'df-' + index} className="row">
               <label>{key}</label>
