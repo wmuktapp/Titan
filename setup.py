@@ -7,6 +7,18 @@ setup(
     license="MIT",
     packages=find_packages(),
     install_requires=[
-        "click"
-    ]
+        "click",
+        "flask",
+        "flask_sqlalchemy",
+        "python-dotenv",
+        "sqlalchemy",
+        "wrapt"
+    ],
+    entry_points={
+        "console_scripts": [
+            "execute = datalake.scripts.execute:main",
+            "orchestrate = datalake.scripts.orchestrate:main",
+            "register = datalake.scripts.register:main"
+        ]
+    }
 )
