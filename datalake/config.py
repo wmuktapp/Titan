@@ -1,6 +1,7 @@
 class _Config(object):
     DATALAKE_ACQUIRE_TIMEOUT = 3600  # Seconds
     DEBUG = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class DevelopmentConfig(_Config):
