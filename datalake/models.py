@@ -100,11 +100,11 @@ def get_executions(page_number=1, page_size=100):
                              page_number=page_number, page_size=page_size)
 
 
-def get_schedule(key):
+def get_scheduled_execution(key):
     return db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetSchedule(:key)"), key=key)
 
 
-def get_schedules(page_number=1, page_size=100):
+def get_scheduled_executions(page_number=1, page_size=100):
     return db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetSchedules(:page_number, :page_size)"),
                              page_number=page_number, page_size=page_size)
 
@@ -150,12 +150,12 @@ def insert_scheduled_acquire(transaction, scheduled_execution_key, name, options
     return result, option_results
 
 
-def insert_scheduled_execution(name="", next_scheduled=None, client_name="", data_set_name="", load_date=None,
-                               enabled=False, user="", schedule_end=None, interval_mi=None, interval_hh=None,
-                               interval_dd=None, monday_enabled=True, tuesday_enabled=True, wednesday_enabled=True,
-                               thursday_enabled=True, friday_enabled=True, saturday_enabled=True, sunday_enabled=True,
-                               acquire_program_key=None, extract_destination="", extract_data_source_name="",
-                               extract_options=None):
+def insert_scheduled_execution(transaction, name="", next_scheduled=None, client_name="", data_set_name="",
+                               load_date=None, enabled=False, user="", schedule_end=None, interval_mi=None,
+                               interval_hh=None, interval_dd=None, monday_enabled=True, tuesday_enabled=True,
+                               wednesday_enabled=True, thursday_enabled=True, friday_enabled=True,
+                               saturday_enabled=True, sunday_enabled=True, acquire_program_key=None,
+                               extract_destination=None, extract_data_source_name=None, extract_options=None):
     params = {
         "ScheduledExecutionName": name,
         "ScheduledExecutionNextScheduled": next_scheduled,
@@ -179,10 +179,9 @@ def insert_scheduled_execution(name="", next_scheduled=None, client_name="", dat
         "ScheduledExtractDestination": extract_destination,
         "ScheduledExtractDataSourceName": extract_data_source_name
     }
-    with db.engine() as transaction:
-        result = _execute_stored_procedure(transaction, "config.SP_InsertScheduledExecution", params,
-                                           {"ScheduledExecutionKey": "INT", "ScheduledExtractKey": "INT"})
-        option_results = _insert_scheduled_extract_options(transaction, result["ScheduledExtractKey"], extract_options)
+    result = _execute_stored_procedure(transaction, "config.SP_InsertScheduledExecution", params,
+                                       {"ScheduledExecutionKey": "INT", "ScheduledExtractKey": "INT"})
+    option_results = _insert_scheduled_extract_options(transaction, result["ScheduledExtractKey"], extract_options)
     return result, option_results
 
 
@@ -282,7 +281,7 @@ def update_acquire_program(key, python_name=None, friendly_name=None, data_sourc
     return update_result, delete_result, option_results
 
 
-def update_scheduled_execution(key, name=None, next_scheduled=None, client_name=None, data_set_name=None,
+def update_scheduled_execution(transaction, key, name=None, next_scheduled=None, client_name=None, data_set_name=None,
                                load_date="1900-01-01", enabled=None, user=None, schedule_end=None, interval_mi=-1,
                                interval_hh=-1, interval_dd=-1, monday_enabled=-1, tuesday_enabled=-1,
                                wednesday_enabled=-1, thursday_enabled=-1, friday_enabled=-1,
@@ -320,12 +319,11 @@ def update_scheduled_execution(key, name=None, next_scheduled=None, client_name=
     }
     delete_result = None
     option_results = None
-    with db.engine() as transaction:
-        result = _execute_stored_procedure(transaction, "config.SP_UpdateScheduledExecution", params, output_params)
-        if extract_options is not _DEFAULT:
-            delete_result = _execute_stored_procedure(transaction, "config.SP_DeleteScheduledExtractOptions",
-                                                      {"ScheduledExtractKey": result["ScheduledExtractKey"]},
-                                                      {"DeleteRowCount": "INT"})
-            option_results = _insert_scheduled_extract_options(transaction, result["ScheduledExtractKey"],
-                                                               extract_options)
+    result = _execute_stored_procedure(transaction, "config.SP_UpdateScheduledExecution", params, output_params)
+    if extract_options is not _DEFAULT:
+        delete_result = _execute_stored_procedure(transaction, "config.SP_DeleteScheduledExtractOptions",
+                                                  {"ScheduledExtractKey": result["ScheduledExtractKey"]},
+                                                  {"DeleteRowCount": "INT"})
+        option_results = _insert_scheduled_extract_options(transaction, result["ScheduledExtractKey"],
+                                                           extract_options)
     return result, delete_result, option_results

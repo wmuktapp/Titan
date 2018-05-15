@@ -19,4 +19,5 @@ def create_app():
     app.register_blueprint(api.api_blueprint, url_prefix="/api")
 
     models.db.init_app(app)
+
     return app

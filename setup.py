@@ -8,10 +8,11 @@ setup(
     packages=find_packages(),
     install_requires=[
         "click",
-        "dotenv",
         "flask",
         "flask_sqlalchemy",
-        "sqlalchemy"
+        "python-dotenv",
+        "sqlalchemy",
+        "wrapt"
     ],
     entry_points={
         "console_scripts": [
