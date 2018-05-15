@@ -35,9 +35,7 @@ class AdhocForm extends React.Component {
 
       extractDestination: '',
       extractDataSource: '',
-      extractFields: [],
-
-      showSubmit: false
+      extractFields: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -98,14 +96,6 @@ class AdhocForm extends React.Component {
     });
   }
 
-  // TODO handle changes in sub-components, show / hide submit button
-
-  handleSubmit(event) {
-    // TODO handle submission, send to server
-    console.log(this.state);
-    event.preventDefault();
-  }
-
   onAddAnotherAcquire() {
     this.addAcquire();
   }
@@ -116,8 +106,8 @@ class AdhocForm extends React.Component {
 
     // TODO get property names dynamically
     acquires.push({
+      // TODO add ID / name here?
       fields: {
-        // TODO add ID / name here?
         property1: '',
         property2: '',
         property3: ''
@@ -162,13 +152,29 @@ class AdhocForm extends React.Component {
     });
   }
 
+  // TODO handle changes in sub-components, show / hide submit button
+
+  handleSubmit(event) {
+
+    fetch('/api/executions', {
+      method: 'POST',
+      data: JSON.stringify(this.state)
+    })
+      .then(() => {
+        console.log('execution successful!');
+      })
+
+    event.preventDefault();
+  }
+
   render() {
 
     const programOptions = this.state.availablePrograms.map((program, index) => {
       return <option key={index} value={program.id}>{program.name}</option>;
     });
 
-    // TODO calculate showSubmit based on other values
+    // TODO calculate whether to show Execute button based on other values
+
     // TODO calculate extractFields based on other values?
 
     return (
@@ -201,11 +207,7 @@ class AdhocForm extends React.Component {
           destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination}
           dataSource={this.state.extractDataSource} updateDataSource={this.onUpdateExtractDataSource}
           fields={this.state.extractFields} updateField={this.onUpdateExtractField} />
-        {
-          this.state.showSubmit
-            ? <input type="submit" value="Execute" />
-            : null
-        }
+        <input type="submit" value="Execute" />
       </form>
     );
   }
