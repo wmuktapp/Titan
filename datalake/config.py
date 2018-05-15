@@ -1,5 +1,6 @@
 class _Config(object):
-    pass
+    DATALAKE_ACQUIRE_TIMEOUT = 3600  # Seconds
+    DEBUG = False
 
 
 class DevelopmentConfig(_Config):
