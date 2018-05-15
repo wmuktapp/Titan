@@ -146,6 +146,7 @@ class Monitor extends React.Component {
     }).then(res => res.json())
       .then((result) => {
           this.setState({
+            retryList: [],
             loading: false,
             data: result
           });
@@ -158,6 +159,9 @@ class Monitor extends React.Component {
   }
 
   render() {
+
+    // TODO pass retryList to MonitoringGrid, use it to handle checked / unchecked state
+
     return (
       <div className="monitoring-grid">
         <MonitoringControls dates={this.state.dates} selectDates={this.showDates} />
