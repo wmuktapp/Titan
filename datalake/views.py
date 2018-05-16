@@ -104,7 +104,7 @@ def schedules_list():
 
 
 @app.route('/api/schedules/', methods=['POST'])
-def schedule_update():
+def schedule_create():
     # TODO create schedule?
     return jsonify([])
 
@@ -115,6 +115,7 @@ def schedules_get(schedule_key):
 
 
 @app.route('/api/schedules/<int:schedule_key>', methods=['POST'])
+def schedule_update(schedule_key):
     # TODO update schedule
     return jsonify([])
 
