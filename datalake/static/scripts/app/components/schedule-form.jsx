@@ -1,6 +1,10 @@
 import React from 'react';
 import ScheduleDays from './schedule/days.jsx';
 import IntervalPicker from './interval-picker.jsx';
+import DatePicker from 'react-datepicker';
+
+// react-datepicker stylesheet
+require('react-datepicker/dist/react-datepicker.css');
 
 class ScheduleForm extends React.Component {
 
@@ -12,9 +16,12 @@ class ScheduleForm extends React.Component {
       id: this.props.id,
 
       name: '',
+      nextScheduled: null,
+      scheduleEnd: null,
       client: '',
       dataSource: '',
       dataSet: '',
+      nextLoadDate: null,
       enabled: true,
       interval: {
         hours: 0,
@@ -34,6 +41,9 @@ class ScheduleForm extends React.Component {
 
     this.onChange = this.onChange.bind(this);
     this.updateInterval = this.updateInterval.bind(this);
+    this.updateNextScheduled = this.updateNextScheduled.bind(this);
+    this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
+    this.updateNextLoadDate = this.updateNextLoadDate.bind(this);
     this.updateDay = this.updateDay.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -55,6 +65,24 @@ class ScheduleForm extends React.Component {
         minutes: minutes,
         seconds: seconds
       }
+    });
+  }
+
+  updateNextScheduled(value) {
+    this.setState({
+      nextScheduled: value
+    });
+  }
+
+  updateScheduleEnd(value) {
+    this.setState({
+      scheduleEnd: value
+    });
+  }
+
+  updateNextLoadDate(value) {
+    this.setState({
+      nextLoadDate: value
     });
   }
 
@@ -80,12 +108,12 @@ class ScheduleForm extends React.Component {
 
     // TODO form rows
     // - DONE name
-    // - next scheduled
-    // - schedule end
+    // - DONE next scheduled
+    // - DONE schedule end
     // - DONE client name
     // - DONE data source name
     // - DONE data set name
-    // - next load date
+    // - DONE next load date
     // - DONE enabled
     // - DONE interval duration (h/m/s)
     // - DONE daily enabled boxes
@@ -105,6 +133,14 @@ class ScheduleForm extends React.Component {
           <input type="text" name="name" value={this.state.name} onChange={this.onChange} />
         </div>
         <div className="row">
+          <label>Next scheduled</label>
+          <DatePicker selected={this.state.nextScheduled} dateFormat="DD/MM/YYYY" onChange={this.updateNextScheduled} />
+        </div>
+        <div className="row">
+          <label>Schedule end</label>
+          <DatePicker selected={this.state.scheduleEnd} dateFormat="DD/MM/YYYY" onChange={this.updateScheduleEnd} />
+        </div>
+        <div className="row">
           <label>Client</label>
           <input type="text" name="client" value={this.state.client} onChange={this.onChange} />
         </div>
@@ -115,6 +151,10 @@ class ScheduleForm extends React.Component {
         <div className="row">
           <label>Data set</label>
           <input type="text" name="dataSet" value={this.state.dataSet} onChange={this.onChange} />
+        </div>
+        <div className="row">
+          <label>Next load date</label>
+          <DatePicker selected={this.state.nextLoadDate} dateFormat="DD/MM/YYYY" onChange={this.updateNextLoadDate} />
         </div>
         <div className="row">
           <label>
