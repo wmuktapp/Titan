@@ -32,7 +32,7 @@ def _process_acquires(app, execution_key, acquire_program_key, acquires):
     acquire_program = {row["AcquireProgramKey"]: row["AcquireProgramPythonName"]
                        for row in _call_models_function(app, models.get_acquire_programs)}[acquire_program_key]
     for acquire in acquires:
-        options = acquire.get("options", [])
+        options = acquire.get("options")
         acquire_key = _call_models_function(app, models.start_acquire_log, execution_key, options=options)["AcquireKey"]
         _execute_program(app, acquire_program, models.end_acquire_log, acquire_key, options=options,
                          timeout=app.config.get("DATALAKE_ACQUIRE_TIMEOUT"))
@@ -67,7 +67,7 @@ def main(config_file):
         if acquire_program_key is not None:
             _process_acquires(app, execution_key, acquire_program_key, acquires)
         if extract_destination is not None:
-            _process_extract(app, execution_key, extract_destination, extract.get("options", []))
+            _process_extract(app, execution_key, extract_destination, extract.get("options"))
     except Exception as error:
         error = error
     finally:
