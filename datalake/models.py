@@ -117,8 +117,7 @@ def get_queue(max_items=None):
         return list(_execute_stored_procedure(transaction, "dbo.SP_GetQueue", params))
 
 
-def insert_acquire_program(python_name=None, friendly_name=None, data_source_name=None, author=None, enabled=False,
-                           options=None):
+def insert_acquire_program(python_name, friendly_name, data_source_name, author, enabled, options=None):
     params = {
         "AcquireProgramPythonName": python_name,
         "AcquireProgramFriendlyName": friendly_name,
@@ -152,12 +151,12 @@ def insert_scheduled_acquire(transaction, scheduled_execution_key, name, options
     return result, option_results
 
 
-def insert_scheduled_execution(transaction, name="", next_scheduled=None, client_name="", data_set_name="",
-                               load_date=None, enabled=False, user="", schedule_end=None, interval_mi=None,
-                               interval_hh=None, interval_dd=None, monday_enabled=True, tuesday_enabled=True,
-                               wednesday_enabled=True, thursday_enabled=True, friday_enabled=True,
-                               saturday_enabled=True, sunday_enabled=True, acquire_program_key=None,
-                               extract_destination=None, extract_data_source_name=None, extract_options=None):
+def insert_scheduled_execution(transaction, name, next_scheduled, client_name, data_set_name, load_date, enabled,
+                               user, schedule_end=None, interval_mi=None, interval_hh=None, interval_dd=None,
+                               monday_enabled=True, tuesday_enabled=True, wednesday_enabled=True, thursday_enabled=True,
+                               friday_enabled=True, saturday_enabled=True, sunday_enabled=True,
+                               acquire_program_key=None, extract_destination=None, extract_data_source_name=None,
+                               extract_options=None):
     params = {
         "ScheduledExecutionName": name,
         "ScheduledExecutionNextScheduled": next_scheduled,

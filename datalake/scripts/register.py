@@ -24,8 +24,8 @@ def main(acquire_program_key, python_name, friendly_name, data_source_name, auth
         command = program.main
     options = {max(option.opts, key=len): option.required for option in command.params}
 
-    app = datalake.create_app()
-    with app.app_context():
+    flask_app = datalake.create_app()
+    with flask_app.flask_app_context():
         if acquire_program_key is None:
             models.insert_acquire_program(python_name, friendly_name, data_source_name, author, enabled, options)
         else:

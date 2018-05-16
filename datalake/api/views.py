@@ -1,6 +1,6 @@
 import flask
 
-from datalake import api, models
+from datalake import api, app, models
 from datalake.api import decorators
 
 
@@ -35,7 +35,7 @@ def create_scheduled_execution():
 @decorators.to_json
 def execute():
     data = flask.request.get_json(force=True)
-    _execute(data)
+    app.execute(data)
 
 
 @api.api_blueprint.route("/executions/", methods=["GET"])
