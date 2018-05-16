@@ -104,7 +104,7 @@ def schedules_list():
     return get_schedules()
 
 
-@app.route('/api/schedules/', methods=['POST'])
+@app.route('/api/schedules', methods=['POST'])
 def schedule_create():
     # TODO create schedule?
     return jsonify([])

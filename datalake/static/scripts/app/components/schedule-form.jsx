@@ -143,12 +143,24 @@ class ScheduleForm extends React.Component {
   onSubmit(event) {
 
     // TODO send insert/update to server
-    console.log('Form submitted');
+    fetch('/api/schedules', {
+      method: 'POST',
+      data: JSON.stringify(this.state)
+    })
+      .then(() => {
+        this.setState({
+          updated: true
+        });
+      });
 
     event.preventDefault();
   }
 
   render() {
+
+    if (this.state.updated) {
+      return <p>Schedule updated</p>;
+    }
 
     // NOTE: Handles both insert and update
 
