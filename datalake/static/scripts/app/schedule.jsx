@@ -1,9 +1,11 @@
 import React from 'react';
 import {render} from 'react-dom';
+import ScheduleForm from './components/schedule-form.jsx';
 
 class ScheduleApp extends React.Component {
   render() {
-    return <p>Schedule form goes here</p>;
+    const id = null;    // TODO get this from the page, if applicable
+    return <ScheduleForm id={id} />;
   }
 }
 
