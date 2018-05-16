@@ -1,5 +1,6 @@
 import click
 
+import datalake
 from datalake import models
 
 
@@ -22,8 +23,11 @@ def main(acquire_program_key, python_name, friendly_name, data_source_name, auth
     else:
         command = program.main
     options = {max(option.opts, key=len): option.required for option in command.params}
-    if acquire_program_key is None:
-        models.insert_acquire_program(python_name, friendly_name, data_source_name, author, enabled, options)
-    else:
-        models.update_acquire_program(acquire_program_key, python_name, friendly_name, data_source_name, author,
-                                      enabled, options)
+
+    app = datalake.create_app()
+    with app.app_context():
+        if acquire_program_key is None:
+            models.insert_acquire_program(python_name, friendly_name, data_source_name, author, enabled, options)
+        else:
+            models.update_acquire_program(acquire_program_key, python_name, friendly_name, data_source_name, author,
+                                          enabled, options)
