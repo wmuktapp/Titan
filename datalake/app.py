@@ -41,3 +41,5 @@ def launch_container(security_context, resource_group_name, container_group_pref
     client = containerinstance.ContainerInstanceManagementClient(security_context.credentials,
                                                                  security_context.subscription_id)
     client.container_groups.create_or_update(resource_group_name, container_group_name, container_group)
+
+    # Need to ensure that container group is automatically removed when container finishes.
