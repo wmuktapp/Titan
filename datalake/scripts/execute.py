@@ -3,8 +3,8 @@ import subprocess
 
 import click
 
-import datalake
 from datalake import models
+import datalake
 
 
 def _execute_program(app, program, end_log_function, log_key, options=(), timeout=None):

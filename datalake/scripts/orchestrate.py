@@ -1,6 +1,6 @@
-import datalake
 from datalake import models
 from datalake.api import views
+import datalake
 
 
 def _call_models_function(app, func, *args, **kwargs):

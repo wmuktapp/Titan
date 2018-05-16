@@ -1,7 +1,7 @@
 import click
 
-import datalake
 from datalake import models
+import datalake
 
 
 @click.command()
