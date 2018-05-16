@@ -2,6 +2,8 @@ import React from 'react';
 import ScheduleDays from './schedule/days.jsx';
 import IntervalPicker from './interval-picker.jsx';
 import DatePicker from 'react-datepicker';
+import dateUtils from '../utils/date-utils';
+import moment from 'moment';
 
 // react-datepicker stylesheet
 require('react-datepicker/dist/react-datepicker.css');
@@ -79,10 +81,10 @@ class ScheduleForm extends React.Component {
         .then(res => res.json())
         .then((result) => {
 
-          // TODO some date conversion (here or in API endpoint?)
-          result.nextScheduled = null;
-          result.scheduleEnd = null;
-          result.nextLoadDate = null;
+          // TODO Make this a method in dateUtils?
+          result.nextScheduled = moment(new Date(result.nextScheduled));
+          result.scheduleEnd = moment(new Date(result.scheduleEnd));
+          result.nextLoadDate = moment(new Date(result.nextLoadDate));
 
           this.setState(result);
           this.setState({
