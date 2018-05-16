@@ -7,10 +7,6 @@ from datalake.api import decorators
 _DEFAULT = object()
 
 
-def _execute(details):
-    pass
-
-
 @api.api_blueprint.route("/schedules/", methods=["POST"])
 @decorators.to_json
 def create_scheduled_execution():
