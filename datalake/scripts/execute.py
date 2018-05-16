@@ -1,7 +1,7 @@
+import os
+
 import json
 import subprocess
-
-import click
 
 from datalake import models
 import datalake
@@ -44,11 +44,8 @@ def _process_extract(app, execution_key, extract_destination, options):
                      timeout=app.config.get("DATALAKE_EXTRACT_TIMEOUT_SECONDS"))
 
 
-@click.command
-@click.option("-f", "--config-file", type=click.File(), help="The configuration file (use - for stdin) containing the "
-              "JSON formatted execution details")
 def main(config_file):
-    data = json.loads(config_file.read())
+    data = json.loads(os.getenv("DATALAKE_EXECUTE_STDIN"))
     execution, acquires, extract = data["execution"], data["acquires"], data["extract"]
     acquire_program_key = execution.get("acquire_program_key")
     extract_destination = extract.get("extract_destination")
