@@ -7,7 +7,7 @@ import datalake
 from datalake import models
 
 
-def _execute_program(app, program, options, end_log_function, log_key, timeout):
+def _execute_program(app, program, end_log_function, log_key, options=(), timeout=None):
     error_message = None
     args = ["python", "-m", program]
     args.extend(options)
@@ -32,17 +32,16 @@ def _process_acquires(app, execution_key, acquire_program_key, acquires):
     acquire_program = {row["AcquireProgramKey"]: row["AcquireProgramPythonName"]
                        for row in models.get_acquire_programs()}[acquire_program_key]
     for acquire in acquires:
-        acquire_options = acquire.get("options", [])
-        acquire_key = _call_models_function(app, models.start_acquire_log, execution_key,
-                                            options=acquire_options)["AcquireKey"]
-        _execute_program(app, acquire_program, acquire_options, models.end_acquire_log, acquire_key,
-                         app.config["DATALAKE_ACQUIRE_TIMEOUT"])
+        options = acquire.get("options", [])
+        acquire_key = _call_models_function(app, models.start_acquire_log, execution_key, options=options)["AcquireKey"]
+        _execute_program(app, acquire_program, models.end_acquire_log, acquire_key, options=options,
+                         timeout=app.config.get("DATALAKE_ACQUIRE_TIMEOUT"))
 
 
 def _process_extract(app, execution_key, extract_destination, options):
     extract_key = _call_models_function(app, models.start_extract_log, execution_key, options=options)["AcquireKey"]
-    _execute_program(app, extract_destination, options, models.end_extract_log, extract_key,
-                     app.config["DATALAKE_EXTRACT_TIMEOUT"])
+    _execute_program(app, extract_destination, models.end_extract_log, extract_key, options=options,
+                     timeout=app.config.get("DATALAKE_EXTRACT_TIMEOUT"))
 
 
 @click.command
