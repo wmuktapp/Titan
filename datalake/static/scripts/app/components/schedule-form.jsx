@@ -5,9 +5,12 @@ class ScheduleForm extends React.Component {
 
   constructor(props) {
     super(props);
+
+    // TODO populate these from querying
     this.state = {
       id: this.props.id,
 
+      name: '',
       enabled: true,
 
       days: {
@@ -57,7 +60,7 @@ class ScheduleForm extends React.Component {
     // NOTE: Handles both insert and update
 
     // TODO form rows
-    // - name
+    // - DONE name
     // - next scheduled
     // - schedule end
     // - client name
@@ -74,6 +77,15 @@ class ScheduleForm extends React.Component {
     // - status
     const rows = [];
 
+    // Name
+    rows.push(
+      <div key="name">
+        <label>Name</label>
+        <input type="text" name="name" value={this.state.name} />
+      </div>
+    );
+
+    // Enabled
     rows.push(
       <div key="enabled" className="row">
         <label>
@@ -83,6 +95,7 @@ class ScheduleForm extends React.Component {
       </div>
     );
 
+    // Days
     const daysRow = (
       <div key="days" className="row">
         <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
