@@ -8,6 +8,8 @@ class ScheduleForm extends React.Component {
     this.state = {
       id: this.props.id,
 
+      enabled: true,
+
       days: {
         Monday: false,
         Tuesday: false,
@@ -19,8 +21,19 @@ class ScheduleForm extends React.Component {
       }
     };
 
+    this.onChange = this.onChange.bind(this);
     this.updateDay = this.updateDay.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  onChange(event) {
+    const target = event.target,
+      name = target.name,
+      value = target.value;
+
+    this.setState({
+      [name]: value
+    });
   }
 
   updateDay(day, enabled) {
@@ -44,7 +57,6 @@ class ScheduleForm extends React.Component {
     // NOTE: Handles both insert and update
 
     // TODO form rows
-    // - key?
     // - name
     // - next scheduled
     // - schedule end
@@ -52,15 +64,24 @@ class ScheduleForm extends React.Component {
     // - data source name
     // - data set name
     // - next load date
-    // - enabled
+    // - DONE enabled
     // - interval duration (h/m/s)
-    // - daily enabled boxes
+    // - DONE daily enabled boxes
     // - acquire (key/name?)
     // - acquire option(s) (name/value)
     // - extract (key/name?)
     // - extract option(s) (name/value)
     // - status
     const rows = [];
+
+    rows.push(
+      <div key="enabled" className="row">
+        <label>
+          <input type="checkbox" name="enabled" checked={this.enabled} onChange={this.onChange} />
+          <span className="label-body">Enabled</span>
+        </label>
+      </div>
+    );
 
     const daysRow = (
       <div key="days" className="row">
