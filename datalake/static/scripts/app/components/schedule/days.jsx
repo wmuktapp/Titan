@@ -28,6 +28,7 @@ class ScheduleDays extends React.Component {
 
     return (
       <div className="schedule-days">
+        <h6>Days</h6>
         {days}
       </div>
     );

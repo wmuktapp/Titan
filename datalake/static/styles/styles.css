@@ -200,6 +200,8 @@ input[type=checkbox]:checked:after {
     cursor: default;
 }
 
+/* Schedules */
+
 .schedule-loading {
     text-align: center;
 }
@@ -219,6 +221,17 @@ input[type=checkbox]:checked:after {
     background: #fff;
     border: 1px solid #aaa;
     border-radius: .5em;
+}
+
+/* Schedule (single) */
+
+.schedule-days {
+    border-top: 1px solid #eee;
+    width: 200px;
+}
+
+.schedule-days label span {
+    vertical-align: text-bottom;
 }
 
 /* Adhoc */
