@@ -12,7 +12,7 @@ class ScheduleForm extends React.Component {
   }
 
   onSubmit(event) {
-    
+
     // TODO send insert/update to server
     console.log('Form submitted');
 
@@ -31,6 +31,22 @@ class ScheduleForm extends React.Component {
     );
 
     // TODO form rows
+    // - key?
+    // - name
+    // - next scheduled
+    // - schedule end
+    // - client name
+    // - data source name
+    // - data set name
+    // - next load date
+    // - enabled
+    // - interval duration (h/m/s)
+    // - daily enabled boxes
+    // - acquire (key/name?)
+    // - acquire option(s) (name/value)
+    // - extract (key/name?)
+    // - extract option(s) (name/value)
+    // - status
     const rows = []
 
     // Submit button
