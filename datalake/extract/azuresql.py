@@ -1,0 +1,1 @@
+# Connect to the azure sql instance and issue a BULK COPY command
