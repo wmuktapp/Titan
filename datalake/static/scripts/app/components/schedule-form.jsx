@@ -23,13 +23,6 @@ class ScheduleForm extends React.Component {
 
     // NOTE: Handles both insert and update
 
-    // Form title
-    const title = (
-      <h5>
-        { this.state.id ? 'Update Schedule' : 'New Schedule' }
-      </h5>
-    );
-
     // TODO form rows
     // - key?
     // - name
@@ -49,14 +42,11 @@ class ScheduleForm extends React.Component {
     // - status
     const rows = []
 
-    // Submit button
-    const submit = <input type="submit" value={ this.state.id ? 'Update' : 'Create' } />;
-
     return (
       <form className="schedule-form" onSubmit={this.onSubmit}>
-        {title}
+        <h5>{ this.state.id ? 'Update Schedule' : 'New Schedule' }</h5>
         {rows}
-        {submit}
+        <input type="submit" value={ this.state.id ? 'Update' : 'Create' } />
       </form>
     );
   }
