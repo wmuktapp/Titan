@@ -99,7 +99,14 @@ def execution_retry():
 
 @app.route('/api/schedules')
 def schedules_list():
+    # TODO support filtering by querystring
     return get_schedules()
+
+
+@app.route('/api/schedules/', methods=['POST'])
+def schedule_update():
+    # TODO create schedule?
+    return jsonify([])
 
 
 @app.route('/api/schedules/<int:schedule_key>')
@@ -107,38 +114,19 @@ def schedules_get(schedule_key):
     return get_schedule(schedule_key)
 
 
+@app.route('/api/schedules/<int:schedule_key>', methods=['POST'])
+    # TODO update schedule
+    return jsonify([])
+
+
 @app.route('/api/acquire-programs')
 def acquire_programs_list():
     return get_acquire_programs()
 
 
-# ENDPOINTS
-
-# Execution endpoints
-# /executions
-#   POST: create execution (we know this is adhoc)
-#   GET: list all
-# /executions/<execution_key>
-#   GET: retrieve individual
-#   PUT: partial update/overwrite
-# /executions/retry
-#   POST: retry existing execution(s)
-
-# Schedule endpoints
-# /schedules
-#   POST: create new schedule
-#   GET: list schedules, supports filtering by querystring
-# /schedules/<schedule_key>
-#   GET: retrieve individual item
-#   PATCH/PUT: partial update/overwrite
-# Optional:
+# Potential new endpoints:
 # /schedules/distinct/<col>
 #   GET: retrieve distinct column values (for filtering)
-
-# AcquirePrograms endpoints
-# /acquire-programs
-#   GET: list all
-# Optional
 # /acquire-programs/<key>
 #   GET: retrieve individual instance
 
