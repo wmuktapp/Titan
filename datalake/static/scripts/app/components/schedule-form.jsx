@@ -11,6 +11,9 @@ class ScheduleForm extends React.Component {
       id: this.props.id,
 
       name: '',
+      client: '',
+      dataSource: '',
+      dataSet: '',
       enabled: true,
 
       days: {
@@ -63,9 +66,9 @@ class ScheduleForm extends React.Component {
     // - DONE name
     // - next scheduled
     // - schedule end
-    // - client name
-    // - data source name
-    // - data set name
+    // - DONE client name
+    // - DONE data source name
+    // - DONE data set name
     // - next load date
     // - DONE enabled
     // - interval duration (h/m/s)
@@ -81,7 +84,31 @@ class ScheduleForm extends React.Component {
     rows.push(
       <div key="name">
         <label>Name</label>
-        <input type="text" name="name" value={this.state.name} />
+        <input type="text" name="name" value={this.state.name} onChange={this.onChange} />
+      </div>
+    );
+
+    // Client
+    rows.push(
+      <div key="client">
+        <label>Client</label>
+        <input type="text" name="client" value={this.state.client} onChange={this.onChange} />
+      </div>
+    );
+
+    // Data Source
+    rows.push(
+      <div key="data-source">
+        <label>Data Source</label>
+        <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.onChange} />
+      </div>
+    );
+
+    // Data Set
+    rows.push(
+      <div key="data-set">
+        <label>Data set</label>
+        <input type="text" name="dataSet" value={this.state.dataSet} onChange={this.onChange} />
       </div>
     );
 
