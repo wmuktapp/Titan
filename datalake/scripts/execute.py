@@ -50,7 +50,7 @@ def _process_extract(app, execution_key, extract_destination, options):
               "JSON formatted execution details")
 def main(config_file):
     data = json.loads(config_file.read())
-    execution, acquires, extract = data["execution"], data["acquires"], data["extracted"]
+    execution, acquires, extract = data["execution"], data["acquires"], data["extract"]
     acquire_program_key = execution.get("acquire_program_key")
     extract_destination = extract["extract_destination"]
 
