@@ -123,6 +123,9 @@ class ScheduleForm extends React.Component {
     // - extract option(s) (name/value)
     // - status
 
+    // TODO loading state
+    // TODO separate into two components?
+
     return (
       <form className="schedule-form" onSubmit={this.onSubmit}>
 
