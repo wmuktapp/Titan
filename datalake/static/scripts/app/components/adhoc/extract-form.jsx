@@ -39,7 +39,6 @@ class ExtractForm extends React.Component {
       });
 
       rows.push(
-        // How are input values restricted in child components?
         <div key="destination" className="row">
           <label>Destination</label>
           <select value={this.props.destination} onChange={this.onDestinationChange}>
