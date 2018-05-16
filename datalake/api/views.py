@@ -7,6 +7,10 @@ from datalake.api import decorators
 _DEFAULT = object()
 
 
+def _execute(details):
+    pass
+
+
 @api.api_blueprint.route("/schedules/", methods=["POST"])
 @decorators.to_json
 def create_scheduled_execution():
@@ -34,7 +38,8 @@ def create_scheduled_execution():
 @api.api_blueprint.route("/execute", methods=["POST"])
 @decorators.to_json
 def execute():
-    pass
+    data = flask.request.get_json(force=True)
+    _execute(data)
 
 
 @api.api_blueprint.route("/executions/", methods=["GET"])
