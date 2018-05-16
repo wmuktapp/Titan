@@ -51,7 +51,7 @@ def main(config_file):
     data = json.loads(config_file.read())
     execution, acquires, extract = data["execution"], data["acquires"], data["extract"]
     acquire_program_key = execution.get("acquire_program_key")
-    extract_destination = extract["extract_destination"]
+    extract_destination = extract.get("extract_destination")
 
     app = datalake.create_app()
     execution_key = _call_models_function(app, models.start_execution_log,
