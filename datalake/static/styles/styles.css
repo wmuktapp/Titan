@@ -230,7 +230,7 @@ input[type=checkbox]:checked:after {
     width: 200px;
 }
 
-.schedule-days label span {
+form .label-body {
     vertical-align: text-bottom;
 }
 
