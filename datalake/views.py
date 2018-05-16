@@ -115,7 +115,8 @@ def schedules_get(schedule_key):
     return get_schedule(schedule_key)
 
 
-@app.route('/api/schedules/<int:schedule_key>', methods=['POST'])
+# Should this be merged with /api/schedules POST?
+@app.route('/api/schedules/<int:schedule_key>', methods=['PUT'])
 def schedule_update(schedule_key):
     # TODO update schedule
     return jsonify([])
