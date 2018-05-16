@@ -15,6 +15,18 @@ h1, h2, h3, h4, h5, h6 {
     text-transform: uppercase;
 }
 
+h5, h6 {
+    color: #aaa;
+}
+
+h5 {
+    font-size: 2rem;
+}
+
+h6 {
+    font-size: 1.6rem;
+}
+
 a {
     cursor: pointer;
     text-decoration: none;
