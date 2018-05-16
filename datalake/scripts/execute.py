@@ -35,13 +35,13 @@ def _process_acquires(app, execution_key, acquire_program_key, acquires):
         options = acquire.get("options")
         acquire_key = _call_models_function(app, models.start_acquire_log, execution_key, options=options)["AcquireKey"]
         _execute_program(app, acquire_program, models.end_acquire_log, acquire_key, options=options,
-                         timeout=app.config.get("DATALAKE_ACQUIRE_TIMEOUT"))
+                         timeout=app.config.get("DATALAKE_ACQUIRE_TIMEOUT_SECONDS"))
 
 
 def _process_extract(app, execution_key, extract_destination, options):
     extract_key = _call_models_function(app, models.start_extract_log, execution_key, options=options)["AcquireKey"]
     _execute_program(app, extract_destination, models.end_extract_log, extract_key, options=options,
-                     timeout=app.config.get("DATALAKE_EXTRACT_TIMEOUT"))
+                     timeout=app.config.get("DATALAKE_EXTRACT_TIMEOUT_SECONDS"))
 
 
 @click.command
