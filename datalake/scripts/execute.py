@@ -30,7 +30,7 @@ def _call_models_function(app, func, *args, **kwargs):
 
 def _process_acquires(app, execution_key, acquire_program_key, acquires):
     acquire_program = {row["AcquireProgramKey"]: row["AcquireProgramPythonName"]
-                       for row in models.get_acquire_programs()}[acquire_program_key]
+                       for row in _call_models_function(app, models.get_acquire_programs)}[acquire_program_key]
     for acquire in acquires:
         options = acquire.get("options", [])
         acquire_key = _call_models_function(app, models.start_acquire_log, execution_key, options=options)["AcquireKey"]
