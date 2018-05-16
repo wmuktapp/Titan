@@ -46,7 +46,7 @@ def _process_extract(flask_app, execution_key, extract_destination, options):
                      timeout=flask_app.config.get("DATALAKE_EXTRACT_TIMEOUT_SECONDS"))
 
 
-def main(config_file):
+def main():
     data = json.loads(os.getenv("DATALAKE_EXECUTE_STDIN"))
     execution, acquires, extract = data["execution"], data["acquires"], data["extract"]
     acquire_program_key = execution.get("acquire_program_key")
