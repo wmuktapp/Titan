@@ -3,21 +3,27 @@ from datalake import models
 from datalake.api import views
 
 
+def _call_models_function(app, func, *args, **kwargs):
+    with app.app_context():
+        return func(*args, **kwargs)
 
-def _clean_up_containers():
+
+def _clean_up_containers(app):
     pass
 
 
-def _clean_up_logs():
+def _clean_up_logs(app):
     pass
 
 
-def _process_queue():
-    for execution in models.get_queue():
-        details = models.get_schedule(execution["ScheduledExecutionKey"])
+def _process_queue(app):
+    for execution in _call_models_function(app, models.get_queue):
+        details = _call_models_function(app, models.get_scheduled_execution, execution["ScheduledExecutionKey"])
         views._execute(details)
 
 
 def main():
-    _process_queue()
-
+    app = datalake.create_app()
+    _process_queue(app)
+    _clean_up_containers(app)
+    _clean_up_logs(app)
