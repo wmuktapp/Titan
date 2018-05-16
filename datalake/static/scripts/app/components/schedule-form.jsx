@@ -78,62 +78,40 @@ class ScheduleForm extends React.Component {
     // - extract (key/name?)
     // - extract option(s) (name/value)
     // - status
-    const rows = [];
-
-    // Name
-    rows.push(
-      <div key="name">
-        <label>Name</label>
-        <input type="text" name="name" value={this.state.name} onChange={this.onChange} />
-      </div>
-    );
-
-    // Client
-    rows.push(
-      <div key="client">
-        <label>Client</label>
-        <input type="text" name="client" value={this.state.client} onChange={this.onChange} />
-      </div>
-    );
-
-    // Data Source
-    rows.push(
-      <div key="data-source">
-        <label>Data Source</label>
-        <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.onChange} />
-      </div>
-    );
-
-    // Data Set
-    rows.push(
-      <div key="data-set">
-        <label>Data set</label>
-        <input type="text" name="dataSet" value={this.state.dataSet} onChange={this.onChange} />
-      </div>
-    );
-
-    // Enabled
-    rows.push(
-      <div key="enabled" className="row">
-        <label>
-          <input type="checkbox" name="enabled" checked={this.enabled} onChange={this.onChange} />
-          <span className="label-body">Enabled</span>
-        </label>
-      </div>
-    );
-
-    // Days
-    rows.push(
-      <div key="days" className="row">
-        <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
-      </div>
-    );
 
     return (
       <form className="schedule-form" onSubmit={this.onSubmit}>
+
         <h5>{ this.state.id ? 'Update Schedule' : 'New Schedule' }</h5>
-        {rows}
+
+        <div key="name">
+          <label>Name</label>
+          <input type="text" name="name" value={this.state.name} onChange={this.onChange} />
+        </div>
+        <div key="client">
+          <label>Client</label>
+          <input type="text" name="client" value={this.state.client} onChange={this.onChange} />
+        </div>
+        <div key="data-source">
+          <label>Data Source</label>
+          <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.onChange} />
+        </div>
+        <div key="data-set">
+          <label>Data set</label>
+          <input type="text" name="dataSet" value={this.state.dataSet} onChange={this.onChange} />
+        </div>
+        <div key="enabled" className="row">
+          <label>
+            <input type="checkbox" name="enabled" checked={this.enabled} onChange={this.onChange} />
+            <span className="label-body">Enabled</span>
+          </label>
+        </div>
+        <div key="days" className="row">
+          <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
+        </div>
+
         <input type="submit" value={ this.state.id ? 'Update' : 'Create' } />
+
       </form>
     );
   }
