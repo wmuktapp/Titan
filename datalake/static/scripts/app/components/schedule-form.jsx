@@ -36,7 +36,24 @@ class ScheduleForm extends React.Component {
         Friday: false,
         Saturday: false,
         Sunday: false
-      }
+      },
+      acquire: '',
+      extract: '',
+
+      acquireOptions: [
+        { id: 1, name: 'Acquire 1' },
+        { id: 2, name: 'Acquire 2' },
+        { id: 3, name: 'Acquire 3' },
+        { id: 4, name: 'Acquire 4' },
+        { id: 5, name: 'Acquire 5' }
+      ],
+      extractOptions: [
+        { id: 1, name: 'Extract 1' },
+        { id: 2, name: 'Extract 2' },
+        { id: 3, name: 'Extract 3' },
+        { id: 4, name: 'Extract 4' },
+        { id: 5, name: 'Extract 5' }
+      ]
     };
 
     this.onChange = this.onChange.bind(this);
@@ -106,25 +123,23 @@ class ScheduleForm extends React.Component {
 
     // NOTE: Handles both insert and update
 
-    // TODO form rows
-    // - DONE name
-    // - DONE next scheduled
-    // - DONE schedule end
-    // - DONE client name
-    // - DONE data source name
-    // - DONE data set name
-    // - DONE next load date
-    // - DONE enabled
-    // - DONE interval duration (h/m/s)
-    // - DONE daily enabled boxes
-    // - acquire (key/name?)
+    // TODO form rows:
     // - acquire option(s) (name/value)
-    // - extract (key/name?)
     // - extract option(s) (name/value)
     // - status
 
     // TODO loading state
     // TODO separate into two components?
+
+    // Acquire options
+    const acquireOptions = this.state.acquireOptions.map(
+      (option) => <option key={option.id} value={option.id}>{option.name}</option>
+    );
+
+    // Extract options
+    const extractOptions = this.state.extractOptions.map(
+      (option) => <option key={option.id} value={option.id}>{option.name}</option>
+    );
 
     return (
       <form className="schedule-form" onSubmit={this.onSubmit}>
@@ -172,6 +187,20 @@ class ScheduleForm extends React.Component {
         </div>
         <div className="row">
           <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
+        </div>
+        <div className="row">
+          <label>Acquire program</label>
+          <select name="acquire" value={this.state.acquire} onChange={this.onChange}>
+            <option value=""></option>
+            { acquireOptions }
+          </select>
+        </div>
+        <div className="row">
+          <label>Extract program</label>
+          <select name="acquire" value={this.state.extract} onChange={this.onChange}>
+            <option value=""></option>
+            { extractOptions }
+          </select>
         </div>
 
         <div className="row">
