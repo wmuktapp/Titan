@@ -121,7 +121,34 @@ def get_extract_programs():
 @decorators.to_json
 def retry_executions():
     for key in flask.request.get_json(force=True)["keys"]:
-        execute(key)
+        rows = models.get_execution(key)
+        arbitrary_row = rows[0]
+        details = {
+            "execution": {
+                "scheduled_execution_key": arbitrary_row["ScheduledExecutionKey"],
+                "acquire_program_key": arbitrary_row["AcquireProgramKey"],
+                "client_name": arbitrary_row["ExecutionClientName"],
+                "data_set_name": arbitrary_row["ExecutionDataSetName"],
+                "load_date": arbitrary_row["ExecutionLoadDate"],
+                "ad_hoc_user": arbitrary_row["ExecutionAdHocUser"]
+            },
+            "acquires": [],
+            "extract": {
+                "extract_destination": arbitrary_row["ExtractDestination"],
+                "options": {}
+            } if arbitrary_row["ExtractKey"] is not None else {}
+        }
+        acquires = {}
+        for row in rows:
+            acquire_key = row["AcquireKey"]
+            if acquire_key is not None:
+                acquire = acquires.get(acquire_key, {"options": {}})
+            acquire[row["AcquireOptionName"]] = row["AcquireOptionValue"]
+            extract_option_name = row["ExtractOptionName"]
+            if extract_option_name is not None:
+                details["extract"]["options"][extract_option_name] = row["ExtractOptionValue"]
+        details["acquires"].extend(acquires.values())
+        _execute(details)
 
 
 @api.api_blueprint.route("/schedules/<int:key>", methods=["PUT"])
