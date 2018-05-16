@@ -145,56 +145,56 @@ class ScheduleForm extends React.Component {
 
         <h5>{ this.state.id ? 'Update Schedule' : 'New Schedule' }</h5>
 
-        <div className="row">
+        <div>
           <label>Name</label>
           <input type="text" name="name" value={this.state.name} onChange={this.onChange} />
         </div>
-        <div className="row">
+        <div>
           <label>Next scheduled</label>
           <DatePicker selected={this.state.nextScheduled} dateFormat="DD/MM/YYYY" onChange={this.updateNextScheduled} />
         </div>
-        <div className="row">
+        <div>
           <label>Schedule end</label>
           <DatePicker selected={this.state.scheduleEnd} dateFormat="DD/MM/YYYY" onChange={this.updateScheduleEnd} />
         </div>
-        <div className="row">
+        <div>
           <label>Client</label>
           <input type="text" name="client" value={this.state.client} onChange={this.onChange} />
         </div>
-        <div className="row">
+        <div>
           <label>Data Source</label>
           <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.onChange} />
         </div>
-        <div className="row">
+        <div>
           <label>Data set</label>
           <input type="text" name="dataSet" value={this.state.dataSet} onChange={this.onChange} />
         </div>
-        <div className="row">
+        <div>
           <label>Next load date</label>
           <DatePicker selected={this.state.nextLoadDate} dateFormat="DD/MM/YYYY" onChange={this.updateNextLoadDate} />
         </div>
-        <div className="row">
+        <div>
           <label>
             <input type="checkbox" name="enabled" checked={this.enabled} onChange={this.onChange} />
             <span className="label-body">Enabled</span>
           </label>
         </div>
-        <div className="row">
+        <div>
           <label>Interval</label>
           <IntervalPicker hours={this.state.interval.hours} minutes={this.state.interval.minutes}
             seconds={this.state.interval.seconds} onUpdate={this.updateInterval} />
         </div>
-        <div className="row">
+        <div>
           <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
         </div>
-        <div className="row">
+        <div>
           <label>Acquire program</label>
           <select name="acquire" value={this.state.acquire} onChange={this.onChange}>
             <option value=""></option>
             { acquireOptions }
           </select>
         </div>
-        <div className="row">
+        <div>
           <label>Extract program</label>
           <select name="acquire" value={this.state.extract} onChange={this.onChange}>
             <option value=""></option>
@@ -202,7 +202,7 @@ class ScheduleForm extends React.Component {
           </select>
         </div>
 
-        <div className="row">
+        <div>
           <input type="submit" value={ this.state.id ? 'Update' : 'Create' } />
         </div>
 
