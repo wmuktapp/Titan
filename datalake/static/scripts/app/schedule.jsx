@@ -4,7 +4,7 @@ import ScheduleForm from './components/schedule-form.jsx';
 
 class ScheduleApp extends React.Component {
   render() {
-    const id = null;    // TODO get this from the page, if applicable
+    const id = data.scheduleKey;
     return <ScheduleForm id={id} />;
   }
 }

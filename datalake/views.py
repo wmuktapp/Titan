@@ -32,14 +32,15 @@ def schedules():
 
 @app.route('/schedules/<int:schedule_key>')
 def schedule_details(schedule_key):
-    # TODO pass param
+
     # NOTE: 'run now' button, links to the adhoc page pre-filled (if possible)
-    return render_template('schedule.html')
+    data = Markup({ 'scheduleKey': schedule_key })
+    return render_template('schedule.html', data=data)
 
 @app.route('/schedules/add')
 def schedule_add():
-    # TODO
-    return render_template('schedules.html')
+    data = Markup({})
+    return render_template('schedule.html', data=data)
 
 @app.route('/adhoc')
 def adhoc():
