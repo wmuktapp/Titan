@@ -9,7 +9,7 @@ import datalake
 
 def _execute_program(flask_app, program, end_log_function, log_key, options=(), timeout=None):
     error_message = None
-    args = ["python", "-m", program]
+    args = program.split(" ")
     args.extend(options)
     try:
         subprocess.run(args, stderr=subprocess.PIPE, check=True, timeout=timeout)
@@ -35,8 +35,8 @@ def _process_acquires(flask_app, execution_key, acquire_program_key, acquires):
         options = acquire.get("options")
         acquire_key = _call_models_function(flask_app, models.start_acquire_log, execution_key,
                                             options=options)["AcquireKey"]
-        _execute_program(flask_app, acquire_program, models.end_acquire_log, acquire_key, options=options,
-                         timeout=flask_app.config.get("DATALAKE_ACQUIRE_TIMEOUT_SECONDS"))
+        _execute_program(flask_app, "python -m %s" % acquire_program, models.end_acquire_log, acquire_key,
+                         options=options, timeout=flask_app.config.get("DATALAKE_ACQUIRE_TIMEOUT_SECONDS"))
 
 
 def _process_extract(flask_app, execution_key, extract_destination, options):

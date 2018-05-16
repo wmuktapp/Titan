@@ -21,7 +21,8 @@ setup(
         "console_scripts": [
             "execute = datalake.scripts.execute:main",
             "orchestrate = datalake.scripts.orchestrate:main",
-            "register = datalake.scripts.register:main"
+            "register = datalake.scripts.register:main",
+            "extract-azure-sql = datalake.extract.azuresql:main"
         ]
     }
 )
