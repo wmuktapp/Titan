@@ -84,8 +84,8 @@ def get_extract_programs():
     return {
         "data": [
             {
-                "ExtractProgramPythonName": "db",
-                "ExtractProgramFriendlyName": "OLE Database",
+                "ExtractProgramPythonName": "extract-azure-sql",
+                "ExtractProgramFriendlyName": "Azure SQL",
                 "Options": [
                     {
                         "ExtractProgramOptionName": "ConnectionString",
