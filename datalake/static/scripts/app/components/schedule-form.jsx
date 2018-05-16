@@ -96,13 +96,11 @@ class ScheduleForm extends React.Component {
     );
 
     // Days
-    const daysRow = (
+    rows.push(
       <div key="days" className="row">
         <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
       </div>
     );
-
-    rows.push(daysRow);
 
     return (
       <form className="schedule-form" onSubmit={this.onSubmit}>
