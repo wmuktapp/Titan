@@ -53,7 +53,9 @@ class ScheduleForm extends React.Component {
         { id: 3, name: 'Extract 3' },
         { id: 4, name: 'Extract 4' },
         { id: 5, name: 'Extract 5' }
-      ]
+      ],
+
+      loading: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -63,6 +65,31 @@ class ScheduleForm extends React.Component {
     this.updateNextLoadDate = this.updateNextLoadDate.bind(this);
     this.updateDay = this.updateDay.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  componentDidMount() {
+
+    this.setState({
+      loading: true
+    });
+
+    if (this.state.id) {
+
+      fetch('/api/schedules/' + this.state.id)
+        .then(res => res.json())
+        .then((result) => {
+
+          // TODO some date conversion (here or in API endpoint?)
+          result.nextScheduled = null;
+          result.scheduleEnd = null;
+          result.nextLoadDate = null;
+
+          this.setState(result);
+          this.setState({
+            loading: false
+          });
+        });
+    }
   }
 
   onChange(event) {

@@ -19,8 +19,8 @@ class ScheduleTable extends React.Component {
     const body = this.props.schedules.map((schedule, index) => {
 
       const href = '/schedules/' + schedule.id;
-      const nextDate = dateUtils.dateToString(new Date(schedule.nextDate))
-      const loadDate = dateUtils.dateToString(new Date(schedule.loadDate));
+      const nextDate = dateUtils.dateToString(new Date(schedule.nextScheduled))
+      const loadDate = dateUtils.dateToString(new Date(schedule.nextLoadDate));
 
       return (
         <tr key={index}>
@@ -29,7 +29,7 @@ class ScheduleTable extends React.Component {
           </td>
           <td>{nextDate}</td>
           <td>{schedule.client}</td>
-          <td>{schedule.dataset}</td>
+          <td>{schedule.dataSet}</td>
           <td>{loadDate}</td>
           <td>
             <input type="checkbox" disabled={true} checked={schedule.enabled} />

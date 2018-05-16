@@ -112,7 +112,7 @@ def schedule_create():
 
 @app.route('/api/schedules/<int:schedule_key>')
 def schedules_get(schedule_key):
-    return get_schedule(schedule_key)
+    return jsonify(get_schedule(schedule_key))
 
 
 # Should this be merged with /api/schedules POST?
@@ -239,11 +239,29 @@ def get_schedule(id):
     return {
         'id': id,
         'name': 'Schedule %i' % id,
-        'nextDate': get_next_date(),
+        'nextScheduled': get_next_date(),
+        'scheduleEnd': get_next_date(),
         'client': 'Client %i' % id,
-        'dataset': 'Dataset %i' % id,
-        'loadDate': get_load_date(),
-        'enabled': random() > .2
+        'dataSource': 'Data source %i' % id,
+        'dataSet': 'Dataset %i' % id,
+        'nextLoadDate': get_load_date(),
+        'enabled': random() > .2,
+        'interval': {
+            'hours': randint(1, 23),
+            'minutes': randint(1, 59),
+            'seconds': randint(1, 59)
+        },
+        'days': {
+            'Monday': random() > .3,
+            'Tuesday': random() > .3,
+            'Wednesday': random() > .3,
+            'Thursday': random() > .3,
+            'Friday': random() > .3,
+            'Saturday': random() > .3,
+            'Sunday': random() > .3
+        },
+        'acquire': 3,
+        'extract': 4
     }
 
 def get_interval():
