@@ -39,6 +39,7 @@ class ProductionConfig(_Config):
 
 
 CONFIGURATIONS = {
+    None: _Config,
     "dev": DevelopmentConfig,
     "test": TestConfig,
     "prod": ProductionConfig
