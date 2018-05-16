@@ -1,14 +1,34 @@
 import React from 'react';
+import ScheduleDays from './schedule/days.jsx';
 
 class ScheduleForm extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      id: this.props.id
+      id: this.props.id,
+
+      days: {
+        Monday: false,
+        Tuesday: false,
+        Wednesday: false,
+        Thursday: false,
+        Friday: false,
+        Saturday: false,
+        Sunday: false
+      }
     };
 
+    this.updateDay = this.updateDay.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  updateDay(day, enabled) {
+    const days = this.state.days;
+    days[day] = enabled;
+    this.setState({
+      days: days
+    });
   }
 
   onSubmit(event) {
@@ -40,7 +60,15 @@ class ScheduleForm extends React.Component {
     // - extract (key/name?)
     // - extract option(s) (name/value)
     // - status
-    const rows = []
+    const rows = [];
+
+    const daysRow = (
+      <div key="days" className="row">
+        <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
+      </div>
+    );
+
+    rows.push(daysRow);
 
     return (
       <form className="schedule-form" onSubmit={this.onSubmit}>
