@@ -123,10 +123,9 @@ class ScheduleForm extends React.Component {
 
     // NOTE: Handles both insert and update
 
-    // TODO form rows:
+    // TODO (re-use existing components?):
     // - acquire option(s) (name/value)
     // - extract option(s) (name/value)
-    // - status
 
     // TODO loading state
     // TODO separate into two components?
