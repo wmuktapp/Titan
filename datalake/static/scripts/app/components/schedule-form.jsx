@@ -1,12 +1,13 @@
 import React from 'react';
 import ScheduleDays from './schedule/days.jsx';
+import IntervalPicker from './interval-picker.jsx';
 
 class ScheduleForm extends React.Component {
 
   constructor(props) {
     super(props);
 
-    // TODO populate these from querying
+    // TODO populate these from querying (componentDidMount)
     this.state = {
       id: this.props.id,
 
@@ -15,7 +16,11 @@ class ScheduleForm extends React.Component {
       dataSource: '',
       dataSet: '',
       enabled: true,
-
+      interval: {
+        hours: 0,
+        minutes: 0,
+        seconds: 0
+      },
       days: {
         Monday: false,
         Tuesday: false,
@@ -28,6 +33,7 @@ class ScheduleForm extends React.Component {
     };
 
     this.onChange = this.onChange.bind(this);
+    this.updateInterval = this.updateInterval.bind(this);
     this.updateDay = this.updateDay.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -39,6 +45,16 @@ class ScheduleForm extends React.Component {
 
     this.setState({
       [name]: value
+    });
+  }
+
+  updateInterval(hours, minutes, seconds) {
+    this.setState({
+      interval: {
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds
+      }
     });
   }
 
@@ -71,7 +87,7 @@ class ScheduleForm extends React.Component {
     // - DONE data set name
     // - next load date
     // - DONE enabled
-    // - interval duration (h/m/s)
+    // - DONE interval duration (h/m/s)
     // - DONE daily enabled boxes
     // - acquire (key/name?)
     // - acquire option(s) (name/value)
@@ -105,6 +121,11 @@ class ScheduleForm extends React.Component {
             <input type="checkbox" name="enabled" checked={this.enabled} onChange={this.onChange} />
             <span className="label-body">Enabled</span>
           </label>
+        </div>
+        <div className="row">
+          <label>Interval</label>
+          <IntervalPicker hours={this.state.interval.hours} minutes={this.state.interval.minutes}
+            seconds={this.state.interval.seconds} onUpdate={this.updateInterval} />
         </div>
         <div key="days" className="row">
           <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
