@@ -19,6 +19,6 @@ def _process_queue(flask_app):
 
 def main():
     flask_app = datalake.create_app()
-    _process_queue(flask_app)
     _clean_up_containers(flask_app)
     _clean_up_logs(flask_app)
+    _process_queue(flask_app)
