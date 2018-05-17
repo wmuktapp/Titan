@@ -13,7 +13,9 @@ _DEFAULT = object()
 @decorators.to_json
 def create_scheduled_execution():
     data = flask.request.get_json(force=True)
-    execution, acquires, extract = data["execution"], data["acquires"], data["extract"]
+    execution = data["execution"]
+    acquires = data["acquires"]
+    extract = data["extract"]
     params = {}
     for k in ("name", "next_scheduled", "client_name", "data_set_name", "load_date", "enabled", "user", "schedule_end",
               "interval_mi", "interval_hh", "interval_dd", "monday_enabled", "tuesday_enabled", "wednesday_enabled",
@@ -161,7 +163,9 @@ def retry_executions():
 @decorators.to_json
 def update_scheduled_execution(key):
     data = flask.request.get_json(force=True)
-    execution, acquires, extract = data["execution"], data["acquires"], data["extract"]
+    execution = data["execution"]
+    acquires = data["acquires"]
+    extract = data["extract"]
     params = {}
     for k in ("name", "next_scheduled", "client_name", "data_set_name", "load_date", "enabled", "user", "schedule_end",
               "interval_mi", "interval_hh", "interval_dd", "monday_enabled", "tuesday_enabled", "wednesday_enabled",
