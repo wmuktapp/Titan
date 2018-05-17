@@ -1,3 +1,5 @@
+import importlib
+
 import flask
 
 from datalake import api, app, models
@@ -81,36 +83,21 @@ def get_acquire_programs():
 @api.api_blueprint.route("/extract-programs/", methods=["GET"])
 @decorators.to_json
 def get_extract_programs():
-    return {
-        "data": [
-            {
-                "ExtractProgramPythonName": "extract-azure-sql",
-                "ExtractProgramFriendlyName": "Azure SQL",
-                "Options": [
-                    {
-                        "ExtractProgramOptionName": "ConnectionString",
-                        "ExtractProgramOptionRequired": True
-                    },
-                    {
-                        "ExtractProgramOptionName": "Action",
-                        "ExtractProgramOptionRequired": True
-                    },
-                    {
-                        "ExtractProgramOptionName": "TableName",
-                        "ExtractProgramOptionRequired": True
-                    },
-                    {
-                        "ExtractProgramOptionName": "Delimiter",
-                        "ExtractProgramOptionRequired": True
-                    },
-                    {
-                        "ExtractProgramOptionName": "TextQualifier",
-                        "ExtractProgramOptionRequired": True
-                    }
-                ]
-            }
-        ]
-    }
+    response = {"data": []}
+    for python_name, friendly_name in (("extract-azure-sql", "Azure SQL")):
+        program = importlib.import_module("datalake.extract.%s" % python_name)
+        response["data"].append({
+            "ExtractProgramPythonName": python_name,
+            "ExtractProgramFriendlyName": friendly_name,
+            "Options": [
+                {
+                    "ExtractProgramOptionName": max(option.opts, key=len),
+                    "ExtractProgramOptionRequired": option.required
+                }
+                for option in program.main.params
+            ]
+        })
+    return response
 
 
 @api.api_blueprint.route("/executions/retry", methods=["POST"])
