@@ -101,12 +101,12 @@ def get_executions(page_number=1, page_size=100):
 
 
 def get_scheduled_execution(key):
-    return list(db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetSchedule(:key)"), key=key))
+    return list(db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetScheduledExecution(:key)"), key=key))
 
 
 def get_scheduled_executions(page_number=1, page_size=100):
-    return list(db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetSchedules(:page_number, :page_size)"),
-                                  page_number=page_number, page_size=page_size))
+    return list(db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetScheduledExecutions(:page_number, "
+                                                  ":page_size)"), page_number=page_number, page_size=page_size))
 
 
 def get_queue(max_items=None):
@@ -216,13 +216,13 @@ def start_acquire_log(execution_key, options=None):
         if options:
             acquire_key = result["AcquireKey"]
             for name, value in options.items():
-                params = {
+                option_params = {
                     "AcquireKey": acquire_key,
                     "AcquireOptionName": name,
                     "AcquireOptionValue": value
                 }
-                option_results.append(_execute_stored_procedure(transaction, "log.SP_InsertAcquireOptionLog", params,
-                                                                option_output_params).fetchone())
+                option_results.append(_execute_stored_procedure(transaction, "log.SP_InsertAcquireOptionLog",
+                                                                option_params, option_output_params).fetchone())
     return result, option_results
 
 
@@ -242,22 +242,27 @@ def start_execution_log(scheduled_execution_key=None, acquire_program_key=None, 
     return result
 
 
-def start_extract_log(execution_key, options=None):
-    option_results =[]
+def start_extract_log(execution_key, destination=None, data_source_name=None, options=None):
+    option_results = []
+    params = {
+        "ExecutionKey": execution_key,
+        "ExtractDestination": destination,
+        "ExtractDataSourceName": data_source_name
+    }
     option_output_params = {"ExtractOptionKey": "INT"}
     with db.engine() as transaction:
-        result = _execute_stored_procedure(transaction, "log.SP_StartExtractLog", {"ExecutionKey": execution_key},
+        result = _execute_stored_procedure(transaction, "log.SP_StartExtractLog", params,
                                            {"ExtractKey": "INT"}).fetchone()
         if options:
             extract_key = result["ExtractKey"]
             for name, value in options.items():
-                params = {
+                option_params = {
                     "ExtractKey": extract_key,
                     "ExtractOptionName": name,
                     "ExtractOptionValue": value
                 }
-                option_results.append(_execute_stored_procedure(transaction, "log.SP_InsertAcquireOptionLog", params,
-                                                                option_output_params).fetchone())
+                option_results.append(_execute_stored_procedure(transaction, "log.SP_InsertExtractOptionLog",
+                                                                option_params, option_output_params).fetchone())
     return result, option_results
 
 
