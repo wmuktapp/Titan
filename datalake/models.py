@@ -151,16 +151,17 @@ def insert_scheduled_acquire(transaction, scheduled_execution_key, name, options
     return result, option_results
 
 
-def insert_scheduled_execution(transaction, name, next_scheduled, client_name, data_set_name, load_date, enabled,
-                               user, schedule_end=None, interval_mi=None, interval_hh=None, interval_dd=None,
-                               monday_enabled=True, tuesday_enabled=True, wednesday_enabled=True, thursday_enabled=True,
-                               friday_enabled=True, saturday_enabled=True, sunday_enabled=True,
+def insert_scheduled_execution(transaction, name, next_scheduled, client_name, data_source_name, data_set_name,
+                               load_date, enabled, user, schedule_end=None, interval_mi=None, interval_hh=None,
+                               interval_dd=None, monday_enabled=True, tuesday_enabled=True, wednesday_enabled=True,
+                               thursday_enabled=True, friday_enabled=True, saturday_enabled=True, sunday_enabled=True,
                                acquire_program_key=None, extract_destination=None, extract_data_source_name=None,
                                extract_options=None):
     params = {
         "ScheduledExecutionName": name,
         "ScheduledExecutionNextScheduled": next_scheduled,
         "ScheduledExecutionClientName": client_name,
+        "ScheduledExecutionDataSourceName": data_source_name,
         "ScheduledExecutionDataSetName": data_set_name,
         "ScheduledExecutionLoadDate": load_date,
         "ScheduledExecutionEnabled": enabled,
@@ -186,27 +187,6 @@ def insert_scheduled_execution(transaction, name, next_scheduled, client_name, d
     return result, option_results
 
 
-def insert_scheduled_extract(scheduled_execution_key, name, options=None):
-    option_results = []
-    option_output_params = {"ScheduledExtractOptionKey": "INT"}
-    with db.engine() as transaction:
-        result = _execute_stored_procedure(transaction, "config.SP_InsertScheduledExtract",
-                                           {"ScheduledExecutionKey": scheduled_execution_key,
-                                            "ScheduledExtractName": name},
-                                           {"ScheduledExtractKey": "INT"}).fetchone()
-        if options:
-            scheduled_extract_key = result["ScheduledExtractKey"]
-            for name, value in options.items():
-                params = {
-                    "ScheduledExtractKey": scheduled_extract_key,
-                    "ScheduledExtractOptionName": name,
-                    "ScheduledExtractOptionValue": value
-                }
-                option_results.append(_execute_stored_procedure(transaction, "config.SP_InsertScheduledExtractOption",
-                                                                params, option_output_params).fetchone())
-    return result, option_results
-
-
 def start_acquire_log(execution_key, options=None):
     option_results = []
     option_output_params = {"AcquireOptionKey": "INT"}
@@ -226,12 +206,13 @@ def start_acquire_log(execution_key, options=None):
     return result, option_results
 
 
-def start_execution_log(scheduled_execution_key=None, acquire_program_key=None, client_name=None, data_set_name=None,
-                        load_date=None, ad_hoc_user=None):
+def start_execution_log(scheduled_execution_key=None, acquire_program_key=None, client_name=None, data_source_name=None,
+                        data_set_name=None, load_date=None, ad_hoc_user=None):
     params = {
         "ScheduledExecutionKey": scheduled_execution_key,
         "AcquireProgramKey": acquire_program_key,
         "ExecutionClientName": client_name,
+        "ExecutionDataSourceName": data_source_name,
         "ExecutionDataSetName": data_set_name,
         "ExecutionLoadDate": load_date,
         "ExecutionAdHocUser": ad_hoc_user
@@ -242,16 +223,12 @@ def start_execution_log(scheduled_execution_key=None, acquire_program_key=None, 
     return result
 
 
-def start_extract_log(execution_key, destination=None, data_source_name=None, options=None):
+def start_extract_log(execution_key, destination=None, options=None):
     option_results = []
-    params = {
-        "ExecutionKey": execution_key,
-        "ExtractDestination": destination,
-        "ExtractDataSourceName": data_source_name
-    }
     option_output_params = {"ExtractOptionKey": "INT"}
     with db.engine() as transaction:
-        result = _execute_stored_procedure(transaction, "log.SP_StartExtractLog", params,
+        result = _execute_stored_procedure(transaction, "log.SP_StartExtractLog",
+                                           {"ExecutionKey": execution_key, "ExtractDestination": destination},
                                            {"ExtractKey": "INT"}).fetchone()
         if options:
             extract_key = result["ExtractKey"]
@@ -289,17 +266,18 @@ def update_acquire_program(key, python_name=None, friendly_name=None, data_sourc
     return update_result, delete_result, option_results
 
 
-def update_scheduled_execution(transaction, key, name=None, next_scheduled=None, client_name=None, data_set_name=None,
-                               load_date="1900-01-01", enabled=None, user=None, schedule_end=None, interval_mi=-1,
-                               interval_hh=-1, interval_dd=-1, monday_enabled=-1, tuesday_enabled=-1,
-                               wednesday_enabled=-1, thursday_enabled=-1, friday_enabled=-1,
-                               saturday_enabled=-1, sunday_enabled=-1, acquire_program_key=-1,
+def update_scheduled_execution(transaction, key, name=None, next_scheduled=None, client_name=None,
+                               data_source_name=None, data_set_name=None, load_date="1900-01-01", enabled=None,
+                               user=None, schedule_end=None, interval_mi=-1, interval_hh=-1, interval_dd=-1,
+                               monday_enabled=-1, tuesday_enabled=-1, wednesday_enabled=-1, thursday_enabled=-1,
+                               friday_enabled=-1, saturday_enabled=-1, sunday_enabled=-1, acquire_program_key=-1,
                                extract_destination="", extract_data_source_name="", extract_options=_DEFAULT):
     params = {
         "ScheduledExecutionKey": key,
         "ScheduledExecutionName": name,
         "ScheduledExecutionNextScheduled": next_scheduled,
         "ScheduledExecutionClientName": client_name,
+        "ScheduledExecutionDataSourceName": data_source_name,
         "ScheduledExecutionDataSetName": data_set_name,
         "ScheduledExecutionLoadDate": load_date,
         "ScheduledExecutionEnabled": enabled,
