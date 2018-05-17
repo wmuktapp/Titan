@@ -1,5 +1,7 @@
 import React from 'react';
 
+require('./controls.css');
+
 class MonitoringControls extends React.Component {
 
   constructor(props) {
