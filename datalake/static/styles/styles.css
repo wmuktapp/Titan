@@ -1,5 +1,5 @@
 
-/* Basic Wavemaker style properties */
+/* Base Styles */
 
 html {
     font-family: "Calibri light";
@@ -128,146 +128,11 @@ input[type=checkbox]:checked:after {
     background-color: #f6f6f6;
 }
 
-.monitoring-controls {
-    width: 100%;
-    margin: 1em 0;
-}
-
-.monitoring-control-previous {
-    float: left;
-}
-
-.monitoring-control-next {
-    float: right;
-}
-
-.monitoring-controls-footer {
-    text-align: center;
-}
-
-.monitoring-table {
-    width: 100%;
-}
-
-.execution-cell {
-    display: inline-block;
-}
-
-.execution-partial {
-    display: inline-block;
-    height: 1em;
-    width: 2em;
-    padding: .2em 0;
-    font-size: 24px;
-    line-height: 1;
-    text-align: center;
-}
-
-.execution-success {
-    background-color: #548235;
-    color: #fff;
-}
-
-.execution-failure {
-    background-color: #9e323a;
-    color: #fff;
-}
-
-.execution-running {
-    background-color: #f9ae42;
-    color: #fff;
-}
-
-.execution-waiting {
-    color: #aaa;
-}
-
-.execution-selector {
-    margin-left: .2em;
-}
-
-.loading-message {
-    text-align: center;
-    color: #aaa;
-}
-
-.btn-retry {
-    float: right;
-}
-
-.btn-disabled {
-    opacity: .5;
-    cursor: default;
-}
-
-/* Schedules */
-
-.schedule-loading {
-    text-align: center;
-}
-
-.schedule-table {
-    width: 100%;
-}
-
-.schedule-link {
-    float: right;
-}
-
-.filter-menu {
-    position: fixed;
-    width: 200px;
-    height: 200px;
-    background: #fff;
-    border: 1px solid #aaa;
-    border-radius: .5em;
-}
-
-/* Schedule (single) */
-
-.schedule-days {
-    border-top: 1px solid #eee;
-    width: 200px;
-}
-
 form .label-body {
     vertical-align: text-bottom;
 }
 
-/* Adhoc */
-
-.acquire-form {
+.form-section {
     border-top: 1px solid #aaa;
     padding: 1em 0 0;
-}
-
-.acquire-entry + .acquire-entry {
-    border-top: 1px solid #eee;
-    padding: 1em 0 0;
-}
-
-.acquire-entry label {
-    display: inline-block;
-    min-width: 8em;
-}
-
-.acquire-entry-remove {
-    float: right;
-}
-
-.extract-form {
-    border-top: 1px solid #aaa;
-    padding: 1em 0 0;
-}
-
-/* Interval Picker */
-
-.interval-picker-label {
-    display: inline-block;
-    padding-right: .5em;
-}
-
-.interval-picker-input {
-    width: 4em;
-    margin-right: .5em;
 }

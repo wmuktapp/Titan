@@ -2,6 +2,8 @@ import React from 'react';
 import MonitoringGridHeader from './header.jsx';
 import MonitoringGridContent from './content.jsx';
 
+require('./grid.css');
+
 class MonitoringGrid extends React.Component {
 
   render() {

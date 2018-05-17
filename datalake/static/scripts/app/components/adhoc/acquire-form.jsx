@@ -26,7 +26,7 @@ class AcquireForm extends React.Component {
     const emptyMessage = <p>No acquire program selected</p>;
 
     return (
-      <div className="acquire-form">
+      <div className="form-section acquire-form">
         <h5>Acquires</h5>
         { acquireEntries }
         { this.props.acquires.length ? addAnother : emptyMessage }
