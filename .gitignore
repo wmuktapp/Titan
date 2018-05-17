@@ -116,3 +116,6 @@ Pipfile.lock
 
 # Node
 node_modules/
+
+# Public JS
+datalake/static/scripts/public/
