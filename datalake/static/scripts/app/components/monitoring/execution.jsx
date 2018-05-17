@@ -2,6 +2,8 @@ import React from 'react';
 import MonitoringGridExecutionAcquire from './execution-acquire.jsx';
 import MonitoringGridExecutionExtract from './execution-extract.jsx';
 
+require('./execution.css');
+
 class MonitoringGridExecution extends React.Component {
 
   constructor(props) {

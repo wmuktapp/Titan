@@ -2,6 +2,8 @@ import React from 'react';
 import MonitoringControls from './monitoring/controls.jsx';
 import MonitoringGrid from './monitoring/grid.jsx';
 
+require('./monitor.css');
+
 class Monitor extends React.Component {
 
   constructor() {
@@ -163,15 +165,15 @@ class Monitor extends React.Component {
     // TODO pass retryList to MonitoringGrid, use it to handle checked / unchecked state
 
     return (
-      <div className="monitoring-grid">
+      <div className="monitor-grid">
         <MonitoringControls dates={this.state.dates} selectDates={this.showDates} />
         <MonitoringGrid dates={this.state.dates} data={this.state.data} select={this.selectExecution} />
         {
           this.state.loading
-            ? <p className="loading-message">Loading...</p>
-            : <div className="monitoring-controls-footer">
+            ? <p className="monitor-loading">Loading...</p>
+            : <div className="monitor-controls-footer">
                 <a onClick={this.showMore} className="monitoring-control-more">Show more</a>
-                <a onClick={this.retryExecutions} className={'btn-retry' + (!!this.state.retryList.length ? '' : ' btn-disabled')}>Retry</a>
+                <a onClick={this.retryExecutions} className={'monitor-btn-retry' + (!!this.state.retryList.length ? '' : ' monitor-btn-disabled')}>Retry</a>
               </div>
         }
       </div>
