@@ -13,6 +13,22 @@ class AzureSecurityContext(object):
         self.credentials = credentials.ServicePrincipalCredentials(client_id, client_secret, tenant=tenant)
 
 
+def _list_block_blobs(service, container, prefix):
+    marker = None
+    while marker != "":
+        response = service.list_blobs(container, prefix=prefix, marker=marker)
+        marker = response.next_marker
+        for blob in response:
+            yield blob
+
+
+def list_block_blobs(service, container, client, data_source_name, data_set_name, load_date):
+    prefix = "/".join((client, data_source_name, data_set_name, load_date))
+    blobs = _list_block_blobs(service, container, prefix)
+    latest_version = max(int(blob.name.replace(prefix + "/v", "").split("/")[0]) for blob in blobs)
+    return _list_block_blobs(service, container, prefix + "/v%s" % latest_version)
+
+
 def execute(details):
     config = flask.current_app.config
     container_name = config["DATALAKE_AZURE_CONTAINER_NAME"]
