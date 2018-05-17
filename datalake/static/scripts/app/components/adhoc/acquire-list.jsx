@@ -1,7 +1,9 @@
 import React from 'react';
-import AcquireEntry from './acquire-entry.jsx';
+import AcquireItem from './acquire-item.jsx';
 
-class AcquireForm extends React.Component {
+require('./acquire-list.css');
+
+class AcquireList extends React.Component {
 
   constructor(props) {
     super(props);
@@ -19,8 +21,8 @@ class AcquireForm extends React.Component {
 
   render() {
 
-    const acquireEntries = this.props.acquires.map((acquire, index) => {
-      return <AcquireEntry key={index} fields={acquire.fields} index={index} remove={this.remove} />
+    const acquireItems = this.props.acquires.map((acquire, index) => {
+      return <AcquireItem key={index} fields={acquire.fields} index={index} remove={this.remove} />
     });
     const addAnother = <a onClick={this.addAnother}>+ Add another</a>;
     const emptyMessage = <p>No acquire program selected</p>;
@@ -28,11 +30,11 @@ class AcquireForm extends React.Component {
     return (
       <div className="form-section acquire-form">
         <h5>Acquires</h5>
-        { acquireEntries }
+        { acquireItems }
         { this.props.acquires.length ? addAnother : emptyMessage }
       </div>
     );
   }
 }
 
-export default AcquireForm;
+export default AcquireList;

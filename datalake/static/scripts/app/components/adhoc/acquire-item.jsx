@@ -1,8 +1,6 @@
 import React from 'react';
 
-require('./acquire-entry.css');
-
-class AcquireEntry extends React.Component {
+class AcquireItem extends React.Component {
 
   constructor(props) {
     super(props);
@@ -26,10 +24,10 @@ class AcquireEntry extends React.Component {
 
     const removeButton = this.props.index === 0
       ? []
-      : <a onClick={this.remove} className="acquire-entry-remove">Remove</a>
+      : <a onClick={this.remove} className="acquire-item-remove">Remove</a>
 
     return (
-      <div className="acquire-entry u-cf">
+      <div className="acquire-item u-cf">
         {rows}
         {removeButton}
       </div>
@@ -37,4 +35,4 @@ class AcquireEntry extends React.Component {
   }
 }
 
-export default AcquireEntry;
+export default AcquireItem;
