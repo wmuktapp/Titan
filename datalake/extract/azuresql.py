@@ -66,5 +66,5 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
     db.engine.execute(sqlalchemy.text(sql_text), table_name=table_name, field_delimiter=field_delimiter,
                       row_delimiter=row_delimiter, text_qualifier=text_qualifier, code_page=code_page,
                       credential_name=credential_name, data_source_name=data_source_name,
-                      blob_key=config["DATALAKE_AZURE_BLOB_KEY"], blob_location=config["DATALAKE_AZURE_BLOB_LOCATION"],
-                      **params)
+                      blob_key=config["DATALAKE_AZURE_BLOB_SHARED_ACCESS_SIGNATURE"],
+                      blob_location=config["DATALAKE_AZURE_BLOB_LOCATION"], **params)
