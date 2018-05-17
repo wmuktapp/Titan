@@ -1,4 +1,5 @@
 import click
+import importlib
 
 from datalake import models
 import datalake
@@ -17,7 +18,7 @@ import datalake
               "program.", required=True)
 @click.option("-e",  "--enabled", is_flag=True)
 def main(acquire_program_key, python_name, friendly_name, data_source_name, author, enabled):
-    program = __import__(python_name)
+    program = importlib.import_module(python_name)
     if program.__package__:
         command = program.__main__.main
     else:
