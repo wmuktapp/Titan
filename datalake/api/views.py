@@ -131,7 +131,7 @@ def retry_executions():
             if extract_option_name is not None:
                 details["extract"]["options"][extract_option_name] = row["ExtractOptionValue"]
         details["acquires"].extend(acquires.values())
-        _execute(details)
+        app.execute(details)
 
 
 @api.api_blueprint.route("/schedules/<int:key>", methods=["PUT"])
