@@ -59,7 +59,7 @@ def get_acquire_programs():
             option_name = row["AcquireProgramOptionName"]
         if option_name is not None:
             acquire_programs[key].append({"AcquireProgramOptionName": option_name,
-                                          "AcquireProgramoptionRequired": row["AcquireProgramOptionRequired"]})
+                                          "AcquireProgramOptionRequired": row["AcquireProgramOptionRequired"]})
     return {"data": acquire_programs.values()}
 
 
