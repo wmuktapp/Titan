@@ -40,6 +40,29 @@ def execute():
     app.execute(data)
 
 
+@api.api_blueprint.route("/acquire-programs/", methods=["GET"])
+@decorators.to_json
+def get_acquire_programs():
+    acquire_programs = {}
+    for row in models.get_acquire_programs():
+        key = row["AcquireProgramKey"]
+        acquire_program = acquire_programs.get(key)
+        if acquire_program is None:
+            acquire_programs[key] = {
+                "AcquireProgramKey": key,
+                "AcquireProgramPythonName": row["AcquireProgramPythonName"],
+                "AcquireProgramFriendlyName": row["AcquireProgramFriendlyName"],
+                "AcquireProgramDataSourceName": row["AcquireProgramDataSourceName"],
+                "AcquireProgramEnabled": row["AcquireProgramEnabled"],
+                "Options": []
+            }
+            option_name = row["AcquireProgramOptionName"]
+        if option_name is not None:
+            acquire_programs[key].append({"AcquireProgramOptionName": option_name,
+                                          "AcquireProgramoptionRequired": row["AcquireProgramOptionRequired"]})
+    return {"data": acquire_programs.values()}
+
+
 @api.api_blueprint.route("/executions/", methods=["GET"])
 @decorators.to_json
 def get_executions():
@@ -55,29 +78,6 @@ def get_executions():
 @decorators.to_json
 def get_execution(key):
     result = models.get_execution(key)
-
-
-@api.api_blueprint.route("/schedules/", methods=["GET"])
-@decorators.to_json
-def get_scheduled_executions():
-    params = {}
-    for k in ("page_number", "page_size"):
-        value = flask.request.args.get(k)
-        if k is not None:
-            params[k] = value
-    result = models.get_scheduled_executions(**params)
-
-
-@api.api_blueprint.route("/schedules/<int:key>", metods=["GET"])
-@decorators.to_json
-def get_scheduled_execution(key):
-    result = models.get_scheduled_execution(key)
-
-
-@api.api_blueprint.route("/acquire-programs/", methods=["GET"])
-@decorators.to_json
-def get_acquire_programs():
-    result = models.get_acquire_programs()
 
 
 @api.api_blueprint.route("/extract-programs/", methods=["GET"])
@@ -100,6 +100,24 @@ def get_extract_programs():
     return response
 
 
+
+@api.api_blueprint.route("/schedules/", methods=["GET"])
+@decorators.to_json
+def get_scheduled_executions():
+    params = {}
+    for k in ("page_number", "page_size"):
+        value = flask.request.args.get(k)
+        if k is not None:
+            params[k] = value
+    result = models.get_scheduled_executions(**params)
+
+
+@api.api_blueprint.route("/schedules/<int:key>", metods=["GET"])
+@decorators.to_json
+def get_scheduled_execution(key):
+    result = models.get_scheduled_execution(key)
+
+
 @api.api_blueprint.route("/executions/retry", methods=["POST"])
 @decorators.to_json
 def retry_executions():
@@ -111,6 +129,7 @@ def retry_executions():
                 "scheduled_execution_key": arbitrary_row["ScheduledExecutionKey"],
                 "acquire_program_key": arbitrary_row["AcquireProgramKey"],
                 "client_name": arbitrary_row["ExecutionClientName"],
+                "data_source_name": arbitrary_row["ExecutionDataSourceName"],
                 "data_set_name": arbitrary_row["ExecutionDataSetName"],
                 "load_date": arbitrary_row["ExecutionLoadDate"],
                 "ad_hoc_user": arbitrary_row["ExecutionAdHocUser"]
@@ -125,8 +144,12 @@ def retry_executions():
         for row in rows:
             acquire_key = row["AcquireKey"]
             if acquire_key is not None:
-                acquire = acquires.get(acquire_key, {"options": {}})
-            acquire[row["AcquireOptionName"]] = row["AcquireOptionValue"]
+                acquire = acquires.get(acquire_key)
+                if acquire is None:
+                    acquires[acquire_key] = {"options": {}}
+                    acquire_option_name = row["AcquireOptionName"]
+                    if acquire_option_name is not None:
+                        acquire["options"][row["AcquireOptionName"]] = row["AcquireOptionValue"]
             extract_option_name = row["ExtractOptionName"]
             if extract_option_name is not None:
                 details["extract"]["options"][extract_option_name] = row["ExtractOptionValue"]
