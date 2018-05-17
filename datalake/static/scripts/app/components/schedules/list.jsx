@@ -1,6 +1,8 @@
 import React from 'react';
 import ScheduleTable from './table.jsx';
 
+require('./schedule.css');
+
 class ScheduleList extends React.Component {
 
   // Retrieve data from database
@@ -62,7 +64,7 @@ class ScheduleList extends React.Component {
         <div className="schedule-loading">
           {
             this.state.loading
-              ? <p className="loading-message">Loading...</p>
+              ? <p>Loading...</p>
               : <a onClick={this.loadMore}>Load more</a>
           }
         </div>

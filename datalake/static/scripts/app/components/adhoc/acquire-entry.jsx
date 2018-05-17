@@ -1,5 +1,7 @@
 import React from 'react';
 
+require('./acquire-entry.css');
+
 class AcquireEntry extends React.Component {
 
   constructor(props) {

@@ -1,5 +1,7 @@
 import React from 'react';
 
+require('./menu.css');
+
 class FilterButton extends React.Component {
 
   render() {
