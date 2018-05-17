@@ -1,5 +1,6 @@
 import os
 
+from applicationinsights.flask import ext
 import dotenv
 import flask
 
@@ -18,6 +19,7 @@ def create_app():
     flask_app.register_blueprint(api.api_blueprint, url_prefix="/api")
 
     models.db.init_app(flask_app)
+    ext.AppInsights().init_app(flask_app)
 
     flask_app.config["DATALAKE_AZURE_SECURITY_CONTEXT"] = app.AzureSecurityContext(
         flask_app.config["DATALAKE_AZURE_SUBSCRIPTION_ID"],
