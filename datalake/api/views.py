@@ -17,13 +17,14 @@ def create_scheduled_execution():
     acquires = data["acquires"]
     extract = data["extract"]
     params = {}
-    for k in ("name", "next_scheduled", "client_name", "data_set_name", "load_date", "enabled", "user", "schedule_end",
-              "interval_mi", "interval_hh", "interval_dd", "monday_enabled", "tuesday_enabled", "wednesday_enabled",
-              "thursday_enabled", "friday_enabled", "saturday_enabled", "sunday_enabled", "acquire_program_key"):
+    for k in ("name", "next_scheduled", "client_name", "data_source_name", "data_set_name", "load_date", "enabled",
+              "user", "schedule_end", "interval_mi", "interval_hh", "interval_dd", "monday_enabled", "tuesday_enabled",
+              "wednesday_enabled", "thursday_enabled", "friday_enabled", "saturday_enabled", "sunday_enabled",
+              "acquire_program_key"):
         value = execution.get(k, _DEFAULT)
         if value is not _DEFAULT:
             params[k] = value
-    for k in ("extract_destination", "extract_data_source_name", "extract_options"):
+    for k in ("extract_destination", "extract_options"):
         value = extract.get(k, _DEFAULT)
         if value is not _DEFAULT:
             params[k] = value
@@ -58,10 +59,12 @@ def get_acquire_programs():
                 "AcquireProgramEnabled": row["AcquireProgramEnabled"],
                 "Options": []
             }
-            option_name = row["AcquireProgramOptionName"]
+        option_name = row["AcquireProgramOptionName"]
         if option_name is not None:
-            acquire_programs[key].append({"AcquireProgramOptionName": option_name,
-                                          "AcquireProgramOptionRequired": row["AcquireProgramOptionRequired"]})
+            acquire_programs[key]["Options"].append({
+                "AcquireProgramOptionName": option_name,
+                "AcquireProgramOptionRequired": row["AcquireProgramOptionRequired"]}
+            )
     return {"data": acquire_programs.values()}
 
 
@@ -86,7 +89,7 @@ def get_execution(key):
 @decorators.to_json
 def get_extract_programs():
     response = {"data": []}
-    for python_name, friendly_name in (("extract-azure-sql", "Azure SQL")):
+    for python_name, friendly_name in (("extract-azure-sql", "Azure SQL"), ):
         program = importlib.import_module("datalake.extract.%s" % python_name)
         response["data"].append({
             "ExtractProgramPythonName": python_name,
@@ -100,7 +103,6 @@ def get_extract_programs():
             ]
         })
     return response
-
 
 
 @api.api_blueprint.route("/schedules/", methods=["GET"])
@@ -149,9 +151,9 @@ def retry_executions():
                 acquire = acquires.get(acquire_key)
                 if acquire is None:
                     acquires[acquire_key] = {"options": {}}
-                    acquire_option_name = row["AcquireOptionName"]
-                    if acquire_option_name is not None:
-                        acquire["options"][row["AcquireOptionName"]] = row["AcquireOptionValue"]
+                acquire_option_name = row["AcquireOptionName"]
+                if acquire_option_name is not None:
+                    acquire["options"][row["AcquireOptionName"]] = row["AcquireOptionValue"]
             extract_option_name = row["ExtractOptionName"]
             if extract_option_name is not None:
                 details["extract"]["options"][extract_option_name] = row["ExtractOptionValue"]
@@ -167,13 +169,14 @@ def update_scheduled_execution(key):
     acquires = data["acquires"]
     extract = data["extract"]
     params = {}
-    for k in ("name", "next_scheduled", "client_name", "data_set_name", "load_date", "enabled", "user", "schedule_end",
-              "interval_mi", "interval_hh", "interval_dd", "monday_enabled", "tuesday_enabled", "wednesday_enabled",
-              "thursday_enabled", "friday_enabled", "saturday_enabled", "sunday_enabled", "acquire_program_key"):
+    for k in ("name", "next_scheduled", "client_name", "data_source_name", "data_set_name", "load_date", "enabled",
+              "user", "schedule_end", "interval_mi", "interval_hh", "interval_dd", "monday_enabled", "tuesday_enabled",
+              "wednesday_enabled", "thursday_enabled", "friday_enabled", "saturday_enabled", "sunday_enabled",
+              "acquire_program_key"):
         value = execution.get(k, _DEFAULT)
         if value is not _DEFAULT:
             params[k] = value
-    for k in ("extract_destination", "extract_data_source_name", "extract_options"):
+    for k in ("extract_destination", "extract_options"):
         value = extract.get(k, _DEFAULT)
         if value is not _DEFAULT:
             params[k] = value
