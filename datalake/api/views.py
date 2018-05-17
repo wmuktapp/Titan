@@ -68,6 +68,12 @@ def get_acquire_programs():
     return {"data": acquire_programs.values()}
 
 
+@api.api_blueprint.route("/executions/<int:key>", methods=["GET"])
+@decorators.to_json
+def get_execution(key):
+    result = models.get_execution(key)
+
+
 @api.api_blueprint.route("/executions/", methods=["GET"])
 @decorators.to_json
 def get_executions():
@@ -77,12 +83,6 @@ def get_executions():
         if k is not None:
             params[k] = value
     result = models.get_executions(**params)
-
-
-@api.api_blueprint.route("/extension/<int:key>", methods=["GET"])
-@decorators.to_json
-def get_execution(key):
-    result = models.get_execution(key)
 
 
 @api.api_blueprint.route("/extract-programs/", methods=["GET"])
@@ -105,6 +105,12 @@ def get_extract_programs():
     return response
 
 
+@api.api_blueprint.route("/schedules/<int:key>", metods=["GET"])
+@decorators.to_json
+def get_scheduled_execution(key):
+    result = models.get_scheduled_execution(key)
+
+
 @api.api_blueprint.route("/schedules/", methods=["GET"])
 @decorators.to_json
 def get_scheduled_executions():
@@ -114,12 +120,6 @@ def get_scheduled_executions():
         if k is not None:
             params[k] = value
     result = models.get_scheduled_executions(**params)
-
-
-@api.api_blueprint.route("/schedules/<int:key>", metods=["GET"])
-@decorators.to_json
-def get_scheduled_execution(key):
-    result = models.get_scheduled_execution(key)
 
 
 @api.api_blueprint.route("/executions/retry", methods=["POST"])
