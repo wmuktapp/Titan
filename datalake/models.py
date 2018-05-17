@@ -110,9 +110,7 @@ def get_scheduled_executions(page_number=1, page_size=100):
 
 
 def get_queue(max_items=None):
-    params = {}
-    if max_items is not None:
-        params["MaxItems"] = max_items
+    params = {} if max_items is None else {"MaxItems": max_items}
     with db.engine() as transaction:
         return list(_execute_stored_procedure(transaction, "dbo.SP_GetQueue", params))
 
