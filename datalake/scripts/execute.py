@@ -40,7 +40,7 @@ def _process_acquires(flask_app, execution_key, acquire_program_key, acquires):
 
 
 def _process_extract(flask_app, execution_key, extract_destination, options):
-    extract_key = _call_models_function(flask_app, models.start_extract_log, execution_key,
+    extract_key = _call_models_function(flask_app, models.start_extract_log, execution_key, extract_destination,
                                         options=options)["AcquireKey"]
     _execute_program(flask_app, extract_destination, models.end_extract_log, extract_key, options=options,
                      timeout=flask_app.config.get("DATALAKE_EXTRACT_TIMEOUT_SECONDS"))
@@ -57,6 +57,7 @@ def main():
                                           scheduled_execution_key=execution.get("scheduled_execution_key"),
                                           acquire_program_key=acquire_program_key,
                                           client_name=execution.get("client_name"),
+                                          data_source_name=execution.get("data_source_name"),
                                           data_set_name=execution.get("data_set_name"),
                                           load_date=execution.get("load_date"),
                                           ad_hoc_user=execution.get("ad_hoc_user"))["ExecutionKey"]
