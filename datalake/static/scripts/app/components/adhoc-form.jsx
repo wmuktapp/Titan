@@ -1,6 +1,6 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
-import AcquireForm from './adhoc/acquire-form.jsx';
+import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './adhoc/extract-form.jsx';
 
 // Datepicker styles
@@ -213,7 +213,7 @@ class AdhocForm extends React.Component {
           <label>User</label>
           <input type="text" name="user" value={this.state.user} onChange={this.handleChange} />
         </div>
-        <AcquireForm acquires={this.state.acquires} addAnother={this.onAddAnotherAcquire} remove={this.removeAcquire} />
+        <AcquireList acquires={this.state.acquires} addAnother={this.onAddAnotherAcquire} remove={this.removeAcquire} />
         <ExtractForm showForm={!!this.state.program}
           destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination}
           dataSource={this.state.extractDataSource} updateDataSource={this.onUpdateExtractDataSource}
