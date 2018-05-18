@@ -32,51 +32,37 @@ def _process_acquires(flask_app, execution_key, acquire_program_key, acquires):
     acquire_program = {row["AcquireProgramKey"]: row["AcquireProgramPythonName"]
                        for row in _call_models_function(flask_app, models.get_acquire_programs)}[acquire_program_key]
     for acquire in acquires:
-        options = acquire.get("options")
-        acquire_key = _call_models_function(flask_app, models.start_acquire_log, execution_key,
-                                            options=options)["AcquireKey"]
+        acquire["ExecutionKey"] = execution_key
+        options = acquire.get("Options")
+        acquire_key = _call_models_function(flask_app, models.start_acquire_log, acquire)["AcquireKey"]
         _execute_program(flask_app, "python -m %s" % acquire_program, models.end_acquire_log, acquire_key,
                          options=options, timeout=flask_app.config.get("DATALAKE_ACQUIRE_TIMEOUT_SECONDS"))
 
 
-def _process_extract(flask_app, execution_key, extract_destination, options, prefix):
-    extract_key = _call_models_function(flask_app, models.start_extract_log, execution_key, extract_destination,
-                                        options=options)["AcquireKey"]
+def _process_extract(flask_app, execution_key, extract, prefix):
+    extract["ExecutionKey"] = execution_key
+    extract_key = _call_models_function(flask_app, models.start_extract_log, extract)["AcquireKey"]
+    options = extract.get("Options")
     options["--blob-prefix"] = prefix
-    _execute_program(flask_app, extract_destination, models.end_extract_log, extract_key, options=options,
+    _execute_program(flask_app, extract.get("ExtractDestination"), models.end_extract_log, extract_key, options=options,
                      timeout=flask_app.config.get("DATALAKE_EXTRACT_TIMEOUT_SECONDS"))
 
 
 def main():
     data = json.loads(os.getenv("DATALAKE_EXECUTE_STDIN"))
     execution = data.get("execution", {})
-    acquires = data.get("acquires", {})
-    extract = data.get("extract", {})
-    acquire_program_key = execution.get("acquire_program_key")
-    client_name = execution.get("client_name")
-    data_source_name = execution.get("data_source_name")
-    data_set_name = execution.get("data_set_name")
-    load_date = execution.get("load_date")
-    prefix = "/".join((client_name, data_source_name, data_set_name, load_date))
-    extract_destination = extract.get("extract_destination")
-
+    acquires = data.get("acquires")
+    extract = data.get("extract")
     flask_app = datalake.create_app()
-    execution_key = _call_models_function(flask_app, models.start_execution_log,
-                                          scheduled_execution_key=execution.get("scheduled_execution_key"),
-                                          acquire_program_key=acquire_program_key,
-                                          client_name=client_name,
-                                          data_source_name=data_source_name,
-                                          data_set_name=data_set_name,
-                                          load_date=load_date,
-                                          ad_hoc_user=execution.get("ad_hoc_user"))["ExecutionKey"]
-
+    execution_key = _call_models_function(flask_app, models.start_execution_log, execution)["ExecutionKey"]
     error = None
     try:
-        if acquire_program_key is not None:
-            _process_acquires(flask_app, execution_key, acquire_program_key, acquires)
-        if extract_destination is not None:
-            _process_extract(flask_app, execution_key, extract_destination, extract.get("extract_options", {}),
-                             prefix=prefix)
+        if acquires is not None:
+            _process_acquires(flask_app, execution_key, execution.get("acquire_program_key"), acquires)
+        if extract is not None:
+            prefix = "/".join((execution.get("client_name"), execution.get("data_source_name"),
+                               execution.get("data_set_name"), execution.get("load_date")))
+            _process_extract(flask_app, execution_key, extract, prefix=prefix)
     except Exception as error:
         error = error
     finally:
