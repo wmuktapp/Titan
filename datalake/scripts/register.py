@@ -23,12 +23,22 @@ def main(acquire_program_key, python_name, friendly_name, data_source_name, auth
         command = program.__main__.main
     else:
         command = program.main
-    options = {max(option.opts, key=len): option.required for option in command.params}
-
     flask_app = datalake.create_app()
+    acquire_program = {
+        "AcquireProgramPythonName": python_name,
+        "AcquireProgramFriendlyName": friendly_name,
+        "AcquireProgramDataSourceName": data_source_name,
+        "AcquireProgramAuthor": author,
+        "AcquireProgramEnabled": enabled,
+        "Options":
+            [{
+                "AcquireProgramOptionName": max(option.opts, key=len),
+                "AcquireProgramOptionRequired": option.required
+            } for option in command.params]
+    }
     with flask_app.flask_app_context():
         if acquire_program_key is None:
-            models.insert_acquire_program(python_name, friendly_name, data_source_name, author, enabled, options)
+            models.insert_acquire_program(acquire_program)
         else:
-            models.update_acquire_program(acquire_program_key, python_name, friendly_name, data_source_name, author,
-                                          enabled, options)
+            acquire_program["AcquireProgramKey"] = acquire_program_key
+            models.update_acquire_program(acquire_program)
