@@ -65,6 +65,7 @@ class ScheduleForm extends React.Component {
     };
 
     this.onChange = this.onChange.bind(this);
+    this.onChangeAcquireProgram = this.onChangeAcquireProgram.bind(this);
     this.updateInterval = this.updateInterval.bind(this);
     this.updateNextScheduled = this.updateNextScheduled.bind(this);
     this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
@@ -109,6 +110,13 @@ class ScheduleForm extends React.Component {
     this.setState({
       [name]: value
     });
+  }
+
+  onChangeAcquireProgram() {
+    this.setState({
+      acquires: []
+    });
+    this.onChange(...arguments);
   }
 
   updateInterval(hours, minutes, seconds) {
@@ -267,7 +275,7 @@ class ScheduleForm extends React.Component {
         <div className="form-section">
           <div>
             <label>Acquire program</label>
-            <select name="acquire" value={this.state.acquire} onChange={this.onChange}>
+            <select name="acquire" value={this.state.acquire} onChange={this.onChangeAcquireProgram}>
               <option value=""></option>
               { acquireOptions }
             </select>
