@@ -23,7 +23,7 @@ class AcquireItem extends React.Component {
 
     const rows = Object.keys(this.props.fields).map((key) => {
       return (
-        <div key={key} className="row">
+        <div key={key} className="acquire-property">
           <label>{key}</label>
           <input type="text" name={key} value={this.props.fields[key]} onChange={this.onChange} />
         </div>
@@ -32,7 +32,9 @@ class AcquireItem extends React.Component {
 
     return (
       <div className="acquire-item u-cf">
-        {rows}
+        <div className="acquire-properties">
+          {rows}
+        </div>
         <a onClick={this.remove} className="acquire-item-remove">Remove</a>
       </div>
     );
