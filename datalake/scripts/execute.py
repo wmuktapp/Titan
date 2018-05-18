@@ -28,6 +28,7 @@ def _execute_program(program, options, end_log_function, log_key, timeout):
               "JSON formatted execution details")
 def main(config_file):
     data = json.loads(config_file.read())
+    print("Hello")
     execution, acquires, extract = data["execution"], data["acquires"], data["extracted"]
     acquire_program_key = execution.get("acquire_program_key")
     execution_key = models.start_execution_log(execution.get("scheduled_execution_key"), acquire_program_key,
