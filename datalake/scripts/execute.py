@@ -79,6 +79,7 @@ def main():
     except Exception as error:
         error = error
     finally:
-        _call_models_function(flask_app, models.end_execution_log, execution_key)
+        error_message = str(error) if error is not None else None
+        _call_models_function(flask_app, models.end_execution_log, execution_key, error_message=error_message)
         if error is not None:
             raise error

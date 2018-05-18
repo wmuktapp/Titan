@@ -71,9 +71,10 @@ def end_acquire_log(key, error_message=None):
     return result
 
 
-def end_execution_log(key):
+def end_execution_log(key, error_message=None):
     with db.engine() as transaction:
-        result = _execute_stored_procedure(transaction, "log.SP_EndExecutionLog", {"ExecutionKey": key},
+        result = _execute_stored_procedure(transaction, "log.SP_EndExecutionLog",
+                                           {"ExecutionKey": key, "ExecutionErrorMessage": error_message},
                                            {"ExecutionLogUpdateRowCount": "INT",
                                             "ScheduledExecutionUpdateRowCount": "INT"}).fetchone()
     return result
