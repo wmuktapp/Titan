@@ -205,15 +205,16 @@ def start_extract_log(execution_key, destination=None, options=None):
     return result, option_results
 
 
-def update_acquire_program(params, options=_DEFAULT):
+def update_acquire_program(acquire_program):
     delete_result = None
     option_results = None
     update_output_params = {"UpdateRowCount": "INT", "DisabledScheduledExecutionsCount": "INT"}
-    key_param = {"AcquireProgramKey": params.get("AcquireProgramKey")}
+    options = acquire_program.get("Options", _DEFAULT)
     with db.engine.begin() as transaction:
-        update_result = _execute_stored_procedure(transaction, "config.SP_UpdateAcquireProgram", params,
+        update_result = _execute_stored_procedure(transaction, "config.SP_UpdateAcquireProgram", acquire_program,
                                                   update_output_params).fetchone()
         if options is not _DEFAULT:
+            key_param = {"AcquireProgramKey": acquire_program.get("AcquireProgramKey")}
             delete_output_params = {"DeleteRowCount": "INT"}
             delete_result = _execute_stored_procedure(transaction, "config.SP_DeleteAcquireProgramOptions", key_param,
                                                       delete_output_params).fetchone()
@@ -230,12 +231,14 @@ def update_scheduled_execution(transaction, execution, extract):
         "ScheduledExtractDeleteRowCount": "INT",
         "ScheduledExtractKey": "INT"
     }
-    result = _execute_stored_procedure(transaction, "config.SP_UpdateScheduledExecution", params,
+    options = extract.pop("Options", _DEFAULT)
+    execution.update(extract)
+    result = _execute_stored_procedure(transaction, "config.SP_UpdateScheduledExecution", execution,
                                        update_output_params).fetchone()
-    if extract_options is not _DEFAULT:
-        extract_key_param = {"ScheduledExtractKey": result["ScheduledExtractKey"]}
+    if options is not _DEFAULT:
+        key_param = {"ScheduledExtractKey": result["ScheduledExtractKey"]}
         delete_output_params = {"DeleteRowCount": "INT"}
         delete_result = _execute_stored_procedure(transaction, "config.SP_DeleteScheduledExtractOptions",
-                                                  extract_key_param, delete_output_params).fetchone()
-        option_results = _insert_scheduled_extract_options(transaction, extract_key_param, extract_options)
+                                                  key_param, delete_output_params).fetchone()
+        option_results = _insert_scheduled_extract_options(transaction, key_param, options)
     return result, delete_result, option_results
