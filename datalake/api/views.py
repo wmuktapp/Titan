@@ -13,27 +13,15 @@ _DEFAULT = object()
 @decorators.to_json
 def create_scheduled_execution():
     data = flask.request.get_json(force=True)
-    execution = data["execution"]
-    acquires = data["acquires"]
-    extract = data["extract"]
-    params = {}
-    for k in ("name", "next_scheduled", "client_name", "data_source_name", "data_set_name", "load_date", "enabled",
-              "user", "schedule_end", "interval_mi", "interval_hh", "interval_dd", "monday_enabled", "tuesday_enabled",
-              "wednesday_enabled", "thursday_enabled", "friday_enabled", "saturday_enabled", "sunday_enabled",
-              "acquire_program_key"):
-        value = execution.get(k, _DEFAULT)
-        if value is not _DEFAULT:
-            params[k] = value
-    for k in ("extract_destination", "extract_options"):
-        value = extract.get(k, _DEFAULT)
-        if value is not _DEFAULT:
-            params[k] = value
-    with models.db.engine() as transaction:
-        result, _ = models.insert_scheduled_execution(transaction, **params)
+    execution = data.get("execution", {})
+    acquires = data.get("acquires", [])
+    extract = data.get("extract", {})
+    with models.db.engine.begin() as transaction:
+        result, _ = models.insert_scheduled_execution(transaction, execution, extract)
         scheduled_execution_key = result["ScheduledExecutionKey"]
         for acquire in acquires:
-            models.insert_scheduled_acquire(transaction, scheduled_execution_key, acquire.get("name"),
-                                            acquire.get("options"))
+            acquire["ScheduledExecutionKey"] = scheduled_execution_key
+            _, _ = models.insert_scheduled_acquire(transaction, acquire)
     return {}, 201, None
 
 
@@ -67,7 +55,7 @@ def get_acquire_programs():
                 "AcquireProgramOptionName": option_name,
                 "AcquireProgramOptionRequired": row["AcquireProgramOptionRequired"]}
             )
-    return {"data": acquire_programs.values()}
+    return {"data": list(acquire_programs.values())}
 
 
 @api.api_blueprint.route("/executions/<int:key>", methods=["GET"])
@@ -129,29 +117,22 @@ def get_scheduled_executions():
 def retry_executions():
     for key in flask.request.get_json(force=True)["keys"]:
         app.execute(app.format_execution_details(models.get_execution(key)))
+    return {}, 201, None
 
 
 @api.api_blueprint.route("/schedules/<int:key>", methods=["PUT"])
 @decorators.to_json
 def update_scheduled_execution(key):
     data = flask.request.get_json(force=True)
-    execution = data["execution"]
-    acquires = data["acquires"]
-    extract = data["extract"]
-    params = {}
-    for k in ("name", "next_scheduled", "client_name", "data_source_name", "data_set_name", "load_date", "enabled",
-              "user", "schedule_end", "interval_mi", "interval_hh", "interval_dd", "monday_enabled", "tuesday_enabled",
-              "wednesday_enabled", "thursday_enabled", "friday_enabled", "saturday_enabled", "sunday_enabled",
-              "acquire_program_key"):
-        value = execution.get(k, _DEFAULT)
-        if value is not _DEFAULT:
-            params[k] = value
-    for k in ("extract_destination", "extract_options"):
-        value = extract.get(k, _DEFAULT)
-        if value is not _DEFAULT:
-            params[k] = value
-    with models.db.engine() as transaction:
-        result, _, _ = models.update_scheduled_execution(transaction, key, **params)
-        _ = models.delete_scheduled_acquires(transaction, key)
+    params = {"ScheduledExecutionKey": key}
+    execution = data.get("execution", {})
+    execution.update(params)
+    acquires = data.get("acquires", [])
+    extract = data.get("extract", {})
+    with models.db.engine.begin() as transaction:
+        result, _ = models.update_scheduled_execution(transaction, execution, extract)
+        _ = models.delete_scheduled_acquires(transaction, params)
         for acquire in acquires:
-            models.insert_scheduled_acquire(transaction, key, acquire.get("name"), acquire.get("options"))
+            acquire.update(params)
+            _, _ = models.insert_scheduled_acquire(transaction, acquire)
+    return {}, 201, None
