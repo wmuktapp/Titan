@@ -45,6 +45,44 @@ def execute(details):
     )
 
 
+def format_execution_details(rows, scheduled=False):
+    arbitrary_row = rows[0]
+    details = {
+        "execution": {
+            "scheduled_execution_key": arbitrary_row["ScheduledExecutionKey"],
+            "acquire_program_key": arbitrary_row["AcquireProgramKey"],
+            "client_name": arbitrary_row["ScheduledExecutionClientName" if scheduled else "ExecutionClientName"],
+            "data_source_name": arbitrary_row["ScheduledExecutionDataSourceName" if scheduled
+                                              else "ExecutionDataSourceName"],
+            "data_set_name": arbitrary_row["ScheduledExecutionDataSetName" if scheduled else "ExecutionDataSetName"],
+            "load_date": arbitrary_row["ScheduledExecutionLoadDate" if scheduled else "ExecutionLoadDate"],
+            "ad_hoc_user": arbitrary_row["ScheduledExecutionUser" if scheduled else "AdHocUser"]
+        },
+        "acquires": [],
+        "extract": {
+            "extract_destination": arbitrary_row["ScheduledExtractDestination" if scheduled else "ExtractDestination"],
+            "options": {}
+        } if arbitrary_row["ScheduledExtractKey" if scheduled else "ExtractKey"] is not None else {}
+    }
+    acquires = {}
+    for row in rows:
+        acquire_key = row["AcquireKey"]
+        if acquire_key is not None:
+            acquire = acquires.get(acquire_key)
+            if acquire is None:
+                acquires[acquire_key] = {"options": {}}
+            acquire_option_name = row["ScheduledAcquireOptionName" if scheduled else "AcquireOptionName"]
+            if acquire_option_name is not None:
+                acquire["options"][acquire_option_name] = row["ScheduledAcquireOptionValue" if scheduled
+                                                              else "AcquireOptionValue"]
+        extract_option_name = row["ScheduledExtractOptionName" if scheduled else "ExtractOptionName"]
+        if extract_option_name is not None:
+            details["extract"]["options"][extract_option_name] = row["ScheduledExtractOptionValue" if scheduled
+                                                                     else "ExtractOptionValue"]
+    details["acquires"].extend(acquires.values())
+    return details
+
+
 def launch_container(security_context, resource_group_name, container_group_prefix, os_type, location, container_name,
                      image_name, memory_in_gb, cpu_count, configuration):
     container_group_name = "%s_%s" % (container_group_prefix, uuid.uuid4())
