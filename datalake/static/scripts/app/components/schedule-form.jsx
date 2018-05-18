@@ -70,6 +70,9 @@ class ScheduleForm extends React.Component {
     this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
     this.updateNextLoadDate = this.updateNextLoadDate.bind(this);
     this.updateDay = this.updateDay.bind(this);
+    this.addAcquire = this.addAcquire.bind(this);
+    this.removeAcquire = this.removeAcquire.bind(this);
+    this.updateAcquireItem = this.updateAcquireItem.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
