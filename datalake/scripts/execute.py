@@ -49,11 +49,11 @@ def _process_extract(flask_app, execution_key, extract, prefix):
 
 
 def main():
+    flask_app = datalake.create_app()
     data = json.loads(os.getenv("DATALAKE_EXECUTE_STDIN"))
     execution = data.get("execution", {})
     acquires = data.get("acquires")
     extract = data.get("extract")
-    flask_app = datalake.create_app()
     execution_key = _call_models_function(flask_app, models.start_execution_log, execution)["ExecutionKey"]
     error = None
     try:
