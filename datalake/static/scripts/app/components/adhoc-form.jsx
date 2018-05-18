@@ -177,30 +177,28 @@ class AdhocForm extends React.Component {
       return <p>Adhoc execution triggered</p>;
     }
 
-    // TODO remove row classes
-
     return (
       <form onSubmit={this.handleSubmit}>
-        <div className="row">
+        <div>
           <label>Program</label>
           <select name="program" value={this.state.program} onChange={this.handleChange}>
             <option value=""></option>
             { programOptions }
           </select>
         </div>
-        <div className="row">
+        <div>
           <label>Load date</label>
           <DatePicker selected={this.state.loadDate} dateFormat="DD/MM/YYYY" onChange={this.handleLoadDateChange} />
         </div>
-        <div className="row">
+        <div>
           <label>Client</label>
           <input type="text" name="client" value={this.state.client} onChange={this.handleChange} />
         </div>
-        <div className="row">
+        <div>
           <label>Dataset</label>
           <input type="text" name="dataset" value={this.state.dataset} onChange={this.handleChange} />
         </div>
-        <div className="row">
+        <div>
           <label>User</label>
           <input type="text" name="user" value={this.state.user} onChange={this.handleChange} />
         </div>
