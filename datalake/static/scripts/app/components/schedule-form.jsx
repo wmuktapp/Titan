@@ -1,6 +1,7 @@
 import React from 'react';
 import ScheduleDays from './schedule/days.jsx';
 import IntervalPicker from './interval-picker.jsx';
+import AcquireList from './acquire-list/acquire-list.jsx';
 import DatePicker from 'react-datepicker';
 import dateUtils from '../utils/date-utils';
 import moment from 'moment';
@@ -42,6 +43,9 @@ class ScheduleForm extends React.Component {
       acquire: '',
       extract: '',
 
+      acquires: [],
+      acquireProperties: ['property1', 'property2', 'property3'],
+
       acquireOptions: [
         { id: 1, name: 'Acquire 1' },
         { id: 2, name: 'Acquire 2' },
@@ -61,11 +65,15 @@ class ScheduleForm extends React.Component {
     };
 
     this.onChange = this.onChange.bind(this);
+    this.onChangeAcquireProgram = this.onChangeAcquireProgram.bind(this);
     this.updateInterval = this.updateInterval.bind(this);
     this.updateNextScheduled = this.updateNextScheduled.bind(this);
     this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
     this.updateNextLoadDate = this.updateNextLoadDate.bind(this);
     this.updateDay = this.updateDay.bind(this);
+    this.addAcquire = this.addAcquire.bind(this);
+    this.removeAcquire = this.removeAcquire.bind(this);
+    this.updateAcquireItem = this.updateAcquireItem.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
@@ -104,6 +112,13 @@ class ScheduleForm extends React.Component {
     });
   }
 
+  onChangeAcquireProgram() {
+    this.setState({
+      acquires: []
+    });
+    this.onChange(...arguments);
+  }
+
   updateInterval(hours, minutes, seconds) {
     this.setState({
       interval: {
@@ -140,6 +155,32 @@ class ScheduleForm extends React.Component {
     });
   }
 
+  addAcquire() {
+    const acquires = this.state.acquires;
+    acquires.push({
+      fields: this.state.acquireProperties.reduce((obj, option) => { obj[option] = ''; return obj; }, {})
+    });
+    this.setState({
+      acquires: acquires
+    });
+  }
+
+  removeAcquire(index) {
+    let acquires = this.state.acquires;
+    acquires.splice(index, 1);
+    this.setState({
+      acquires: acquires
+    });
+  }
+
+  updateAcquireItem(index, name, value) {
+    const acquires = this.state.acquires;
+    acquires[index].fields[name] = value;
+    this.setState({
+      acquires: acquires
+    });
+  }
+
   onSubmit(event) {
 
     // TODO send insert/update to server
@@ -170,6 +211,8 @@ class ScheduleForm extends React.Component {
 
     // TODO loading state
     // TODO separate into two components?
+
+    // TODO move acquire dropdown to the top?  Should it dictate the value of data source?
 
     // Acquire options
     const acquireOptions = this.state.acquireOptions.map(
@@ -220,22 +263,28 @@ class ScheduleForm extends React.Component {
             <span className="label-body">Enabled</span>
           </label>
         </div>
-        <div>
+        <div className="form-section">
           <label>Interval</label>
           <IntervalPicker hours={this.state.interval.hours} minutes={this.state.interval.minutes}
             seconds={this.state.interval.seconds} onUpdate={this.updateInterval} />
         </div>
-        <div>
+        <div className="form-section">
+          <h6>Days</h6>
           <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
         </div>
-        <div>
-          <label>Acquire program</label>
-          <select name="acquire" value={this.state.acquire} onChange={this.onChange}>
-            <option value=""></option>
-            { acquireOptions }
-          </select>
+        <div className="form-section">
+          <div>
+            <label>Acquire program</label>
+            <select name="acquire" value={this.state.acquire} onChange={this.onChangeAcquireProgram}>
+              <option value=""></option>
+              { acquireOptions }
+            </select>
+          </div>
+          <div>
+            <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire} onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+          </div>
         </div>
-        <div>
+        <div className="form-section">
           <label>Extract program</label>
           <select name="acquire" value={this.state.extract} onChange={this.onChange}>
             <option value=""></option>
