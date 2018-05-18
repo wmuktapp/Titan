@@ -34,8 +34,7 @@ class AcquireList extends React.Component {
     });
 
     return (
-      <div className="form-section acquire-form">
-        <h5>Acquires</h5>
+      <div className="acquire-list">
         { acquireItems }
         { this.props.acquires.length ? [] : <p>No acquires</p> }
         <a onClick={this.add}>+ Add another</a>

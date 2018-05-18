@@ -204,7 +204,10 @@ class AdhocForm extends React.Component {
           <label>User</label>
           <input type="text" name="user" value={this.state.user} onChange={this.handleChange} />
         </div>
-        <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire} onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+        <div className="form-section">
+          <h6>Acquires</h6>
+          <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire} onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+        </div>
         <ExtractForm showForm={!!this.state.program}
           destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination}
           dataSource={this.state.extractDataSource} updateDataSource={this.onUpdateExtractDataSource}
