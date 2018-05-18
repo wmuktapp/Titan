@@ -37,8 +37,9 @@ class AdhocForm extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleProgramChange = this.handleProgramChange.bind(this);
     this.handleLoadDateChange = this.handleLoadDateChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.addAcquire = this.addAcquire.bind(this);
     this.removeAcquire = this.removeAcquire.bind(this);
     this.updateAcquireItem = this.updateAcquireItem.bind(this);
@@ -66,20 +67,21 @@ class AdhocForm extends React.Component {
       value = target.value,
       name = target.name;
 
-    // TODO is there a better way of catching this event?
-    if (name === 'program') {
-      this.setState({
-        acquires: [],
-        extractFields: []
-      });
-    }
-
     this.setState({
       [name]: value
     });
   }
 
-  // Special case - merge with handleChange?
+  // Special case for program
+  handleProgramChange(...args) {
+    this.setState({
+      acquires: [],
+      extractFields: []
+    });
+    this.handleChange(...args);
+  }
+
+  // Special case for load date
   // TODO only permit dates in the past?
   handleLoadDateChange(date) {
     this.setState({
@@ -143,8 +145,6 @@ class AdhocForm extends React.Component {
     });
   }
 
-  // TODO handle changes in sub-components, show / hide submit button
-
   handleSubmit(event) {
 
     this.setState({
@@ -181,7 +181,7 @@ class AdhocForm extends React.Component {
       <form onSubmit={this.handleSubmit}>
         <div>
           <label>Program</label>
-          <select name="program" value={this.state.program} onChange={this.handleChange}>
+          <select name="program" value={this.state.program} onChange={this.handleProgramChange}>
             <option value=""></option>
             { programOptions }
           </select>
