@@ -21,12 +21,11 @@ class AcquireItem extends React.Component {
 
   render() {
 
-    // TODO use keys instead?
-    const rows = Object.entries(this.props.fields).map((field, index) => {
+    const rows = Object.keys(this.props.fields).map((key) => {
       return (
-        <div key={index} className="row">
-          <label>{field[0]}</label>
-          <input type="text" name={field[0]} value={field[1]} onChange={this.onChange} />
+        <div key={key} className="row">
+          <label>{key}</label>
+          <input type="text" name={key} value={this.props.fields[key]} onChange={this.onChange} />
         </div>
       );
     });
