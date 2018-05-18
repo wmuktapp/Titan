@@ -26,7 +26,7 @@ class AdhocForm extends React.Component {
       user: '',
       availablePrograms: [],
 
-      acquireOptions: ['property1', 'property2', 'property3'],
+      acquireProperties: ['property1', 'property2', 'property3'],
       acquires: [],
 
       extractDestination: '',
@@ -73,12 +73,12 @@ class AdhocForm extends React.Component {
   }
 
   // Special case for program
-  handleProgramChange(...args) {
+  handleProgramChange() {
     this.setState({
       acquires: [],
       extractFields: []
     });
-    this.handleChange(...args);
+    this.handleChange(...arguments);
   }
 
   // Special case for load date
@@ -92,7 +92,7 @@ class AdhocForm extends React.Component {
   addAcquire() {
 
     const acquire = {
-      fields: this.state.acquireOptions.reduce((obj, option) => { obj[option] = ''; return obj; }, {})
+      fields: this.state.acquireProperties.reduce((obj, option) => { obj[option] = ''; return obj; }, {})
     }
 
     const acquires = this.state.acquires;
