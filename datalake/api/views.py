@@ -34,6 +34,7 @@ def create_scheduled_execution():
         for acquire in acquires:
             models.insert_scheduled_acquire(transaction, scheduled_execution_key, acquire.get("name"),
                                             acquire.get("options"))
+    return {}, 201, None
 
 
 @api.api_blueprint.route("/execute", methods=["POST"])
@@ -41,6 +42,7 @@ def create_scheduled_execution():
 def execute():
     data = flask.request.get_json(force=True)
     app.execute(data)
+    return {}, 201, None
 
 
 @api.api_blueprint.route("/acquire-programs/", methods=["GET"])
@@ -71,7 +73,7 @@ def get_acquire_programs():
 @api.api_blueprint.route("/executions/<int:key>", methods=["GET"])
 @decorators.to_json
 def get_execution(key):
-    return app.format_execution_details(models.get_execution(key))
+    return {"data": app.format_execution_details(models.get_execution(key))}
 
 
 @api.api_blueprint.route("/executions/", methods=["GET"])

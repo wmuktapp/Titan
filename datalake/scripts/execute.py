@@ -75,7 +75,8 @@ def main():
         if acquire_program_key is not None:
             _process_acquires(flask_app, execution_key, acquire_program_key, acquires)
         if extract_destination is not None:
-            _process_extract(flask_app, execution_key, extract_destination, extract.get("options", {}), prefix=prefix)
+            _process_extract(flask_app, execution_key, extract_destination, extract.get("extract_options", {}),
+                             prefix=prefix)
     except Exception as error:
         error = error
     finally:

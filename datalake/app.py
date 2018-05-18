@@ -61,7 +61,7 @@ def format_execution_details(rows, scheduled=False):
         "acquires": [],
         "extract": {
             "extract_destination": arbitrary_row["ScheduledExtractDestination" if scheduled else "ExtractDestination"],
-            "options": {}
+            "extract_options": {}
         } if arbitrary_row["ScheduledExtractKey" if scheduled else "ExtractKey"] is not None else {}
     }
     acquires = {}
@@ -77,8 +77,8 @@ def format_execution_details(rows, scheduled=False):
                                                               else "AcquireOptionValue"]
         extract_option_name = row["ScheduledExtractOptionName" if scheduled else "ExtractOptionName"]
         if extract_option_name is not None:
-            details["extract"]["options"][extract_option_name] = row["ScheduledExtractOptionValue" if scheduled
-                                                                     else "ExtractOptionValue"]
+            details["extract"]["extract_options"][extract_option_name] = row["ScheduledExtractOptionValue" if scheduled
+                                                                             else "ExtractOptionValue"]
     details["acquires"].extend(acquires.values())
     return details
 

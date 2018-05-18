@@ -154,8 +154,7 @@ def insert_scheduled_execution(transaction, name, next_scheduled, client_name, d
                                load_date, enabled, user, schedule_end=None, interval_mi=None, interval_hh=None,
                                interval_dd=None, monday_enabled=True, tuesday_enabled=True, wednesday_enabled=True,
                                thursday_enabled=True, friday_enabled=True, saturday_enabled=True, sunday_enabled=True,
-                               acquire_program_key=None, extract_destination=None, extract_data_source_name=None,
-                               extract_options=None):
+                               acquire_program_key=None, extract_destination=None, extract_options=None):
     params = {
         "ScheduledExecutionName": name,
         "ScheduledExecutionNextScheduled": next_scheduled,
@@ -177,8 +176,7 @@ def insert_scheduled_execution(transaction, name, next_scheduled, client_name, d
         "ScheduledIntervalSaturdayEnabled": saturday_enabled,
         "ScheduledIntervalSundayEnabled": sunday_enabled,
         "AcquireProgramKey": acquire_program_key,
-        "ScheduledExtractDestination": extract_destination,
-        "ScheduledExtractDataSourceName": extract_data_source_name
+        "ScheduledExtractDestination": extract_destination
     }
     result = _execute_stored_procedure(transaction, "config.SP_InsertScheduledExecution", params,
                                        {"ScheduledExecutionKey": "INT", "ScheduledExtractKey": "INT"}).fetchone()
@@ -270,7 +268,7 @@ def update_scheduled_execution(transaction, key, name=None, next_scheduled=None,
                                user=None, schedule_end=None, interval_mi=-1, interval_hh=-1, interval_dd=-1,
                                monday_enabled=-1, tuesday_enabled=-1, wednesday_enabled=-1, thursday_enabled=-1,
                                friday_enabled=-1, saturday_enabled=-1, sunday_enabled=-1, acquire_program_key=-1,
-                               extract_destination="", extract_data_source_name="", extract_options=_DEFAULT):
+                               extract_destination="", extract_options=_DEFAULT):
     params = {
         "ScheduledExecutionKey": key,
         "ScheduledExecutionName": name,
@@ -293,8 +291,7 @@ def update_scheduled_execution(transaction, key, name=None, next_scheduled=None,
         "ScheduledIntervalSaturdayEnabled": saturday_enabled,
         "ScheduledIntervalSundayEnabled": sunday_enabled,
         "AcquireProgramKey": acquire_program_key,
-        "ScheduledExtractDestination": extract_destination,
-        "ScheduledExtractDataSourceName": extract_data_source_name
+        "ScheduledExtractDestination": extract_destination
     }
     output_params = {
         "ScheduledExecutionUpdateRowCount": "INT",
