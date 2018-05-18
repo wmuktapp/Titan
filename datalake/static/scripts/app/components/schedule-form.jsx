@@ -171,6 +171,8 @@ class ScheduleForm extends React.Component {
     // TODO loading state
     // TODO separate into two components?
 
+    // TODO move acquire dropdown to the top?  Should it dictate the value of data source?
+
     // Acquire options
     const acquireOptions = this.state.acquireOptions.map(
       (option) => <option key={option.id} value={option.id}>{option.name}</option>
@@ -220,22 +222,23 @@ class ScheduleForm extends React.Component {
             <span className="label-body">Enabled</span>
           </label>
         </div>
-        <div>
+        <div className="form-section">
           <label>Interval</label>
           <IntervalPicker hours={this.state.interval.hours} minutes={this.state.interval.minutes}
             seconds={this.state.interval.seconds} onUpdate={this.updateInterval} />
         </div>
-        <div>
+        <div className="form-section">
+          <h6>Days</h6>
           <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
         </div>
-        <div>
+        <div className="form-section">
           <label>Acquire program</label>
           <select name="acquire" value={this.state.acquire} onChange={this.onChange}>
             <option value=""></option>
             { acquireOptions }
           </select>
         </div>
-        <div>
+        <div className="form-section">
           <label>Extract program</label>
           <select name="acquire" value={this.state.extract} onChange={this.onChange}>
             <option value=""></option>
