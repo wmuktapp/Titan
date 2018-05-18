@@ -1,14 +1,14 @@
 
-.acquire-entry + .acquire-entry {
+.acquire-item + .acquire-list {
     border-top: 1px solid #eee;
     padding: 1em 0 0;
 }
 
-.acquire-entry label {
+.acquire-item label {
     display: inline-block;
     min-width: 8em;
 }
 
-.acquire-entry-remove {
+.acquire-item-remove {
     float: right;
 }

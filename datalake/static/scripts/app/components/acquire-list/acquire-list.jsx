@@ -7,31 +7,38 @@ class AcquireList extends React.Component {
 
   constructor(props) {
     super(props);
-    this.addAnother = this.addAnother.bind(this);
+
+    this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
+    this.itemChange = this.itemChange.bind(this);
   }
 
-  addAnother() {
-    this.props.addAnother();
+  // Add another acquire to list
+  add() {
+    this.props.onAdd();
   }
 
   remove(index) {
-    this.props.remove(index);
+    this.props.onRemove(index);
+  }
+
+  itemChange(index, name, value) {
+    this.props.onItemChange(index, name, value);
   }
 
   render() {
 
     const acquireItems = this.props.acquires.map((acquire, index) => {
-      return <AcquireItem key={index} fields={acquire.fields} index={index} remove={this.remove} />
+      return <AcquireItem key={index} fields={acquire.fields} expanded={acquire.expanded}
+        index={index} remove={this.remove} onChange={this.itemChange} />
     });
-    const addAnother = <a onClick={this.addAnother}>+ Add another</a>;
-    const emptyMessage = <p>No acquire program selected</p>;
 
     return (
       <div className="form-section acquire-form">
         <h5>Acquires</h5>
         { acquireItems }
-        { this.props.acquires.length ? addAnother : emptyMessage }
+        { this.props.acquires.length ? [] : <p>No acquires</p> }
+        <a onClick={this.add}>+ Add another</a>
       </div>
     );
   }

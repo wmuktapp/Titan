@@ -16,10 +16,6 @@ class AdhocForm extends React.Component {
   // - Dataset
   // - User
 
-  // TODO add:
-  // - Define zero or more acquires (name-value pairs)
-  // - Extract details - same as above, but with destination and data source name
-
   constructor() {
     super();
     this.state = {
@@ -30,7 +26,7 @@ class AdhocForm extends React.Component {
       user: '',
       availablePrograms: [],
 
-      // Handled by sub-forms
+      acquireOptions: ['property1', 'property2', 'property3'],
       acquires: [],
 
       extractDestination: '',
@@ -43,8 +39,9 @@ class AdhocForm extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleLoadDateChange = this.handleLoadDateChange.bind(this);
-    this.onAddAnotherAcquire = this.onAddAnotherAcquire.bind(this);
+    this.addAcquire = this.addAcquire.bind(this);
     this.removeAcquire = this.removeAcquire.bind(this);
+    this.updateAcquireItem = this.updateAcquireItem.bind(this);
     this.onSelectExtractDestination = this.onSelectExtractDestination.bind(this);
     this.onUpdateExtractDataSource = this.onUpdateExtractDataSource.bind(this);
     this.onUpdateExtractField = this.onUpdateExtractField.bind(this);
@@ -71,18 +68,10 @@ class AdhocForm extends React.Component {
 
     // TODO is there a better way of catching this event?
     if (name === 'program') {
-
-      if (value) {
-        this.addAcquire();
-        this.setState({
-          extractFields: []
-        });
-      } else {
-        this.setState({
-          acquires: [],
-          extractFields: []
-        });
-      }
+      this.setState({
+        acquires: [],
+        extractFields: []
+      });
     }
 
     this.setState({
@@ -98,32 +87,32 @@ class AdhocForm extends React.Component {
     });
   }
 
-  onAddAnotherAcquire() {
-    this.addAcquire();
-  }
-
   addAcquire() {
 
-    let acquires = this.state.acquires;
+    const acquire = {
+      fields: this.state.acquireOptions.reduce((obj, option) => { obj[option] = ''; return obj; }, {})
+    }
 
-    // TODO get property names dynamically
-    acquires.push({
-      // TODO add ID / name here?
-      fields: {
-        property1: '',
-        property2: '',
-        property3: ''
-      }
-    });
+    const acquires = this.state.acquires;
+    acquires.push(acquire);
 
     this.setState({
       acquires: acquires
     });
+
   }
 
   removeAcquire(index) {
     let acquires = this.state.acquires;
     acquires.splice(index, 1);
+    this.setState({
+      acquires: acquires
+    });
+  }
+
+  updateAcquireItem(index, name, value) {
+    let acquires = this.state.acquires;
+    acquires[index].fields[name] = value;
     this.setState({
       acquires: acquires
     });
@@ -188,6 +177,8 @@ class AdhocForm extends React.Component {
       return <p>Adhoc execution triggered</p>;
     }
 
+    // TODO remove row classes
+
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="row">
@@ -213,7 +204,7 @@ class AdhocForm extends React.Component {
           <label>User</label>
           <input type="text" name="user" value={this.state.user} onChange={this.handleChange} />
         </div>
-        <AcquireList acquires={this.state.acquires} addAnother={this.onAddAnotherAcquire} remove={this.removeAcquire} />
+        <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire} onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
         <ExtractForm showForm={!!this.state.program}
           destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination}
           dataSource={this.state.extractDataSource} updateDataSource={this.onUpdateExtractDataSource}
