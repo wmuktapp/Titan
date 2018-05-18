@@ -49,9 +49,9 @@ def _process_extract(flask_app, execution_key, extract_destination, options, pre
 
 def main():
     data = json.loads(os.getenv("DATALAKE_EXECUTE_STDIN"))
-    execution = data["execution"]
-    acquires = data["acquires"]
-    extract = data["extract"]
+    execution = data.get("execution", {})
+    acquires = data.get("acquires", {})
+    extract = data.get("extract", {})
     acquire_program_key = execution.get("acquire_program_key")
     client_name = execution.get("client_name")
     data_source_name = execution.get("data_source_name")
