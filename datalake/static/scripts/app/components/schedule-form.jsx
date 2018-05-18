@@ -1,6 +1,7 @@
 import React from 'react';
 import ScheduleDays from './schedule/days.jsx';
 import IntervalPicker from './interval-picker.jsx';
+import AcquireList from './acquire-list/acquire-list.jsx';
 import DatePicker from 'react-datepicker';
 import dateUtils from '../utils/date-utils';
 import moment from 'moment';
@@ -41,6 +42,9 @@ class ScheduleForm extends React.Component {
       },
       acquire: '',
       extract: '',
+
+      acquires: [],
+      acquireProperties: ['property1', 'property2', 'property3'],
 
       acquireOptions: [
         { id: 1, name: 'Acquire 1' },
@@ -140,6 +144,32 @@ class ScheduleForm extends React.Component {
     });
   }
 
+  addAcquire() {
+    const acquires = this.state.acquires;
+    acquires.push({
+      fields: this.state.acquireProperties.reduce((obj, option) => { obj[option] = ''; return obj; }, {})
+    });
+    this.setState({
+      acquires: acquires
+    });
+  }
+
+  removeAcquire(index) {
+    let acquires = this.state.acquires;
+    acquires.splice(index, 1);
+    this.setState({
+      acquires: acquires
+    });
+  }
+
+  updateAcquireItem(index, name, value) {
+    const acquires = this.state.acquires;
+    acquires[index].fields[name] = value;
+    this.setState({
+      acquires: acquires
+    });
+  }
+
   onSubmit(event) {
 
     // TODO send insert/update to server
@@ -232,11 +262,16 @@ class ScheduleForm extends React.Component {
           <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
         </div>
         <div className="form-section">
-          <label>Acquire program</label>
-          <select name="acquire" value={this.state.acquire} onChange={this.onChange}>
-            <option value=""></option>
-            { acquireOptions }
-          </select>
+          <div>
+            <label>Acquire program</label>
+            <select name="acquire" value={this.state.acquire} onChange={this.onChange}>
+              <option value=""></option>
+              { acquireOptions }
+            </select>
+          </div>
+          <div>
+            <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire} onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+          </div>
         </div>
         <div className="form-section">
           <label>Extract program</label>
