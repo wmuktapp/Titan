@@ -49,19 +49,21 @@ def format_execution_details(rows, scheduled=False):
     arbitrary_row = rows[0]
     details = {
         "execution": {
-            "scheduled_execution_key": arbitrary_row["ScheduledExecutionKey"],
-            "acquire_program_key": arbitrary_row["AcquireProgramKey"],
-            "client_name": arbitrary_row["ScheduledExecutionClientName" if scheduled else "ExecutionClientName"],
-            "data_source_name": arbitrary_row["ScheduledExecutionDataSourceName" if scheduled
-                                              else "ExecutionDataSourceName"],
-            "data_set_name": arbitrary_row["ScheduledExecutionDataSetName" if scheduled else "ExecutionDataSetName"],
-            "load_date": arbitrary_row["ScheduledExecutionLoadDate" if scheduled else "ExecutionLoadDate"],
-            "ad_hoc_user": arbitrary_row["ScheduledExecutionUser" if scheduled else "AdHocUser"]
-        },
+            "ScheduledExecutionKey": arbitrary_row["ScheduledExecutionKey"],
+            "AcquireProgramKey": arbitrary_row["AcquireProgramKey"],
+            "ExecutionClientName": arbitrary_row["ScheduledExecutionClientName" if scheduled
+                                                 else "ExecutionClientName"],
+            "ExecutionDataSourceName": arbitrary_row["ScheduledExecutionDataSourceName" if scheduled
+                                                     else "ExecutionDataSourceName"],
+            "ExecutionDataSetName": arbitrary_row["ScheduledExecutionDataSetName" if scheduled
+                                                  else "ExecutionDataSetName"],
+            "ExecutionLoadDate": arbitrary_row["ScheduledExecutionLoadDate" if scheduled else "ExecutionLoadDate"],
+            "ExecutionAdHocUser": arbitrary_row["ScheduledExecutionUser" if scheduled else "AdHocUser"]
+        }, # TODO: ad hoc user line needs fixing as name will change based on scheduled or execution. Separate?
         "acquires": [],
         "extract": {
-            "extract_destination": arbitrary_row["ScheduledExtractDestination" if scheduled else "ExtractDestination"],
-            "extract_options": {}
+            "ExtractDestination": arbitrary_row["ScheduledExtractDestination" if scheduled else "ExtractDestination"],
+            "Options": {}
         } if arbitrary_row["ScheduledExtractKey" if scheduled else "ExtractKey"] is not None else {}
     }
     acquires = {}
@@ -70,15 +72,15 @@ def format_execution_details(rows, scheduled=False):
         if acquire_key is not None:
             acquire = acquires.get(acquire_key)
             if acquire is None:
-                acquires[acquire_key] = {"options": {}}
+                acquires[acquire_key] = {"Options": {}}
             acquire_option_name = row["ScheduledAcquireOptionName" if scheduled else "AcquireOptionName"]
             if acquire_option_name is not None:
-                acquire["options"][acquire_option_name] = row["ScheduledAcquireOptionValue" if scheduled
+                acquire["Options"][acquire_option_name] = row["ScheduledAcquireOptionValue" if scheduled
                                                               else "AcquireOptionValue"]
         extract_option_name = row["ScheduledExtractOptionName" if scheduled else "ExtractOptionName"]
         if extract_option_name is not None:
-            details["extract"]["extract_options"][extract_option_name] = row["ScheduledExtractOptionValue" if scheduled
-                                                                             else "ExtractOptionValue"]
+            details["extract"]["Options"][extract_option_name] = row["ScheduledExtractOptionValue" if scheduled
+                                                                     else "ExtractOptionValue"]
     details["acquires"].extend(acquires.values())
     return details
 

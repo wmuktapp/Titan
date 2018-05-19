@@ -1,7 +1,6 @@
+from azure.storage import blob
 import click
 import sqlalchemy
-
-from azure.storage import blob
 
 from datalake import app
 import datalake
@@ -76,7 +75,8 @@ def main(connection_string, table_name, blob_prefix, replace, field_delimiter, r
          credential_name, data_source_name):
     config = datalake.create_app().config
     db = sqlalchemy.create_engine(connection_string)
-    service = blob.BlockBlobService(config["DATALAKE_AZURE_BLOB"])
+    service = blob.BlockBlobService(account_name=config["DATALAKE_AZURE_BLOB_ACCOUNT_NAME"],
+                                    sas_token=config["DATALAKE_AZURE_BLOB_SAS_TOKEN"])
     container_name = config["DATALAKE_AZURE_BLOB_CONTAINER_NAME"]
     sql_text, params = _generate_sql_text(replace, app.list_block_blobs(service, container_name, blob_prefix))
     blob_location = config["DATALAKE_AZURE_BLOB_ENDPOINT"] + "/" + container_name
