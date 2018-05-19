@@ -1,3 +1,5 @@
+import os
+
 from azure.storage import blob
 import click
 import sqlalchemy
@@ -60,8 +62,6 @@ def _generate_sql_text(replace, blobs):
               "database.", required=True)
 @click.option("-t", "--table-name", help="The name of the table to bulk insert data into. Can include schema.",
               required=True)
-@click.option("-b", "--blob-prefix", help="The blob name prefix (client_name/data_souce_name/data_set_name/load_date) "
-              "to use to locate the archived data to be extracted.", required=True)
 @click.option("-a", "--replace", type=bool, default=False, help="Whether or not the extract table contents will be "
               "replaced or appended to. Defaults to False (appended to).")
 @click.option("-f", "--field-delimiter", default=",", help="The delimiter character(s) to split columns / fields by.")
@@ -81,6 +81,7 @@ def main(connection_string, table_name, blob_prefix, replace, field_delimiter, r
     service = blob.BlockBlobService(account_name=config["DATALAKE_AZURE_BLOB_ACCOUNT_NAME"],
                                     sas_token=config["DATALAKE_AZURE_BLOB_SAS_TOKEN"])
     container_name = config["DATALAKE_AZURE_BLOB_CONTAINER_NAME"]
+    blob_prefix = os.environ.get("DATALAKE_PREFIX")
     sql_text, params = _generate_sql_text(replace, app.list_block_blobs(service, container_name, blob_prefix))
     blob_location = config["DATALAKE_AZURE_BLOB_ENDPOINT"] + "/" + container_name
     db.engine.execute(sqlalchemy.text(sql_text), table_name=table_name, field_delimiter=field_delimiter,
