@@ -47,6 +47,9 @@ def _generate_sql_text(replace, blobs):
             );
         """ % param_name
     sql_text += """
+            UPDATE :table_name
+            SET ExtractKey = :extract_key
+            WHERE ExtractKey IS NULL;
         COMMIT TRANSACTION
     """
     return sql_text, params
