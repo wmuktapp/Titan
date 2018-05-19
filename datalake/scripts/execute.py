@@ -56,12 +56,12 @@ def main():
     extract = data.get("extract")
     execution_key = _call_models_function(flask_app, models.start_execution_log, execution)["ExecutionKey"]
     error = None
+    prefix = "/".join((execution.get("client_name"), execution.get("data_source_name"), execution.get("data_set_name"),
+                       execution.get("load_date")))
     try:
         if acquires is not None:
             _process_acquires(flask_app, execution_key, execution.get("acquire_program_key"), acquires)
         if extract is not None:
-            prefix = "/".join((execution.get("client_name"), execution.get("data_source_name"),
-                               execution.get("data_set_name"), execution.get("load_date")))
             _process_extract(flask_app, execution_key, extract, prefix=prefix)
     except Exception as error:
         error = error

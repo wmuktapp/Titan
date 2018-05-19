@@ -5,6 +5,7 @@ import dotenv
 import flask
 
 from datalake import api, app, config, models
+from datalake.utilities import *
 
 
 def create_app():
