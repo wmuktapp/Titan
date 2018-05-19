@@ -34,39 +34,40 @@ def _process_acquires(flask_app, execution_key, acquire_program_key, load_date, 
     for acquire in acquires:
         acquire["ExecutionKey"] = execution_key
         options = acquire.get("Options")
-        options["ExecutionLoadDate"] = load_date
-        # TODO: Need to pass prefix in to process_acquires too so acquire knows where to drop off files etc.
+        options["--load-date"] = load_date
         acquire_key = _call_models_function(flask_app, models.start_acquire_log, acquire)["AcquireKey"]
         _execute_program(flask_app, "python -m %s" % acquire_program, models.end_acquire_log, acquire_key,
                          options=options, timeout=flask_app.config.get("DATALAKE_ACQUIRE_TIMEOUT_SECONDS"))
 
 
-def _process_extract(flask_app, execution_key, prefix, extract):
+def _process_extract(flask_app, execution_key, extract):
     extract["ExecutionKey"] = execution_key
     extract_key = _call_models_function(flask_app, models.start_extract_log, extract)["AcquireKey"]
     options = extract.get("Options")
-    options["--blob-prefix"] = prefix # TODO: This needs to change to be an explicit full path as could be simultaneous executions.
     _execute_program(flask_app, extract.get("ExtractDestination"), models.end_extract_log, extract_key, options=options,
                      timeout=flask_app.config.get("DATALAKE_EXTRACT_TIMEOUT_SECONDS"))
 
 
 def main():
-    flask_app = datalake.create_app()
     data = json.loads(os.getenv("DATALAKE_STDIN"))
     execution = data.get("execution", {})
     acquires = data.get("acquires")
     extract = data.get("extract")
     load_date = data.get("ExecutionLoadDate")
-    execution_key = _call_models_function(flask_app, models.start_execution_log, execution)["ExecutionKey"]
-    error = None
+    flask_app = datalake.create_app()
+    result = _call_models_function(flask_app, models.start_execution_log, execution)
+    execution_key = result["ExecutionKey"]
+    version = result["ExecutionVersion"]  # TODO: Update [log].StartExecutionLog to return ExecutionVersion aswell.
     prefix = "/".join((execution.get("ExecutionClientName"), execution.get("ExecutionDataSourceName"),
-                       execution.get("ExecutionDataSetName"), load_date))
+                       execution.get("ExecutionDataSetName"), load_date, version))
+    os.putenv("DATALAKE_PREFIX", prefix)
+    error = None
     try:
         if acquires is not None:
             _process_acquires(flask_app, execution_key, acquire_program_key=execution.get("AcquireProgramKey"),
                               load_date=load_date, acquires=acquires)
         if extract is not None:
-            _process_extract(flask_app, execution_key, prefix=prefix, extract=extract)
+            _process_extract(flask_app, execution_key, extract=extract)
     except Exception as error:
         error = error
     finally:
