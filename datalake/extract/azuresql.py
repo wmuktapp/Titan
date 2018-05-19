@@ -49,7 +49,7 @@ def _generate_sql_text(replace, blobs):
     sql_text += """
             UPDATE :table_name
             SET ExtractKey = :extract_key
-            WHERE ExtractKey IS NULL;
+            WHERE DataLakeExtractKey IS NULL;
         COMMIT TRANSACTION
     """
     return sql_text, params
