@@ -59,7 +59,7 @@ def main():
     execution_key = result["ExecutionKey"]
     version = result["ExecutionVersion"]  # TODO: Update [log].StartExecutionLog to return ExecutionVersion aswell.
     prefix = "/".join((execution.get("ExecutionClientName"), execution.get("ExecutionDataSourceName"),
-                       execution.get("ExecutionDataSetName"), load_date, version))
+                       execution.get("ExecutionDataSetName"), load_date, "v%s" % version))
     os.putenv("DATALAKE_PREFIX", prefix)
     error = None
     try:
