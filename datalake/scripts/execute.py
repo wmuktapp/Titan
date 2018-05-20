@@ -28,43 +28,59 @@ def _call_models_function(flask_app, func, *args, **kwargs):
         return func(*args, **kwargs)
 
 
-def _process_acquires(flask_app, execution_key, acquire_program_key, load_date, acquires):
-    acquire_program = {row["AcquireProgramKey"]: row["AcquireProgramPythonName"]
-                       for row in _call_models_function(flask_app, models.get_acquire_programs)}[acquire_program_key]
+def _process_acquire(flask_app, execution_key, acquire_program, acquire, load_date):
+    acquire["ExecutionKey"] = execution_key
+    options = acquire.get("Options")
+    options["--load-date"] = load_date
+    acquire_key = _call_models_function(flask_app, models.start_acquire_log, acquire)["AcquireKey"]
+    _execute_program(flask_app, "python -m %s" % acquire_program, models.end_acquire_log, acquire_key,
+                     options=options, timeout=flask_app.config.get("DATALAKE_ACQUIRE_TIMEOUT_SECONDS"))
+
+
+def _process_acquires(flask_app, data):
+    execution = data["execution"]
+    acquire_program_key = execution.get("AcquireProgramKey")
+    acquire_programs = {row["AcquireProgramKey"]: row["AcquireProgramPythonName"]
+                        for row in _call_models_function(flask_app, models.get_acquire_programs)}
+    acquire_program = acquire_programs[acquire_program_key]
+    execution_key = execution["ExecutionKey"]
+    load_date = execution["ExecutionLoadDate"]
+    acquires = data["acquires"]
     for acquire in acquires:
-        acquire["ExecutionKey"] = execution_key
-        options = acquire.get("Options")
-        options["--load-date"] = load_date
-        acquire_key = _call_models_function(flask_app, models.start_acquire_log, acquire)["AcquireKey"]
-        _execute_program(flask_app, "python -m %s" % acquire_program, models.end_acquire_log, acquire_key,
-                         options=options, timeout=flask_app.config.get("DATALAKE_ACQUIRE_TIMEOUT_SECONDS"))
+        _process_acquire(flask_app, execution_key, acquire_program, acquire=acquire, load_date=load_date)
+        _update_env_var(data)
 
 
 def _process_extract(flask_app, execution_key, extract):
     extract["ExecutionKey"] = execution_key
-    extract_key = _call_models_function(flask_app, models.start_extract_log, extract)["AcquireKey"]
+    extract_key = extract["ExtractKey"] = _call_models_function(flask_app, models.start_extract_log,
+                                                                extract)["ExtractKey"]
     options = extract.get("Options")
     _execute_program(flask_app, extract.get("ExtractDestination"), models.end_extract_log, extract_key, options=options,
                      timeout=flask_app.config.get("DATALAKE_EXTRACT_TIMEOUT_SECONDS"))
 
 
+def _update_env_var(data):
+    os.putenv("DATALAKE_STDIN", json.dumps(data))
+
+
 def main():
     data = json.loads(os.getenv("DATALAKE_STDIN"))
-    execution = data.get("execution", {})
-    acquires = data.get("acquires")
-    extract = data.get("extract")
-    load_date = data.get("ExecutionLoadDate")
+    execution = data["execution"]
+    acquires = data["acquires"]
+    extract = data["extract"]
     flask_app = datalake.create_app()
     result = _call_models_function(flask_app, models.start_execution_log, execution)
-    execution_key = result["ExecutionKey"]
-    version = result["ExecutionVersion"]
+    execution["ExecutionVersion"] = result["ExecutionVersion"]
+    execution_key = execution["ExecutionKey"] = result["ExecutionKey"]
+    _update_env_var(data)
     error = None
     try:
-        if acquires is not None:
-            _process_acquires(flask_app, execution_key, acquire_program_key=execution.get("AcquireProgramKey"),
-                              load_date=load_date, acquires=acquires)
-        if extract is not None:
+        if acquires:
+            _process_acquires(flask_app, data)
+        if extract:
             _process_extract(flask_app, execution_key, extract=extract)
+            _update_env_var(data)
     except Exception as error:
         error = error
     finally:
