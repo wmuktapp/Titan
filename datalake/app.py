@@ -53,7 +53,7 @@ def format_execution_details(rows, scheduled=False):
             "ExecutionDataSetName": arbitrary_row["ScheduledExecutionDataSetName" if scheduled
                                                   else "ExecutionDataSetName"],
             "ExecutionLoadDate": arbitrary_row["ScheduledExecutionLoadDate" if scheduled else "ExecutionLoadDate"],
-            "ExecutionAdHocUser": arbitrary_row["ScheduledExecutionUser" if scheduled else "AdHocUser"]
+            "ExecutionUser": arbitrary_row["ScheduledExecutionUser" if scheduled else "ExecutionUser"]
         },
         "acquires": [],
         "extract": {
