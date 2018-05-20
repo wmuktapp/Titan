@@ -152,9 +152,9 @@ def start_acquire_log(acquire):
 
 
 def start_execution_log(execution):
+    output_params = {"ExecutionKey": "INT", "ExecutionVersion": "INT"}
     with db.engine.begin() as transaction:
-        result = _execute_stored_procedure(transaction, "log.SP_StartExecutionLog", execution,
-                                           {"ExecutionKey": "INT"}).fetchone()  # TODO: Needs to return version too
+        result = _execute_stored_procedure(transaction, "log.SP_StartExecutionLog", execution, output_params).fetchone()
     return result
 
 

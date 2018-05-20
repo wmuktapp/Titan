@@ -57,10 +57,7 @@ def main():
     flask_app = datalake.create_app()
     result = _call_models_function(flask_app, models.start_execution_log, execution)
     execution_key = result["ExecutionKey"]
-    version = result["ExecutionVersion"]  # TODO: Update [log].StartExecutionLog to return ExecutionVersion aswell.
-    prefix = "/".join((execution.get("ExecutionClientName"), execution.get("ExecutionDataSourceName"),
-                       execution.get("ExecutionDataSetName"), load_date, "v%s" % version))
-    os.putenv("DATALAKE_PREFIX", prefix)
+    version = result["ExecutionVersion"]
     error = None
     try:
         if acquires is not None:

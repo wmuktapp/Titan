@@ -40,6 +40,7 @@ def execute(details):
 
 
 def format_execution_details(rows, scheduled=False):
+    # TODO: Fix this func. Work out how it's going to handle scheduled and non-scheduled execution details
     arbitrary_row = rows[0]
     details = {
         "execution": {
@@ -53,7 +54,7 @@ def format_execution_details(rows, scheduled=False):
                                                   else "ExecutionDataSetName"],
             "ExecutionLoadDate": arbitrary_row["ScheduledExecutionLoadDate" if scheduled else "ExecutionLoadDate"],
             "ExecutionAdHocUser": arbitrary_row["ScheduledExecutionUser" if scheduled else "AdHocUser"]
-        }, # TODO: ad hoc user line needs fixing as name will change based on scheduled or execution. Separate?
+        },
         "acquires": [],
         "extract": {
             "ExtractDestination": arbitrary_row["ScheduledExtractDestination" if scheduled else "ExtractDestination"],
