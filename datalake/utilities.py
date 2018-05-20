@@ -1,3 +1,4 @@
+import json
 import os
 
 from azure.storage import blob
@@ -11,11 +12,13 @@ class AcquireProgram(object):
         self._app = datalake.create_app()
         self._blob_service = blob.BlockBlobService(account_name=self._app.config["DATALAKE_AZURE_BLOB_ACCOUNT_NAME"],
                                                    sas_token=self._app.config["DATALAKE_AZURE_BLOB_SAS_TOKEN"])
-        self._blob_prefix = os.environ.get("DATALAKE_PREFIX")
+        self._data = json.loads(os.getenv("DATALAKE_PREFIX"))
+        executions = self._data["executions"]
         self._file_name_params = {
-            "DATALAKE_CLIENT_NAME": os.environ.get("DATALAKE_CLIENT_NAME"),
-            "DATALAKE_DATA_SOURCE_NAME": os.environ.get("DATALAKE_DATA_SOURCE_NAME"),
-            "DATALAKE_DATA_SET_NAME": os.environ.get("DATALAKE_DATA_SET_NAME")
+            "DATALAKE_CLIENT_NAME": executions["ExecutionClientName"],
+            "DATALAKE_DATA_SOURCE_NAME": executions["ExecutionDataSourceName"],
+            "DATALAKE_DATA_SET_NAME": executions["ExecutionDataSetName"],
+            "DATALAKE_LOAD_DATE": executions["ExecutionLoadDate"]
         }
         self.file_name = "{DATALAKE_DATA_SOURCE_NAME}_{DATALAKE_LOAD_DATE}"
         self.logger = self._app.logger

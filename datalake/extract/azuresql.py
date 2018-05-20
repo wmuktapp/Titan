@@ -1,3 +1,4 @@
+import json
 import os
 
 from azure.storage import blob
@@ -77,14 +78,18 @@ def _generate_sql_text(replace, blobs):
 def main(connection_string, table_name, blob_prefix, replace, field_delimiter, row_delimiter, text_qualifier, code_page,
          credential_name, data_source_name):
     config = datalake.create_app().config
-    db = sqlalchemy.create_engine(connection_string)
+    container_name = config["DATALAKE_AZURE_BLOB_CONTAINER_NAME"]
+    blob_location = config["DATALAKE_AZURE_BLOB_ENDPOINT"] + "/" + container_name
     service = blob.BlockBlobService(account_name=config["DATALAKE_AZURE_BLOB_ACCOUNT_NAME"],
                                     sas_token=config["DATALAKE_AZURE_BLOB_SAS_TOKEN"])
-    container_name = config["DATALAKE_AZURE_BLOB_CONTAINER_NAME"]
-    blob_prefix = os.environ.get("DATALAKE_PREFIX")
+    data = json.loads(os.getenv("DATALAKE_STDIN"))
+    execution = data["execution"]
+    blob_prefix = "/".join((execution["ExecutionClientName"], execution["ExecutionDataSourceName"],
+                            execution["DataSetName"], execution["ExecutionLoadDate"], execution["ExecutionVersion"]))
     sql_text, params = _generate_sql_text(replace, app.list_block_blobs(service, container_name, blob_prefix))
-    blob_location = config["DATALAKE_AZURE_BLOB_ENDPOINT"] + "/" + container_name
+    db = sqlalchemy.create_engine(connection_string)
     db.engine.execute(sqlalchemy.text(sql_text), table_name=table_name, field_delimiter=field_delimiter,
                       row_delimiter=row_delimiter, text_qualifier=text_qualifier, code_page=code_page,
                       credential_name=credential_name, data_source_name=data_source_name,
-                      blob_key=config["DATALAKE_AZURE_BLOB_SAS"], blob_location=blob_location, **params)
+                      blob_key=config["DATALAKE_AZURE_BLOB_SAS"], blob_location=blob_location,
+                      extract_key=data["extract"]["ExtractKey"], **params)
