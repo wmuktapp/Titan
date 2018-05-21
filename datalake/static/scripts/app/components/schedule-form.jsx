@@ -48,7 +48,6 @@ class ScheduleForm extends React.Component {
       acquireProperties: ['property1', 'property2', 'property3'],
 
       extractDestination: '',
-      extractDataSource: '',
       extractFields: {
         'Extract field 1': '',
         'Extract field 2': '',
@@ -199,10 +198,6 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  updateExtractDataSource() {
-    // TODO
-  }
-
   updateExtractField() {
     // TODO
   }
@@ -268,7 +263,7 @@ class ScheduleForm extends React.Component {
           <input type="text" name="client" value={this.state.client} onChange={this.onChange} />
         </div>
         <div>
-          <label>Data Source</label>
+          <label>Data source</label>
           <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.onChange} />
         </div>
         <div>
@@ -305,7 +300,8 @@ class ScheduleForm extends React.Component {
           {
             this.state.acquire
               ? <div>
-                  <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire} onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+                  <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
+                    onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
                 </div>
               : []
           }
@@ -313,7 +309,6 @@ class ScheduleForm extends React.Component {
         <div className="form-section">
           <h6>Extract</h6>
           <ExtractForm destination={this.state.extractDestination} selectDestination={this.selectExtractDestination}
-            dataSource={this.state.extractDataSource} updateDataSource={this.updateExtractDataSource}
             fields={this.state.extractFields} updateField={this.updateExtractField} />
         </div>
 

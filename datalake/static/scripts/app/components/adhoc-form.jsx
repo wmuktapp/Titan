@@ -22,7 +22,8 @@ class AdhocForm extends React.Component {
       program: '',
       loadDate: null,
       client: '',
-      dataset: '',
+      dataSource: '',
+      dataSet: '',
       user: '',
       availablePrograms: [],
 
@@ -30,7 +31,6 @@ class AdhocForm extends React.Component {
       acquires: [],
 
       extractDestination: '',
-      extractDataSource: '',
       extractFields: [],
 
       submitted: false
@@ -195,8 +195,12 @@ class AdhocForm extends React.Component {
           <input type="text" name="client" value={this.state.client} onChange={this.handleChange} />
         </div>
         <div>
-          <label>Dataset</label>
-          <input type="text" name="dataset" value={this.state.dataset} onChange={this.handleChange} />
+          <label>Data source</label>
+          <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.handleChange} />
+        </div>
+        <div>
+          <label>Data set</label>
+          <input type="text" name="dataSet" value={this.state.dataSet} onChange={this.handleChange} />
         </div>
         <div>
           <label>User</label>
@@ -204,14 +208,14 @@ class AdhocForm extends React.Component {
         </div>
         <div className="form-section">
           <h6>Acquires</h6>
-          <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire} onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+          <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
+            onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
         </div>
         <div className="form-section">
           <h6>Extract</h6>
           {
             this.state.program
               ? <ExtractForm destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination}
-                  dataSource={this.state.extractDataSource} updateDataSource={this.onUpdateExtractDataSource}
                   fields={this.state.extractFields} updateField={this.onUpdateExtractField} />
               : <p className="empty-msg">No acquire program selected</p>
           }

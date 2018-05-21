@@ -5,16 +5,11 @@ class ExtractForm extends React.Component {
   constructor(props) {
     super(props);
     this.onDestinationChange = this.onDestinationChange.bind(this);
-    this.onDataSourceChange = this.onDataSourceChange.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
   }
 
   onDestinationChange(e) {
     this.props.selectDestination(e.target.value);
-  }
-
-  onDataSourceChange(e) {
-    this.props.updateDataSource(e.target.value);
   }
 
   onFieldChange(e) {
@@ -47,14 +42,6 @@ class ExtractForm extends React.Component {
     );
 
     if (this.props.destination) {
-      
-      // Data source
-      rows.push(
-        <div key="datasource" className="row">
-          <label>Data source name</label>
-          <input type="text" name="datasource" value={this.props.dataSource} onChange={this.onDataSourceChange} />
-        </div>
-      );
 
       // Dynamic fields
       const dynamicFieldRows = Object.keys(this.props.fields).map((key, index) => {
