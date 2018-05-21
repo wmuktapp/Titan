@@ -109,7 +109,7 @@ class Monitor extends React.Component {
 
     // Add or remove execution from list
 
-    let list = this.state.retryList;
+    const list = this.state.retryList;
 
     if (add) {
       // Add to list
@@ -119,7 +119,7 @@ class Monitor extends React.Component {
       });
     } else {
       // Remove from list
-      for (let i in list) {
+      for (const i in list) {
         if (list[i].id === id && list[i].date === date) {
           list.splice(i, 1);
           break;
