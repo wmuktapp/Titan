@@ -206,11 +206,18 @@ class AdhocForm extends React.Component {
           <h6>Acquires</h6>
           <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire} onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
         </div>
-        <ExtractForm showForm={!!this.state.program}
-          destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination}
-          dataSource={this.state.extractDataSource} updateDataSource={this.onUpdateExtractDataSource}
-          fields={this.state.extractFields} updateField={this.onUpdateExtractField} />
-        <input type="submit" value="Execute" />
+        <div className="form-section">
+          {
+            this.state.program
+            ? <ExtractForm destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination}
+                dataSource={this.state.extractDataSource} updateDataSource={this.onUpdateExtractDataSource}
+                fields={this.state.extractFields} updateField={this.onUpdateExtractField} />
+            : <p className="empty-msg">No acquire program selected</p>
+          }
+        </div>
+        <div>
+          <input type="submit" value="Execute" />
+        </div>
       </form>
     );
   }
