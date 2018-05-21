@@ -20,6 +20,7 @@ class ScheduleForm extends React.Component {
       id: this.props.id,
 
       name: '',
+      program: '',
       nextScheduled: null,
       scheduleEnd: null,
       client: '',
@@ -41,7 +42,6 @@ class ScheduleForm extends React.Component {
         Saturday: false,
         Sunday: false
       },
-      acquire: '',
       extract: '',
 
       acquires: [],
@@ -54,7 +54,7 @@ class ScheduleForm extends React.Component {
         'Extract field 3': ''
       },
 
-      acquireOptions: [
+      availablePrograms: [
         { id: 1, name: 'Acquire 1' },
         { id: 2, name: 'Acquire 2' },
         { id: 3, name: 'Acquire 3' },
@@ -73,7 +73,7 @@ class ScheduleForm extends React.Component {
     };
 
     this.onChange = this.onChange.bind(this);
-    this.onChangeAcquireProgram = this.onChangeAcquireProgram.bind(this);
+    this.onChangeProgram = this.onChangeProgram.bind(this);
     this.updateInterval = this.updateInterval.bind(this);
     this.updateNextScheduled = this.updateNextScheduled.bind(this);
     this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
@@ -122,8 +122,11 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  onChangeAcquireProgram() {
+  // Special case for program
+  onChangeProgram() {
+    // TODO get data source from server
     this.setState({
+      dataSource: 'Program data source',
       acquires: []
     });
     this.onChange(...arguments);
@@ -232,10 +235,8 @@ class ScheduleForm extends React.Component {
     // TODO loading state
     // TODO separate into two components?
 
-    // TODO move acquire dropdown to the top?  Should it dictate the value of data source?
-
     // Acquire options
-    const acquireOptions = this.state.acquireOptions.map(
+    const programOptions = this.state.availablePrograms.map(
       (option) => <option key={option.id} value={option.id}>{option.name}</option>
     );
 
@@ -254,6 +255,13 @@ class ScheduleForm extends React.Component {
           <input type="text" name="name" value={this.state.name} onChange={this.onChange} />
         </div>
         <div>
+          <label>Program</label>
+          <select name="program" value={this.state.program} onChange={this.onChangeProgram}>
+            <option value=""></option>
+            { programOptions }
+          </select>
+        </div>
+        <div>
           <label>Next scheduled</label>
           <DatePicker selected={this.state.nextScheduled} dateFormat="DD/MM/YYYY" onChange={this.updateNextScheduled} />
         </div>
@@ -267,7 +275,7 @@ class ScheduleForm extends React.Component {
         </div>
         <div>
           <label>Data source</label>
-          <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.onChange} />
+          <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.onChange} disabled={!!this.state.program} />
         </div>
         <div>
           <label>Data set</label>
@@ -293,13 +301,6 @@ class ScheduleForm extends React.Component {
           <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
         </div>
         <div className="form-section">
-          <div>
-            <label>Acquire program</label>
-            <select name="acquire" value={this.state.acquire} onChange={this.onChangeAcquireProgram}>
-              <option value=""></option>
-              { acquireOptions }
-            </select>
-          </div>
           {
             this.state.acquire
               ? <div>

@@ -44,7 +44,6 @@ class AdhocForm extends React.Component {
     this.removeAcquire = this.removeAcquire.bind(this);
     this.updateAcquireItem = this.updateAcquireItem.bind(this);
     this.onSelectExtractDestination = this.onSelectExtractDestination.bind(this);
-    this.onUpdateExtractDataSource = this.onUpdateExtractDataSource.bind(this);
     this.onUpdateExtractField = this.onUpdateExtractField.bind(this);
   }
 
@@ -74,9 +73,9 @@ class AdhocForm extends React.Component {
 
   // Special case for program
   handleProgramChange() {
-    // TODO load data source
+    // TODO get data source from server
     this.setState({
-      dataSource: 'Acquire data source',
+      dataSource: 'Program data source',
       acquires: [],
       extractFields: []
     });
@@ -130,12 +129,6 @@ class AdhocForm extends React.Component {
         'Extract field 2': '',
         'Extract field 3': ''
       }
-    });
-  }
-
-  onUpdateExtractDataSource(dataSource) {
-    this.setState({
-      extractDataSource: dataSource
     });
   }
 
