@@ -42,7 +42,59 @@ def get_acquire_programs():
 @api.api_blueprint.route("/executions/<int:key>", methods=["GET"])
 @decorators.to_json
 def get_execution(key):
-    # TODO: Fill me in
+    rows = models.get_execution(key)
+    arbitrary_row = rows[0]
+    extract_key = arbitrary_row["ExtractKey"]
+    details = {
+        "execution": {
+            "ExecutionKey": arbitrary_row["ExecutionKey"],
+            "ScheduledExecutionKey": arbitrary_row["ScheduledExecutionKey"],
+            "ExecutionScheduledTime": arbitrary_row["ExecutionScheduledTime"],
+            "ExecutionStartTime": arbitrary_row["ExecutionStartTime"],
+            "ExecutionEndTime": arbitrary_row["ExecutionEndTime"],
+            "ExecutionSuccessful": arbitrary_row["ExecutionSuccessful"],
+            "ExecutionClientName": arbitrary_row["ExecutionClientName"],
+            "ExecutionDataSourceName": arbitrary_row["ExecutionDataSourceName"],
+            "ExecutionDataSetName": arbitrary_row["ExecutionDataSetName"],
+            "ExecutionLoadDate": arbitrary_row["ExecutionLoadDate"],
+            "ExecutionVersion": arbitrary_row["ExecutionVersion"],
+            "ExecutionUser": arbitrary_row["ExecutionUser"],
+            "AcquireProgramKey": arbitrary_row["AcquireProgramKey"],
+            "AcquireProgramFriendlyName": arbitrary_row["AcquireProgramFriendlyName"]
+        },
+        "acquires": [],
+        "extract": {
+            "ExtractKey": extract_key,
+            "ExtractDestination": arbitrary_row["ExtractDestination"],
+            "ExtractStartTime": arbitrary_row["ExtractStartTime"],
+            "ExtractEndTime": arbitrary_row["ExtractEndTime"],
+            "ExtractStatus": arbitrary_row["ExtractStatus"],
+            "ExtractErrorMessage": arbitrary_row["ExtractErrorMessage"],
+            "Options": {}
+        } if extract_key is not None else {}
+    }
+    acquires = {}
+    for row in rows:
+        acquire_key = row["AcquireKey"]
+        if acquire_key is not None:
+            acquire = acquires.get(acquire_key)
+            if acquire is None:
+                acquires[acquire_key] = {
+                    "AcquireKey": row["AcquireKey"],
+                    "AcquireStartTime": row["AcquireStartTime"],
+                    "AcquireEndTime": row["AcquireEndTime"],
+                    "AcquireStatus": row["AcquireStatus"],
+                    "AcquireErrorMessage": row["AcquireErrorMessage"],
+                    "Options": {}
+                }
+            acquire_option_name = row.get("AcquireOptionName")
+            if acquire_option_name is not None:
+                acquire["Options"][acquire_option_name] = row["AcquireOptionValue"]
+        extract_option_name = row.get("ExtractOptionName")
+        if extract_option_name is not None:
+            details["extract"]["Options"][extract_option_name] = row["ExtractOptionValue"]
+    details["acquires"].extend(acquires.values())
+    return details
 
 
 @api.api_blueprint.route("/executions/", methods=["GET"])
@@ -79,7 +131,62 @@ def get_extract_programs():
 @api.api_blueprint.route("/schedules/<int:key>", metods=["GET"])
 @decorators.to_json
 def get_scheduled_execution(key):
-    # TODO: Fill me in
+    rows = models.get_scheduled_execution(key)
+    arbitrary_row = rows[0]
+    scheduled_extract_key = arbitrary_row["ScheduledExtractKey"]
+    details = {
+        "execution": {
+            "ScheduledExecutionKey": arbitrary_row["ScheduledExecutionKey"],
+            "ScheduledExecutionName": arbitrary_row["ScheduledExecutionName"],
+            "ScheduledExecutionNextScheduled": arbitrary_row["ScheduledExecutionNextScheduled"],
+            "ScheduledExecutionScheduleEnd": arbitrary_row["ScheduledExecutionScheduleEnd"],
+            "ScheduledExecutionClientName": arbitrary_row["ScheduledExecutionClientName"],
+            "ScheduledExecutionDataSourceName": arbitrary_row["ScheduledExecutionDataSourceName"],
+            "ScheduledExecutionDataSetName": arbitrary_row["ScheduledExecutionDataSetName"],
+            "ScheduledExecutionNextLoadDate": arbitrary_row["ScheduledExecutionNextLoadDate"],
+            "ScheduledExecutionEnabled": arbitrary_row["ScheduledExecutionEnabled"],
+            "ScheduledExecutionUser": arbitrary_row["ScheduledExecutionUser"],
+            "ScheduledIntervalKey": arbitrary_row["ScheduledIntervalKey"],
+            "ScheduledIntervalMI": arbitrary_row["ScheduledIntervalMI"],
+            "ScheduledIntervalHH": arbitrary_row["ScheduledIntervalHH"],
+            "ScheduledIntervalDD": arbitrary_row["ScheduledIntervalDD"],
+            "ScheduledMondayEnabled": arbitrary_row["ScheduledMondayEnabled"],
+            "ScheduledTuesdayEnabled": arbitrary_row["ScheduledTuesdayEnabled"],
+            "ScheduledWednesdayEnabled": arbitrary_row["ScheduledWednesdayEnabled"],
+            "ScheduledThursdayEnabled": arbitrary_row["ScheduledThursdayEnabled"],
+            "ScheduledFridayEnabled": arbitrary_row["ScheduledFridayEnabled"],
+            "ScheduledSaturdayEnabled": arbitrary_row["ScheduledSaturdayEnabled"],
+            "ScheduledSundayEnabled": arbitrary_row["ScheduledSundayEnabled"],
+            "AcquireProgramKey": arbitrary_row["AcquireProgramKey"],
+            "AcquireProgramFriendlyName": arbitrary_row["AcquireProgramFriendlyName"],
+            "Status": arbitrary_row["Status"]
+        },
+        "acquires": [],
+        "extract": {
+            "ScheduledExtractKey": scheduled_extract_key,
+            "ScheduledExtractDestination": arbitrary_row["ScheduledExtractDestination"],
+            "Options": {}
+        } if scheduled_extract_key is not None else {}
+    }
+    acquires = {}
+    for row in rows:
+        acquire_key = row["AcquireKey"]
+        if acquire_key is not None:
+            acquire = acquires.get(acquire_key)
+            if acquire is None:
+                acquires[acquire_key] = {
+                    "ScheduledAcquireKey": row["ScheduledAcquireKey"],
+                    "ScheduledAcquireName": row["ScheduledAcquireName"],
+                    "Options": {}
+                }
+            acquire_option_name = row.get("ScheduledAcquireOptionName")
+            if acquire_option_name is not None:
+                acquire["Options"][acquire_option_name] = row["ScheduledAcquireOptionValue"]
+        extract_option_name = row.get("ScheduledExtractOptionName")
+        if extract_option_name is not None:
+            details["extract"]["Options"][extract_option_name] = row["ScheduledExtractOptionValue"]
+    details["acquires"].extend(acquires.values())
+    return details
 
 
 @api.api_blueprint.route("/schedules/", methods=["GET"])
