@@ -82,10 +82,9 @@ def main(connection_string, table_name, blob_prefix, replace, field_delimiter, r
     blob_location = config["DATALAKE_AZURE_BLOB_ENDPOINT"] + "/" + container_name
     service = blob.BlockBlobService(account_name=config["DATALAKE_AZURE_BLOB_ACCOUNT_NAME"],
                                     sas_token=config["DATALAKE_AZURE_BLOB_SAS_TOKEN"])
-    data = json.loads(os.getenv("DATALAKE_STDIN"))
-    execution = data["execution"]
-    blob_prefix = "/".join((execution["ExecutionClientName"], execution["ExecutionDataSourceName"],
-                            execution["DataSetName"], execution["ExecutionLoadDate"], execution["ExecutionVersion"]))
+    data = json.loads(os.getenv("DATALAKE_STDIN"))["execution"]
+    blob_prefix = "/".join((data["ExecutionClientName"], data["ExecutionDataSourceName"],
+                            data["DataSetName"], data["ExecutionLoadDate"], data["ExecutionVersion"]))
     sql_text, params = _generate_sql_text(replace, app.list_block_blobs(service, container_name, blob_prefix))
     db = sqlalchemy.create_engine(connection_string)
     db.engine.execute(sqlalchemy.text(sql_text), table_name=table_name, field_delimiter=field_delimiter,
