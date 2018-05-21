@@ -14,15 +14,15 @@ class Monitor extends React.Component {
 
     const days = 5;
 
-    let today = new Date();
+    const today = new Date();
     today.setHours(0);
     today.setMinutes(0);
     today.setSeconds(0);
     today.setMilliseconds(0);
 
-    let start = new Date(today);
+    const start = new Date(today);
     start.setDate(start.getDate() - days + 1);
-    let end = new Date(today);
+    const end = new Date(today);
 
     this.state = {
       dates: {
