@@ -47,7 +47,13 @@ class ScheduleForm extends React.Component {
       acquires: [],
       acquireProperties: ['property1', 'property2', 'property3'],
 
-      extractDestination: null,
+      extractDestination: '',
+      extractDataSource: '',
+      extractFields: {
+        'Extract field 1': '',
+        'Extract field 2': '',
+        'Extract field 3': ''
+      },
 
       acquireOptions: [
         { id: 1, name: 'Acquire 1' },
@@ -77,6 +83,9 @@ class ScheduleForm extends React.Component {
     this.addAcquire = this.addAcquire.bind(this);
     this.removeAcquire = this.removeAcquire.bind(this);
     this.updateAcquireItem = this.updateAcquireItem.bind(this);
+    this.selectExtractDestination = this.selectExtractDestination.bind(this);
+    this.updateExtractDataSource = this.updateExtractDataSource.bind(this);
+    this.updateExtractField = this.updateExtractField.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
@@ -182,6 +191,20 @@ class ScheduleForm extends React.Component {
     this.setState({
       acquires: acquires
     });
+  }
+
+  selectExtractDestination(destination) {
+    this.setState({
+      extractDestination: destination
+    });
+  }
+
+  updateExtractDataSource() {
+    // TODO
+  }
+
+  updateExtractField() {
+    // TODO
   }
 
   onSubmit(event) {
@@ -292,7 +315,9 @@ class ScheduleForm extends React.Component {
         </div>
         <div className="form-section">
           <h6>Extract</h6>
-          <ExtractForm destination={this.state.extractDestination} />
+          <ExtractForm destination={this.state.extractDestination} selectDestination={this.selectExtractDestination}
+            dataSource={this.state.extractDataSource} updateDataSource={this.updateExtractDataSource}
+            fields={this.state.extractFields} updateField={this.updateExtractField} />
         </div>
 
         <div>
