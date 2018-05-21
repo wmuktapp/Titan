@@ -2,6 +2,7 @@ import React from 'react';
 import ScheduleDays from './schedule/days.jsx';
 import IntervalPicker from './interval-picker.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
+import ExtractForm from './extract/extract-form.jsx';
 import DatePicker from 'react-datepicker';
 import dateUtils from '../utils/date-utils';
 import moment from 'moment';
@@ -45,6 +46,8 @@ class ScheduleForm extends React.Component {
 
       acquires: [],
       acquireProperties: ['property1', 'property2', 'property3'],
+
+      extractDestination: null,
 
       acquireOptions: [
         { id: 1, name: 'Acquire 1' },
@@ -288,11 +291,8 @@ class ScheduleForm extends React.Component {
           }
         </div>
         <div className="form-section">
-          <label>Extract program</label>
-          <select name="extract" value={this.state.extract} onChange={this.onChange}>
-            <option value=""></option>
-            { extractOptions }
-          </select>
+          <h6>Extract</h6>
+          <ExtractForm destination={this.state.extractDestination} />
         </div>
 
         <div>
