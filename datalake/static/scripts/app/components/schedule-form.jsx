@@ -83,7 +83,6 @@ class ScheduleForm extends React.Component {
     this.removeAcquire = this.removeAcquire.bind(this);
     this.updateAcquireItem = this.updateAcquireItem.bind(this);
     this.selectExtractDestination = this.selectExtractDestination.bind(this);
-    this.updateExtractDataSource = this.updateExtractDataSource.bind(this);
     this.updateExtractField = this.updateExtractField.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
