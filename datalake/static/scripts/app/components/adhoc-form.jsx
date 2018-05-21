@@ -210,10 +210,10 @@ class AdhocForm extends React.Component {
           <h6>Extract</h6>
           {
             this.state.program
-            ? <ExtractForm destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination}
-                dataSource={this.state.extractDataSource} updateDataSource={this.onUpdateExtractDataSource}
-                fields={this.state.extractFields} updateField={this.onUpdateExtractField} />
-            : <p className="empty-msg">No acquire program selected</p>
+              ? <ExtractForm destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination}
+                  dataSource={this.state.extractDataSource} updateDataSource={this.onUpdateExtractDataSource}
+                  fields={this.state.extractFields} updateField={this.onUpdateExtractField} />
+              : <p className="empty-msg">No acquire program selected</p>
           }
         </div>
         <div>
