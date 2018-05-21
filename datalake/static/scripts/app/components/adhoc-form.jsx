@@ -74,7 +74,9 @@ class AdhocForm extends React.Component {
 
   // Special case for program
   handleProgramChange() {
+    // TODO load data source
     this.setState({
+      dataSource: 'Acquire data source',
       acquires: [],
       extractFields: []
     });
@@ -196,7 +198,7 @@ class AdhocForm extends React.Component {
         </div>
         <div>
           <label>Data source</label>
-          <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.handleChange} />
+          <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.handleChange} disabled={!!this.state.program} />
         </div>
         <div>
           <label>Data set</label>
