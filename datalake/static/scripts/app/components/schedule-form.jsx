@@ -206,7 +206,6 @@ class ScheduleForm extends React.Component {
     // NOTE: Handles both insert and update
 
     // TODO (re-use existing components?):
-    // - acquire option(s) (name/value)
     // - extract option(s) (name/value)
 
     // TODO loading state
@@ -280,9 +279,13 @@ class ScheduleForm extends React.Component {
               { acquireOptions }
             </select>
           </div>
-          <div>
-            <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire} onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
-          </div>
+          {
+            this.state.acquire
+              ? <div>
+                  <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire} onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+                </div>
+              : []
+          }
         </div>
         <div className="form-section">
           <label>Extract program</label>
