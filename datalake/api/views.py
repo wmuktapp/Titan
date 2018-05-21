@@ -9,7 +9,7 @@ from datalake.api import decorators
 @api.api_blueprint.route("/execute", methods=["POST"])
 @decorators.to_json
 def execute():
-    data = flask.request.get_json(force=True)
+    data = flask.request.get_json(force=True).get("data", {"execution": {}, "acquires": [], "extract": {}})
     app.execute(data)
     return {}, 201, None
 
@@ -53,7 +53,7 @@ def get_executions():
         value = flask.request.args.get(k)
         if k is not None:
             params[k] = value
-    return models.get_executions(**params)
+    return {"data": dict(row) for row in models.get_executions(**params)}
 
 
 @api.api_blueprint.route("/extract-programs/", methods=["GET"])
@@ -90,7 +90,7 @@ def get_scheduled_executions():
         value = flask.request.args.get(k)
         if k is not None:
             params[k] = value
-    return models.get_scheduled_executions(**params)
+    return {"data": dict(row) for row in models.get_scheduled_executions(**params)}
 
 
 @api.api_blueprint.route("/schedules/", methods=["POST"])

@@ -39,43 +39,37 @@ def execute(details):
     )
 
 
-def format_execution_details(rows, scheduled=False):
-    # TODO: Fix this func. Work out how it's going to handle scheduled and non-scheduled execution details
+def format_nested_execution(rows):
     arbitrary_row = rows[0]
     details = {
         "execution": {
-            "ScheduledExecutionKey": arbitrary_row["ScheduledExecutionKey"],
-            "AcquireProgramKey": arbitrary_row["AcquireProgramKey"],
-            "ExecutionClientName": arbitrary_row["ScheduledExecutionClientName" if scheduled
-                                                 else "ExecutionClientName"],
-            "ExecutionDataSourceName": arbitrary_row["ScheduledExecutionDataSourceName" if scheduled
-                                                     else "ExecutionDataSourceName"],
-            "ExecutionDataSetName": arbitrary_row["ScheduledExecutionDataSetName" if scheduled
-                                                  else "ExecutionDataSetName"],
-            "ExecutionLoadDate": arbitrary_row["ScheduledExecutionLoadDate" if scheduled else "ExecutionLoadDate"],
-            "ExecutionUser": arbitrary_row["ScheduledExecutionUser" if scheduled else "ExecutionUser"]
+            "ScheduledExecutionKey": arbitrary_row.get("ScheduledExecutionKey"),
+            "AcquireProgramKey": arbitrary_row.get("AcquireProgramKey"),
+            "ExecutionClientName": arbitrary_row.get("ExecutionClientName"),
+            "ExecutionDataSourceName": arbitrary_row.get("ExecutionDataSourceName"),
+            "ExecutionDataSetName": arbitrary_row.get("ExecutionDataSetName"),
+            "ExecutionLoadDate": arbitrary_row.get("ExecutionLoadDate"),
+            "ExecutionUser": arbitrary_row.get("ExecutionUser")
         },
         "acquires": [],
         "extract": {
-            "ExtractDestination": arbitrary_row["ScheduledExtractDestination" if scheduled else "ExtractDestination"],
+            "ExtractDestination": arbitrary_row.get("ExtractDestination"),
             "Options": {}
-        } if arbitrary_row["ScheduledExtractKey" if scheduled else "ExtractKey"] is not None else {}
+        } if arbitrary_row.get("ExtractKey") is not None else {}
     }
     acquires = {}
     for row in rows:
-        acquire_key = row["AcquireKey"]
+        acquire_key = row.get("AcquireKey")
         if acquire_key is not None:
             acquire = acquires.get(acquire_key)
             if acquire is None:
                 acquires[acquire_key] = {"Options": {}}
-            acquire_option_name = row["ScheduledAcquireOptionName" if scheduled else "AcquireOptionName"]
+            acquire_option_name = row.get("AcquireOptionName")
             if acquire_option_name is not None:
-                acquire["Options"][acquire_option_name] = row["ScheduledAcquireOptionValue" if scheduled
-                                                              else "AcquireOptionValue"]
-        extract_option_name = row["ScheduledExtractOptionName" if scheduled else "ExtractOptionName"]
+                acquire["Options"][acquire_option_name] = row.get("AcquireOptionValue")
+        extract_option_name = row.get("ExtractOptionName")
         if extract_option_name is not None:
-            details["extract"]["Options"][extract_option_name] = row["ScheduledExtractOptionValue" if scheduled
-                                                                     else "ExtractOptionValue"]
+            details["extract"]["Options"][extract_option_name] = row.get("ExtractOptionValue")
     details["acquires"].extend(acquires.values())
     return details
 
