@@ -197,8 +197,12 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  updateExtractField() {
-    // TODO
+  updateExtractField(name, value) {
+    const extractFields = this.state.extractFields;
+    extractFields[name] = value;
+    this.setState({
+      extractFields: extractFields
+    });
   }
 
   onSubmit(event) {
