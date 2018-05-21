@@ -31,9 +31,9 @@ class ScheduleDays extends React.Component {
 
     const days = Object.keys(this.props.days).map((day) => {
       return (
-        <label key={day}>
-          <input type="checkbox" name={day} checked={this.props.days[day]} onChange={this.onChange} />
-          <span className="label-body">{labels[day]}</span>
+        <label className="schedule-days-label" key={day}>
+          <input type="checkbox" className="schedule-days-input" name={day} checked={this.props.days[day]} onChange={this.onChange} />
+          <span className="schedule-days-text">{labels[day]}</span>
         </label>
       );
     });

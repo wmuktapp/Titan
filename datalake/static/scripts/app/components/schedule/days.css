@@ -1,19 +1,15 @@
 
-.schedule-days {
-    /*width: 200px;*/
-}
-
-.schedule-days label {
+.schedule-days .schedule-days-label {
     display: inline-block;
-    width: 3em;
+    width: 3.2em;
 }
 
-.schedule-days input[type=checkbox] {
+.schedule-days .schedule-days-input {
     display: block;
     margin: 0 auto;
 }
 
-.schedule-days .label-body {
+.schedule-days .schedule-days-text {
     text-align: center;
-    margin: 0;
+    display: block;
 }
