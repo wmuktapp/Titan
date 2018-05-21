@@ -2,6 +2,8 @@ import React from 'react';
 import MonitoringControls from './monitoring/controls.jsx';
 import MonitoringGrid from './monitoring/grid.jsx';
 
+import dateUtils from '../utils/date-utils';
+
 require('./monitor.css');
 
 class Monitor extends React.Component {
@@ -12,15 +14,15 @@ class Monitor extends React.Component {
 
     const days = 5;
 
-    let today = new Date();
+    const today = new Date();
     today.setHours(0);
     today.setMinutes(0);
     today.setSeconds(0);
     today.setMilliseconds(0);
 
-    let start = new Date(today);
+    const start = new Date(today);
     start.setDate(start.getDate() - days + 1);
-    let end = new Date(today);
+    const end = new Date(today);
 
     this.state = {
       dates: {
@@ -88,8 +90,8 @@ class Monitor extends React.Component {
     });
 
     const url = '/api/executions'
-      + '?start=' + dates.start.toISOString().substr(0, 10)
-      + '&end=' + dates.end.toISOString().substr(0, 10);
+      + '?start=' + dateUtils.dateToIso8601(dates.start)
+      + '&end=' + dateUtils.dateToIso8601(dates.end);
 
     // Request data
     fetch(url)
@@ -107,7 +109,7 @@ class Monitor extends React.Component {
 
     // Add or remove execution from list
 
-    let list = this.state.retryList;
+    const list = this.state.retryList;
 
     if (add) {
       // Add to list
@@ -117,7 +119,7 @@ class Monitor extends React.Component {
       });
     } else {
       // Remove from list
-      for (let i in list) {
+      for (const i in list) {
         if (list[i].id === id && list[i].date === date) {
           list.splice(i, 1);
           break;

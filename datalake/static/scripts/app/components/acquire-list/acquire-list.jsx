@@ -36,7 +36,7 @@ class AcquireList extends React.Component {
     return (
       <div className="acquire-list">
         { acquireItems }
-        { this.props.acquires.length ? [] : <p>No acquires</p> }
+        { !this.props.acquires.length && <p>No acquires</p> }
         <a onClick={this.add}>+ Add another</a>
       </div>
     );

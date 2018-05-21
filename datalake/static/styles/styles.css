@@ -100,6 +100,12 @@ input[type=checkbox]:checked:after {
     color: #99a1a7;
 }
 
+
+input[type=text]:disabled {
+    border-color: #e9ecee;
+    background-color: #fafafa;
+}
+
 .panel {
     background-color: #fff;
     margin: 1em 0;
@@ -115,6 +121,11 @@ input[type=checkbox]:checked:after {
 .tab {
     display: inline-block;
     border-radius: .5em;
+    transition: background-color .2s;
+}
+
+.tab:hover {
+    background-color: #fcfcfc;
 }
 
 .tab a {
@@ -133,6 +144,6 @@ form .label-body {
 }
 
 .form-section {
-    border-top: 1px solid #aaa;
+    border-top: 2px solid #f0f0f0;
     padding: 1em 0 0;
 }

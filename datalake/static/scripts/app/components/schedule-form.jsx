@@ -2,6 +2,7 @@ import React from 'react';
 import ScheduleDays from './schedule/days.jsx';
 import IntervalPicker from './interval-picker.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
+import ExtractForm from './extract/extract-form.jsx';
 import DatePicker from 'react-datepicker';
 import dateUtils from '../utils/date-utils';
 import moment from 'moment';
@@ -14,11 +15,11 @@ class ScheduleForm extends React.Component {
   constructor(props) {
     super(props);
 
-    // TODO populate these from querying (componentDidMount)
     this.state = {
       id: this.props.id,
 
       name: '',
+      program: '',
       nextScheduled: null,
       scheduleEnd: null,
       client: '',
@@ -32,21 +33,27 @@ class ScheduleForm extends React.Component {
         seconds: 0
       },
       days: {
-        Monday: false,
-        Tuesday: false,
-        Wednesday: false,
-        Thursday: false,
-        Friday: false,
-        Saturday: false,
-        Sunday: false
+        Monday: true,
+        Tuesday: true,
+        Wednesday: true,
+        Thursday: true,
+        Friday: true,
+        Saturday: true,
+        Sunday: true
       },
-      acquire: '',
       extract: '',
 
       acquires: [],
       acquireProperties: ['property1', 'property2', 'property3'],
 
-      acquireOptions: [
+      extractDestination: '',
+      extractFields: {
+        'Extract field 1': '',
+        'Extract field 2': '',
+        'Extract field 3': ''
+      },
+
+      availablePrograms: [
         { id: 1, name: 'Acquire 1' },
         { id: 2, name: 'Acquire 2' },
         { id: 3, name: 'Acquire 3' },
@@ -65,7 +72,7 @@ class ScheduleForm extends React.Component {
     };
 
     this.onChange = this.onChange.bind(this);
-    this.onChangeAcquireProgram = this.onChangeAcquireProgram.bind(this);
+    this.onChangeProgram = this.onChangeProgram.bind(this);
     this.updateInterval = this.updateInterval.bind(this);
     this.updateNextScheduled = this.updateNextScheduled.bind(this);
     this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
@@ -74,6 +81,8 @@ class ScheduleForm extends React.Component {
     this.addAcquire = this.addAcquire.bind(this);
     this.removeAcquire = this.removeAcquire.bind(this);
     this.updateAcquireItem = this.updateAcquireItem.bind(this);
+    this.selectExtractDestination = this.selectExtractDestination.bind(this);
+    this.updateExtractField = this.updateExtractField.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
@@ -112,8 +121,11 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  onChangeAcquireProgram() {
+  // Special case for program
+  onChangeProgram() {
+    // TODO get data source from server
     this.setState({
+      dataSource: 'Program data source',
       acquires: []
     });
     this.onChange(...arguments);
@@ -181,6 +193,20 @@ class ScheduleForm extends React.Component {
     });
   }
 
+  selectExtractDestination(destination) {
+    this.setState({
+      extractDestination: destination
+    });
+  }
+
+  updateExtractField(name, value) {
+    const extractFields = this.state.extractFields;
+    extractFields[name] = value;
+    this.setState({
+      extractFields: extractFields
+    });
+  }
+
   onSubmit(event) {
 
     // TODO send insert/update to server
@@ -205,17 +231,8 @@ class ScheduleForm extends React.Component {
 
     // NOTE: Handles both insert and update
 
-    // TODO (re-use existing components?):
-    // - acquire option(s) (name/value)
-    // - extract option(s) (name/value)
-
-    // TODO loading state
-    // TODO separate into two components?
-
-    // TODO move acquire dropdown to the top?  Should it dictate the value of data source?
-
     // Acquire options
-    const acquireOptions = this.state.acquireOptions.map(
+    const programOptions = this.state.availablePrograms.map(
       (option) => <option key={option.id} value={option.id}>{option.name}</option>
     );
 
@@ -234,6 +251,13 @@ class ScheduleForm extends React.Component {
           <input type="text" name="name" value={this.state.name} onChange={this.onChange} />
         </div>
         <div>
+          <label>Program</label>
+          <select name="program" value={this.state.program} onChange={this.onChangeProgram}>
+            <option value=""></option>
+            { programOptions }
+          </select>
+        </div>
+        <div>
           <label>Next scheduled</label>
           <DatePicker selected={this.state.nextScheduled} dateFormat="DD/MM/YYYY" onChange={this.updateNextScheduled} />
         </div>
@@ -246,8 +270,8 @@ class ScheduleForm extends React.Component {
           <input type="text" name="client" value={this.state.client} onChange={this.onChange} />
         </div>
         <div>
-          <label>Data Source</label>
-          <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.onChange} />
+          <label>Data source</label>
+          <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.onChange} disabled={!!this.state.program} />
         </div>
         <div>
           <label>Data set</label>
@@ -273,23 +297,16 @@ class ScheduleForm extends React.Component {
           <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
         </div>
         <div className="form-section">
-          <div>
-            <label>Acquire program</label>
-            <select name="acquire" value={this.state.acquire} onChange={this.onChangeAcquireProgram}>
-              <option value=""></option>
-              { acquireOptions }
-            </select>
-          </div>
-          <div>
-            <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire} onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
-          </div>
+          {
+            this.state.acquire &&
+              <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
+                onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+          }
         </div>
         <div className="form-section">
-          <label>Extract program</label>
-          <select name="acquire" value={this.state.extract} onChange={this.onChange}>
-            <option value=""></option>
-            { extractOptions }
-          </select>
+          <h6>Extract</h6>
+          <ExtractForm destination={this.state.extractDestination} selectDestination={this.selectExtractDestination}
+            fields={this.state.extractFields} updateField={this.updateExtractField} />
         </div>
 
         <div>
