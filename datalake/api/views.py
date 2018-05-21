@@ -96,7 +96,7 @@ def get_scheduled_executions():
 @api.api_blueprint.route("/schedules/", methods=["POST"])
 @decorators.to_json
 def insert_scheduled_execution():
-    data = flask.request.get_json(force=True)
+    data = flask.request.get_json(force=True).get("data", {})
     execution = data.get("execution", {})
     acquires = data.get("acquires", [])
     extract = data.get("extract", {})
@@ -113,14 +113,16 @@ def insert_scheduled_execution():
 @decorators.to_json
 def retry_executions():
     for key in flask.request.get_json(force=True)["keys"]:
-        app.execute(app.format_execution_details(models.get_execution(key)))
+        rows = models.get_execution(key)
+        if rows:
+            app.execute(app.format_execution(rows))
     return {}, 201, None
 
 
 @api.api_blueprint.route("/schedules/<int:key>", methods=["PUT"])
 @decorators.to_json
 def update_scheduled_execution(key):
-    data = flask.request.get_json(force=True)
+    data = flask.request.get_json(force=True).get("data", {})
     params = {"ScheduledExecutionKey": key}
     execution = data.get("execution", {})
     execution.update(params)

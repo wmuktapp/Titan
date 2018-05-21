@@ -39,37 +39,39 @@ def execute(details):
     )
 
 
-def format_nested_execution(rows):
+def format_execution(rows):
     arbitrary_row = rows[0]
+    scheduled_execution_key = arbitrary_row["ScheduledExecutionKey"]
+    prefix = "Scheduled" if scheduled_execution_key is not None else ""
     details = {
         "execution": {
-            "ScheduledExecutionKey": arbitrary_row.get("ScheduledExecutionKey"),
-            "AcquireProgramKey": arbitrary_row.get("AcquireProgramKey"),
-            "ExecutionClientName": arbitrary_row.get("ExecutionClientName"),
-            "ExecutionDataSourceName": arbitrary_row.get("ExecutionDataSourceName"),
-            "ExecutionDataSetName": arbitrary_row.get("ExecutionDataSetName"),
-            "ExecutionLoadDate": arbitrary_row.get("ExecutionLoadDate"),
-            "ExecutionUser": arbitrary_row.get("ExecutionUser")
+            "ScheduledExecutionKey": scheduled_execution_key,
+            "AcquireProgramKey": arbitrary_row["AcquireProgramKey"],
+            "ExecutionClientName": arbitrary_row["%sExecutionClientName" % prefix],
+            "ExecutionDataSourceName": arbitrary_row["%sExecutionDataSourceName" % prefix],
+            "ExecutionDataSetName": arbitrary_row["%sExecutionDataSetName" % prefix],
+            "ExecutionLoadDate": arbitrary_row["%sExecutionLoadDate" % prefix],
+            "ExecutionUser": arbitrary_row["%sExecutionUser" % prefix]
         },
         "acquires": [],
         "extract": {
-            "ExtractDestination": arbitrary_row.get("ExtractDestination"),
+            "ExtractDestination": arbitrary_row["%sExtractDestination"  % prefix],
             "Options": {}
-        } if arbitrary_row.get("ExtractKey") is not None else {}
+        } if arbitrary_row.get("%sExtractKey" % prefix) is not None else {}
     }
     acquires = {}
     for row in rows:
-        acquire_key = row.get("AcquireKey")
+        acquire_key = row.get("%sAcquireKey" % prefix)
         if acquire_key is not None:
             acquire = acquires.get(acquire_key)
             if acquire is None:
                 acquires[acquire_key] = {"Options": {}}
-            acquire_option_name = row.get("AcquireOptionName")
+            acquire_option_name = row.get("%sAcquireOptionName" % prefix)
             if acquire_option_name is not None:
-                acquire["Options"][acquire_option_name] = row.get("AcquireOptionValue")
-        extract_option_name = row.get("ExtractOptionName")
+                acquire["Options"][acquire_option_name] = row.get("%sAcquireOptionValue" % prefix)
+        extract_option_name = row.get("%sExtractOptionName" % prefix)
         if extract_option_name is not None:
-            details["extract"]["Options"][extract_option_name] = row.get("ExtractOptionValue")
+            details["extract"]["Options"][extract_option_name] = row.get("%sExtractOptionValue" % prefix)
     details["acquires"].extend(acquires.values())
     return details
 

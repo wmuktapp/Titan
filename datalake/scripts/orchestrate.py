@@ -14,7 +14,7 @@ def _process_queue(flask_app):
     with flask_app.app_context():
         for execution in models.get_queue():
             rows = models.get_scheduled_execution(execution["ScheduledExecutionKey"])
-            app.execute(app.format_execution_details(rows, scheduled=True))
+            app.execute(app.format_execution(rows))
 
 
 def main():
