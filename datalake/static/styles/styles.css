@@ -86,6 +86,8 @@ input[type=checkbox]:checked {
     color: #99a1a7;
 }
 
+
+input[type=text]:disabled,
 input[type=checkbox]:disabled {
     border-color: #e9ecee;
     box-shadow: none;
