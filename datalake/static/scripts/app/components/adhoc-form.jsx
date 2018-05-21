@@ -1,7 +1,7 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import AcquireList from './acquire-list/acquire-list.jsx';
-import ExtractForm from './adhoc/extract-form.jsx';
+import ExtractForm from './extract/extract-form.jsx';
 
 // Datepicker styles
 require('react-datepicker/dist/react-datepicker.css');
