@@ -121,6 +121,11 @@ input[type=text]:disabled {
 .tab {
     display: inline-block;
     border-radius: .5em;
+    transition: background-color .2s;
+}
+
+.tab:hover {
+    background-color: #fcfcfc;
 }
 
 .tab a {
