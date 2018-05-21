@@ -29,3 +29,6 @@ def create_app():
         flask_app.config["DATALAKE_AZURE_TENANT_ID"]
     )
     return flask_app
+
+
+# TODO: Implement error pages
