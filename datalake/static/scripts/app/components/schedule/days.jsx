@@ -19,7 +19,7 @@ class ScheduleDays extends React.Component {
 
   render() {
 
-    const labels = {
+    const days = {
       Monday: 'Mon',
       Tuesday: 'Tues',
       Wednesday: 'Wed',
@@ -29,18 +29,18 @@ class ScheduleDays extends React.Component {
       Sunday: 'Sun'
     };
 
-    const days = Object.keys(this.props.days).map((day) => {
+    let dayInputs = Object.keys(days).map((day) => {
       return (
         <label className="schedule-days-label" key={day}>
           <input type="checkbox" className="schedule-days-input" name={day} checked={this.props.days[day]} onChange={this.onChange} />
-          <span className="schedule-days-text">{labels[day]}</span>
+          <span className="schedule-days-text">{days[day]}</span>
         </label>
       );
     });
 
     return (
       <div className="schedule-days">
-        {days}
+        {dayInputs}
       </div>
     );
   }
