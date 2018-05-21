@@ -2,6 +2,8 @@ import React from 'react';
 import MonitoringControls from './monitoring/controls.jsx';
 import MonitoringGrid from './monitoring/grid.jsx';
 
+import dateUtils from '../utils/date-utils';
+
 require('./monitor.css');
 
 class Monitor extends React.Component {
@@ -88,8 +90,8 @@ class Monitor extends React.Component {
     });
 
     const url = '/api/executions'
-      + '?start=' + dates.start.toISOString().substr(0, 10)
-      + '&end=' + dates.end.toISOString().substr(0, 10);
+      + '?start=' + dateUtils.dateToIso8601(dates.start)
+      + '&end=' + dateUtils.dateToIso8601(dates.end);
 
     // Request data
     fetch(url)
