@@ -15,7 +15,6 @@ class ScheduleForm extends React.Component {
   constructor(props) {
     super(props);
 
-    // TODO populate these from querying (componentDidMount)
     this.state = {
       id: this.props.id,
 
@@ -302,12 +301,11 @@ class ScheduleForm extends React.Component {
         </div>
         <div className="form-section">
           {
-            this.state.acquire
-              ? <div>
-                  <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
-                    onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
-                </div>
-              : []
+            this.state.acquire &&
+              <div>
+                <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
+                  onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+              </div>
           }
         </div>
         <div className="form-section">
