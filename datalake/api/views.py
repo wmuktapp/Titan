@@ -42,7 +42,7 @@ def get_acquire_programs():
 @api.api_blueprint.route("/executions/<int:key>", methods=["GET"])
 @decorators.to_json
 def get_execution(key):
-    return {"data": app.format_execution_details(models.get_execution(key))}
+    # TODO: Fill me in
 
 
 @api.api_blueprint.route("/executions/", methods=["GET"])
@@ -79,7 +79,7 @@ def get_extract_programs():
 @api.api_blueprint.route("/schedules/<int:key>", metods=["GET"])
 @decorators.to_json
 def get_scheduled_execution(key):
-    return app.format_execution_details(models.get_scheduled_execution(key), scheduled=True)
+    # TODO: Fill me in
 
 
 @api.api_blueprint.route("/schedules/", methods=["GET"])
@@ -112,6 +112,7 @@ def insert_scheduled_execution():
 @api.api_blueprint.route("/executions/retry", methods=["POST"])
 @decorators.to_json
 def retry_executions():
+    # TODO: What if one or more of the keys are invalid? Not needed if just the web front end passing in data.
     for key in flask.request.get_json(force=True)["keys"]:
         rows = models.get_execution(key)
         if rows:
