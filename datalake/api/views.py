@@ -6,25 +6,6 @@ from datalake import api, app, models
 from datalake.api import decorators
 
 
-_DEFAULT = object()
-
-
-@api.api_blueprint.route("/schedules/", methods=["POST"])
-@decorators.to_json
-def create_scheduled_execution():
-    data = flask.request.get_json(force=True)
-    execution = data.get("execution", {})
-    acquires = data.get("acquires", [])
-    extract = data.get("extract", {})
-    with models.db.engine.begin() as transaction:
-        result, _ = models.insert_scheduled_execution(transaction, execution, extract)
-        scheduled_execution_key = result["ScheduledExecutionKey"]
-        for acquire in acquires:
-            acquire["ScheduledExecutionKey"] = scheduled_execution_key
-            _, _ = models.insert_scheduled_acquire(transaction, acquire)
-    return {}, 201, None
-
-
 @api.api_blueprint.route("/execute", methods=["POST"])
 @decorators.to_json
 def execute():
@@ -110,6 +91,22 @@ def get_scheduled_executions():
         if k is not None:
             params[k] = value
     return models.get_scheduled_executions(**params)
+
+
+@api.api_blueprint.route("/schedules/", methods=["POST"])
+@decorators.to_json
+def insert_scheduled_execution():
+    data = flask.request.get_json(force=True)
+    execution = data.get("execution", {})
+    acquires = data.get("acquires", [])
+    extract = data.get("extract", {})
+    with models.db.engine.begin() as transaction:
+        result, _ = models.insert_scheduled_execution(transaction, execution, extract)
+        scheduled_execution_key = result["ScheduledExecutionKey"]
+        for acquire in acquires:
+            acquire["ScheduledExecutionKey"] = scheduled_execution_key
+            _, _ = models.insert_scheduled_acquire(transaction, acquire)
+    return {}, 201, None
 
 
 @api.api_blueprint.route("/executions/retry", methods=["POST"])
