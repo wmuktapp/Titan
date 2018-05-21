@@ -42,9 +42,8 @@ class MonitoringGridExecution extends React.Component {
       <span className="execution-cell" title={'Date: ' + execution.date}>
         {status}
         {
-          showSelector
-            ? <input type="checkbox" checked={execution.selected} className="execution-selector" onChange={this.selectorChange} />
-            : null
+          showSelector &&
+            <input type="checkbox" checked={execution.selected} className="execution-selector" onChange={this.selectorChange} />
         }
       </span>
     );
