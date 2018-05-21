@@ -57,21 +57,21 @@ def format_execution(rows):
         "extract": {
             "ExtractDestination": arbitrary_row["%sExtractDestination"  % prefix],
             "Options": {}
-        } if arbitrary_row.get("%sExtractKey" % prefix) is not None else {}
+        } if arbitrary_row["%sExtractKey" % prefix] is not None else {}
     }
     acquires = {}
     for row in rows:
-        acquire_key = row.get("%sAcquireKey" % prefix)
+        acquire_key = row["%sAcquireKey" % prefix]
         if acquire_key is not None:
             acquire = acquires.get(acquire_key)
             if acquire is None:
                 acquires[acquire_key] = {"Options": {}}
             acquire_option_name = row.get("%sAcquireOptionName" % prefix)
             if acquire_option_name is not None:
-                acquire["Options"][acquire_option_name] = row.get("%sAcquireOptionValue" % prefix)
+                acquire["Options"][acquire_option_name] = row["%sAcquireOptionValue" % prefix]
         extract_option_name = row.get("%sExtractOptionName" % prefix)
         if extract_option_name is not None:
-            details["extract"]["Options"][extract_option_name] = row.get("%sExtractOptionValue" % prefix)
+            details["extract"]["Options"][extract_option_name] = row["%sExtractOptionValue" % prefix]
     details["acquires"].extend(acquires.values())
     return details
 
