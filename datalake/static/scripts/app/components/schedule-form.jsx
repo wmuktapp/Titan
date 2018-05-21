@@ -231,9 +231,6 @@ class ScheduleForm extends React.Component {
 
     // NOTE: Handles both insert and update
 
-    // TODO loading state
-    // TODO separate into two components?
-
     // Acquire options
     const programOptions = this.state.availablePrograms.map(
       (option) => <option key={option.id} value={option.id}>{option.name}</option>
