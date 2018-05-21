@@ -71,7 +71,6 @@ class ExtractForm extends React.Component {
 
     return (
       <div className="extract-form">
-        <h5>Extracts</h5>
         {rows}
       </div>
     );
