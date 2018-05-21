@@ -286,7 +286,7 @@ class ScheduleForm extends React.Component {
         </div>
         <div className="form-section">
           <label>Extract program</label>
-          <select name="acquire" value={this.state.extract} onChange={this.onChange}>
+          <select name="extract" value={this.state.extract} onChange={this.onChange}>
             <option value=""></option>
             { extractOptions }
           </select>
