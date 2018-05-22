@@ -75,20 +75,21 @@ def _generate_sql_text(replace, blobs):
               "storage.")
 @click.option("-d", "--data-source-name", default="DataLakeBlobStorage", help="The name of the data source object to "
               "be created on the database (if not already existing) to be used to connect to the azure blob storage.")
-def main(connection_string, table_name, blob_prefix, replace, field_delimiter, row_delimiter, text_qualifier, code_page,
+def main(connection_string, table_name, replace, field_delimiter, row_delimiter, text_qualifier, code_page,
          credential_name, data_source_name):
-    config = datalake.create_app("azuresql").config
-    container_name = config["DATALAKE_AZURE_BLOB_CONTAINER_NAME"]
-    blob_location = config["DATALAKE_AZURE_BLOB_ENDPOINT"] + "/" + container_name
-    service = blob.BlockBlobService(account_name=config["DATALAKE_AZURE_BLOB_ACCOUNT_NAME"],
-                                    sas_token=config["DATALAKE_AZURE_BLOB_SAS_TOKEN"])
+    flask_app = datalake.create_app("azuresql")
+    container_name = flask_app.config["DATALAKE_AZURE_BLOB_CONTAINER_NAME"]
+    blob_location = flask_app.config["DATALAKE_AZURE_BLOB_ENDPOINT"] + "/" + container_name
+    service = blob.BlockBlobService(account_name=flask_app.config["DATALAKE_AZURE_BLOB_ACCOUNT_NAME"],
+                                    sas_token=flask_app.config["DATALAKE_AZURE_BLOB_SAS_TOKEN"])
     data = json.loads(os.getenv("DATALAKE_STDIN"))["execution"]
     blob_prefix = "/".join((data["ExecutionClientName"], data["ExecutionDataSourceName"],
                             data["DataSetName"], data["ExecutionLoadDate"], data["ExecutionVersion"]))
-    sql_text, params = _generate_sql_text(replace, app.list_block_blobs(service, container_name, blob_prefix))
+    sql_text, params = _generate_sql_text(replace, app.list_blobs(service, container_name, blob_prefix))
     db = sqlalchemy.create_engine(connection_string)
+    flask_app.logger.info("Extracting data to database; %s" % connection_string)
     db.engine.execute(sqlalchemy.text(sql_text), table_name=table_name, field_delimiter=field_delimiter,
                       row_delimiter=row_delimiter, text_qualifier=text_qualifier, code_page=code_page,
                       credential_name=credential_name, data_source_name=data_source_name,
-                      blob_key=config["DATALAKE_AZURE_BLOB_SAS"], blob_location=blob_location,
+                      blob_key=flask_app.config["DATALAKE_AZURE_BLOB_SAS"], blob_location=blob_location,
                       extract_key=data["extract"]["ExtractKey"], **params)
