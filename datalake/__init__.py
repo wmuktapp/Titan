@@ -31,4 +31,4 @@ def create_app():
     return flask_app
 
 
-# TODO: Implement error pages
+# TODO: Implement error pages (add as views to views.py)
