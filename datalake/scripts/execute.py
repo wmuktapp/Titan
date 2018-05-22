@@ -70,6 +70,7 @@ def main():
     acquires = data["acquires"]
     extract = data["extract"]
     flask_app = datalake.create_app("execute")
+    flask_app.logger.info("Starting execution log")
     result = _call_models_function(flask_app, models.start_execution_log, execution)
     execution["ExecutionVersion"] = result["ExecutionVersion"]
     execution_key = execution["ExecutionKey"] = result["ExecutionKey"]
@@ -77,8 +78,10 @@ def main():
     error = None
     try:
         if acquires:
+            flask_app.logger.info("Processing acquires...")
             _process_acquires(flask_app, data)
         if extract:
+            flask_app.logger.info("Processing extract...")
             _process_extract(flask_app, execution_key, extract=extract)
             _update_env_var(data)
     except Exception as error:
@@ -86,5 +89,6 @@ def main():
     finally:
         error_message = str(error) if error is not None else None
         _call_models_function(flask_app, models.end_execution_log, execution_key, error_message=error_message)
+        flask_app.logger.info("Ending execution log")
         if error is not None:
             raise error
