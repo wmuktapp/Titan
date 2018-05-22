@@ -1,6 +1,8 @@
 import click
+import importlib
 
 from datalake import models
+import datalake
 
 
 @click.command()
@@ -16,14 +18,27 @@ from datalake import models
               "program.", required=True)
 @click.option("-e",  "--enabled", is_flag=True)
 def main(acquire_program_key, python_name, friendly_name, data_source_name, author, enabled):
-    program = __import__(python_name)
+    program = importlib.import_module(python_name)
     if program.__package__:
         command = program.__main__.main
     else:
         command = program.main
-    options = {max(option.opts, key=len): option.required for option in command.params}
-    if acquire_program_key is None:
-        models.insert_acquire_program(python_name, friendly_name, data_source_name, author, enabled, options)
-    else:
-        models.update_acquire_program(acquire_program_key, python_name, friendly_name, data_source_name, author,
-                                      enabled, options)
+    flask_app = datalake.create_app()
+    acquire_program = {
+        "AcquireProgramPythonName": python_name,
+        "AcquireProgramFriendlyName": friendly_name,
+        "AcquireProgramDataSourceName": data_source_name,
+        "AcquireProgramAuthor": author,
+        "AcquireProgramEnabled": enabled,
+        "Options":
+            [{
+                "AcquireProgramOptionName": max(option.opts, key=len),
+                "AcquireProgramOptionRequired": option.required
+            } for option in command.params]
+    }
+    with flask_app.flask_app_context():
+        if acquire_program_key is None:
+            models.insert_acquire_program(acquire_program)
+        else:
+            acquire_program["AcquireProgramKey"] = acquire_program_key
+            models.update_acquire_program(acquire_program)
