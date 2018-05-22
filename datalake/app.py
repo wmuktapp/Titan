@@ -43,15 +43,16 @@ def format_execution(rows):
     arbitrary_row = rows[0]
     scheduled_execution_key = arbitrary_row["ScheduledExecutionKey"]
     prefix = "Scheduled" if scheduled_execution_key is not None else ""
+    acquires = {}
     details = {
         "execution": {
             "ScheduledExecutionKey": scheduled_execution_key,
-            "AcquireProgramKey": arbitrary_row["AcquireProgramKey"],
             "ExecutionClientName": arbitrary_row["%sExecutionClientName" % prefix],
             "ExecutionDataSourceName": arbitrary_row["%sExecutionDataSourceName" % prefix],
             "ExecutionDataSetName": arbitrary_row["%sExecutionDataSetName" % prefix],
             "ExecutionLoadDate": arbitrary_row["%sExecutionLoadDate" % prefix],
-            "ExecutionUser": arbitrary_row["%sExecutionUser" % prefix]
+            "ExecutionUser": arbitrary_row["%sExecutionUser" % prefix],
+            "AcquireProgramKey": arbitrary_row["AcquireProgramKey"]
         },
         "acquires": [],
         "extract": {
@@ -59,7 +60,6 @@ def format_execution(rows):
             "Options": {}
         } if arbitrary_row["%sExtractKey" % prefix] is not None else {}
     }
-    acquires = {}
     for row in rows:
         acquire_key = row["%sAcquireKey" % prefix]
         if acquire_key is not None:

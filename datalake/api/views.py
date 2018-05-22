@@ -94,7 +94,7 @@ def get_execution(key):
         if extract_option_name is not None:
             details["extract"]["Options"][extract_option_name] = row["ExtractOptionValue"]
     details["acquires"].extend(acquires.values())
-    return details
+    return {"data": details}
 
 
 @api.api_blueprint.route("/executions/", methods=["GET"])
@@ -186,7 +186,7 @@ def get_scheduled_execution(key):
         if extract_option_name is not None:
             details["extract"]["Options"][extract_option_name] = row["ScheduledExtractOptionValue"]
     details["acquires"].extend(acquires.values())
-    return details
+    return {"data": details}
 
 
 @api.api_blueprint.route("/schedules/", methods=["GET"])

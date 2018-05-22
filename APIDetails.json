@@ -1,0 +1,32 @@
+POST /execute
+{
+    "data": {
+        "execution": {
+            "ScheduledExecutionKey": int (req),
+            "ExecutionClientName": str (req),
+            "ExecutionDataSourceName": str (req),
+            "ExecutionLoadDate": str (req),
+            "ExecutionUser": str (req)
+            "AcquireProgramKey": int
+        },
+        "acquires": [
+            {
+                "Options": [
+                    {
+                        "AcquireOptionName": str (req),
+                        "AcquireOptionValue": str (req)
+                    }
+                ]
+            }
+        ],
+        "extract": {
+            "ExtractDestination": str (req),
+            "Options": [
+                {
+                    "ExtractOptionName": str (req),
+                    "ExtractOptionValue": str (req)
+                }
+            ]
+        }
+    }
+}
