@@ -28,7 +28,7 @@ def main():
     _clean_up_containers(flask_app)
     flask_app.logger.info("Checking for long-running container instances")
     _kill_long_running_containers(flask_app)
-    flask_app.logger.info("Checking for incompleted logs")
+    flask_app.logger.info("Checking for uncompleted logs")
     _clean_up_logs(flask_app)
     flask_app.logger.info("Processing queue...")
     _process_queue(flask_app)
