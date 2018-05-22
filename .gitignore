@@ -112,3 +112,9 @@ venv.bak/
 
 ### PipEnv ###
 Pipfile
+
+# Node
+node_modules/
+
+# Public JS
+datalake/static/scripts/public/
