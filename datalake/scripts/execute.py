@@ -69,7 +69,7 @@ def main():
     execution = data["execution"]
     acquires = data["acquires"]
     extract = data["extract"]
-    flask_app = datalake.create_app()
+    flask_app = datalake.create_app("execute")
     result = _call_models_function(flask_app, models.start_execution_log, execution)
     execution["ExecutionVersion"] = result["ExecutionVersion"]
     execution_key = execution["ExecutionKey"] = result["ExecutionKey"]

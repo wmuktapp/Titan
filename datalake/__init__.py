@@ -8,8 +8,9 @@ from datalake import api, app, config, models
 from datalake.utilities import *
 
 
-def create_app():
-    flask_app = flask.Flask(__name__, instance_relative_config=True)
+def create_app(source):
+    flask_app = flask.Flask("datalake", instance_relative_config=True)
+    flask_app.logger.info("App object created from %s" % source)
 
     dotenv.load_dotenv(os.path.join(os.path.dirname(__file__), "config.env"))
     environment = os.environ.get("DATALAKE_CONFIG_ENVIRONMENT")

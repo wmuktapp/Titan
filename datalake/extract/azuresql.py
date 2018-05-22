@@ -77,7 +77,7 @@ def _generate_sql_text(replace, blobs):
               "be created on the database (if not already existing) to be used to connect to the azure blob storage.")
 def main(connection_string, table_name, blob_prefix, replace, field_delimiter, row_delimiter, text_qualifier, code_page,
          credential_name, data_source_name):
-    config = datalake.create_app().config
+    config = datalake.create_app("azuresql").config
     container_name = config["DATALAKE_AZURE_BLOB_CONTAINER_NAME"]
     blob_location = config["DATALAKE_AZURE_BLOB_ENDPOINT"] + "/" + container_name
     service = blob.BlockBlobService(account_name=config["DATALAKE_AZURE_BLOB_ACCOUNT_NAME"],
