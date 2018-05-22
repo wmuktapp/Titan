@@ -30,3 +30,71 @@ POST /execute
         }
     }
 }
+
+
+GET /acquire-programs/
+{
+    "data": [
+        {
+            "AcquireProgramKey": int (req),
+            "AcquireProgramPythonName": str (req),
+            "AcquireProgramFriendlyName": str (req),
+            "AcquireProgramDataSourceName": str (req),
+            "AcquireProgramEnabled": bool (req),
+            "Options": [
+                {
+                    "AcquireProgramOptionName": str (req),
+                    "AcquirePorgramOptionRequired": bool (req)
+                }
+            ]
+        }
+    ]
+}
+
+
+GET /executions/<int:key>
+{
+    "data": {
+        "execution": {
+            "ExecutionKey": int (req),
+            "ScheduledExecutionKey": int,
+            "ExecutionScheduledTime": datetime (req),
+            "ExecutionStartTime": datatime (req),
+            "ExecutionEndTime": datetime,
+            "ExecutionSuccessful": bool,
+            "ExecutionClientName": str (req),
+            "ExecutionDataSourceName": str (req),
+            "ExecutionDataSetName": str (req),
+            "ExecutionLoadDate": date (req),
+            "ExecutionVersion": str (req),
+            "ExecutionUser": str (req),
+            "AcquireProgramKey": int,
+            "AcquireProgramFriendlyName": str
+        },
+        "acquires": [
+            {
+                "AcquireKey": int (req),
+                "AcquireStartTime": datetime (req),
+                "AcquireEndTime": datetime,
+                "AcquireStatus": str (req),
+                "AcquireErrorMessage": str,
+                "Options": {
+                    "AcquireOptionName": str (req),
+                    "AcquireOptionValue": str (req)
+                }
+            }
+        ],
+        "extract": {
+            "ExtractKey": int (req),
+            "ExtractDestination": str (req),
+            "ExtractStartTime": datetime (req),
+            "ExtractEndTime": datetime,
+            "ExtractStatus": str (req),
+            "ExtractErrorMessage": str,
+            "Options": {
+                "ExtractOptionName": str (req),
+                "ExtractOptionValue": str (req)
+            }
+        }
+    }
+}
