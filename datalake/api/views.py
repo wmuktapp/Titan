@@ -101,7 +101,7 @@ def get_execution(key):
 @decorators.to_json
 def get_executions():
     params = {}
-    for k in ("page_number", "page_size"):
+    for k in ("end_date", "page_number", "page_size"):
         value = flask.request.args.get(k)
         if k is not None:
             params[k] = value
