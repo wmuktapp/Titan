@@ -23,18 +23,18 @@ def list_blobs(service, container, prefix):
 
 
 def execute(details):
-    config = flask.current_app.config
-    container_name = config["DATALAKE_AZURE_CONTAINER_NAME"]
+    flask_app = flask.current_app
+    container_name = flask_app.config["DATALAKE_AZURE_CONTAINER_NAME"]
     launch_container(
-        security_context=config["DATALAKE_AZURE_SECURITY_CONTEXT"],
-        resource_group_name=config["DATALAKE_AZURE_RESOURCE_GROUP_NAME"],
+        security_context=flask_app.config["DATALAKE_AZURE_SECURITY_CONTEXT"],
+        resource_group_name=flask_app.config["DATALAKE_AZURE_RESOURCE_GROUP_NAME"],
         container_group_prefix=container_name,
-        os_type=config["DATALAKE_AZURE_CONTAINER_OS_TYPE"],
-        location=config["DATALAKE_AZURE_CONTAINER_LOCATION"],
+        os_type=flask_app.config["DATALAKE_AZURE_CONTAINER_OS_TYPE"],
+        location=flask_app.config["DATALAKE_AZURE_CONTAINER_LOCATION"],
         container_name=container_name,
-        image_name=config["DATALAKE_AZURE_CONTAINER_IMAGE_NAME"],
-        memory_in_gb=config["DATALAKE_AZURE_CONTAINER_MEMORY_GB"],
-        cpu_count=config["DATALAKE_AZURE_CONTAINER_CPU_COUNT"],
+        image_name=flask_app.config["DATALAKE_AZURE_CONTAINER_IMAGE_NAME"],
+        memory_in_gb=flask_app.config["DATALAKE_AZURE_CONTAINER_MEMORY_GB"],
+        cpu_count=flask_app.config["DATALAKE_AZURE_CONTAINER_CPU_COUNT"],
         configuration=json.dumps(details)
     )
 
@@ -79,6 +79,7 @@ def format_execution(rows):
 def launch_container(security_context, resource_group_name, container_group_prefix, os_type, location, container_name,
                      image_name, memory_in_gb, cpu_count, configuration):
     container_group_name = "%s_%s" % (container_group_prefix, uuid.uuid4())
+    flask.current_app.logger.info("Preparing to launch container; %s" % container_group_name)
     resources = models.ResourceRequirements(requests=models.ResourceRequests(memory_in_gb=memory_in_gb, cpu=cpu_count))
     container = models.Container(name=container_name, image=image_name, resources=resources, command=["execute"],
                                  environment_variables=models.EnvironmentVariable("DATALAKE_STDIN", configuration))
