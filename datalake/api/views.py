@@ -220,7 +220,7 @@ def insert_scheduled_execution():
 @decorators.to_json
 def retry_executions():
     # TODO: What if one or more of the keys are invalid? Not needed if just the web front end passing in data.
-    for key in flask.request.get_json(force=True)["keys"]:
+    for key in flask.request.get_json(force=True)["data"]:
         rows = models.get_execution(key)
         if rows:
             app.execute(app.format_execution(rows))

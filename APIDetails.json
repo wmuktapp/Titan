@@ -78,10 +78,12 @@ GET /executions/<int:key>
                 "AcquireEndTime": datetime,
                 "AcquireStatus": str (req),
                 "AcquireErrorMessage": str,
-                "Options": {
-                    "AcquireOptionName": str (req),
-                    "AcquireOptionValue": str (req)
-                }
+                "Options": [
+                        {
+                        "AcquireOptionName": str (req),
+                        "AcquireOptionValue": str (req)
+                    }
+                ]
             }
         ],
         "extract": {
@@ -91,10 +93,232 @@ GET /executions/<int:key>
             "ExtractEndTime": datetime,
             "ExtractStatus": str (req),
             "ExtractErrorMessage": str,
-            "Options": {
-                "ExtractOptionName": str (req),
-                "ExtractOptionValue": str (req)
+            "Options": [
+                    {
+                    "ExtractOptionName": str (req),
+                    "ExtractOptionValue": str (req)
+                }
+            ]
+        }
+    }
+}
+
+
+GET /executions/?page_number=1&page_size=100
+{
+    "data": [
+        {
+            "ExecutionKey": int (req),
+            "ExecutionClientName": str (req),
+            "ExecutionDataSourceName": str (req),
+            "ExecutionDataSetName": str (req),
+            "ExecutionLoadDate": date (req),
+            "ExecutionVersion": str (req),
+            "AcquireProgramKey": int,
+            "AcquireStartTime" datetime,
+            "AcquireStatus": str (req),
+            "ExtractStartTime": datetime,
+            "ExtractStatus": str (req)
+        }
+    ]
+}
+
+
+GET /extract-programs/
+{
+    "data": [
+        {
+            "ExtractProgramPythonName": str (req),
+            "ExtractProgramFriendlyName": str (req),
+            "Options": [
+                {
+                    "ExtractProgramOptionName": str (req),
+                    "ExtractProgramOptionRequired": bool (req)
+                }
+            ]
+        }
+    ]
+}
+
+
+GET /schedules/<int:key>
+{
+    "data": {
+        "execution": {
+            "ScheduledExecutionKey": int (req),
+            "ScheduledExecutionName": str (req),
+            "ScheduledExecutionNextScheduled": datetime,
+            "ScheduledExecutionScheduleEnd": datetime,
+            "ScheduledExecutionClientName": str (req),
+            "ScheduledExecutionDataSourceName": str (req),
+            "ScheduledExecutionDataSetName": str (req),
+            "ScheduledExecutionNextLoadDate": date (req),
+            "ScheduledExecutionEnabled": bool (req),
+            "ScheduledExecutionUser": str (req),
+            "ScheduledIntervalKey": int,
+            "ScheduledIntervalMI": int,
+            "ScheduledIntervalHH": int,
+            "ScheduledIntervalDD": int,
+            "ScheduledMondayEnabled": bool,
+            "ScheduledTuesdayEnabled": bool,
+            "ScheduledWednesdayEnabled": bool,
+            "ScheduledThursdayEnabled": bool,
+            "ScheduledFridayEnabled": bool,
+            "ScheduledSaturdayEnabled": bool,
+            "ScheduledSundayEnabled": bool,
+            "AcquireProgramKey": int,
+            "AcquireProgramFriendlyName": str,
+            "ScheduledExecutionStatus": str (req)
+        },
+        "acquires": [
+            {
+                "ScheduledAcquireKey": int (req),
+                "ScheduledAcquireName": str (req),
+                "Options": [
+                    {
+                        "ScheduledAcquireOptionName": str (req),
+                        "ScheduledAcquireOptionValue": str (req)
+                    }
+                ]
             }
+        ],
+        "extract": {
+            "ScheduledExtractKey": int (req),
+            "ScheduledExtractDestination": str (req),
+            "Options": [
+                {
+                    "ScheduledExtractOptionName": str (req),
+                    "ScheduledExtractOptionValue": str (req)
+                }
+            ]
+        }
+    }
+}
+
+
+GET /schedules/?page_number=1&page_size=100
+{
+    "data": [
+        {
+            "ScheduledExecutionKey": int (req),
+            "ScheduledExecutionName": str (req),
+            "ScheduledExecutionNextScheduled": datetime,
+            "ScheduledExecutionScheduleEnd": datetime,
+            "ScheduledExecutionClientName": str (req),
+            "ScheduledExecutionDataSourceName": str (req),
+            "ScheduledExecutionDataSetName": str (req),
+            "ScheduledExecutionNextLoadDate": date (req),
+            "ScheduledExecutionEnabled": bool (req),
+            "ScheduledExecutionUser": str (req),
+            "ScheduledExecutionStatus": str (req)
+        }
+    ]
+}
+
+
+POST /schedules/
+{
+    "data": {
+        "execution": {
+            "ScheduledExecutionName": str (req),
+            "ScheduledExecutionNextScheduled": datetime,
+            "ScheduledExecutionScheduleEnd": datetime,
+            "ScheduledExecutionClientName": str (req),
+            "ScheduledExecutionDataSourceName": str (req),
+            "ScheduledExecutionDataSetName": str (req),
+            "ScheduledExecutionNextLoadDate": date (req),
+            "ScheduledExecutionEnabled": bool (req),
+            "ScheduledExecutionUser": str (req),
+            "ScheduledIntervalKey": int,
+            "ScheduledIntervalMI": int,
+            "ScheduledIntervalHH": int,
+            "ScheduledIntervalDD": int,
+            "ScheduledMondayEnabled": bool,
+            "ScheduledTuesdayEnabled": bool,
+            "ScheduledWednesdayEnabled": bool,
+            "ScheduledThursdayEnabled": bool,
+            "ScheduledFridayEnabled": bool,
+            "ScheduledSaturdayEnabled": bool,
+            "ScheduledSundayEnabled": bool,
+            "AcquireProgramKey": int
+        },
+        "acquires": [
+            {
+                "ScheduledAcquireName": str (req),
+                "Options": [
+                    {
+                        "ScheduledAcquireOptionName": str (req),
+                        "ScheduledAcquireOptionValue": str (req)
+                    }
+                ]
+            }
+        ],
+        "extract": {
+            "ScheduledExtractDestination": str (req),
+            "Options": [
+                {
+                    "ScheduledExtractOptionName": str (req),
+                    "ScheduledExtractOptionValue": str (req)
+                }
+            ]
+        }
+    }
+}
+
+
+POST /executions/retry
+{
+    "data": [
+    ]
+}
+
+
+PUT /schedules/<int:key>
+{
+    "data": {
+        "execution": {
+            "ScheduledExecutionKey": int,
+            "ScheduledExecutionName": str,
+            "ScheduledExecutionNextScheduled": datetime,
+            "ScheduledExecutionScheduleEnd": datetime,
+            "ScheduledExecutionClientName": str,
+            "ScheduledExecutionDataSourceName": str,
+            "ScheduledExecutionDataSetName": str,
+            "ScheduledExecutionNextLoadDate": date,
+            "ScheduledExecutionEnabled": bool,
+            "ScheduledExecutionUser": str,
+            "ScheduledIntervalKey": int,
+            "ScheduledIntervalMI": int,
+            "ScheduledIntervalHH": int,
+            "ScheduledIntervalDD": int,
+            "ScheduledMondayEnabled": bool,
+            "ScheduledTuesdayEnabled": bool,
+            "ScheduledWednesdayEnabled": bool,
+            "ScheduledThursdayEnabled": bool,
+            "ScheduledFridayEnabled": bool,
+            "ScheduledSaturdayEnabled": bool,
+            "ScheduledSundayEnabled": bool,
+            "AcquireProgramKey": int
+        },
+        "acquires": [
+            {
+                "ScheduledAcquireName": str,
+                "Options": [
+                    {
+                        "ScheduledAcquireOptionName": str,
+                        "ScheduledAcquireOptionValue": str
+                    }
+                ]
+            }
+        ],
+        "extract": {
+            "ScheduledExtractDestination": str,
+            "Options": [
+                {
+                    "ScheduledExtractOptionName": str,
+                    "ScheduledExtractOptionValue": str
+                }
+            ]
         }
     }
 }
