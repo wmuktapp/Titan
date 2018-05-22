@@ -17,11 +17,13 @@ def create_app(source):
     flask_app.config.from_object(config.CONFIGURATIONS[environment])
     flask_app.config.from_pyfile("%s.py" % environment, silent=True)
     flask_app.config.from_envvar("DATALAKE_CONFIG_OVERRIDE_PATH", silent=True)
+    flask_app.logger.debug("Configuration loaded using environment: %s" % environment)
 
     flask_app.register_blueprint(api.api_blueprint, url_prefix="/api")
 
     models.db.init_app(flask_app)
     ext.AppInsights().init_app(flask_app)
+    flask_app.logger.debug("Enabling Azure Application Insights log stream from app")
 
     flask_app.config["DATALAKE_AZURE_SECURITY_CONTEXT"] = app.AzureSecurityContext(
         flask_app.config["DATALAKE_AZURE_SUBSCRIPTION_ID"],
