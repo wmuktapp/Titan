@@ -38,7 +38,9 @@ def main(acquire_program_key, python_name, friendly_name, data_source_name, auth
     }
     with flask_app.flask_app_context():
         if acquire_program_key is None:
+            flask_app.logger.info("Register new acquire program...")
             models.insert_acquire_program(acquire_program)
         else:
             acquire_program["AcquireProgramKey"] = acquire_program_key
+            flask_app.logger.info("Updating existing acquire program...")
             models.update_acquire_program(acquire_program)
