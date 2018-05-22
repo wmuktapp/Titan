@@ -12,11 +12,21 @@ class MonitoringGridHeader extends React.Component {
     // Iterate from start to end dates
     while (temp <= end) {
 
+      let label = '';
+
+      if (temp.toDateString() === (new Date()).toDateString()) { // Move to dateUtils?
+        label = 'Today';
+      }
+      // TODO if yesterday return 'Yesterday'
+      else {
+        label = dateUtils.dateToString(temp);
+      }
+
       // Add header cell with (formatted) date
-      cells.push(<th key={i++}>{dateUtils.dateToString(temp)}</th>);
-      
+      cells.push(<th key={i++}>{label}</th>);
+
       // Next date
-      temp.setDate(temp.getDate() + 1)
+      temp.setDate(temp.getDate() + 1);
     }
 
     return (
