@@ -292,4 +292,8 @@ def get_acquire_programs():
     return jsonify(data)
 
 def get_acquire_program(id):
-    return { 'id': id, 'name': 'Program %i' % id }
+    return {
+        'id': id,
+        'name': 'Program %i' % id,
+        'dataSource': 'Data source %i' % id
+    }
