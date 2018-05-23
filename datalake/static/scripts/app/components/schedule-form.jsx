@@ -1,5 +1,5 @@
 import React from 'react';
-import ScheduleDays from './schedule/days.jsx';
+import ScheduleDays from './days/days.jsx';
 import IntervalPicker from './interval-picker.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
