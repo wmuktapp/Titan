@@ -106,6 +106,10 @@ input[type=text]:disabled {
     background-color: #fafafa;
 }
 
+th, td {
+    padding: 13px;
+}
+
 .panel {
     background-color: #fff;
     margin: 1em 0;
