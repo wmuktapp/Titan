@@ -24,7 +24,14 @@ const dateUtils = {
   },
 
   isToday(date) {
-    return date.toDateString() === (new Date()).toDateString();
+    const today = new Date();
+    return date.toDateString() === today.toDateString();
+  },
+
+  isYesterday(date) {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return date.toDateString() === yesterday.toDateString();
   }
 
 };
