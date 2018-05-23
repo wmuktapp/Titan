@@ -9,17 +9,13 @@ class MonitoringGridRow extends React.Component {
 
   render() {
 
-    const select = this.props.selectExecution;
-
     const cells = this.props.data.map((datum, index) => {
 
-      const id = datum.id;
-      const date = new Date(datum.date);
-      const className = dateUtils.isToday(date) ? 'cell-today' : '';
+      const id = datum.id, date = new Date(datum.date);
 
       return (
-        <td key={index} className={className}>
-          <MonitoringGridExecution data={datum} select={select} taskId={id} date={date} />
+        <td key={index} className={dateUtils.isToday(date) ? 'cell-today' : ''}>
+          <MonitoringGridExecution data={datum} select={this.props.selectExecution} taskId={id} date={date} />
         </td>
       );
     });
