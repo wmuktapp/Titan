@@ -84,10 +84,11 @@ def get_execution(key):
     return list(db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetExecution(:key)"), key=key))
 
 
-def get_executions(end_date=None, page_number=1, page_size=100):
+def get_executions(end_date=None, page_number=1, page_size=100, load_date_count=5):
     return list(db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetExecutions(:end_date, :page_number, "
-                                                  ":page_size)"),
-                                  end_date=end_date, page_number=page_number, page_size=page_size))
+                                                  ":page_size, :load_date_count)"),
+                                  end_date=end_date, page_number=page_number, page_size=page_size,
+                                  load_date_count=load_date_count))
 
 
 def get_scheduled_execution(key):
