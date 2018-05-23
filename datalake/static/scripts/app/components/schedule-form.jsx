@@ -60,13 +60,6 @@ class ScheduleForm extends React.Component {
         { id: 4, name: 'Acquire 4' },
         { id: 5, name: 'Acquire 5' }
       ],
-      extractOptions: [
-        { id: 1, name: 'Extract 1' },
-        { id: 2, name: 'Extract 2' },
-        { id: 3, name: 'Extract 3' },
-        { id: 4, name: 'Extract 4' },
-        { id: 5, name: 'Extract 5' }
-      ],
 
       loading: false
     };
@@ -231,11 +224,6 @@ class ScheduleForm extends React.Component {
 
     // Acquire options
     const programOptions = this.state.availablePrograms.map(
-      (option) => <option key={option.id} value={option.id}>{option.name}</option>
-    );
-
-    // Extract options
-    const extractOptions = this.state.extractOptions.map(
       (option) => <option key={option.id} value={option.id}>{option.name}</option>
     );
 
