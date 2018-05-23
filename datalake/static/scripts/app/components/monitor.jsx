@@ -87,9 +87,6 @@ class Monitor extends React.Component {
       + '?start=' + dateUtils.dateToIso8601(dates.start)
       + '&end=' + dateUtils.dateToIso8601(dates.end);
 
-    console.log(dates.start)
-    console.log(dateUtils.dateToIso8601(dates.start));
-
     // Request data
     fetch(url)
       .then(res => res.json())
