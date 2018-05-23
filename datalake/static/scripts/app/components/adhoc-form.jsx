@@ -72,10 +72,10 @@ class AdhocForm extends React.Component {
   }
 
   // Special case for program
-  handleProgramChange() {
+  handleProgramChange(event) {
     // TODO get data source from server
     this.setState({
-      dataSource: 'Program data source',
+      dataSource: event.target.value ? 'Program data source' : '',
       acquires: [],
       extractFields: []
     });
