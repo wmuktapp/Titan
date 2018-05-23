@@ -107,7 +107,9 @@ def schedules_list():
 @app.route('/api/schedules', methods=['POST'])
 def schedule_create():
     # TODO create schedule?
-    return jsonify([])
+    return jsonify({
+        'id': randint(1, 1000)
+    })
 
 
 @app.route('/api/schedules/<int:schedule_key>')

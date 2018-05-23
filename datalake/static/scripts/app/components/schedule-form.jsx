@@ -209,13 +209,15 @@ class ScheduleForm extends React.Component {
 
   onSubmit(event) {
 
-    // TODO send insert/update to server
+    // Send insert/update to server
     fetch('/api/schedules', {
       method: 'POST',
       data: JSON.stringify(this.state)
     })
-      .then(() => {
+      .then(res => res.json())
+      .then((response) => {
         this.setState({
+          id: this.state.id || response.id,
           updated: true
         });
       });
@@ -224,10 +226,6 @@ class ScheduleForm extends React.Component {
   }
 
   render() {
-
-    if (this.state.updated) {
-      return <p>Schedule updated</p>;
-    }
 
     // NOTE: Handles both insert and update
 
@@ -243,6 +241,8 @@ class ScheduleForm extends React.Component {
 
     return (
       <form className="schedule-form" onSubmit={this.onSubmit}>
+
+        { this.state.updated && <p>Schedule updated</p> }
 
         <h5>{ this.state.id ? 'Update Schedule' : 'New Schedule' }</h5>
 
