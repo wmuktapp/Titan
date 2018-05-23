@@ -3,8 +3,10 @@
 {% block main %}
     <div class="panel">
         {{ tabs(selected='schedules') }}
-        <h3>Schedules</h3>
-        <a href="schedules/add">New schedule</a>
+        <h3>
+            Schedules
+            <a href="schedules/add" class="button button-primary btn-new-schedule">+ New schedule</a>
+        </h3>
         <div id="schedules"></div>
     </div>
 {% endblock %}
