@@ -23,6 +23,19 @@ const dateUtils = {
     return day + '-' + month + '-' + year;
   },
 
+  getWeekday(date) {
+    const days = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday'
+    ];
+    return days[date.getDay()];
+  },
+
   isToday(date) {
     const today = new Date();
     return date.toDateString() === today.toDateString();
