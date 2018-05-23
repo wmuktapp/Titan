@@ -19,9 +19,9 @@ class MonitoringGridHeader extends React.Component {
       // Special case for yesterday and today
       if (dateUtils.isToday(temp)) {
         dateLabel = 'Today';
-        className = 'header-cell-today';
       } else if (dateUtils.isYesterday(temp)) {
         dateLabel = 'Yesterday';
+        className = 'header-cell-today';
       } else {
         dateLabel = dateUtils.dateToString(temp);
       }

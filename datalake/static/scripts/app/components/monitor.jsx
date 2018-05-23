@@ -15,8 +15,9 @@ class Monitor extends React.Component {
     const days = 5;
 
     const start = new Date();
-    start.setDate(start.getDate() - days + 1);
+    start.setDate(start.getDate() - days);
     const end = new Date();
+    end.setDate(end.getDate() - 1);
 
     this.state = {
       dates: {

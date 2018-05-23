@@ -92,8 +92,8 @@ def execution_retry():
 
     data = request.get_data('executions')
 
-    start_date = datetime.now() - timedelta(days=4)
-    end_date = datetime.now()
+    start_date = datetime.now() - timedelta(days=5)
+    end_date = datetime.now() - timedelta(days=1)
 
     return get_execution_data(start_date, end_date)
 

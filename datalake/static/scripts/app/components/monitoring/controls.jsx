@@ -30,7 +30,7 @@ class MonitoringControls extends React.Component {
     return (
       <div className="monitoring-controls u-cf">
         <label>Show executions up to date</label>
-        <DatePicker selected={date} dateFormat="DD/MM/YYYY" onChange={this.selectDate} />
+        <DatePicker selected={date} dateFormat="DD/MM/YYYY" onChange={this.selectDate} maxDate={moment().add(-1, 'd')} />
       </div>
     );
   }
