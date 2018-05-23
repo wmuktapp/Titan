@@ -29,7 +29,10 @@ class Execution extends React.Component {
   render() {
     return this.state.loading
       ? <p>Loading...</p>
-      : <ExecutionDetails execution={this.state.execution} />;
+      : <div>
+          <ExecutionDetails execution={this.state.execution} />
+          <a href="/schedules/525">Go to schedule &gt;</a>
+        </div>;
   }
 
 }
