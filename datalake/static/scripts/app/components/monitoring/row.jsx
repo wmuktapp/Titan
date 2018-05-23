@@ -14,7 +14,7 @@ class MonitoringGridRow extends React.Component {
       const id = datum.id, date = new Date(datum.date);
 
       return (
-        <td key={index} className={dateUtils.isYesterday(date) ? 'cell-today' : ''}>
+        <td key={index} className={dateUtils.isYesterday(date) ? 'cell-highlight' : ''}>
           <MonitoringGridExecution data={datum} select={this.props.selectExecution} taskId={id} date={date} />
         </td>
       );
