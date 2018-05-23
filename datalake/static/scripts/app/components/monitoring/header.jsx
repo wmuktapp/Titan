@@ -14,7 +14,7 @@ class MonitoringGridHeader extends React.Component {
     // Iterate from start to end dates
     while (temp <= end) {
 
-      let dateLabel = '', day;
+      let dateLabel = '';
 
       // Special case for yesterday and today
       if (dateUtils.isToday(temp)) {
@@ -23,7 +23,6 @@ class MonitoringGridHeader extends React.Component {
         dateLabel = 'Yesterday';
       } else {
         dateLabel = dateUtils.dateToString(temp);
-        day = <label className="header-day">{dateUtils.getWeekday(temp)}</label>;
       }
 
       // Add header cell with (formatted) date
@@ -31,7 +30,7 @@ class MonitoringGridHeader extends React.Component {
         <th key={i++}>
           <span className="header-contents">
             <label className="header-date">{dateLabel}</label>
-            {day}
+            <label className="header-day">{dateUtils.getWeekday(temp)}</label>
           </span>
         </th>
       );
