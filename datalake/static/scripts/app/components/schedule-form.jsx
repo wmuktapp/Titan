@@ -288,7 +288,7 @@ class ScheduleForm extends React.Component {
           </label>
         </div>
         <div className="form-section">
-          <label>Interval</label>
+          <h6>Interval</h6>
           <IntervalPicker hours={this.state.interval.hours} minutes={this.state.interval.minutes}
             seconds={this.state.interval.seconds} onUpdate={this.updateInterval} />
         </div>
