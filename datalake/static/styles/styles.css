@@ -106,6 +106,10 @@ input[type=text]:disabled {
     background-color: #fafafa;
 }
 
+th, td {
+    padding: 13px;
+}
+
 .panel {
     background-color: #fff;
     margin: 1em 0;
@@ -124,7 +128,7 @@ input[type=text]:disabled {
     transition: background-color .2s;
 }
 
-.tab:hover {
+.tab:not(.tab-selected):hover {
     background-color: #fcfcfc;
 }
 
@@ -146,4 +150,20 @@ form .label-body {
 .form-section {
     border-top: 2px solid #f0f0f0;
     padding: 1em 0 0;
+}
+
+.btn-new-schedule {
+    float: right;
+}
+
+
+/* React Datepicker overrides */
+
+.react-datepicker__navigation {
+    height: initial;
+    margin-bottom: 0;
+}
+
+.react-datepicker__navigation:hover {
+    border-color: transparent;
 }

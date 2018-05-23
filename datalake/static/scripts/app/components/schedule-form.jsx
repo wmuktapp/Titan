@@ -1,5 +1,5 @@
 import React from 'react';
-import ScheduleDays from './schedule/days.jsx';
+import ScheduleDays from './days/days.jsx';
 import IntervalPicker from './interval-picker.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
@@ -59,13 +59,6 @@ class ScheduleForm extends React.Component {
         { id: 3, name: 'Acquire 3' },
         { id: 4, name: 'Acquire 4' },
         { id: 5, name: 'Acquire 5' }
-      ],
-      extractOptions: [
-        { id: 1, name: 'Extract 1' },
-        { id: 2, name: 'Extract 2' },
-        { id: 3, name: 'Extract 3' },
-        { id: 4, name: 'Extract 4' },
-        { id: 5, name: 'Extract 5' }
       ],
 
       loading: false
@@ -209,13 +202,15 @@ class ScheduleForm extends React.Component {
 
   onSubmit(event) {
 
-    // TODO send insert/update to server
+    // Send insert/update to server
     fetch('/api/schedules', {
       method: 'POST',
       data: JSON.stringify(this.state)
     })
-      .then(() => {
+      .then(res => res.json())
+      .then((response) => {
         this.setState({
+          id: this.state.id || response.id,
           updated: true
         });
       });
@@ -225,10 +220,6 @@ class ScheduleForm extends React.Component {
 
   render() {
 
-    if (this.state.updated) {
-      return <p>Schedule updated</p>;
-    }
-
     // NOTE: Handles both insert and update
 
     // Acquire options
@@ -236,13 +227,10 @@ class ScheduleForm extends React.Component {
       (option) => <option key={option.id} value={option.id}>{option.name}</option>
     );
 
-    // Extract options
-    const extractOptions = this.state.extractOptions.map(
-      (option) => <option key={option.id} value={option.id}>{option.name}</option>
-    );
-
     return (
       <form className="schedule-form" onSubmit={this.onSubmit}>
+
+        { this.state.updated && <p>Schedule updated</p> }
 
         <h5>{ this.state.id ? 'Update Schedule' : 'New Schedule' }</h5>
 
@@ -288,7 +276,7 @@ class ScheduleForm extends React.Component {
           </label>
         </div>
         <div className="form-section">
-          <label>Interval</label>
+          <h6>Interval</h6>
           <IntervalPicker hours={this.state.interval.hours} minutes={this.state.interval.minutes}
             seconds={this.state.interval.seconds} onUpdate={this.updateInterval} />
         </div>
@@ -297,10 +285,12 @@ class ScheduleForm extends React.Component {
           <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
         </div>
         <div className="form-section">
+          <h6>Acquires</h6>
           {
-            this.state.acquire &&
-              <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
-                onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+            this.state.program
+              ? <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
+                  onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+              : <p>Select an acquire program</p>
           }
         </div>
         <div className="form-section">

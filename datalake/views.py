@@ -92,8 +92,8 @@ def execution_retry():
 
     data = request.get_data('executions')
 
-    start_date = datetime.now() - timedelta(days=4)
-    end_date = datetime.now()
+    start_date = datetime.now() - timedelta(days=5)
+    end_date = datetime.now() - timedelta(days=1)
 
     return get_execution_data(start_date, end_date)
 
@@ -107,7 +107,9 @@ def schedules_list():
 @app.route('/api/schedules', methods=['POST'])
 def schedule_create():
     # TODO create schedule?
-    return jsonify([])
+    return jsonify({
+        'id': randint(1, 1000)
+    })
 
 
 @app.route('/api/schedules/<int:schedule_key>')
@@ -156,6 +158,7 @@ def get_execution_data(start_date, end_date):
         }
 
         temp_date = start_date
+
         while temp_date <= end_date:
 
             execution = get_execution(randint(1, 1000), temp_date)
@@ -180,7 +183,7 @@ def get_execution(id, temp_date=None):
     return {
         'id': id,
         'name': 'Task-%i' % id,
-        'date': temp_date.strftime('%d-%m-%Y'),
+        'date': temp_date.strftime('%Y-%m-%d'),
         'acquire': acquire_state,
         'extract': extract_state
     }
@@ -260,8 +263,8 @@ def get_schedule(id):
             'Saturday': random() > .3,
             'Sunday': random() > .3
         },
-        'acquire': 3,
-        'extract': 4
+        'acquire': randint(1, 5),
+        'extract': randint(1, 5)
     }
 
 def get_interval():
@@ -289,4 +292,8 @@ def get_acquire_programs():
     return jsonify(data)
 
 def get_acquire_program(id):
-    return { 'id': id, 'name': 'Program %i' % id }
+    return {
+        'id': id,
+        'name': 'Program %i' % id,
+        'dataSource': 'Data source %i' % id
+    }

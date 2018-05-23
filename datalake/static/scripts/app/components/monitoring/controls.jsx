@@ -1,40 +1,36 @@
 import React from 'react';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
 
 require('./controls.css');
+require('react-datepicker/dist/react-datepicker.css');
 
 class MonitoringControls extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.showPrevious = this.showPrevious.bind(this);
-    this.showNext = this.showNext.bind(this);
+    this.selectDate = this.selectDate.bind(this);
   }
 
-  showPrevious() {
-    let end = new Date(this.props.dates.start);
-    end.setDate(end.getDate() - 1);
-    let start = new Date(end);
+  selectDate(value) {
+    
+    const start = value.toDate();
     start.setDate(start.getDate() - 4);
-
-    this.props.selectDates(start, end);
-  }
-
-  showNext() {
-    let start = new Date(this.props.dates.end);
-    start.setDate(start.getDate() + 1);
-    let end = new Date(start);
-    end.setDate(end.getDate() + 4);
+    const end = value.toDate();
 
     this.props.selectDates(start, end);
   }
 
   render() {
+
     // TODO enable / disable controls based on available data?
+
+    const date = moment(this.props.dates.end);
+
     return (
       <div className="monitoring-controls u-cf">
-        <a onClick={this.showPrevious} className="monitoring-control-previous">&lt; Previous</a>
-        <a onClick={this.showNext} className="monitoring-control-next">Next &gt;</a>
+        <label>Show executions up to date</label>
+        <DatePicker selected={date} dateFormat="DD/MM/YYYY" onChange={this.selectDate} maxDate={moment().add(-1, 'd')} />
       </div>
     );
   }

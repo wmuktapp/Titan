@@ -6,15 +6,7 @@ import ExtractForm from './extract/extract-form.jsx';
 // Datepicker styles
 require('react-datepicker/dist/react-datepicker.css');
 
-
 class AdhocForm extends React.Component {
-  
-  // Form values
-  // - Program
-  // - Load date
-  // - Client
-  // - Dataset
-  // - User
 
   constructor() {
     super();
@@ -72,10 +64,15 @@ class AdhocForm extends React.Component {
   }
 
   // Special case for program
-  handleProgramChange() {
-    // TODO get data source from server
+  handleProgramChange(event) {
+
+    const program = Number(event.target.value);
+    const dataSource = program
+      ? this.state.availablePrograms.find((obj) => { return obj.id === program; }).dataSource
+      : '';
+
     this.setState({
-      dataSource: 'Program data source',
+      dataSource: dataSource,
       acquires: [],
       extractFields: []
     });
@@ -203,8 +200,12 @@ class AdhocForm extends React.Component {
         </div>
         <div className="form-section">
           <h6>Acquires</h6>
-          <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
-            onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+          {
+            this.state.program
+            ? <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
+                onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+            : <p>Select an acquire program</p>
+          }
         </div>
         <div className="form-section">
           <h6>Extract</h6>

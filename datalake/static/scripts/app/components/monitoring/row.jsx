@@ -1,20 +1,21 @@
 import React from 'react';
 import MonitoringGridLabel from './label.jsx';
 import MonitoringGridExecution from './execution.jsx';
+import dateUtils from '../../utils/date-utils';
+
+require('./row.css');
 
 class MonitoringGridRow extends React.Component {
 
   render() {
 
-    const name = this.props.name;
-    const id = this.props.name; // TODO
-    const date = '2018-05-08';  // TODO
-    const select = this.props.selectExecution;
-
     const cells = this.props.data.map((datum, index) => {
+
+      const id = datum.id, date = new Date(datum.date);
+
       return (
-        <td key={'grid-execution-' + name + '-' + index}>
-          <MonitoringGridExecution data={datum} select={select} taskId={id} date={date} />
+        <td key={index} className={dateUtils.isYesterday(date) ? 'cell-highlight' : ''}>
+          <MonitoringGridExecution data={datum} select={this.props.selectExecution} taskId={id} date={date} />
         </td>
       );
     });
@@ -22,7 +23,7 @@ class MonitoringGridRow extends React.Component {
     return (
       <tr>
         <td>
-          <MonitoringGridLabel label={name} />
+          <MonitoringGridLabel label={this.props.name} />
         </td>
         {cells}
       </tr>
