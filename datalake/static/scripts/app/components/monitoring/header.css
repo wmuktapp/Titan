@@ -19,3 +19,10 @@
     font-weight: 400;
     font-size: 12px;
 }
+
+.header-cell-today {
+    background-color: rgba(249, 174, 66, .15);
+    border-top: 1px solid rgba(249, 174, 66, .2);
+    border-left: 1px solid rgba(249, 174, 66, .2);
+    border-right: 1px solid rgba(249, 174, 66, .3);
+}
