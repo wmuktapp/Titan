@@ -1,4 +1,8 @@
 
+.acquire-list {
+    padding: 0 0 1em;
+}
+
 .acquire-item + .acquire-item {
     border-top: 1px solid #eee;
     padding: 1em 0 0;

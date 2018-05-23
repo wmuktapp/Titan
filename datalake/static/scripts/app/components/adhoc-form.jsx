@@ -203,8 +203,12 @@ class AdhocForm extends React.Component {
         </div>
         <div className="form-section">
           <h6>Acquires</h6>
-          <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
-            onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+          {
+            this.state.program
+            ? <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
+                onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+            : <p>Select an acquire program</p>
+          }
         </div>
         <div className="form-section">
           <h6>Extract</h6>
