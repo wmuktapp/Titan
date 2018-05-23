@@ -14,6 +14,7 @@ class MonitoringGridHeader extends React.Component {
 
       let label = '';
 
+      // Special case for yesterday and today
       if (dateUtils.isToday(temp)) {
         label = 'Today';
       } else if (dateUtils.isYesterday(temp)) {
