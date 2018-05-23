@@ -21,6 +21,10 @@ const dateUtils = {
     }
 
     return day + '-' + month + '-' + year;
+  },
+
+  isToday(date) {
+    return date.toDateString() === (new Date()).toDateString();
   }
 
 };

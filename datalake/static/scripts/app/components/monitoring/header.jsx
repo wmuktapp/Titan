@@ -14,7 +14,7 @@ class MonitoringGridHeader extends React.Component {
 
       let label = '';
 
-      if (temp.toDateString() === (new Date()).toDateString()) { // Move to dateUtils?
+      if (dateUtils.isToday(temp)) {
         label = 'Today';
       }
       // TODO if yesterday return 'Yesterday'
