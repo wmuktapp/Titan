@@ -81,7 +81,7 @@ cffi==1.11.5
 chardet==3.0.4
 click==6.7
 cryptography==2.2.2
--e git+https://github.com/adamcunnington/DataLake.git@1e982c501f76968833ecb991af7713d37d0b4f99#egg=DataLake
+-e git+https://github.com/adamcunnington/DataLake.git@develop
 entrypoints==0.2.3
 Flask==1.0.2
 Flask-SQLAlchemy==2.3.2
