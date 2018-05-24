@@ -27,7 +27,7 @@ def execute(details):
     container_name = flask_app.config["DATALAKE_AZURE_CONTAINER_NAME"]
     launch_container(
         security_context=flask_app.config["DATALAKE_AZURE_SECURITY_CONTEXT"],
-        resource_group_name=flask_app.config["DATALAKE_AZURE_RESOURCE_GROUP_NAME"],
+        resource_group_name=flask_app.config["DATALAKE_AZURE_CONTAINER_RSG_NAME"],
         container_group_prefix=container_name,
         os_type=flask_app.config["DATALAKE_AZURE_CONTAINER_OS_TYPE"],
         location=flask_app.config["DATALAKE_AZURE_CONTAINER_LOCATION"],
