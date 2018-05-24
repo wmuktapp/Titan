@@ -113,7 +113,6 @@ GET /executions/?page_number=1&page_size=100
             "ExecutionDataSourceName": str (req),
             "ExecutionDataSetName": str (req),
             "ExecutionLoadDate": date (req),
-            "ExecutionVersion": str (req),
             "AcquireProgramKey": int,
             "AcquireStartTime" datetime,
             "AcquireStatus": str (req),

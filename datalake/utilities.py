@@ -21,6 +21,7 @@ class AcquireProgram(object):
 
     def create_blob_from_stream(self, stream, count=None, **file_name_params):
         blob_name = self._blob_prefix + "/" + self.file_name.format(**self._data, **file_name_params)
+        self.logger.info("Uploading file, %s, to blob storage" % blob_name)
         self._blob_service.create_blob_from_stream(self._app.config["DATALAKE_AZURE_BLOB_CONTAINER_NAME"], blob_name,
                                                    stream, count=count)
 
