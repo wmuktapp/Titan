@@ -9,7 +9,8 @@ from msrestazure import azure_active_directory
 
 def get_access_token():
     credentials = azure_active_directory.MSIAuthentication()
-    return "%s %s" % (credentials.scheme, credentials.token["access_token"])
+    session = credentials.signed_session()
+    return session.headers.get("Authorization")
 
 
 def list_blobs(service, container, prefix):
