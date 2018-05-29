@@ -244,7 +244,7 @@ def get_schedule(id):
         'name': 'Schedule %i' % id,
         'nextScheduled': get_next_date(),
         'scheduleEnd': get_next_date(),
-        'client': 'Client %i' % id,
+        'client': 'Client %s' % 'ABCDE'[randint(0, 4)],
         'dataSource': 'Data source %i' % id,
         'dataSet': 'Dataset %i' % id,
         'nextLoadDate': get_load_date(),
