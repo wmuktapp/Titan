@@ -6,13 +6,16 @@ require('./filter.css');
 
 class ColumnFilter extends React.Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       open: false,
-      values: ['one', 'two', 'three']
+      values: this.props.values.map((value) => {
+        return { name: value, selected: true }
+      })
     };
     this.toggle = this.toggle.bind(this);
+    this.select = this.select.bind(this);
   }
 
   toggle() {
@@ -21,11 +24,20 @@ class ColumnFilter extends React.Component {
     });
   }
 
+  select(name, selected) {
+    const values = this.state.values;
+    const value = values.find((value) => value.name === name);
+    value.selected = selected;
+    this.setState({
+      values: values
+    });
+  }
+
   render() {
     return (
       <span className="column-filter">
         <FilterButton toggle={this.toggle} />
-        <FilterMenu open={this.state.open} />
+        <FilterMenu open={this.state.open} values={this.state.values} onSelect={this.select} />
       </span>
     );
   }

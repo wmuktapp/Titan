@@ -32,9 +32,15 @@ class ScheduleList extends React.Component {
 
   render() {
 
+    // TODO calculate these properly
+    const clients = ['Client A', 'Client B', 'Client C', 'Client D', 'Client E'];
+    const selectedClients = [];
+
     return (
       <div className="schedule-list">
-        <ScheduleTable schedules={this.state.schedules} />
+        <ScheduleTable schedules={this.state.schedules}
+          clients={clients} selectedClients={selectedClients}
+          />
         {
           this.state.loading && 
             <div className="schedule-loading">
