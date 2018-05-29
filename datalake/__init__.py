@@ -1,5 +1,3 @@
-import os
-
 from applicationinsights.flask import ext
 import dotenv
 import flask
@@ -8,7 +6,7 @@ from datalake import api, app, config, models
 from datalake.utilities import *
 
 
-def create_app(source):
+def create_app(source="webserver"):
     flask_app = flask.Flask("datalake", instance_relative_config=True)
     flask_app.logger.info("App object created from %s" % source)
 
