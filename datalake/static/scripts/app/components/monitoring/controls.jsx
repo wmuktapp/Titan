@@ -2,7 +2,6 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
-require('./controls.css');
 require('react-datepicker/dist/react-datepicker.css');
 
 class MonitoringControls extends React.Component {
@@ -28,7 +27,7 @@ class MonitoringControls extends React.Component {
     const date = moment(this.props.dates.end);
 
     return (
-      <div className="monitoring-controls u-cf">
+      <div className="controls">
         <label>Show executions up to date</label>
         <DatePicker selected={date} dateFormat="DD/MM/YYYY" onChange={this.selectDate} maxDate={moment().add(-1, 'd')} />
       </div>
