@@ -7,6 +7,11 @@ from azure.mgmt.containerinstance import models
 from msrestazure import azure_active_directory
 
 
+def get_access_token():
+    credentials = azure_active_directory.MSIAuthentication()
+    return "%s %s" % (credentials.scheme, credentials.token["access_token"])
+
+
 def list_blobs(service, container, prefix):
     marker = None
     while marker != "":
