@@ -23,12 +23,6 @@ def create_app(source="webserver"):
     ext.AppInsights().init_app(flask_app)
     flask_app.logger.debug("Enabling Azure Application Insights log stream from app")
 
-    flask_app.config["DATALAKE_AZURE_SECURITY_CONTEXT"] = app.AzureSecurityContext(
-        flask_app.config["DATALAKE_AZURE_SUBSCRIPTION_ID"],
-        flask_app.config["DATALAKE_AZURE_APPLICATION_ID"],
-        flask_app.config["DATALAKE_AZURE_APPLICATION_KEY"],
-        flask_app.config["DATALAKE_AZURE_TENANT_ID"]
-    )
     return flask_app
 
 

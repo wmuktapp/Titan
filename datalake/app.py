@@ -2,15 +2,9 @@ import json
 import uuid
 
 import flask
-from azure.common import credentials
-from azure.mgmt import containerinstance
+from azure.mgmt import containerinstance, resource
 from azure.mgmt.containerinstance import models
-
-
-class AzureSecurityContext(object):
-    def __init__(self, subscription_id, client_id, client_secret, tenant):
-        self.subscription_id = subscription_id
-        self.credentials = credentials.ServicePrincipalCredentials(client_id, client_secret, tenant=tenant)
+from msrestazure import azure_active_directory
 
 
 def list_blobs(service, container, prefix):
@@ -26,7 +20,6 @@ def execute(details):
     flask_app = flask.current_app
     container_name = flask_app.config["DATALAKE_AZURE_CONTAINER_NAME"]
     launch_container(
-        security_context=flask_app.config["DATALAKE_AZURE_SECURITY_CONTEXT"],
         resource_group_name=flask_app.config["DATALAKE_AZURE_CONTAINER_RSG_NAME"],
         container_group_prefix=container_name,
         os_type=flask_app.config["DATALAKE_AZURE_CONTAINER_OS_TYPE"],
@@ -76,7 +69,7 @@ def format_execution(rows):
     return details
 
 
-def launch_container(security_context, resource_group_name, container_group_prefix, os_type, location, container_name,
+def launch_container(resource_group_name, container_group_prefix, os_type, location, container_name,
                      image_name, memory_in_gb, cpu_count, configuration):
     container_group_name = "%s_%s" % (container_group_prefix, uuid.uuid4())
     flask.current_app.logger.info("Preparing to launch container; %s" % container_group_name)
@@ -85,6 +78,7 @@ def launch_container(security_context, resource_group_name, container_group_pref
                                  environment_variables=models.EnvironmentVariable("DATALAKE_STDIN", configuration))
     container_group = models.ContainerGroup(containers=[container], os_type=os_type, location=location,
                                             restart_policy="Never")
-    client = containerinstance.ContainerInstanceManagementClient(security_context.credentials,
-                                                                 security_context.subscription_id)
+    credentials = azure_active_directory.MSIAuthentication()
+    subscription_id = next(resource.SubscriptionClient(credentials).subscriptions.list())
+    client = containerinstance.ContainerInstanceManagementClient(credentials, subscription_id)
     client.container_groups.create_or_update(resource_group_name, container_group_name, container_group)

@@ -67,10 +67,10 @@
         },
         "azure-cosmosdb-table": {
             "hashes": [
-                "sha256:7a99cf0abf65d051321506e99fa90dd3e6112665b87646b7e031ebadaba1c973",
-                "sha256:d9ef7dfba6157f6fb3d9228c3570261b3e4ba3c331f9df61671f3c8964eaf5b9"
+                "sha256:e4c33f6e737801a815f54f31b2480881e000cb855fb0285a22ed7260f26404c6",
+                "sha256:f801b519d94dcadfb36891157a4d73eeb94d84c381a0018ef8537adf7671b126"
             ],
-            "version": "==1.0.2"
+            "version": "==1.0.3"
         },
         "azure-datalake-store": {
             "hashes": [
@@ -130,10 +130,10 @@
         },
         "azure-mgmt-batch": {
             "hashes": [
-                "sha256:bc8ab35d21a07e17a4007efeb14a607a86315be5577d521fac53239f2270a633",
-                "sha256:e83988711449d1ad4fe3db5c88c2b08aede073b113f2c5b423af155b1bd5f944"
+                "sha256:6e375ecdd5966ee9ee45b29c90a806388c27ceacc2cbd6dd406ff311b5d7da72",
+                "sha256:d942e225180d07aae07a43e489ae0acbacd92651be3a019f4eb330a587028161"
             ],
-            "version": "==5.0.0"
+            "version": "==5.0.1"
         },
         "azure-mgmt-batchai": {
             "hashes": [
@@ -740,10 +740,10 @@
         },
         "pyjwt": {
             "hashes": [
-                "sha256:c365c2c92063bdc609a9ef328958a910e249ffcad953895914b87e645412cf81",
-                "sha256:d527c3330d83d7278a0a8ef570b7c9c39fbf2c0c1edbe564a1a8a02d5352322b"
+                "sha256:30b1380ff43b55441283cc2b2676b755cca45693ae3097325dea01f3d110628c",
+                "sha256:4ee413b357d53fd3fb44704577afac88e72e878716116270d722723d65b42176"
             ],
-            "version": "==1.6.3"
+            "version": "==1.6.4"
         },
         "pyodbc": {
             "hashes": [
@@ -808,9 +808,9 @@
         },
         "sqlalchemy": {
             "hashes": [
-                "sha256:d6cda03b0187d6ed796ff70e87c9a7dce2c2c9650a7bc3c022cd331416853c31"
+                "sha256:2d5f08f714a886a1382c18be501e614bce50d362384dc089474019ce0768151c"
             ],
-            "version": "==1.2.7"
+            "version": "==1.2.8"
         },
         "urllib3": {
             "hashes": [
