@@ -1,6 +1,8 @@
 import React from 'react';
-import FilterButton from './column-filter/filter-button.jsx';
-import FilterMenu from './column-filter/filter-menu.jsx';
+import FilterButton from './filter-button.jsx';
+import FilterMenu from './filter-menu.jsx';
+
+require('./filter.css');
 
 class ColumnFilter extends React.Component {
 
@@ -21,7 +23,7 @@ class ColumnFilter extends React.Component {
 
   render() {
     return (
-      <span>
+      <span className="column-filter">
         <FilterButton toggle={this.toggle} />
         <FilterMenu open={this.state.open} />
       </span>

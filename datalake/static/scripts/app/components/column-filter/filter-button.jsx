@@ -1,11 +1,9 @@
 import React from 'react';
 
-require('./menu.css');
-
 class FilterButton extends React.Component {
 
   render() {
-    return <button onClick={this.props.toggle}>F</button>;
+    return <button className="filter-button" onClick={this.props.toggle}>F</button>;
   }
 
 }

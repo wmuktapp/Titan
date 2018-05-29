@@ -1,4 +1,5 @@
 import React from 'react';
+import Filter from '../column-filter/filter.jsx'
 import dateUtils from '../../utils/date-utils';
 
 class ScheduleTable extends React.Component {
@@ -9,7 +10,10 @@ class ScheduleTable extends React.Component {
       <tr>
         <th>Schedule</th>
         <th>Next scheduled date</th>
-        <th>Client</th>
+        <th>
+          Client
+          <Filter />
+        </th>
         <th>Dataset</th>
         <th>Load date</th>
         <th>Enabled?</th>
