@@ -100,7 +100,7 @@ def execution_retry():
 
 @app.route('/api/schedules')
 def schedules_list():
-    # TODO support filtering by querystring
+    # TODO support filtering by querystring?
     return get_schedules()
 
 
@@ -224,7 +224,7 @@ def get_schedules():
 
     schedules = []
 
-    row_count = 10
+    row_count = 50
 
     for i in range(1, row_count + 1):
 

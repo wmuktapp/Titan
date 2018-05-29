@@ -15,8 +15,6 @@ class ScheduleList extends React.Component {
       loading: true,
       page: 1
     };
-
-    this.loadMore = this.loadMore.bind(this);
   }
 
   componentDidMount() {
@@ -32,38 +30,17 @@ class ScheduleList extends React.Component {
 
   }
 
-  loadMore() {
-    
-    let page = this.state.page;
-    page++;
-
-    this.setState({
-      loading: true,
-      page: page
-    });
-
-    fetch('/api/schedules?page=' + page)
-      .then(res => res.json())
-      .then((results) => {
-        this.setState({
-          schedules: this.state.schedules.concat(results),
-          loading: false
-        });
-      });
-  }
-
   render() {
 
     return (
       <div className="schedule-list">
         <ScheduleTable schedules={this.state.schedules} />
-        <div className="schedule-loading">
-          {
-            this.state.loading
-              ? <p>Loading...</p>
-              : <a onClick={this.loadMore}>Load more</a>
-          }
-        </div>
+        {
+          this.state.loading && 
+            <div className="schedule-loading">
+              <p>Loading...</p>
+            </div>
+        }
       </div>
     );
   }
