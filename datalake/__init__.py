@@ -8,6 +8,8 @@ from datalake.utilities import *
 
 def create_app(source="webserver"):
     flask_app = flask.Flask("datalake", instance_relative_config=True)
+    app_insights = ext.AppInsights(flask_app)
+    flask_app.logger.debug("Enabling Azure Application Insights log stream from app")
     flask_app.logger.info("App object created from %s" % source)
 
     dotenv.load_dotenv(os.path.join(os.path.dirname(__file__), "config.env"))
@@ -18,10 +20,9 @@ def create_app(source="webserver"):
     flask_app.logger.debug("Configuration loaded using environment: %s" % environment)
 
     flask_app.register_blueprint(api.api_blueprint, url_prefix="/api")
-
     models.db.init_app(flask_app)
-    ext.AppInsights().init_app(flask_app)
-    flask_app.logger.debug("Enabling Azure Application Insights log stream from app")
+
+    app_insights.flush()
 
     return flask_app
 
