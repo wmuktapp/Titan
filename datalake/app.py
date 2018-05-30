@@ -7,6 +7,12 @@ from azure.mgmt.containerinstance import models
 from msrestazure import azure_active_directory
 
 
+def get_security_context():
+    credentials = azure_active_directory.MSIAuthentication()
+    subscription_id = next(resource.SubscriptionClient(credentials).subscriptions.list())
+    return credentials, subscription_id
+
+
 def get_access_token():
     credentials = azure_active_directory.MSIAuthentication()
     session = credentials.signed_session()
@@ -84,7 +90,6 @@ def launch_container(resource_group_name, container_group_prefix, os_type, locat
                                  environment_variables=models.EnvironmentVariable("DATALAKE_STDIN", configuration))
     container_group = models.ContainerGroup(containers=[container], os_type=os_type, location=location,
                                             restart_policy="Never")
-    credentials = azure_active_directory.MSIAuthentication()
-    subscription_id = next(resource.SubscriptionClient(credentials).subscriptions.list())
+    credentials, subscription_id = get_security_context()
     client = containerinstance.ContainerInstanceManagementClient(credentials, subscription_id)
     client.container_groups.create_or_update(resource_group_name, container_group_name, container_group)

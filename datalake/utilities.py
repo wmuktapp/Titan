@@ -5,7 +5,6 @@ from azure.storage import blob
 
 import datalake
 
-# allow an acquire program to upload more than one file?
 
 class AcquireProgram(object):
     def __init__(self):
@@ -20,18 +19,7 @@ class AcquireProgram(object):
         self.logger = self._app.logger
 
     def create_blob_from_stream(self, stream, count=None, **file_name_params):
-        blob_name = self._blob_prefix + "/" + self.file_name.format(**self._data, **file_name_params)
+        blob_name = self._blob_prefix + "/" + self.file_name_format.format(**self._data, **file_name_params)
         self.logger.info("Uploading file, %s, to blob storage" % blob_name)
         self._blob_service.create_blob_from_stream(self._app.config["DATALAKE_AZURE_BLOB_CONTAINER_NAME"], blob_name,
                                                    stream, count=count)
-
-
-"""
-USAGE:
-
-from datalake import AcquireProgram
-
-dcm_downloader = AcquireProgram()
-dcm_downloader.file_name_format = "{DATALAKE_CLIENT_NAME}_{DATALAKE_DATA_SET_NAME}_{DATALAKE_LOAD_DATE}"
-
-"""
