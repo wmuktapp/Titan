@@ -30,6 +30,8 @@ class ScheduleList extends React.Component {
 
   }
 
+  // TODO methods for filtering
+
   render() {
 
     // TODO calculate these properly
