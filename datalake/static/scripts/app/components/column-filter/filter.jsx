@@ -31,6 +31,12 @@ class ColumnFilter extends React.Component {
     this.setState({
       values: values
     });
+
+    const names = values
+      .filter(value => value.selected)
+      .map(value => value.name);
+
+    this.props.onChange(names);
   }
 
   render() {

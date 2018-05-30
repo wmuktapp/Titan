@@ -13,8 +13,12 @@ class ScheduleList extends React.Component {
     this.state = {
       schedules: [],
       loading: true,
-      page: 1
+      
+
+      selectedClients: []
     };
+
+    this.onFilterChange = this.onFilterChange.bind(this);
   }
 
   componentDidMount() {
@@ -30,7 +34,20 @@ class ScheduleList extends React.Component {
 
   }
 
-  // TODO methods for filtering
+  onFilterChange(clients) {
+
+    let schedules = this.state.schedules;
+    // const clients = this.state.selectedClients;
+
+    schedules = schedules.filter((schedule) => {
+      return clients.indexOf(schedule.client) !== -1; 
+    });
+
+    this.setState({
+      schedules: schedules,
+      selectedClients: clients
+    });
+  }
 
   render() {
 
@@ -38,10 +55,12 @@ class ScheduleList extends React.Component {
     const clients = ['Client A', 'Client B', 'Client C', 'Client D', 'Client E'];
     const selectedClients = [];
 
+
+
     return (
       <div className="schedule-list">
         <ScheduleTable schedules={this.state.schedules}
-          clients={clients} selectedClients={selectedClients}
+          clients={clients} selectedClients={selectedClients} filterClients={this.onFilterChange}
           />
         {
           this.state.loading && 
