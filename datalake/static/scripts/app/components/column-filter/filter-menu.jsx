@@ -7,16 +7,20 @@ class FilterMenu extends React.Component {
     this.select = this.select.bind(this);
   }
 
-  select() {
-    // TODO
+  select(event) {
+    const target = event.target;
+    this.props.onSelect(target.name, target.checked);
   }
 
   render() {
 
     const options = this.props.values.map((value, index) => {
+
+      const id = 'filter-value-' + index; // TODO more robust unique ID?
+
       return <div key={index} className="filter-menu-row">
-        <input type="checkbox" checked={value.selected} onChange={this.select} />
-        <label>{value.name}</label>
+        <input id={id} type="checkbox" name={value.name} checked={value.selected} onChange={this.select} />
+        <label htmlFor={id}>{value.name}</label>
       </div>;
     })
 
