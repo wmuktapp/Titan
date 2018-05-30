@@ -17,7 +17,13 @@ class ScheduleTable extends React.Component {
               <ColumnFilter values={this.props.clients} onChange={this.props.filterClients} />
           }
         </th>
-        <th>Dataset</th>
+        <th>
+          Dataset
+          {
+            !!this.props.dataSets.length &&
+              <ColumnFilter values={this.props.dataSets} onChange={this.props.filterDataSets} />
+          }
+        </th>
         <th>Load date</th>
         <th>Enabled?</th>
       </tr>
