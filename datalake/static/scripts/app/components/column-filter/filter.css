@@ -19,13 +19,27 @@
 }
 
 .filter-menu-row {
-    padding: 1em;
+    position: relative;
+}
+
+.filter-menu-row input[type=checkbox] {
+    position: absolute;
+    left: 1em;
+    top: 1em;
 }
 
 .filter-menu-row label {
-    display: inline;
-    padding-left: .5em;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 1em 1em 1em 3em;
     vertical-align: text-bottom;
+    cursor: pointer;
+}
+
+.filter-menu-row label:hover {
+    background-color: rgba(91, 160, 181, .1);
 }
 
 .filter-cover {
