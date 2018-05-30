@@ -12,7 +12,10 @@ class ScheduleTable extends React.Component {
         <th>Next scheduled date</th>
         <th>
           Client
-          <ColumnFilter values={this.props.clients} selected={this.props.selectedClients} onChange={this.props.filterClients} />
+          {
+            !!this.props.clients.length &&
+              <ColumnFilter values={this.props.clients} onChange={this.props.filterClients} />
+          }
         </th>
         <th>Dataset</th>
         <th>Load date</th>

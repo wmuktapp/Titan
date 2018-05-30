@@ -28,7 +28,8 @@ class ScheduleList extends React.Component {
       .then((results) => {
         this.setState({
           schedules: results,
-          loading: false
+          loading: false,
+          selectedClients: this.getUniqueClients(results)
         });
       });
 
@@ -40,10 +41,19 @@ class ScheduleList extends React.Component {
     });
   }
 
+  getUniqueClients(schedules) {
+    return schedules.reduce((clients, schedule) => {
+      if (clients.indexOf(schedule.client) === -1) {
+        clients.push(schedule.client);
+      }
+      return clients;
+    }, []).sort();
+  }
+
   render() {
 
     // TODO calculate these properly
-    const clients = ['Client A', 'Client B', 'Client C', 'Client D', 'Client E'];
+    const clients = this.getUniqueClients(this.state.schedules);
 
     let schedules = this.state.schedules;
     const selectedClients = this.state.selectedClients;
@@ -54,7 +64,7 @@ class ScheduleList extends React.Component {
     return (
       <div className="schedule-list">
         <ScheduleTable schedules={schedules}
-          clients={clients} selectedClients={selectedClients} filterClients={this.onFilterChange}
+          clients={clients} filterClients={this.onFilterChange}
           />
         {
           this.state.loading && 
