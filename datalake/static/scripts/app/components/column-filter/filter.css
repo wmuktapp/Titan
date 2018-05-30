@@ -23,4 +23,6 @@
 
 .filter-menu-row label {
     display: inline;
+    padding-left: .5em;
+    vertical-align: text-bottom;
 }
