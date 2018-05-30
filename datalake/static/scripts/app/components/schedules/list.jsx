@@ -5,16 +5,11 @@ require('./schedule.css');
 
 class ScheduleList extends React.Component {
 
-  // Retrieve data from database
-  // Manage the list of data
-
   constructor() {
     super();
     this.state = {
       schedules: [],
       loading: true,
-      
-
       selectedClients: []
     };
 
@@ -22,6 +17,8 @@ class ScheduleList extends React.Component {
   }
 
   componentDidMount() {
+
+    // On page load, retrieve a list of schedules
 
     fetch('/api/schedules')
       .then(res => res.json())
@@ -32,15 +29,16 @@ class ScheduleList extends React.Component {
           selectedClients: this.getUniqueClients(results)
         });
       });
-
   }
 
+  // TODO needs to handle other filtering
   onFilterChange(clients) {
     this.setState({
       selectedClients: clients
     });
   }
 
+  // Get a list of all clients included in the given list of schedules
   getUniqueClients(schedules) {
     return schedules.reduce((clients, schedule) => {
       if (clients.indexOf(schedule.client) === -1) {
@@ -52,7 +50,6 @@ class ScheduleList extends React.Component {
 
   render() {
 
-    // TODO calculate these properly
     const clients = this.getUniqueClients(this.state.schedules);
 
     let schedules = this.state.schedules;
@@ -60,6 +57,8 @@ class ScheduleList extends React.Component {
     schedules = schedules.filter((schedule) => {
       return selectedClients.indexOf(schedule.client) !== -1; 
     });
+
+    // TODO other filtering, once support is added
 
     return (
       <div className="schedule-list">
