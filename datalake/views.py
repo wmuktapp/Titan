@@ -1,12 +1,13 @@
-
 from datetime import datetime, timedelta
-from flask import Flask, jsonify, redirect, render_template, request
+from flask import jsonify, redirect, render_template, request
 from markupsafe import Markup
 from random import random, randint
 from time import sleep
 
+import datalake
 
-app = Flask(__name__)
+
+app = datalake.create_app()
 
 
 # Page URLs
