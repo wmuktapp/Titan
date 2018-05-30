@@ -4,12 +4,15 @@
 }
 
 .filter-button {
+    height: 24px;
+    line-height: 24px;
     margin: 0 .8em;
-    padding: 0 1em;
+    padding: 0 .4em;
 }
 
 .filter-menu {
     position: fixed;
+    z-index: 1000;
     width: 200px;
     margin-top: .8em;
     background: #fff;
@@ -18,9 +21,39 @@
 }
 
 .filter-menu-row {
-    padding: 1em;
+    position: relative;
+}
+
+.filter-menu-row input[type=checkbox] {
+    position: absolute;
+    left: 1em;
+    top: 1em;
 }
 
 .filter-menu-row label {
-    display: inline;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 1em 1em 1em 3em;
+    vertical-align: text-bottom;
+    cursor: pointer;
+}
+
+.filter-menu-row label:hover {
+    background-color: rgba(91, 160, 181, .1);
+}
+
+.filter-cover {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 990;
+}
+
+.filter-cover-open {
+    display: block;
 }

@@ -12,7 +12,10 @@ class ScheduleTable extends React.Component {
         <th>Next scheduled date</th>
         <th>
           Client
-          <ColumnFilter values={this.props.clients} selected={this.props.selectedClients} onSelect={this.props.filterClients} />
+          {
+            !!this.props.clients.length &&
+              <ColumnFilter values={this.props.clients} onChange={this.props.filterClients} />
+          }
         </th>
         <th>Dataset</th>
         <th>Load date</th>
@@ -20,27 +23,31 @@ class ScheduleTable extends React.Component {
       </tr>
     );
 
-    const body = this.props.schedules.map((schedule, index) => {
+    const body = this.props.schedules.length
+      ? this.props.schedules.map((schedule, index) => {
 
-      const href = '/schedules/' + schedule.id;
-      const nextDate = dateUtils.dateToString(new Date(schedule.nextScheduled));
-      const loadDate = dateUtils.dateToString(new Date(schedule.nextLoadDate));
+        const href = '/schedules/' + schedule.id;
+        const nextDate = dateUtils.dateToString(new Date(schedule.nextScheduled));
+        const loadDate = dateUtils.dateToString(new Date(schedule.nextLoadDate));
 
-      return (
-        <tr key={index}>
-          <td>
-            <a href={href}>{schedule.name}</a>
-          </td>
-          <td>{nextDate}</td>
-          <td>{schedule.client}</td>
-          <td>{schedule.dataSet}</td>
-          <td>{loadDate}</td>
-          <td>
-            <input type="checkbox" disabled={true} checked={schedule.enabled} />
-          </td>
-        </tr>
-      );
-    });
+        return (
+          <tr key={index}>
+            <td>
+              <a href={href}>{schedule.name}</a>
+            </td>
+            <td>{nextDate}</td>
+            <td>{schedule.client}</td>
+            <td>{schedule.dataSet}</td>
+            <td>{loadDate}</td>
+            <td>
+              <input type="checkbox" disabled={true} checked={schedule.enabled} />
+            </td>
+          </tr>
+        );
+      })
+      : <tr>
+        <td className="schedule-loading" colSpan="6">{ this.props.loading ? 'Loading...' : 'No schedules' }</td>
+      </tr>;
 
     return (
       <table className="schedule-table">
