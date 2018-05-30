@@ -143,6 +143,10 @@ th, td {
     background-color: #f6f6f6;
 }
 
+.controls {
+    margin: 1em 0;
+}
+
 form .label-body {
     vertical-align: text-bottom;
 }

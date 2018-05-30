@@ -1,9 +1,26 @@
 
+.column-filter {
+    /*position: relative;*/
+}
+
+.filter-button {
+    margin: 0 .8em;
+    padding: 0 1em;
+}
+
 .filter-menu {
     position: fixed;
     width: 200px;
-    height: 200px;
+    margin-top: .8em;
     background: #fff;
     border: 1px solid #aaa;
     border-radius: .5em;
+}
+
+.filter-menu-row {
+    padding: 1em;
+}
+
+.filter-menu-row label {
+    display: inline;
 }
