@@ -4,8 +4,10 @@
 }
 
 .filter-button {
+    height: 24px;
+    line-height: 24px;
     margin: 0 .8em;
-    padding: 0 1em;
+    padding: 0 .4em;
 }
 
 .filter-menu {
