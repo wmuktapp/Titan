@@ -62,15 +62,9 @@ class ScheduleList extends React.Component {
 
     return (
       <div className="schedule-list">
-        <ScheduleTable schedules={schedules}
+        <ScheduleTable schedules={schedules} loading={this.state.loading}
           clients={clients} filterClients={this.onFilterChange}
           />
-        {
-          this.state.loading && 
-            <div className="schedule-loading">
-              <p>Loading...</p>
-            </div>
-        }
       </div>
     );
   }
