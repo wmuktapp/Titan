@@ -1,9 +1,18 @@
+from azure.mgmt import containerinstance
+
 from datalake import app, models
 import datalake
 
 
 def _clean_up_containers(flask_app):
-    pass
+    credentials, subscription_id = app.get_security_context()
+    client = containerinstance.ContainerInstanceManagementClient(credentials, subscription_id)
+    resource_group_name = flask_app.config["DATALAKE_AZURE_CONTAINER_RSG_NAME"]
+    for partial_container_group in client.container_groups.list():
+        container_group = client.container_groups.get(resource_group_name, partial_container_group.name)
+        if container_group.instance_view.state != "Running":
+            flask_app.logger.info("Deleting terminated container group; %s" % partial_container_group.name)
+            client.container_groups.delete(resource_group_name, partial_container_group.name)
 
 
 def _clean_up_logs(flask_app):
@@ -11,6 +20,9 @@ def _clean_up_logs(flask_app):
 
 
 def _kill_long_running_containers(flask_app):
+    # TODO: Need to work out how to deal with this. There are timeout parameters for an acquire and an extract but there
+    # could be x acquires. I think we need an overarching timeout. Either that or we don't kill but we send structured
+    # log data which appinsights can send an alert off so we can review manually
     pass
 
 
