@@ -35,16 +35,7 @@ class ScheduleList extends React.Component {
   }
 
   onFilterChange(clients) {
-
-    let schedules = this.state.schedules;
-    // const clients = this.state.selectedClients;
-
-    schedules = schedules.filter((schedule) => {
-      return clients.indexOf(schedule.client) !== -1; 
-    });
-
     this.setState({
-      schedules: schedules,
       selectedClients: clients
     });
   }
@@ -53,13 +44,16 @@ class ScheduleList extends React.Component {
 
     // TODO calculate these properly
     const clients = ['Client A', 'Client B', 'Client C', 'Client D', 'Client E'];
-    const selectedClients = [];
 
-
+    let schedules = this.state.schedules;
+    const selectedClients = this.state.selectedClients;
+    schedules = schedules.filter((schedule) => {
+      return selectedClients.indexOf(schedule.client) !== -1; 
+    });
 
     return (
       <div className="schedule-list">
-        <ScheduleTable schedules={this.state.schedules}
+        <ScheduleTable schedules={schedules}
           clients={clients} selectedClients={selectedClients} filterClients={this.onFilterChange}
           />
         {
