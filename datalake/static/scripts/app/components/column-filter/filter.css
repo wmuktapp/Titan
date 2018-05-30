@@ -10,6 +10,7 @@
 
 .filter-menu {
     position: fixed;
+    z-index: 1000;
     width: 200px;
     margin-top: .8em;
     background: #fff;
@@ -25,4 +26,18 @@
     display: inline;
     padding-left: .5em;
     vertical-align: text-bottom;
+}
+
+.filter-cover {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 990;
+}
+
+.filter-cover-open {
+    display: block;
 }

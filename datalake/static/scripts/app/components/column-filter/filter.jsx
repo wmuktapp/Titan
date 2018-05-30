@@ -15,12 +15,19 @@ class ColumnFilter extends React.Component {
       })
     };
     this.toggle = this.toggle.bind(this);
+    this.close = this.close.bind(this);
     this.select = this.select.bind(this);
   }
 
   toggle() {
     this.setState({
       open: !this.state.open
+    });
+  }
+
+  close() {
+    this.setState({
+      open: false
     });
   }
 
@@ -44,6 +51,7 @@ class ColumnFilter extends React.Component {
       <span className="column-filter">
         <FilterButton toggle={this.toggle} />
         <FilterMenu open={this.state.open} values={this.state.values} onSelect={this.select} />
+        <div className={'filter-cover' + (this.state.open && ' filter-cover-open')} onClick={this.close} />
       </span>
     );
   }
