@@ -5,14 +5,19 @@ function getAccessToken() {
 
 const Ajax = {
 
-    fetch(url, method, body) {
+    fetch(url, options) {
 
-        return window.fetch(url, {
-            method: method || 'GET',
+        // Default request options
+        const defaults = {
             headers: {
                 'Authorization': 'Bearer ' + getAccessToken()
             }
-        });
+        };
+
+        // Merge objects
+        Object.assign(options, defaults);
+
+        return window.fetch(url, options);
     }
 
 };
