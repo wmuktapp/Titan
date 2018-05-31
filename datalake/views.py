@@ -143,7 +143,7 @@ def acquire_programs_list():
 def get_access_token():
 
     # Only required in the live environment
-    if not current_app.config['DEBUG']:
+    if current_app.config['DATALAKE_AUTH_REQUIRED']:
         return datalake_app.get_access_token()
     return ''
 
