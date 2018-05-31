@@ -2,6 +2,7 @@ import React from 'react';
 import MonitoringControls from './monitoring/controls.jsx';
 import MonitoringGrid from './monitoring/grid.jsx';
 
+import Ajax from '../utils/ajax';
 import dateUtils from '../utils/date-utils';
 
 require('./monitor.css');
@@ -89,7 +90,7 @@ class Monitor extends React.Component {
       + '&end=' + dateUtils.dateToIso8601(dates.end);
 
     // Request data
-    fetch(url)
+    Ajax.fetch(url)
       .then(res => res.json())
       .then(
         callback,

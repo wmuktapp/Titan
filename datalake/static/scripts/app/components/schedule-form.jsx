@@ -4,6 +4,7 @@ import IntervalPicker from './interval-picker.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import DatePicker from 'react-datepicker';
+import Ajax from '../utils/ajax';
 import dateUtils from '../utils/date-utils';
 import moment from 'moment';
 
@@ -87,7 +88,7 @@ class ScheduleForm extends React.Component {
 
     if (this.state.id) {
 
-      fetch('/api/schedules/' + this.state.id)
+      Ajax.fetch('/api/schedules/' + this.state.id)
         .then(res => res.json())
         .then((result) => {
 
@@ -203,7 +204,7 @@ class ScheduleForm extends React.Component {
   onSubmit(event) {
 
     // Send insert/update to server
-    fetch('/api/schedules', {
+    Ajax.fetch('/api/schedules', {
       method: 'POST',
       data: JSON.stringify(this.state)
     })

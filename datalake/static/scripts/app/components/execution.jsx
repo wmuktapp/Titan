@@ -1,5 +1,6 @@
 import React from 'react';
 import ExecutionDetails from './execution-details.jsx';
+import Ajax from '../utils/ajax';
 
 class Execution extends React.Component {
 
@@ -13,7 +14,7 @@ class Execution extends React.Component {
 
   componentDidMount() {
 
-    fetch('/api/executions/' + this.props.executionKey)
+    Ajax.fetch('/api/executions/' + this.props.executionKey)
       .then(res => res.json())
       .then((result) => {
         this.setState({
