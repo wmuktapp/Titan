@@ -1,3 +1,4 @@
+# from datalake import app as datalake_app
 from datetime import datetime, timedelta
 from flask import jsonify, redirect, render_template, request
 from markupsafe import Markup
@@ -18,34 +19,34 @@ def index():
 
 @app.route('/monitoring')
 def monitoring():
-    return render_template('monitoring.html')
+    return render_template('monitoring.html', access_token=get_access_token())
 
 @app.route('/monitoring/executions/<int:execution_key>')
 def monitoring_execution(execution_key):
     # TODO return full set of data for execution?
     # TODO add link to related schedule page, if applicable
     data = Markup({ 'executionKey': execution_key })
-    return render_template('execution.html', data=data)
+    return render_template('execution.html', access_token=get_access_token(), data=data)
 
 @app.route('/schedules')
 def schedules():
-    return render_template('schedules.html')
+    return render_template('schedules.html', access_token=get_access_token())
 
 @app.route('/schedules/<int:schedule_key>')
 def schedule_details(schedule_key):
 
     # NOTE: 'run now' button, links to the adhoc page pre-filled (if possible)
     data = Markup({ 'scheduleKey': schedule_key })
-    return render_template('schedule.html', data=data)
+    return render_template('schedule.html', access_token=get_access_token(), data=data)
 
 @app.route('/schedules/add')
 def schedule_add():
     data = Markup({})
-    return render_template('schedule.html', data=data)
+    return render_template('schedule.html', access_token=get_access_token(), data=data)
 
 @app.route('/adhoc')
 def adhoc():
-    return render_template('adhoc.html')
+    return render_template('adhoc.html', access_token=get_access_token())
 
 
 # API URLs
@@ -135,6 +136,13 @@ def acquire_programs_list():
 #   GET: retrieve distinct column values (for filtering)
 # /acquire-programs/<key>
 #   GET: retrieve individual instance
+
+
+# Access Token
+
+def get_access_token():
+    return '<TOKEN>'# datalake_app.get_access_token()
+
 
 
 
