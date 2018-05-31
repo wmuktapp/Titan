@@ -1,7 +1,6 @@
 
-// TODO
 function getAccessToken() {
-    return '3268756328756732';
+    return authorisation.accessToken;
 }
 
 const Ajax = {
