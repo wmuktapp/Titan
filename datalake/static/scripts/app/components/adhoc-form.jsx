@@ -2,6 +2,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
+import Ajax from '../utils/ajax';
 
 // Datepicker styles
 require('react-datepicker/dist/react-datepicker.css');
@@ -42,7 +43,7 @@ class AdhocForm extends React.Component {
   componentDidMount() {
 
     // Get available acquire programs
-    fetch('/api/acquire-programs')
+    Ajax.fetch('/api/acquire-programs')
       .then(res => res.json())
       .then((results) => {
         this.setState({
@@ -143,7 +144,7 @@ class AdhocForm extends React.Component {
       submitted: true
     });
 
-    fetch('/api/executions', {
+    Ajax.fetch('/api/executions', {
       method: 'POST',
       data: JSON.stringify(this.state)
     })

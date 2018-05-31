@@ -1,5 +1,6 @@
 import React from 'react';
 import ScheduleTable from './table.jsx';
+import Ajax from '../../utils/ajax';
 
 require('./schedule.css');
 
@@ -22,7 +23,7 @@ class ScheduleList extends React.Component {
 
     // On page load, retrieve a list of schedules
 
-    fetch('/api/schedules')
+    Ajax.fetch('/api/schedules')
       .then(res => res.json())
       .then((results) => {
         this.setState({
