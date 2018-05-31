@@ -1,6 +1,6 @@
-# from datalake import app as datalake_app
+from datalake import app as datalake_app
 from datetime import datetime, timedelta
-from flask import jsonify, redirect, render_template, request
+from flask import jsonify, redirect, render_template, request, current_app
 from markupsafe import Markup
 from random import random, randint
 from time import sleep
@@ -141,9 +141,11 @@ def acquire_programs_list():
 # Access Token
 
 def get_access_token():
-    return '<TOKEN>'# datalake_app.get_access_token()
 
-
+    # Only required in the live environment
+    if not current_app.config['DEBUG']:
+        return datalake_app.get_access_token()
+    return ''
 
 
 # SAMPLE DATA
