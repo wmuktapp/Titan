@@ -10,10 +10,12 @@ class ScheduleList extends React.Component {
     this.state = {
       schedules: [],
       loading: true,
-      selectedClients: []
+      selectedClients: [],
+      selectedDataSets: []
     };
 
-    this.onFilterChange = this.onFilterChange.bind(this);
+    this.onClientFilterChange = this.onClientFilterChange.bind(this);
+    this.onDataSetFilterChange = this.onDataSetFilterChange.bind(this);
   }
 
   componentDidMount() {
@@ -26,15 +28,23 @@ class ScheduleList extends React.Component {
         this.setState({
           schedules: results,
           loading: false,
-          selectedClients: this.getUniqueClients(results)
+          selectedClients: this.getUniqueClients(results),
+          selectedDataSets: this.getUniqueDataSets(results)
         });
       });
   }
 
-  // TODO needs to handle other filtering
-  onFilterChange(clients) {
+  // Filter update methods
+
+  onClientFilterChange(clients) {
     this.setState({
       selectedClients: clients
+    });
+  }
+
+  onDataSetFilterChange(dataSets) {
+    this.setState({
+      selectedDataSets: dataSets
     });
   }
 
@@ -48,22 +58,38 @@ class ScheduleList extends React.Component {
     }, []).sort();
   }
 
+  // Get a list of all datasets included in the given list of schedules
+  getUniqueDataSets(schedules) {
+    return schedules.reduce((dataSets, schedule) => {
+      if (dataSets.indexOf(schedule.dataSet) === -1) {
+        dataSets.push(schedule.dataSet);
+      }
+      return dataSets;
+    }, []).sort();
+  }
+
   render() {
 
-    const clients = this.getUniqueClients(this.state.schedules);
+    const clients = this.getUniqueClients(this.state.schedules),
+      dataSets = this.getUniqueDataSets(this.state.schedules);
 
     let schedules = this.state.schedules;
-    const selectedClients = this.state.selectedClients;
+
+    // Filter by client
     schedules = schedules.filter((schedule) => {
-      return selectedClients.indexOf(schedule.client) !== -1; 
+      return this.state.selectedClients.indexOf(schedule.client) !== -1; 
     });
 
-    // TODO other filtering, once support is added
+    // Filter by dataset
+    schedules = schedules.filter((schedule) => {
+      return this.state.selectedDataSets.indexOf(schedule.dataSet) !== -1; 
+    });
 
     return (
       <div className="schedule-list">
         <ScheduleTable schedules={schedules} loading={this.state.loading}
-          clients={clients} filterClients={this.onFilterChange}
+          clients={clients} filterClients={this.onClientFilterChange}
+          dataSets={dataSets} filterDataSets={this.onDataSetFilterChange}
           />
       </div>
     );

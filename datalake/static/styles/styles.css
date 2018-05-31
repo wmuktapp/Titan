@@ -68,6 +68,8 @@ footer {
 }
 
 input[type=checkbox] {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
     -webkit-appearance: none;
     background-color: #fafafa;
     border: 1px solid #cacece;
@@ -92,14 +94,21 @@ input[type=checkbox]:disabled {
 }
 
 input[type=checkbox]:checked:after {
-    content: '\2714';
+    content: "\f00c";
     font-size: 14px;
     position: absolute;
-    top: 0px;
-    left: 3px;
-    color: #99a1a7;
+    top: 2px;
+    left: 2px;
+    color: #548235;
 }
 
+input[type=checkbox]:disabled:after {
+    color: rgba(84, 130, 53, .5);
+}
+
+input[type=checkbox]:focus {
+    outline: none;
+}
 
 input[type=text]:disabled {
     border-color: #e9ecee;
