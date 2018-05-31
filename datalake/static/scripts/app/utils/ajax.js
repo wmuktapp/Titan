@@ -8,16 +8,16 @@ const Ajax = {
     fetch(url, options) {
 
         // Default request options
-        const defaults = {
+        const requestOptions = {
             headers: {
                 'Authorization': 'Bearer ' + getAccessToken()
             }
         };
 
         // Merge objects
-        Object.assign(options, defaults);
+        Object.assign(requestOptions, options);
 
-        return window.fetch(url, options);
+        return window.fetch(url, requestOptions);
     }
 
 };
