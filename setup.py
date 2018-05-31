@@ -1,11 +1,11 @@
-from setuptools import find_packages, setup
+import setuptools
 
 
-setup(
+setuptools.setup(
     name="DataLake",
     author="Adam Cunnington",
     license="MIT",
-    packages=find_packages(),
+    packages=setuptools.find_packages(),
     install_requires=[
         "applicationinsights",
         "azure",
