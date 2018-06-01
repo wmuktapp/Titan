@@ -8,34 +8,29 @@ class Dialog extends React.Component {
 
     super(props);
 
-    this.state = {
-      show: true  // Take value from props if provided?
-    };
-
     this.close = this.close.bind(this);
     this.ok = this.ok.bind(this);
   }
 
   close() {
-    this.setState({
-      show: false
-    });
     this.props.onClose();
   }
 
   ok() {
-    this.setState({
-      show: false
-    });
+    this.props.onOk();
   }
 
   render() {
 
-    return this.state.show && (
+    return (
       <div className="dialog">
         <div className="dialog-box">
-          <p>This is dialog!</p>
-          <button className="button button-primary" onClick={this.ok}>Ok</button>
+          <div className="dialog-contents">
+            { this.props.children }
+          </div>
+          <div className="dialog-controls">
+            <button className="button button-primary" onClick={this.ok}>Ok</button>
+          </div>
         </div>
         <div className="dialog-cover" onClick={this.close}></div>
       </div>
