@@ -4,6 +4,7 @@ import MonitoringGrid from './monitoring/grid.jsx';
 
 import Ajax from '../utils/ajax';
 import dateUtils from '../utils/date-utils';
+import Dialog from '../utils/dialog.jsx';
 
 require('./monitor.css');
 
@@ -27,7 +28,8 @@ class Monitor extends React.Component {
       },
       loading: true,
       data: [],
-      retryList: []
+      retryList: [],
+      message: null
     };
 
     // Bind events
@@ -35,6 +37,7 @@ class Monitor extends React.Component {
     this.retryExecutions = this.retryExecutions.bind(this);
     this.showDates = this.showDates.bind(this);
     this.showMore = this.showMore.bind(this);
+    this.onDialogClose = this.onDialogClose.bind(this);
   }
 
   componentDidMount() {
@@ -148,7 +151,8 @@ class Monitor extends React.Component {
           this.setState({
             retryList: [],
             loading: false,
-            data: result
+            data: result,
+            message: 'Acquire programs restarted.  Check back in a few minutes to see progress.'
           });
         },
         (error) => {
@@ -156,6 +160,12 @@ class Monitor extends React.Component {
           console.log('Error retrieving data');
         }
       );
+  }
+
+  onDialogClose() {
+    this.setState({
+      message: null
+    });
   }
 
   render() {
@@ -173,6 +183,12 @@ class Monitor extends React.Component {
                 <a onClick={this.showMore} className="monitoring-control-more">Show more</a>
                 <a onClick={this.retryExecutions} className={'monitor-btn-retry' + (!!this.state.retryList.length ? '' : ' monitor-btn-disabled')}>Retry</a>
               </div>
+        }
+        {
+          this.state.message &&
+            <Dialog onClose={this.onDialogClose} onOk={this.onDialogClose}>
+              <p>{this.state.message}</p>
+            </Dialog>
         }
       </div>
     );
