@@ -152,7 +152,7 @@ class Monitor extends React.Component {
             retryList: [],
             loading: false,
             data: result,
-            message: 'DIALOG MESSAGE - UPDATE THIS'
+            message: 'Acquire programs restarted.  Check back in a few minutes to see progress.'
           });
         },
         (error) => {
@@ -185,7 +185,10 @@ class Monitor extends React.Component {
               </div>
         }
         {
-          this.state.message && <Dialog message={this.state.message} onClose={this.onDialogClose} />
+          this.state.message &&
+            <Dialog onClose={this.onDialogClose} onOk={this.onDialogClose}>
+              <p>{this.state.message}</p>
+            </Dialog>
         }
       </div>
     );
