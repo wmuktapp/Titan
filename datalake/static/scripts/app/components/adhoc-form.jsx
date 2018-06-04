@@ -9,6 +9,8 @@ require('react-datepicker/dist/react-datepicker.css');
 
 class AdhocForm extends React.Component {
 
+  // TODO handle schedule parameter
+
   constructor() {
     super();
     this.state = {
