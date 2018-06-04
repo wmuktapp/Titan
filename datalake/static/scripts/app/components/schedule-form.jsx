@@ -119,10 +119,15 @@ class ScheduleForm extends React.Component {
   }
 
   // Special case for program
-  onChangeProgram() {
-    // TODO get data source from server
+  onChangeProgram(event) {
+
+    const program = Number(event.target.value);
+    const dataSource = program
+      ? this.state.availablePrograms.find((obj) => { return obj.id === program; }).dataSource
+      : '';
+
     this.setState({
-      dataSource: 'Program data source',
+      dataSource: dataSource,
       acquires: []
     });
     this.onChange(...arguments);
