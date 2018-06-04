@@ -31,6 +31,10 @@
     border-bottom: 1px solid #f6f6f6;
 }
 
+.filter-menu-icon  {
+    margin-right: .3em;
+}
+
 .filter-menu-row {
     position: relative;
 }

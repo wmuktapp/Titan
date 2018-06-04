@@ -38,8 +38,14 @@ class FilterMenu extends React.Component {
       return (
         <div className="filter-menu">
           <div className="filter-menu-controls">
-            <a onClick={this.selectAll}>Select all</a>
-            <a onClick={this.deselectAll}>Deselect all</a>
+            <a className="filter-menu-link" onClick={this.selectAll}>
+              <span className="far fa-check-square filter-menu-icon" />
+              Select all
+            </a>
+            <a className="filter-menu-link" onClick={this.deselectAll}>
+              <span className="far fa-square filter-menu-icon" />
+              Deselect all
+            </a>
           </div>
           {options}
         </div>
