@@ -46,7 +46,16 @@ def schedule_add():
 
 @app.route('/adhoc')
 def adhoc():
-    return render_template('adhoc.html', access_token=get_access_token())
+
+    data = {}
+
+    schedule_id = request.args.get('schedule')
+    if schedule_id:
+        data['scheduleId'] = int(schedule_id)
+
+    data = Markup(data)
+
+    return render_template('adhoc.html', access_token=get_access_token(), data=data)
 
 
 # API URLs
@@ -258,7 +267,7 @@ def get_schedule(id):
         'client': 'Client %s' % 'ABCDE'[randint(0, 4)],
         'dataSource': 'Data source %i' % id,
         'dataSet': 'Dataset %s' % 'ABCDE'[randint(0, 4)],
-        'nextLoadDate': get_load_date(),
+        'loadDate': get_load_date(),
         'enabled': random() > .2,
         'interval': {
             'hours': randint(1, 23),
@@ -274,7 +283,7 @@ def get_schedule(id):
             'Saturday': random() > .3,
             'Sunday': random() > .3
         },
-        'acquire': randint(1, 5),
+        'program': randint(1, 5),
         'extract': randint(1, 5)
     }
 

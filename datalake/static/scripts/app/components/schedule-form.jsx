@@ -11,6 +11,8 @@ import moment from 'moment';
 // react-datepicker stylesheet
 require('react-datepicker/dist/react-datepicker.css');
 
+require('./schedule-form.css');
+
 class ScheduleForm extends React.Component {
 
   constructor(props) {
@@ -26,7 +28,7 @@ class ScheduleForm extends React.Component {
       client: '',
       dataSource: '',
       dataSet: '',
-      nextLoadDate: null,
+      loadDate: null,
       enabled: true,
       interval: {
         hours: 0,
@@ -54,13 +56,7 @@ class ScheduleForm extends React.Component {
         'Extract field 3': ''
       },
 
-      availablePrograms: [
-        { id: 1, name: 'Acquire 1' },
-        { id: 2, name: 'Acquire 2' },
-        { id: 3, name: 'Acquire 3' },
-        { id: 4, name: 'Acquire 4' },
-        { id: 5, name: 'Acquire 5' }
-      ],
+      availablePrograms: [],
 
       loading: false
     };
@@ -78,6 +74,7 @@ class ScheduleForm extends React.Component {
     this.selectExtractDestination = this.selectExtractDestination.bind(this);
     this.updateExtractField = this.updateExtractField.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.executeNow = this.executeNow.bind(this);
   }
 
   componentDidMount() {
@@ -85,6 +82,15 @@ class ScheduleForm extends React.Component {
     this.setState({
       loading: true
     });
+
+    // Get acquire prohrams
+    Ajax.fetch('/api/acquire-programs')
+      .then(res => res.json())
+      .then((results) => {
+        this.setState({
+          availablePrograms: results
+        });
+      })
 
     if (this.state.id) {
 
@@ -95,7 +101,7 @@ class ScheduleForm extends React.Component {
           // TODO Make this a method in dateUtils?
           result.nextScheduled = moment(new Date(result.nextScheduled));
           result.scheduleEnd = moment(new Date(result.scheduleEnd));
-          result.nextLoadDate = moment(new Date(result.nextLoadDate));
+          result.loadDate = moment(new Date(result.loadDate));
 
           this.setState(result);
           this.setState({
@@ -116,10 +122,15 @@ class ScheduleForm extends React.Component {
   }
 
   // Special case for program
-  onChangeProgram() {
-    // TODO get data source from server
+  onChangeProgram(event) {
+
+    const program = Number(event.target.value);
+    const dataSource = program
+      ? this.state.availablePrograms.find((obj) => { return obj.id === program; }).dataSource
+      : '';
+
     this.setState({
-      dataSource: 'Program data source',
+      dataSource: dataSource,
       acquires: []
     });
     this.onChange(...arguments);
@@ -149,7 +160,7 @@ class ScheduleForm extends React.Component {
 
   updateNextLoadDate(value) {
     this.setState({
-      nextLoadDate: value
+      loadDate: value
     });
   }
 
@@ -219,6 +230,15 @@ class ScheduleForm extends React.Component {
     event.preventDefault();
   }
 
+  executeNow() {
+
+    // TODO
+    // Dialog about unsaved values?
+
+    // Redirect to adhoc form, pre-populated
+    window.location.href = '/adhoc?schedule=' + this.state.id;
+  }
+
   render() {
 
     // NOTE: Handles both insert and update
@@ -268,7 +288,7 @@ class ScheduleForm extends React.Component {
         </div>
         <div>
           <label>Next load date</label>
-          <DatePicker selected={this.state.nextLoadDate} dateFormat="DD/MM/YYYY" onChange={this.updateNextLoadDate} />
+          <DatePicker selected={this.state.loadDate} dateFormat="DD/MM/YYYY" onChange={this.updateNextLoadDate} />
         </div>
         <div>
           <label>
@@ -302,6 +322,10 @@ class ScheduleForm extends React.Component {
 
         <div>
           <input type="submit" value={ this.state.id ? 'Update' : 'Create' } />
+          <button onClick={this.executeNow} className="btn-now">
+            Execute now
+            <span className="fas fa-angle-right btn-now-icon" />
+          </button>
         </div>
 
       </form>
