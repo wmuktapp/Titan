@@ -274,7 +274,7 @@ def get_schedule(id):
             'Saturday': random() > .3,
             'Sunday': random() > .3
         },
-        'acquire': randint(1, 5),
+        'program': randint(1, 5),
         'extract': randint(1, 5)
     }
 
