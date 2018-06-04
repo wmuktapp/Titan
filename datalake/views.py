@@ -267,7 +267,7 @@ def get_schedule(id):
         'client': 'Client %s' % 'ABCDE'[randint(0, 4)],
         'dataSource': 'Data source %i' % id,
         'dataSet': 'Dataset %s' % 'ABCDE'[randint(0, 4)],
-        'nextLoadDate': get_load_date(),
+        'loadDate': get_load_date(),
         'enabled': random() > .2,
         'interval': {
             'hours': randint(1, 23),
