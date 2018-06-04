@@ -29,6 +29,11 @@
     text-align: center;
 }
 
+.dialog-controls button,
+.dialog-controls .button {
+    margin: 0;
+}
+
 .dialog-cover {
     position: fixed;
     top: 0;
