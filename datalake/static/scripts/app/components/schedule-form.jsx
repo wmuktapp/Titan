@@ -11,6 +11,8 @@ import moment from 'moment';
 // react-datepicker stylesheet
 require('react-datepicker/dist/react-datepicker.css');
 
+require('./schedule-form.css');
+
 class ScheduleForm extends React.Component {
 
   constructor(props) {
@@ -72,6 +74,7 @@ class ScheduleForm extends React.Component {
     this.selectExtractDestination = this.selectExtractDestination.bind(this);
     this.updateExtractField = this.updateExtractField.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.executeNow = this.executeNow.bind(this);
   }
 
   componentDidMount() {
@@ -227,6 +230,12 @@ class ScheduleForm extends React.Component {
     event.preventDefault();
   }
 
+  executeNow() {
+    // TODO
+    // Dialog about unsaved values?
+    // Redirect to adhoc form, pre-populated
+  }
+
   render() {
 
     // NOTE: Handles both insert and update
@@ -310,6 +319,10 @@ class ScheduleForm extends React.Component {
 
         <div>
           <input type="submit" value={ this.state.id ? 'Update' : 'Create' } />
+          <button onClick={this.executeNow} className="btn-now">
+            Execute now
+            <span className="fas fa-angle-right btn-now-icon" />
+          </button>
         </div>
 
       </form>
