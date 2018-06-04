@@ -54,13 +54,7 @@ class ScheduleForm extends React.Component {
         'Extract field 3': ''
       },
 
-      availablePrograms: [
-        { id: 1, name: 'Acquire 1' },
-        { id: 2, name: 'Acquire 2' },
-        { id: 3, name: 'Acquire 3' },
-        { id: 4, name: 'Acquire 4' },
-        { id: 5, name: 'Acquire 5' }
-      ],
+      availablePrograms: [],
 
       loading: false
     };
@@ -85,6 +79,15 @@ class ScheduleForm extends React.Component {
     this.setState({
       loading: true
     });
+
+    // Get acquire prohrams
+    Ajax.fetch('/api/acquire-programs')
+      .then(res => res.json())
+      .then((results) => {
+        this.setState({
+          availablePrograms: results
+        });
+      })
 
     if (this.state.id) {
 
