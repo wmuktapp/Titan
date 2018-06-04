@@ -3,15 +3,17 @@ import DatePicker from 'react-datepicker';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import Ajax from '../utils/ajax';
+import moment from 'moment';
 
 // Datepicker styles
 require('react-datepicker/dist/react-datepicker.css');
 
 class AdhocForm extends React.Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
+      schedule: props.schedule,
       program: '',
       loadDate: null,
       client: '',
@@ -52,7 +54,17 @@ class AdhocForm extends React.Component {
       });
 
     if (this.state.schedule) {
+      
       // TODO query server, update state
+
+      Ajax.fetch('/api/schedules/' + this.state.schedule)
+        .then(res => res.json())
+        .then((results) => {
+
+          results.loadDate = moment(new Date(results.loadDate));
+
+          this.setState(results);
+        });
     }
 
   }

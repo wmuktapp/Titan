@@ -28,7 +28,7 @@ class ScheduleForm extends React.Component {
       client: '',
       dataSource: '',
       dataSet: '',
-      nextLoadDate: null,
+      loadDate: null,
       enabled: true,
       interval: {
         hours: 0,
@@ -101,7 +101,7 @@ class ScheduleForm extends React.Component {
           // TODO Make this a method in dateUtils?
           result.nextScheduled = moment(new Date(result.nextScheduled));
           result.scheduleEnd = moment(new Date(result.scheduleEnd));
-          result.nextLoadDate = moment(new Date(result.nextLoadDate));
+          result.loadDate = moment(new Date(result.loadDate));
 
           this.setState(result);
           this.setState({
@@ -160,7 +160,7 @@ class ScheduleForm extends React.Component {
 
   updateNextLoadDate(value) {
     this.setState({
-      nextLoadDate: value
+      loadDate: value
     });
   }
 
@@ -288,7 +288,7 @@ class ScheduleForm extends React.Component {
         </div>
         <div>
           <label>Next load date</label>
-          <DatePicker selected={this.state.nextLoadDate} dateFormat="DD/MM/YYYY" onChange={this.updateNextLoadDate} />
+          <DatePicker selected={this.state.loadDate} dateFormat="DD/MM/YYYY" onChange={this.updateNextLoadDate} />
         </div>
         <div>
           <label>

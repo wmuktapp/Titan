@@ -4,7 +4,7 @@ import AdhocForm from './components/adhoc-form.jsx';
 
 class AdhocApp extends React.Component {
   render() {
-    return <AdhocForm />;
+    return <AdhocForm schedule={data.scheduleId} />;
   }
 }
 
