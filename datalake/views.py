@@ -46,7 +46,16 @@ def schedule_add():
 
 @app.route('/adhoc')
 def adhoc():
-    return render_template('adhoc.html', access_token=get_access_token())
+
+    data = {}
+
+    schedule_id = request.args.get('schedule')
+    if schedule_id:
+        data['scheduleId'] = int(schedule_id)
+
+    data = Markup(data)
+
+    return render_template('adhoc.html', access_token=get_access_token(), data=data)
 
 
 # API URLs
