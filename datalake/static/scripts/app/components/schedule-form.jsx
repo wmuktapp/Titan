@@ -231,9 +231,12 @@ class ScheduleForm extends React.Component {
   }
 
   executeNow() {
+
     // TODO
     // Dialog about unsaved values?
+
     // Redirect to adhoc form, pre-populated
+    window.location.href = '/adhoc?schedule=' + this.state.id;
   }
 
   render() {
