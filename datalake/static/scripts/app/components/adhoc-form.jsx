@@ -9,8 +9,6 @@ require('react-datepicker/dist/react-datepicker.css');
 
 class AdhocForm extends React.Component {
 
-  // TODO handle schedule parameter
-
   constructor() {
     super();
     this.state = {
@@ -52,6 +50,10 @@ class AdhocForm extends React.Component {
           availablePrograms: results
         });
       });
+
+    if (this.state.schedule) {
+      // TODO query server, update state
+    }
 
   }
 
