@@ -34,7 +34,7 @@ class ScheduleTable extends React.Component {
 
         const href = '/schedules/' + schedule.id;
         const nextDate = dateUtils.dateToString(new Date(schedule.nextScheduled));
-        const loadDate = dateUtils.dateToString(new Date(schedule.nextLoadDate));
+        const loadDate = dateUtils.dateToString(new Date(schedule.loadDate));
 
         return (
           <tr key={index}>
