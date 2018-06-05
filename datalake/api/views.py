@@ -1,9 +1,15 @@
+import collections
 import importlib
 
 import flask
 
 from datalake import api, app, models
 from datalake.api import decorators
+
+
+def _nested_default_dict():
+    # This allows an arbitrary amount of nested default dicts
+    return collections.defaultdict(_nested_default_dict)
 
 
 @api.api_blueprint.route("/execute", methods=["POST"])
@@ -106,7 +112,18 @@ def get_executions():
         value = flask.request.args.get(k)
         if k is not None:
             params[k] = value
-    return {"data": [dict(row) for row in models.get_executions(**params)]}
+    executions = models.get_executions(**params)
+    data = _nested_default_dict()
+    for row in executions:
+        client = data[row["ExecutionClientName"]]
+        data_source = client[row["ExecutionDataSourceName"]]
+        data_set = data_source[row["ExecutionDataSetName"]]
+        details = {}
+        for key in ("ExecutionKey", "AcquireProgramKey", "AcquireStartTime", "AcquireStatus", "ExtractStartTime",
+                    "ExtractStatus"):
+            details[key] = row[key]
+        data_set[row["ExecutionLoadDate"]] = details
+    return {"data": data}
 
 
 @api.api_blueprint.route("/extract-programs/", methods=["GET"])
