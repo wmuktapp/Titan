@@ -57,6 +57,7 @@ GET /executions/<int:key>
     "data": {
         "execution": {
             "ExecutionKey": int (req),
+            "ExecutionContainerGroupName": str (req),
             "ScheduledExecutionKey": int,
             "ExecutionScheduledTime": datetime (req),
             "ExecutionStartTime": datatime (req),

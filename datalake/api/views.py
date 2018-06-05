@@ -48,6 +48,7 @@ def get_execution(key):
     details = {
         "execution": {
             "ExecutionKey": arbitrary_row["ExecutionKey"],
+            "ExecutionContainerGroupName": arbitrary_row["ExecutionContainerGroupName"],
             "ScheduledExecutionKey": arbitrary_row["ScheduledExecutionKey"],
             "ExecutionScheduledTime": arbitrary_row["ExecutionScheduledTime"],
             "ExecutionStartTime": arbitrary_row["ExecutionStartTime"],

@@ -84,10 +84,11 @@ def format_execution(rows):
 def launch_container(resource_group_name, container_group_prefix, os_type, location, container_name,
                      image_name, memory_in_gb, cpu_count, configuration):
     container_group_name = "%s_%s" % (container_group_prefix, uuid.uuid4())
+    configuration["execution"]["ExecutionContainerGroupName"] = container_group_name
     flask.current_app.logger.info("Preparing to launch container; %s" % container_group_name)
     resources = models.ResourceRequirements(requests=models.ResourceRequests(memory_in_gb=memory_in_gb, cpu=cpu_count))
     container = models.Container(name=container_name, image=image_name, resources=resources, command=["execute"],
-                                 environment_variables=models.EnvironmentVariable("DATALAKE_STDIN", configuration))
+                                 environment_variables=[models.EnvironmentVariable("DATALAKE_STDIN", configuration)])
     container_group = models.ContainerGroup(containers=[container], os_type=os_type, location=location,
                                             restart_policy="Never")
     credentials, subscription_id = get_security_context()
