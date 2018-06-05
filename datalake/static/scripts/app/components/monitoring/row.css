@@ -1,18 +1,44 @@
 
-.cell-highlight {
-    background-color: rgba(249, 174, 66, .15);
-    border-left: 1px solid rgba(249, 174, 66, .2);
-    border-right: 1px solid rgba(249, 174, 66, .3);
-}
-
-.monitoring-cell-client {
+.monitoring-client {
+    padding-top: 12px;
     font-size: 12px;
 }
 
-.monitoring-cell-datasource {
-    font-size: 12px;
+.monitoring-client-label {
+    display: inline-block;
+    padding: .2em 0;
+    text-transform: uppercase;
+    color: #1f4e79;
+    font-weight: bold;
 }
 
-.monitoring-cell-dataset {
+.monitoring-datasource {
+    padding-top: 12px;
     font-size: 12px;
+    margin-left: 2em;
+}
+
+.monitoring-datasource-label {
+    display: inline-block;
+    padding: .2em 0;
+    text-transform: uppercase;
+    color: #5ba0b5;
+    font-weight: bold;
+}
+
+.monitoring-dataset {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    margin-left: 2em;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.monitoring-dataset-label {
+    vertical-align: text-bottom;
+}
+
+.monitoring-executions {
+    align-self: flex-end;
 }

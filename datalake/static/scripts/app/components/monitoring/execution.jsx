@@ -1,6 +1,7 @@
 import React from 'react';
 import MonitoringGridExecutionAcquire from './execution-acquire.jsx';
 import MonitoringGridExecutionExtract from './execution-extract.jsx';
+import dateUtils from '../../utils/date-utils';
 
 require('./execution.css');
 
@@ -41,7 +42,7 @@ class MonitoringGridExecution extends React.Component {
     const title = 'Acquire time: ' + execution.AcquireStartTime + '\nExtract time: ' + execution.ExtractStartTime;
 
     return (
-      <span className="execution-cell" title={title}>
+      <span className={'execution' + (dateUtils.isYesterday(this.props.date) ? ' execution-highlight' : '')} title={title}>
         {status}
         {
           showSelector &&

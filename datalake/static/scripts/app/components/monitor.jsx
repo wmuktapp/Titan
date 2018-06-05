@@ -78,7 +78,6 @@ class Monitor extends React.Component {
       this.setState({
         loading: false,
         data: DataUtils.mergeData(this.state.data, result.data)
-        // data: this.state.data.concat(result.data)
       });
     };
     this.fetchData(this.state.dates, callback)

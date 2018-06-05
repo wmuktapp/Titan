@@ -7,11 +7,14 @@ require('./grid.css');
 class MonitoringGrid extends React.Component {
 
   render() {
+
+    // TODO refactor this and MonitoringRow
+
     return (
-      <table className="monitoring-table">
+      <div className="monitoring-grid">
         <MonitoringGridHeader dates={this.props.dates} />
         <MonitoringGridContent data={this.props.data} selectExecution={this.props.select} />
-      </table>
+      </div>
     );
   }
 

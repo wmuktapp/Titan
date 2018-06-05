@@ -15,50 +15,40 @@ class MonitoringGridRow extends React.Component {
       const id = datum.id, date = new Date(key);
 
       return (
-        <td key={key} className={dateUtils.isYesterday(date) ? 'cell-highlight' : ''}>
-          <MonitoringGridExecution data={datum} select={this.props.selectExecution} taskId={id} date={date} />
-        </td>
+        <MonitoringGridExecution key={key} data={datum} select={this.props.selectExecution} taskId={id} date={date} />
       );
     });
 
     return (
-      <tr>
+      <div className="monitoring-dataset">
         {this.props.children}
-        <td className="monitoring-cell-dataset">{this.props.name}</td>
-        {cells}
-      </tr>
+        <span className="monitoring-dataset-label">{this.props.name}</span>
+        <div className="monitoring-executions">{cells}</div>
+      </div>
     );
   }
 
-}
-
-function getDataLength(data) {
-  let count = 0;
-  for (var dataSource in data) {
-    count += Object.keys(data[dataSource]).length;
-  }
-  return count;
 }
 
 class MonitoringGridClient extends React.Component {
 
   render() {
 
-    const rowSpan = getDataLength(this.props.data);
-
-    return Object.keys(this.props.data).map((key, index) => {
+    const dataSources = Object.keys(this.props.data).map((key, index) => {
 
       const datum = this.props.data[key];
 
-      let label = (index === 0) &&
-        <td rowSpan={rowSpan} className="monitoring-cell-client">{this.props.name}</td>;
-
       return (
-        <MonitoringGridDataSource key={index} name={key} data={datum} selectExecution={this.props.selectExecution}>
-          {label}
-        </MonitoringGridDataSource>
+        <MonitoringGridDataSource key={index} name={key} data={datum} selectExecution={this.props.selectExecution} />
       );
     });
+
+    return (
+      <div className="monitoring-client">
+        <div className="monitoring-client-label">{this.props.name}</div>
+        {dataSources}
+      </div>
+    );
   }
 
 }
@@ -67,23 +57,20 @@ class MonitoringGridDataSource extends React.Component {
 
   render() {
 
-    const rowSpan = Object.keys(this.props.data).length;
-
-    return Object.keys(this.props.data).map((key, index) => {
+    const rows = Object.keys(this.props.data).map((key, index) => {
 
       const datum = this.props.data[key];
 
-      const dataSource = (index === 0) &&
-        <td rowSpan={rowSpan} className="monitoring-cell-datasource">{this.props.name}</td>;
-
       return (
-        <MonitoringGridRow key={index} name={key} data={datum} selectExecution={this.props.selectExecution}>
-          { (index === 0) && this.props.children }
-          { dataSource }
-        </MonitoringGridRow>
+        <MonitoringGridRow key={index} name={key} data={datum} selectExecution={this.props.selectExecution} />
       );
-
     });
+    return (
+      <div className="monitoring-datasource">
+        <div className="monitoring-datasource-label">{this.props.name}</div>
+        {rows}
+      </div>
+    );
   }
 }
 
