@@ -44,8 +44,7 @@ class MonitoringGridClient extends React.Component {
 
   render() {
 
-    // Fix this thing
-    const rowSpan = getDataLength(this.props.data);// 3 * 4;  // Calculate properly
+    const rowSpan = getDataLength(this.props.data);
 
     return Object.keys(this.props.data).map((key, index) => {
 
