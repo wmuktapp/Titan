@@ -55,13 +55,13 @@ def end_acquire_log(key, error_message=None):
     params = {"AcquireKey": key, "AcquireErrorMessage": error_message}
     output_params = {"UpdateRowCount": "INT"}
     with db.engine.begin() as transaction:
-        result = _execute_stored_procedure(transaction, "log.SP_EndAcquireLog", params, output_params).fetchone()
+        result = _execute_stored_procedure(transaction, "[log].SP_EndAcquireLog", params, output_params).fetchone()
     return result
 
 
 def end_execution_log(key, error_message=None):
     with db.engine.begin() as transaction:
-        result = _execute_stored_procedure(transaction, "log.SP_EndExecutionLog",
+        result = _execute_stored_procedure(transaction, "[log].SP_EndExecutionLog",
                                            {"ExecutionKey": key, "ExecutionErrorMessage": error_message},
                                            {"ExecutionLogUpdateRowCount": "INT",
                                             "ScheduledExecutionUpdateRowCount": "INT"}).fetchone()
@@ -70,7 +70,7 @@ def end_execution_log(key, error_message=None):
 
 def end_extract_log(key, error_message=None):
     with db.engine.begin() as transaction:
-        result = _execute_stored_procedure(transaction, "log.SP_EndExtractLog",
+        result = _execute_stored_procedure(transaction, "[log].SP_EndExtractLog",
                                            {"ExtractKey": key, "ExtractErrorMessage": error_message},
                                            {"UpdateRowCount": "INT"}).fetchone()
     return result
@@ -89,6 +89,10 @@ def get_executions(end_date=None, page_number=1, page_size=100, load_date_count=
                                                   ":page_size, :load_date_count)"),
                                   end_date=end_date, page_number=page_number, page_size=page_size,
                                   load_date_count=load_date_count))
+
+
+def get_running_container_groups():
+    return list(db.engine.execute("SELECT * FROM [log].VWRunningContainerGroups"))
 
 
 def get_scheduled_execution(key):
@@ -143,12 +147,12 @@ def start_acquire_log(acquire):
     option_output_params = {"AcquireOptionKey": "INT"}
     options = acquire.pop("Options", ())
     with db.engine.begin() as transaction:
-        result = _execute_stored_procedure(transaction, "log.SP_StartAcquireLog", acquire,
+        result = _execute_stored_procedure(transaction, "[log].SP_StartAcquireLog", acquire,
                                            {"AcquireKey": "INT"}).fetchone()
         acquire_key = result["AcquireKey"]
         for option in options:
             option["AcquireKey"] = acquire_key
-            option_results.append(_execute_stored_procedure(transaction, "log.SP_InsertAcquireOptionLog",
+            option_results.append(_execute_stored_procedure(transaction, "[log].SP_InsertAcquireOptionLog",
                                                             option, option_output_params).fetchone())
     return result, option_results
 
@@ -156,7 +160,7 @@ def start_acquire_log(acquire):
 def start_execution_log(execution):
     output_params = {"ExecutionKey": "INT", "ExecutionVersion": "INT"}
     with db.engine.begin() as transaction:
-        result = _execute_stored_procedure(transaction, "log.SP_StartExecutionLog", execution, output_params).fetchone()
+        result = _execute_stored_procedure(transaction, "[log].SP_StartExecutionLog", execution, output_params).fetchone()
     return result
 
 
@@ -165,12 +169,12 @@ def start_extract_log(extract):
     option_output_params = {"ExtractOptionKey": "INT"}
     options = extract.pop("Options", ())
     with db.engine.begin() as transaction:
-        result = _execute_stored_procedure(transaction, "log.SP_StartExtractLog", extract,
+        result = _execute_stored_procedure(transaction, "[log].SP_StartExtractLog", extract,
                                            {"ExtractKey": "INT"}).fetchone()
         extract_key = result["ExtractKey"]
         for option in options:
             option["ExtractKey"] = extract_key
-            option_results.append(_execute_stored_procedure(transaction, "log.SP_InsertExtractOptionLog",
+            option_results.append(_execute_stored_procedure(transaction, "[log].SP_InsertExtractOptionLog",
                                                             option, option_output_params).fetchone())
     return result, option_results
 

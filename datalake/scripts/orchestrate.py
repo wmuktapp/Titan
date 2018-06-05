@@ -1,22 +1,47 @@
 from azure.mgmt import containerinstance
+from msrestazure import azure_exceptions
 
 from datalake import app, models
 import datalake
 
 
-def _clean_up_containers(flask_app):
+def _get_client():
     credentials, subscription_id = app.get_security_context()
-    client = containerinstance.ContainerInstanceManagementClient(credentials, subscription_id)
+    return containerinstance.ContainerInstanceManagementClient(credentials, subscription_id)
+
+
+def _clean_up_containers(flask_app):
+    client = _get_client()
     resource_group_name = flask_app.config["DATALAKE_AZURE_CONTAINER_RSG_NAME"]
+    running_container_groups = [row["ExecutionContainerGroupName"] for row in models.get_running_container_groups()]
     for partial_container_group in client.container_groups.list():
         container_group = client.container_groups.get(resource_group_name, partial_container_group.name)
         if container_group.instance_view.state != "Running":
             flask_app.logger.info("Deleting terminated container group; %s" % partial_container_group.name)
             client.container_groups.delete(resource_group_name, partial_container_group.name)
+        else:
+            if partial_container_group.name not in running_container_groups:
+                flask_app.logger.warning("Killing and deleting container group; %s. This container should have "
+                                         "finished as the log entry is complete. If this persists, check the acquire "
+                                         "program for bugs that could be causing the code to hang."
+                                         % partial_container_group.name)
+                client.container_groups.delete(resource_group_name, partial_container_group.name)
 
 
 def _clean_up_logs(flask_app):
-    pass
+    client = _get_client()
+    resource_group_name = flask_app.config["DATALAKE_AZURE_CONTAINER_RSG_NAME"]
+    for running_container_group in models.get_running_container_groups():
+        execution_key = running_container_group["ExecutionKey"]
+        container_group_name = running_container_group["ExecutionContainerGroupName"]
+        state = None
+        try:
+            container_group = client.container_groups.get(resource_group_name, container_group_name)
+            state = container_group.instance_view.state
+        except azure_exceptions.CloudError:
+            pass
+        if state is None or state != "Running":
+            models.end_execution_log(execution_key, "Container instance was terminated but log entry was incomplete.")
 
 
 def _kill_long_running_containers(flask_app):
