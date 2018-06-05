@@ -4,3 +4,15 @@
     border-left: 1px solid rgba(249, 174, 66, .2);
     border-right: 1px solid rgba(249, 174, 66, .3);
 }
+
+.monitoring-cell-client {
+    font-size: 12px;
+}
+
+.monitoring-cell-datasource {
+    font-size: 12px;
+}
+
+.monitoring-cell-dataset {
+    font-size: 12px;
+}

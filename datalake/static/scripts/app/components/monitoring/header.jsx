@@ -43,7 +43,7 @@ class MonitoringGridHeader extends React.Component {
     return (
       <thead className="header">
         <tr>
-          <th></th>
+          <th colSpan="3"></th>
           {cells}
         </tr>
       </thead>

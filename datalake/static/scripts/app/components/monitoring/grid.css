@@ -2,3 +2,7 @@
 .monitoring-table {
     width: 100%;
 }
+
+.monitoring-table td {
+    padding: 10px;
+}

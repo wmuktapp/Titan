@@ -163,33 +163,77 @@ def get_access_token():
 
 def get_execution_data(start_date, end_date):
 
-    # Small delay, for testing purposes
-    sleep(1)
+    # Small delay
+    sleep(.5)
 
-    # Sample data
-    tasks = []
-    row_count = 10
+    data = {}
 
-    for i in range(1, row_count + 1):
+    clients = [
+        'InGen Bioengineering %i' % randint(0, 9),
+        'Nedry Solutions %i' % randint(0, 9),
+        'Dr. Grant and Co %i' % randint(0, 9)
+    ]
 
-        task = {
-            'name': 'Task-%s' % i,
-            'executions': []
-        }
+    data_sources = [
+        'Facebook %i' % randint(0, 9),
+        'DCM %i' % randint(0, 9),
+        'MySpace %i' % randint(0, 9)
+    ]
 
-        temp_date = start_date
+    data_sets = [
+        'Data set 1%i' % randint(0, 9),
+        'Data set 2%i' % randint(0, 9),
+        'Data set 3%i' % randint(0, 9),
+        'Data set 4%i' % randint(0, 9)
+    ]
 
-        while temp_date <= end_date:
+    for client in clients:
 
-            execution = get_execution(randint(1, 1000), temp_date)
+        client_data = {}
 
-            task['executions'].append(execution)
+        for data_source in data_sources:
 
-            temp_date += timedelta(days=1)
+            data_source_data = {}
 
-        tasks.append(task)
+            for data_set in data_sets:
 
-    return jsonify(tasks)
+                data_set_data = {}
+
+                temp_date = start_date
+
+                while temp_date <= end_date:
+
+                    acquire_state = get_state()
+                    extract_state = get_state(prev_state=acquire_state)
+
+                    data_set_data[temp_date.strftime('%Y-%m-%d')] = {
+                        'ExecutionKey': randint(1, 1000),
+                        'AcquireProgramKey': randint(1, 5),
+                        'AcquireStartTime': get_time(),
+                        'AcquireStatus': acquire_state,
+                        'ExtractStartTime': get_time(),
+                        'ExtractStatus': extract_state
+                    }
+
+                    temp_date += timedelta(days=1)
+
+                data_source_data[data_set] = data_set_data
+
+            client_data[data_source] = data_source_data
+
+        data[client] = client_data
+
+    return jsonify({ 'data': data })
+
+
+def get_time():
+    return '%s:%s:%s' % (pad(randint(0, 23)), pad(randint(0, 59)), pad(randint(0, 59)))
+
+def pad(number):
+    if number < 10:
+        return '0%i' % number
+    else:
+        return str(number)
 
 
 def get_execution(id, temp_date=None):

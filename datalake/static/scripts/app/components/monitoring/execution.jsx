@@ -20,8 +20,8 @@ class MonitoringGridExecution extends React.Component {
 
     const SUCCESS = 'success', FAILURE = 'failure';
     const execution = this.props.data,
-      acquireStatus = execution.acquire,
-      extractStatus = execution.extract;
+      acquireStatus = execution.AcquireStatus,
+      extractStatus = execution.ExtractStatus;
     const showSelector = acquireStatus === FAILURE || extractStatus === FAILURE;
     const showLink = acquireStatus === SUCCESS
       || acquireStatus === FAILURE
@@ -30,16 +30,18 @@ class MonitoringGridExecution extends React.Component {
 
     const status = showLink
       ? <a href={'/monitoring/executions/' + execution.id}>
-          <MonitoringGridExecutionAcquire status={execution.acquire} />
-          <MonitoringGridExecutionExtract status={execution.extract} />
+          <MonitoringGridExecutionAcquire status={acquireStatus} />
+          <MonitoringGridExecutionExtract status={extractStatus} />
         </a>
       : <span>
-          <MonitoringGridExecutionAcquire status={execution.acquire} />
-          <MonitoringGridExecutionExtract status={execution.extract} />
+          <MonitoringGridExecutionAcquire status={acquireStatus} />
+          <MonitoringGridExecutionExtract status={extractStatus} />
         </span>;
 
+    const title = 'Acquire time: ' + execution.AcquireStartTime + '\nExtract time: ' + execution.ExtractStartTime;
+
     return (
-      <span className="execution-cell" title={'Date: ' + execution.date}>
+      <span className="execution-cell" title={title}>
         {status}
         {
           showSelector &&
