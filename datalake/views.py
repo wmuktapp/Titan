@@ -1,6 +1,6 @@
 from datalake import app as datalake_app
 from datetime import datetime, timedelta
-from flask import flash, jsonify, redirect, render_template, request, current_app
+from flask import jsonify, redirect, render_template, request, current_app
 from markupsafe import Markup
 from random import random, randint
 from time import sleep
@@ -19,7 +19,7 @@ def index():
 
 @app.route('/monitoring')
 def monitoring():
-    flash("Headers: %s" % request.headers)
+    app.logger.info("Headers: %s" % request.headers)
     return render_template('monitoring.html', access_token=get_access_token())
 
 @app.route('/monitoring/executions/<int:execution_key>')
