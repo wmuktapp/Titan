@@ -4,6 +4,8 @@ import ExecutionAcquireDetails from './execution/acquire-details.jsx';
 import ExecutionExtractDetails from './execution/extract-details.jsx';
 import Ajax from '../utils/ajax';
 
+require('./execution.css');
+
 class Execution extends React.Component {
 
   constructor(props) {
@@ -46,7 +48,7 @@ class Execution extends React.Component {
     });
 
     return (
-      <div>
+      <div className="execution">
         <ExecutionDetails execution={this.state.execution} />
         <section className="form-section">
           <h6>Acquires</h6>
