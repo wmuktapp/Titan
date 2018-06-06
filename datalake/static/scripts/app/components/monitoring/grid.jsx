@@ -1,6 +1,5 @@
 import React from 'react';
 import MonitoringGridHeader from './header.jsx';
-// import MonitoringGridContent from './content.jsx';
 import MonitoringGridClient from './client.jsx';
 
 require('./grid.css');
