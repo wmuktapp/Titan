@@ -236,10 +236,10 @@ def pad(number):
         return str(number)
 
 
-def get_execution(id, temp_date=None):
+def get_execution(id):
 
     execution = {
-        'ExecutionKey': randint(1, 1000),
+        'ExecutionKey': id,
         'ExecutionContainerGroupName': 'Container %s' % 'ABCDE'[randint(0, 4)],
         'ScheduledExecutionKey': randint(1, 1000),
         'ExecutionScheduledTime': '14:23:35',
