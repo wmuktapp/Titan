@@ -1,6 +1,7 @@
 import React from 'react';
 import MonitoringGridHeader from './header.jsx';
-import MonitoringGridContent from './content.jsx';
+// import MonitoringGridContent from './content.jsx';
+import MonitoringGridClient from './client.jsx';
 
 require('./grid.css');
 
@@ -8,12 +9,17 @@ class MonitoringGrid extends React.Component {
 
   render() {
 
-    // TODO refactor this and MonitoringRow
+    const clients = Object.keys(this.props.data).map((key) => {
+
+      const datum = this.props.data[key];
+
+      return <MonitoringGridClient key={key} name={key} data={datum} selectExecution={this.props.select} />;
+    })
 
     return (
       <div className="monitoring-grid">
         <MonitoringGridHeader dates={this.props.dates} />
-        <MonitoringGridContent data={this.props.data} selectExecution={this.props.select} />
+        { clients }
       </div>
     );
   }
