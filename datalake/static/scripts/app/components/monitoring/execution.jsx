@@ -1,6 +1,7 @@
 import React from 'react';
 import MonitoringGridExecutionAcquire from './execution-acquire.jsx';
 import MonitoringGridExecutionExtract from './execution-extract.jsx';
+import dateUtils from '../../utils/date-utils';
 
 require('./execution.css');
 
@@ -20,8 +21,8 @@ class MonitoringGridExecution extends React.Component {
 
     const SUCCESS = 'success', FAILURE = 'failure';
     const execution = this.props.data,
-      acquireStatus = execution.acquire,
-      extractStatus = execution.extract;
+      acquireStatus = execution.AcquireStatus,
+      extractStatus = execution.ExtractStatus;
     const showSelector = acquireStatus === FAILURE || extractStatus === FAILURE;
     const showLink = acquireStatus === SUCCESS
       || acquireStatus === FAILURE
@@ -29,17 +30,20 @@ class MonitoringGridExecution extends React.Component {
       || extractStatus === FAILURE;
 
     const status = showLink
-      ? <a href={'/monitoring/executions/' + execution.id}>
-          <MonitoringGridExecutionAcquire status={execution.acquire} />
-          <MonitoringGridExecutionExtract status={execution.extract} />
+      ? <a href={`/monitoring/executions/${execution.ExecutionKey}`}>
+          <MonitoringGridExecutionAcquire status={acquireStatus} />
+          <MonitoringGridExecutionExtract status={extractStatus} />
         </a>
       : <span>
-          <MonitoringGridExecutionAcquire status={execution.acquire} />
-          <MonitoringGridExecutionExtract status={execution.extract} />
+          <MonitoringGridExecutionAcquire status={acquireStatus} />
+          <MonitoringGridExecutionExtract status={extractStatus} />
         </span>;
 
+    const className = 'execution' + (dateUtils.isYesterday(this.props.date) ? ' execution-highlight' : '');
+    const title = `Acquire time: ${execution.AcquireStartTime}\nExtract time: ${execution.ExtractStartTime}`;
+
     return (
-      <span className="execution-cell" title={'Date: ' + execution.date}>
+      <span className={className} title={title}>
         {status}
         {
           showSelector &&

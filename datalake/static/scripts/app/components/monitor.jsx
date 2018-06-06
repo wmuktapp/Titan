@@ -3,6 +3,7 @@ import MonitoringControls from './monitoring/controls.jsx';
 import MonitoringGrid from './monitoring/grid.jsx';
 
 import Ajax from '../utils/ajax';
+import DataUtils from '../utils/data-utils';
 import dateUtils from '../utils/date-utils';
 import Dialog from '../utils/dialog.jsx';
 
@@ -45,7 +46,7 @@ class Monitor extends React.Component {
     const callback = (result) => {
       this.setState({
         loading: false,
-        data: result
+        data: result.data
       });
     };
 
@@ -65,7 +66,7 @@ class Monitor extends React.Component {
     const callback = (result) => {
       this.setState({
         loading: false,
-        data: result
+        data: result.data
       });
     }
 
@@ -76,7 +77,7 @@ class Monitor extends React.Component {
     const callback = (result) => {
       this.setState({
         loading: false,
-        data: this.state.data.concat(result)
+        data: DataUtils.mergeData(this.state.data, result.data)
       });
     };
     this.fetchData(this.state.dates, callback)
@@ -151,7 +152,7 @@ class Monitor extends React.Component {
           this.setState({
             retryList: [],
             loading: false,
-            data: result,
+            data: result.data,
             message: 'Acquire programs restarted.  Check back in a few minutes to see progress.'
           });
         },
