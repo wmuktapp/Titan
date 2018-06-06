@@ -83,9 +83,7 @@ def execute():
 @app.route('/api/executions/<int:execution_key>')
 def execution_get(execution_key):
 
-    data = {
-        'execution': get_execution(execution_key)
-    }
+    data = get_execution(execution_key)
 
     return jsonify(data)
 
