@@ -13,9 +13,13 @@ class MonitoringGridDataSource extends React.Component {
         <MonitoringGridDataSet key={index} name={key} data={datum} selectExecution={this.props.selectExecution} />
       );
     });
+
+    const className = 'monitoring-datasource-title'
+        + (this.props.highlight ? ' monitoring-title-highlight' : '');
+
     return (
       <div className="monitoring-datasource">
-        <div className="monitoring-datasource-label">{this.props.name}</div>
+        <h5 className={className}>{this.props.name}</h5>
         {rows}
       </div>
     );

@@ -1,26 +1,26 @@
 
 .monitoring-client {
-    padding-top: 12px;
     font-size: 12px;
 }
 
-.monitoring-client-label {
-    display: inline-block;
-    padding: .2em 0;
+.monitoring-client-title {
+    margin: 0;
+    padding: 1em 0 .2em;
+    font-size: 12px;
     text-transform: uppercase;
     color: #1f4e79;
     font-weight: bold;
 }
 
 .monitoring-datasource {
-    padding-top: 12px;
     font-size: 12px;
     margin-left: 2em;
 }
 
-.monitoring-datasource-label {
-    display: inline-block;
-    padding: .2em 0;
+.monitoring-datasource-title {
+    margin: 0;
+    padding: 1em 0 .2em;
+    font-size: 12px;
     text-transform: uppercase;
     color: #5ba0b5;
     font-weight: bold;
@@ -41,4 +41,21 @@
 
 .monitoring-executions {
     align-self: flex-end;
+}
+
+.monitoring-title-highlight {
+    position: relative;
+}
+
+.monitoring-title-highlight:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 105px;
+    height: 100%;
+    box-sizing: border-box;
+    background-color: rgba(249, 174, 66, .15);
+    border-left: 1px solid rgba(249, 174, 66, .2);
+    border-right: 1px solid rgba(249, 174, 66, .2);
 }

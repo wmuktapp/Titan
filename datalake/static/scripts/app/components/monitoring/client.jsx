@@ -1,6 +1,5 @@
 import React from 'react';
 import MonitoringGridDataSource from './datasource.jsx';
-import dateUtils from '../../utils/date-utils';
 
 class MonitoringGridClient extends React.Component {
 
@@ -11,13 +10,16 @@ class MonitoringGridClient extends React.Component {
       const datum = this.props.data[key];
 
       return (
-        <MonitoringGridDataSource key={index} name={key} data={datum} selectExecution={this.props.selectExecution} />
+        <MonitoringGridDataSource key={index} name={key} data={datum} selectExecution={this.props.selectExecution} highlight={this.props.highlight} />
       );
     });
 
+    const className = 'monitoring-client-title'
+      + (this.props.highlight ? ' monitoring-title-highlight' : '');
+
     return (
       <div className="monitoring-client">
-        <div className="monitoring-client-label">{this.props.name}</div>
+        <h4 className={className}>{this.props.name}</h4>
         {dataSources}
       </div>
     );
