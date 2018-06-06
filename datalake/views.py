@@ -19,8 +19,7 @@ def index():
 
 @app.route('/monitoring')
 def monitoring():
-    return render_template('monitoring.html', access_token="Bearer %s" %
-                           request.headers.get("X-Ms-Token-Aad-Access-Token"))
+    return render_template('monitoring.html', access_token="")
 
 @app.route('/monitoring/executions/<int:execution_key>')
 def monitoring_execution(execution_key):
