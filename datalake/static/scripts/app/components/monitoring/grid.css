@@ -1,8 +1,44 @@
 
-.monitoring-table {
-    width: 100%;
+.monitoring-client {
+    padding-top: 12px;
+    font-size: 12px;
 }
 
-.monitoring-table td {
-    padding: 10px;
+.monitoring-client-label {
+    display: inline-block;
+    padding: .2em 0;
+    text-transform: uppercase;
+    color: #1f4e79;
+    font-weight: bold;
+}
+
+.monitoring-datasource {
+    padding-top: 12px;
+    font-size: 12px;
+    margin-left: 2em;
+}
+
+.monitoring-datasource-label {
+    display: inline-block;
+    padding: .2em 0;
+    text-transform: uppercase;
+    color: #5ba0b5;
+    font-weight: bold;
+}
+
+.monitoring-dataset {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    margin-left: 2em;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.monitoring-dataset-label {
+    vertical-align: text-bottom;
+}
+
+.monitoring-executions {
+    align-self: flex-end;
 }

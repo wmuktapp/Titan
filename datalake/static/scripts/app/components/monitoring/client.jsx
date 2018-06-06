@@ -3,8 +3,6 @@ import MonitoringGridLabel from './label.jsx';
 import MonitoringGridExecution from './execution.jsx';
 import dateUtils from '../../utils/date-utils';
 
-require('./row.css');
-
 class MonitoringGridDataSet extends React.Component {
 
   render() {
