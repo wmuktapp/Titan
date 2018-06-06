@@ -10,7 +10,7 @@ const Ajax = {
         // Default request options
         const requestOptions = {
             headers: {
-
+                "Authorization": getAccessToken()
             }
         };
 

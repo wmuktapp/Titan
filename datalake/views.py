@@ -19,7 +19,7 @@ def index():
 
 @app.route('/monitoring')
 def monitoring():
-    return render_template('monitoring.html')
+    return render_template('monitoring.html', access_token=get_access_token())
 
 @app.route('/monitoring/executions/<int:execution_key>')
 def monitoring_execution(execution_key):
