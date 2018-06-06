@@ -1,10 +1,14 @@
 
 .header {
-    vertical-align: top;
+    display: flex;
+    justify-content: flex-end;
 }
 
-.header-contents {
+.header-label {
     display: inline-block;
+    width: 10.5rem;
+    box-sizing: border-box;
+    padding: .4em;
 }
 
 .header-date {
@@ -20,9 +24,9 @@
     font-size: 12px;
 }
 
-.header-cell-highlight {
+.header-highlight {
     background-color: rgba(249, 174, 66, .15);
     border-top: 1px solid rgba(249, 174, 66, .2);
     border-left: 1px solid rgba(249, 174, 66, .2);
-    border-right: 1px solid rgba(249, 174, 66, .3);
+    border-right: 1px solid rgba(249, 174, 66, .2);
 }
