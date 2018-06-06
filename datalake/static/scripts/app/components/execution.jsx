@@ -1,5 +1,6 @@
 import React from 'react';
 import ExecutionDetails from './execution/details.jsx';
+import ExecutionAcquireDetails from './execution/acquire-details.jsx';
 import Ajax from '../utils/ajax';
 
 class Execution extends React.Component {
@@ -40,9 +41,14 @@ class Execution extends React.Component {
 
     // TODO components for acquires and extract
 
+    const acquires = this.state.acquires.map(acquire => {
+      return <ExecutionAcquireDetails key={acquire.AcquireKey} acquireKey={acquire.AcquireKey} />
+    });
+
     return (
       <div>
         <ExecutionDetails execution={this.state.execution} />
+        { acquires }
         <a href={`/schedules/${this.state.execution.ScheduledExecutionKey}`}>
           Go to schedule <span className="fas fa-angle-right" />
         </a>
