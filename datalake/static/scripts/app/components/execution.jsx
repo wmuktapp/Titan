@@ -40,8 +40,6 @@ class Execution extends React.Component {
       return <p>Loading...</p>;
     }
 
-    // TODO components for extract
-
     const acquires = this.state.acquires.map(acquire => {
       return <ExecutionAcquireDetails key={acquire.AcquireKey} acquireKey={acquire.AcquireKey}
         startTime={acquire.StartTime} endTime={acquire.EndTime} status={acquire.AcquireStatus} />
@@ -50,8 +48,14 @@ class Execution extends React.Component {
     return (
       <div>
         <ExecutionDetails execution={this.state.execution} />
-        { acquires }
-        <ExecutionExtractDetails extractKey={this.state.extract.ExtractKey} />
+        <section className="form-section">
+          <h6>Acquires</h6>
+          { acquires }
+        </section>
+        <section className="form-section">
+          <h6>Extract</h6>
+          <ExecutionExtractDetails extractKey={this.state.extract.ExtractKey} />
+        </section>
         <a href={`/schedules/${this.state.execution.ScheduledExecutionKey}`}>
           Go to schedule <span className="fas fa-angle-right" />
         </a>
