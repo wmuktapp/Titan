@@ -30,7 +30,7 @@ class MonitoringGridExecution extends React.Component {
       || extractStatus === FAILURE;
 
     const status = showLink
-      ? <a href={'/monitoring/executions/' + execution.id}>
+      ? <a href={`/monitoring/executions/${execution.ExecutionKey}`}>
           <MonitoringGridExecutionAcquire status={acquireStatus} />
           <MonitoringGridExecutionExtract status={extractStatus} />
         </a>
