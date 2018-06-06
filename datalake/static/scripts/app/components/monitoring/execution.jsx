@@ -39,7 +39,7 @@ class MonitoringGridExecution extends React.Component {
           <MonitoringGridExecutionExtract status={extractStatus} />
         </span>;
 
-    const title = 'Acquire time: ' + execution.AcquireStartTime + '\nExtract time: ' + execution.ExtractStartTime;
+    const title = `Acquire time: ${execution.AcquireStartTime}\nExtract time: ${execution.ExtractStartTime}`;
 
     return (
       <span className={'execution' + (dateUtils.isYesterday(this.props.date) ? ' execution-highlight' : '')} title={title}>
