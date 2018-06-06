@@ -36,7 +36,9 @@ class Execution extends React.Component {
     return (
       <div>
         <ExecutionDetails execution={this.state.execution} />
-        <a href="/schedules/525">Go to schedule &gt;</a>
+        <a href="/schedules/525">
+          Go to schedule <span className="fas fa-angle-right" />
+        </a>
       </div>
     );
   }
