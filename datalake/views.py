@@ -275,6 +275,8 @@ def get_execution(id):
                 'AcquireOptionValue': 'Value %i' % j
             })
 
+        acquires.append(acquire)
+
     extract = {
         'ExtractKey': randint(1, 1000),
         'ExtractDestination': 'Destination %s' % 'ABCDE'[randint(0, 4)],
