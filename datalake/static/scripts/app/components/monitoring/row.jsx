@@ -5,7 +5,7 @@ import dateUtils from '../../utils/date-utils';
 
 require('./row.css');
 
-class MonitoringGridRow extends React.Component {
+class MonitoringGridDataSet extends React.Component {
 
   render() {
 
@@ -62,7 +62,7 @@ class MonitoringGridDataSource extends React.Component {
       const datum = this.props.data[key];
 
       return (
-        <MonitoringGridRow key={index} name={key} data={datum} selectExecution={this.props.selectExecution} />
+        <MonitoringGridDataSet key={index} name={key} data={datum} selectExecution={this.props.selectExecution} />
       );
     });
     return (
@@ -74,5 +74,4 @@ class MonitoringGridDataSource extends React.Component {
   }
 }
 
-// export default MonitoringGridRow;
 export default MonitoringGridClient;
