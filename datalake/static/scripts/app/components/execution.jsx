@@ -1,5 +1,5 @@
 import React from 'react';
-import ExecutionDetails from './execution-details.jsx';
+import ExecutionDetails from './execution/details.jsx';
 import Ajax from '../utils/ajax';
 
 class Execution extends React.Component {
