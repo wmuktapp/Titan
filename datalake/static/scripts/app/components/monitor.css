@@ -1,9 +1,11 @@
 
 .monitor-controls-footer {
+    padding: 1.5em;
     text-align: center;
 }
 
 .monitor-loading {
+    padding: 1.5em;
     text-align: center;
     color: #aaa;
 }
