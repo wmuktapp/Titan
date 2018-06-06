@@ -1,8 +1,6 @@
 import React from 'react';
-import MonitoringGridLabel from './label.jsx';
 import MonitoringGridDataSource from './datasource.jsx';
 import dateUtils from '../../utils/date-utils';
-
 
 class MonitoringGridClient extends React.Component {
 
