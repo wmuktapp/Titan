@@ -1,6 +1,7 @@
 import React from 'react';
 import ExecutionDetails from './execution/details.jsx';
 import ExecutionAcquireDetails from './execution/acquire-details.jsx';
+import ExecutionExtractDetails from './execution/extract-details.jsx';
 import Ajax from '../utils/ajax';
 
 class Execution extends React.Component {
@@ -39,16 +40,18 @@ class Execution extends React.Component {
       return <p>Loading...</p>;
     }
 
-    // TODO components for acquires and extract
+    // TODO components for extract
 
     const acquires = this.state.acquires.map(acquire => {
-      return <ExecutionAcquireDetails key={acquire.AcquireKey} acquireKey={acquire.AcquireKey} />
+      return <ExecutionAcquireDetails key={acquire.AcquireKey} acquireKey={acquire.AcquireKey}
+        startTime={acquire.StartTime} endTime={acquire.EndTime} status={acquire.AcquireStatus} />
     });
 
     return (
       <div>
         <ExecutionDetails execution={this.state.execution} />
         { acquires }
+        <ExecutionExtractDetails extractKey={this.state.extract.ExtractKey} />
         <a href={`/schedules/${this.state.execution.ScheduledExecutionKey}`}>
           Go to schedule <span className="fas fa-angle-right" />
         </a>
