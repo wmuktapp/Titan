@@ -8,7 +8,9 @@ class Execution extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      execution: null
+      execution: null,
+      acquires: null,
+      extract: null
     };
   }
 
@@ -16,10 +18,13 @@ class Execution extends React.Component {
 
     Ajax.fetch('/api/executions/' + this.props.executionKey)
       .then(res => res.json())
-      .then((result) => {
+      .then(result => {
+        const data = result.data;
         this.setState({
           loading: false,
-          execution: result.execution
+          execution: data.execution,
+          acquires: data.acquires,
+          extract: data.extract
         });
       },
       (error) => {
@@ -33,10 +38,12 @@ class Execution extends React.Component {
       return <p>Loading...</p>;
     }
 
+    // TODO components for acquires and extract
+
     return (
       <div>
         <ExecutionDetails execution={this.state.execution} />
-        <a href="/schedules/525">
+        <a href={`/schedules/${this.state.execution.ScheduledExecutionKey}`}>
           Go to schedule <span className="fas fa-angle-right" />
         </a>
       </div>
