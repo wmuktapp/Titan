@@ -28,3 +28,7 @@
 .text-neutral {
     color: #998a2f;
 }
+
+.status-icon {
+    margin-right: 5px;
+}

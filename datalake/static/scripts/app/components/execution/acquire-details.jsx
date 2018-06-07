@@ -1,4 +1,5 @@
 import React from 'react';
+import Status from './status.jsx';
 
 class ExecutionAcquireDetails extends React.Component {
 
@@ -8,14 +9,6 @@ class ExecutionAcquireDetails extends React.Component {
 
     // TODO
     // - Add options (expandable section?)
-
-    const statusClasses = {
-      success: 'text-success',
-      failure: 'text-failure',
-      running: 'text-neutral'
-    };
-
-    const statusClass = statusClasses[acquire.AcquireStatus] || '';
 
     return (
       <div className="acquire-details">
@@ -34,7 +27,9 @@ class ExecutionAcquireDetails extends React.Component {
         </div>
         <div>
           <label>Status</label>
-          <span className={'execution-value status ' + statusClass}>{acquire.AcquireStatus.toUpperCase()}</span>
+          <span className="execution-value">
+            <Status status={acquire.AcquireStatus} />
+          </span>
         </div>
         {
           acquire.AcquireErrorMessage &&
