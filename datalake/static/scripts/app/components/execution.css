@@ -4,3 +4,27 @@
     width: 200px;
     margin-right: 10px;
 }
+
+.acquire-details {
+    padding: 10px 0;
+}
+
+.acquire-details + .acquire-details {
+    border-top: 1px solid #f0f0f0;
+}
+
+.status {
+    font-weight: bold;
+}
+
+.text-success {
+    color: #548235;
+}
+
+.text-failure {
+    color: #9e323a;
+}
+
+.text-neutral {
+    color: #998a2f;
+}

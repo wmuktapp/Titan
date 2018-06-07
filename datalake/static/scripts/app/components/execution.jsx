@@ -43,8 +43,7 @@ class Execution extends React.Component {
     }
 
     const acquires = this.state.acquires.map(acquire => {
-      return <ExecutionAcquireDetails key={acquire.AcquireKey} acquireKey={acquire.AcquireKey}
-        startTime={acquire.StartTime} endTime={acquire.EndTime} status={acquire.AcquireStatus} />
+      return <ExecutionAcquireDetails key={acquire.AcquireKey} acquire={acquire} />
     });
 
     return (
