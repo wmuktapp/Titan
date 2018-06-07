@@ -1,6 +1,10 @@
 import React from 'react';
-import ExecutionDetails from './execution-details.jsx';
+import ExecutionDetails from './execution/details.jsx';
+import ExecutionAcquireDetails from './execution/acquire-details.jsx';
+import ExecutionExtractDetails from './execution/extract-details.jsx';
 import Ajax from '../utils/ajax';
+
+require('./execution.css');
 
 class Execution extends React.Component {
 
@@ -8,7 +12,9 @@ class Execution extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      execution: null
+      execution: null,
+      acquires: null,
+      extract: null
     };
   }
 
@@ -16,10 +22,13 @@ class Execution extends React.Component {
 
     Ajax.fetch('/api/executions/' + this.props.executionKey)
       .then(res => res.json())
-      .then((result) => {
+      .then(result => {
+        const data = result.data;
         this.setState({
           loading: false,
-          execution: result.execution
+          execution: data.execution,
+          acquires: data.acquires,
+          extract: data.extract
         });
       },
       (error) => {
@@ -33,10 +42,26 @@ class Execution extends React.Component {
       return <p>Loading...</p>;
     }
 
+    const acquires = this.state.acquires.map(
+      acquire => <ExecutionAcquireDetails key={acquire.AcquireKey} acquire={acquire} />
+    );
+
     return (
-      <div>
+      <div className="execution">
         <ExecutionDetails execution={this.state.execution} />
-        <a href="/schedules/525">Go to schedule &gt;</a>
+        <section className="form-section">
+          <h6>Acquires</h6>
+          { acquires }
+        </section>
+        <section className="form-section">
+          <h6>Extract</h6>
+          <ExecutionExtractDetails extract={this.state.extract} />
+        </section>
+        <section className="form-section">
+          <a href={`/schedules/${this.state.execution.ScheduledExecutionKey}`}>
+            Go to schedule <span className="fas fa-angle-right" />
+          </a>
+        </section>
       </div>
     );
   }

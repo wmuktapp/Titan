@@ -83,9 +83,7 @@ def execute():
 @app.route('/api/executions/<int:execution_key>')
 def execution_get(execution_key):
 
-    data = {
-        'execution': get_execution(execution_key)
-    }
+    data = get_execution(execution_key)
 
     return jsonify(data)
 
@@ -235,21 +233,74 @@ def pad(number):
         return str(number)
 
 
-def get_execution(id, temp_date=None):
+def get_execution(id):
 
-    if not temp_date:
-        temp_date = datetime.now()
+    execution = {
+        'ExecutionKey': id,
+        'ExecutionContainerGroupName': 'Container %s' % 'ABCDE'[randint(0, 4)],
+        'ScheduledExecutionKey': randint(1, 1000),
+        'ExecutionScheduledTime': '14:23:35',
+        'ExecutionStartTime': '14:23:52',
+        'ExecutionEndTime': '14:27:29',
+        'ExecutionSuccessful': (random() < .5),
+        'ExecutionClientName': 'Client %s' % 'ABCDE'[randint(0, 4)],
+        'ExecutionDataSourceName': 'Data Source %s' % 'ABCDE'[randint(0, 4)],
+        'ExecutionDataSetName': 'Data Set %s' % 'ABCDE'[randint(0, 4)],
+        'ExecutionLoadDate': datetime.now(),
+        'ExecutionVersion': randint(1, 3),
+        'ExecutionUser': 'User %s' % 'ABCDE'[randint(0, 4)],
+        'AcquireProgramKey': randint(1, 1000),
+        'AcquireProgramFriendlyName': 'My Acquire Program %s' % 'ABCDE'[randint(0, 4)]
+    }
 
-    acquire_state = get_state()
-    extract_state = get_state(prev_state=acquire_state)
+    acquires = []
+    acquire_count = randint(1, 3)
+
+    for i in range(0, acquire_count):
+
+        acquire = {
+            'AcquireKey': randint(1, 1000),
+            'AcquireStartTime': '12:34:56',
+            'AcquireEndTime': '12:51:15',
+            'AcquireStatus': get_state(),
+            'AcquireErrorMessage': None,
+            'Options': []
+        }
+
+        option_count = randint(1, 5)
+        for j in range(0, option_count):
+            acquire['Options'].append({
+                'AcquireOptionName': 'Name %i' % j,
+                'AcquireOptionValue': 'Value %i' % j
+            })
+
+        acquires.append(acquire)
+
+    extract = {
+        'ExtractKey': randint(1, 1000),
+        'ExtractDestination': 'Destination %s' % 'ABCDE'[randint(0, 4)],
+        'ExtractStartTime': '19:23:35',
+        'ExtractEndTime': '19:38:16',
+        'ExtractStatus': get_state(),
+        'ExtractErrorMessage': None,
+        'Options': []
+    }
+
+    option_count = randint(1, 5)
+    for i in range(0, option_count):
+        extract['Options'].append({
+            'ExtractOptionName': 'Name %i' % i,
+            'ExtractOptionValue': 'Value %i' % i
+        })
 
     return {
-        'id': id,
-        'name': 'Task-%i' % id,
-        'date': temp_date.strftime('%Y-%m-%d'),
-        'acquire': acquire_state,
-        'extract': extract_state
+        'data': {
+            'execution': execution,
+            'acquires': acquires,
+            'extract': extract
+        }
     }
+
 
 
 # State randomiser

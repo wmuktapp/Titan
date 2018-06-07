@@ -160,6 +160,18 @@ form .label-body {
     vertical-align: text-bottom;
 }
 
+.text-success {
+    color: #548235;
+}
+
+.text-failure {
+    color: #9e323a;
+}
+
+.text-neutral {
+    color: #998a2f;
+}
+
 .form-section {
     border-top: 2px solid #f0f0f0;
     padding: 1em 0 0;
