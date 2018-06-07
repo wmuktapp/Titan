@@ -27,26 +27,10 @@
     margin-right: 10px;
 }
 
-.acquire-option-label {
+.execution-option-label {
     width: 180px;
 }
 
-.status {
+.task-status {
     font-weight: bold;
-}
-
-.text-success {
-    color: #548235;
-}
-
-.text-failure {
-    color: #9e323a;
-}
-
-.text-neutral {
-    color: #998a2f;
-}
-
-.status-icon {
-    margin-right: 5px;
 }

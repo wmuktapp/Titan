@@ -19,8 +19,8 @@ class Status extends React.Component {
     const className = classNames[this.props.status] || '';
     const icon = icons[this.props.status];
 
-    return <span className={'status ' + className}>
-      { icon && <span className={'status-icon ' + icon} /> }
+    return <span className={'task-status ' + className}>
+      { icon && <span className={'task-status-icon ' + icon} /> }
       { this.props.status.toUpperCase() }
     </span>;
 
