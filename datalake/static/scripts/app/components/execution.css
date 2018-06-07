@@ -6,11 +6,12 @@
 }
 
 .acquire-details {
-    padding: 10px 0;
+    padding-bottom: 10px;
 }
 
 .acquire-details + .acquire-details {
     border-top: 1px solid #f0f0f0;
+    padding-top: 10px;
 }
 
 .status {
