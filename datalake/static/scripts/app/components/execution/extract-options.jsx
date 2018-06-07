@@ -11,10 +11,11 @@ class ExecutionExtractOptions extends React.Component {
     this.toggle = this.toggle.bind(this);
   }
 
-  toggle() {
+  toggle(event) {
     this.setState({
       expanded: !this.state.expanded
     });
+    event.preventDefault();
   }
 
   render() {
