@@ -1,0 +1,45 @@
+import React from 'react';
+
+class ExecutionExtractOptions extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      expanded: false
+    };
+    this.toggle = this.toggle.bind(this);
+  }
+
+  toggle() {
+    this.setState({
+      expanded: !this.state.expanded
+    });
+  }
+
+  render() {
+
+    const icon = this.state.expanded ? 'fa-angle-left' : 'fa-angle-right';
+
+    const optionsList = this.props.options.map(
+      (option, index) => <p key={index}>OPTION</p>
+    )
+
+    return (
+      <div className="extract-options">
+        <div className="extract-options-toggle-wrap">
+          <a onClick={this.toggle}>
+            Options <span className={'fas ' + icon} />
+          </a>
+        </div>
+        {
+          this.state.expanded &&
+            <div className="extract-options-list">
+              {optionsList}
+            </div>
+        }
+      </div>
+    );
+  }
+}
+
+export default ExecutionExtractOptions;

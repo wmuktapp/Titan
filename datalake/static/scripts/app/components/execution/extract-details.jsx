@@ -1,5 +1,6 @@
 import React from 'react';
 import Status from './status.jsx';
+import ExecutionExtractOptions from './extract-options.jsx';
 
 class ExecutionExtractDetails extends React.Component {
 
@@ -33,7 +34,7 @@ class ExecutionExtractDetails extends React.Component {
           </span>
         </div>
 
-        <p>Options go here</p>
+        <ExecutionExtractOptions options={extract.Options} />
 
       </div>
     );
