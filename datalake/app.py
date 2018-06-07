@@ -14,7 +14,7 @@ def get_security_context():
 
 
 def get_access_token():
-    credentials = azure_active_directory.MSIAuthentication(client_id="5e0c2a56-17ca-4846-9083-130cbf6a1e8c")
+    credentials = azure_active_directory.MSIAuthentication()
     session = credentials.signed_session()
     return session.headers.get("Authorization")
 
