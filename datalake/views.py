@@ -290,8 +290,8 @@ def get_execution(id):
     option_count = randint(1, 5)
     for i in range(0, option_count):
         extract['Options'].append({
-            'ExtractOptionName': 'Name %i' % j,
-            'ExtractOptionValue': 'Value %i' % j
+            'ExtractOptionName': 'Name %i' % i,
+            'ExtractOptionValue': 'Value %i' % i
         })
 
     return {
