@@ -23,7 +23,7 @@ class ExecutionExtractOptions extends React.Component {
 
     const optionsList = this.props.options.map(
       (option, index) => <ExecutionTaskOption key={index} name={option.ExtractOptionName} value={option.ExtractOptionValue} />
-    )
+    );
 
     return (
       <div className="extract-options">
