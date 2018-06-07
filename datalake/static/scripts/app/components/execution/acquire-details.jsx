@@ -1,4 +1,5 @@
 import React from 'react';
+import AcquireOptions from './acquire-options.jsx';
 import Status from './status.jsx';
 
 class ExecutionAcquireDetails extends React.Component {
@@ -6,9 +7,6 @@ class ExecutionAcquireDetails extends React.Component {
   render() {
 
     const acquire = this.props.acquire;
-
-    // TODO
-    // - Add options (expandable section?)
 
     return (
       <div className="acquire-details">
@@ -38,6 +36,10 @@ class ExecutionAcquireDetails extends React.Component {
               <span className="execution-value">{acquire.AcquireKey}</span>
             </div>
         }
+
+        <div>
+          <AcquireOptions options={acquire.Options} />
+        </div>
 
       </div>
     )
