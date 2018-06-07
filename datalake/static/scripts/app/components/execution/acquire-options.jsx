@@ -19,18 +19,24 @@ class AcquireOptions extends React.Component {
 
   render() {
 
-    const icon = this.state.expanded ? 'fa-angle-up' : 'fa-angle-down';
+    const icon = this.state.expanded ? 'fa-angle-left' : 'fa-angle-right';
 
-    // TODO expandable thing containing options
+    const options = this.props.options.map(
+      (option, index) => <AcquireOption key={index} name={option.AcquireOptionName} value={option.AcquireOptionValue} />
+    )
 
     return (
       <div className="acquire-options">
-        <a onClick={this.toggle}>
-          Options <span className={'fas ' + icon} />
-        </a>
+        <div className="acquire-options-toggle-wrap">
+          <a onClick={this.toggle}>
+            Options <span className={'fas ' + icon} />
+          </a>
+        </div>
         {
-          this.state.expanded && this.props.options.map(
-            (option, index) => <AcquireOption key={index} name={option.AcquireOptionName} value={option.AcquireOptionValue} />)
+          this.state.expanded && 
+          <div className="acquire-option-list">
+            {options}
+          </div>
         }
       </div>
     );
