@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Status extends React.Component {
+class ExecutionTaskStatus extends React.Component {
 
   render() {
 
@@ -27,4 +27,4 @@ class Status extends React.Component {
   }
 }
 
-export default Status;
+export default ExecutionTaskStatus;

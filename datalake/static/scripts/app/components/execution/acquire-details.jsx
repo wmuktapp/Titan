@@ -1,6 +1,6 @@
 import React from 'react';
 import ExecutionAcquireOptions from './acquire-options.jsx';
-import Status from './status.jsx';
+import ExecutionTaskStatus from './task-status.jsx';
 
 class ExecutionAcquireDetails extends React.Component {
 
@@ -27,7 +27,7 @@ class ExecutionAcquireDetails extends React.Component {
           <div>
             <label>Status</label>
             <span className="execution-value">
-              <Status status={acquire.AcquireStatus} />
+              <ExecutionTaskStatus status={acquire.AcquireStatus} />
             </span>
           </div>
           {
