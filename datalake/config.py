@@ -21,7 +21,7 @@ class _Config(object):
 
 class DevelopmentConfig(_Config):
     DATALAKE_ACQUIRE_TIMEOUT = 600
-    DATALAKE_AUTH_REQUIRED = False
+    DATALAKE_AUTH_REQUIRED = True
     DATALAKE_EXTRACT_TIMEOUT = 600
     DEBUG = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
