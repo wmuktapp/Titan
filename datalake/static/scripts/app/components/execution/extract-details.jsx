@@ -1,9 +1,42 @@
 import React from 'react';
+import Status from './status.jsx';
 
 class ExecutionExtractDetails extends React.Component {
 
   render() {
-    return <p>Key: {this.props.extractKey}</p>;
+
+    const extract = this.props.extract;
+
+    return (
+      <div className="extract-details">
+
+        <div>
+          <label>Key</label>
+          <span className="execution-value">{extract.ExtractKey}</span>
+        </div>
+        <div>
+          <label>Destination</label>
+          <span className="execution-value">{extract.ExtractDestination}</span>
+        </div>
+        <div>
+          <label>Start Time</label>
+          <span className="execution-value">{extract.ExtractStartTime}</span>
+        </div>
+        <div>
+          <label>End Time</label>
+          <span className="execution-value">{extract.ExtractEndTime}</span>
+        </div>
+        <div>
+          <label>Status</label>
+          <span className="execution-value">
+            <Status status={extract.ExtractStatus} />
+          </span>
+        </div>
+
+        <p>Options go here</p>
+
+      </div>
+    );
   }
 }
 
