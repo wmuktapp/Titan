@@ -1,4 +1,5 @@
 import React from 'react';
+import ExecutionTaskOption from './task-option.jsx';
 
 class ExecutionExtractOptions extends React.Component {
 
@@ -21,7 +22,7 @@ class ExecutionExtractOptions extends React.Component {
     const icon = this.state.expanded ? 'fa-angle-left' : 'fa-angle-right';
 
     const optionsList = this.props.options.map(
-      (option, index) => <p key={index}>OPTION</p>
+      (option, index) => <ExecutionTaskOption key={index} name={option.ExtractOptionName} value={option.ExtractOptionValue} />
     )
 
     return (
