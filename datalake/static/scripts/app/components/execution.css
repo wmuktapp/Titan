@@ -34,3 +34,7 @@
 .task-status {
     font-weight: bold;
 }
+
+.task-status-icon {
+    margin-right: 5px;
+}
