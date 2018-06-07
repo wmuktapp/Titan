@@ -1,5 +1,5 @@
 import React from 'react';
-import AcquireOptions from './acquire-options.jsx';
+import ExecutionAcquireOptions from './acquire-options.jsx';
 import Status from './status.jsx';
 
 class ExecutionAcquireDetails extends React.Component {
@@ -39,7 +39,7 @@ class ExecutionAcquireDetails extends React.Component {
           }
         </div>
 
-        <AcquireOptions options={acquire.Options} />
+        <ExecutionAcquireOptions options={acquire.Options} />
 
       </div>
     )

@@ -1,7 +1,7 @@
 import React from 'react';
 import AcquireOption from './acquire-option.jsx';
 
-class AcquireOptions extends React.Component {
+class ExecutionAcquireOptions extends React.Component {
 
   constructor(props) {
     super(props);
@@ -44,4 +44,4 @@ class AcquireOptions extends React.Component {
 
 }
 
-export default AcquireOptions;
+export default ExecutionAcquireOptions;
