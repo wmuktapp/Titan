@@ -17,6 +17,9 @@ class _Config(object):
     DEBUG = None
     SQLALCHEMY_DATABASE_URI = None
     SQLALCHEMY_TRACK_MODIFICATIONS = None
+    TEST_CLIENT_ID = None
+    TEST_CLIENT_SECRET = None
+    TEST_TENANT_ID = None
 
 
 class DevelopmentConfig(_Config):
