@@ -57,9 +57,11 @@ class Execution extends React.Component {
           <h6>Extract</h6>
           <ExecutionExtractDetails extract={this.state.extract} />
         </section>
-        <a href={`/schedules/${this.state.execution.ScheduledExecutionKey}`}>
-          Go to schedule <span className="fas fa-angle-right" />
-        </a>
+        <section className="form-section">
+          <a href={`/schedules/${this.state.execution.ScheduledExecutionKey}`}>
+            Go to schedule <span className="fas fa-angle-right" />
+          </a>
+        </section>
       </div>
     );
   }
