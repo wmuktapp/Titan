@@ -1,5 +1,5 @@
 import React from 'react';
-import ExecutionTaskOption from './option.jsx';
+import ExecutionTaskOption from './task-option.jsx';
 
 class ExecutionAcquireOptions extends React.Component {
 
