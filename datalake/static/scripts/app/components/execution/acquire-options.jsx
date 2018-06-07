@@ -20,6 +20,11 @@ class ExecutionAcquireOptions extends React.Component {
 
   render() {
 
+    // Don't render if no options are provided
+    if (!this.props.options.length) {
+      return null;
+    }
+
     const icon = this.state.expanded ? 'fa-angle-left' : 'fa-angle-right';
 
     const options = this.props.options.map(
