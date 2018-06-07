@@ -153,7 +153,12 @@ def get_access_token():
 
     # Only required in the live environment
     if current_app.config['DATALAKE_AUTH_REQUIRED']:
-        return datalake_app.get_access_token()
+        try:
+            access_token = datalake_app.get_access_token()
+        except Exception as e:
+            app.logger.error(e)
+            raise
+        return access_token
     return ''
 
 
