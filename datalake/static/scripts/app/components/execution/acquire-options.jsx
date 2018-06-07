@@ -1,5 +1,5 @@
 import React from 'react';
-import ExecutionOption from './option.jsx';
+import ExecutionTaskOption from './option.jsx';
 
 class ExecutionAcquireOptions extends React.Component {
 
@@ -22,7 +22,7 @@ class ExecutionAcquireOptions extends React.Component {
     const icon = this.state.expanded ? 'fa-angle-left' : 'fa-angle-right';
 
     const options = this.props.options.map(
-      (option, index) => <ExecutionOption key={index} name={option.AcquireOptionName} value={option.AcquireOptionValue} />
+      (option, index) => <ExecutionTaskOption key={index} name={option.AcquireOptionName} value={option.AcquireOptionValue} />
     );
 
     return (

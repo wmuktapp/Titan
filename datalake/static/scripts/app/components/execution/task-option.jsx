@@ -1,6 +1,6 @@
 import React from 'react';
 
-function ExecutionOption(props) {
+function ExecutionTaskOption(props) {
   return (
     <div className="execution-option">
       <label className="execution-option-label">{props.name}</label>
@@ -9,4 +9,4 @@ function ExecutionOption(props) {
   );
 }
 
-export default ExecutionOption;
+export default ExecutionTaskOption;
