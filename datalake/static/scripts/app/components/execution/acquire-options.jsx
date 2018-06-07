@@ -1,4 +1,5 @@
 import React from 'react';
+import AcquireOption from './acquire-option.jsx';
 
 class AcquireOptions extends React.Component {
 
@@ -23,9 +24,15 @@ class AcquireOptions extends React.Component {
     // TODO expandable thing containing options
 
     return (
-      <a onClick={this.toggle}>
-        Options <span className={'fas ' + icon} />
-      </a>
+      <div className="acquire-options">
+        <a onClick={this.toggle}>
+          Options <span className={'fas ' + icon} />
+        </a>
+        {
+          this.state.expanded && this.props.options.map(
+            (option, index) => <AcquireOption key={index} name={option.AcquireOptionName} value={option.AcquireOptionValue} />)
+        }
+      </div>
     );
   }
 
