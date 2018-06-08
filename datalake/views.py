@@ -389,7 +389,7 @@ def get_schedule(id):
         'ScheduledFridayEnabled': random() > .3,
         'ScheduledSaturdayEnabled': random() > .3,
         'ScheduledSundayEnabled': random() > .3,
-        'AcquireProgramKey': key(),
+        'AcquireProgramKey': randint(1, 5),
         'AcquireProgramFriendlyName': 'My Acquire Program %s' % az(),
         'ScheduledExecutionStatus': get_state()
     }
