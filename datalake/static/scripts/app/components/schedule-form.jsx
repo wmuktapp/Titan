@@ -29,10 +29,11 @@ class ScheduleForm extends React.Component {
         ScheduledExecutionDataSourceName: '',
         ScheduledExecutionDataSetName: '',
         ScheduledExecutionNextLoadDate: null,
-        ScheduledExecutionEnabled: true
+        ScheduledExecutionEnabled: true,
+        AcquireProgramKey: ''
       },
 
-      program: '',
+      // program: '',
       interval: {
         hours: 0,
         minutes: 0,
@@ -141,8 +142,11 @@ class ScheduleForm extends React.Component {
       ? this.state.availablePrograms.find((obj) => { return obj.id === program; }).dataSource
       : '';
 
+    const execution = this.state.execution;
+    execution.ScheduledExecutionDataSourceName = dataSource;
+
     this.setState({
-      dataSource: dataSource,
+      execution: execution,
       acquires: []
     });
     this.onExecutionChange(...arguments);
@@ -285,7 +289,7 @@ class ScheduleForm extends React.Component {
         </div>
         <div>
           <label>Program</label>
-          <select name="program" value={this.state.program} onChange={this.onChangeProgram}>
+          <select name="AcquireProgramKey" value={execution.AcquireProgramKey} onChange={this.onChangeProgram}>
             <option value=""></option>
             { programOptions }
           </select>
