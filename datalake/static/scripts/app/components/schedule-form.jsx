@@ -91,8 +91,17 @@ class ScheduleForm extends React.Component {
     Ajax.fetch('/api/acquire-programs')
       .then(res => res.json())
       .then(results => {
+
+        const availablePrograms = results.data.map(program => {
+          return {
+            id: program.AcquireProgramKey,
+            name: program.AcquireProgramFriendlyName,
+            dataSource: program.AcquireProgramDataSource
+          };
+        });
+
         this.setState({
-          availablePrograms: results
+          availablePrograms: availablePrograms
         });
       })
 
@@ -128,10 +137,6 @@ class ScheduleForm extends React.Component {
     this.setState({
       execution: execution
     });
-  }
-
-  onChange() {
-    // TODO
   }
 
   // Special case for program
@@ -245,7 +250,7 @@ class ScheduleForm extends React.Component {
       data: JSON.stringify(this.state)
     })
       .then(res => res.json())
-      .then((response) => {
+      .then(response => {
 
         const execution = this.state.execution;
         execution.ScheduledExecutionKey = execution.ScheduledExecutionKey || response.ScheduledExecutionKey;
@@ -276,7 +281,7 @@ class ScheduleForm extends React.Component {
 
     // Acquire options
     const programOptions = this.state.availablePrograms.map(
-      (option) => <option key={option.id} value={option.id}>{option.name}</option>
+      option => <option key={option.id} value={option.id}>{option.name}</option>
     );
 
     return (
@@ -339,7 +344,7 @@ class ScheduleForm extends React.Component {
         <div className="form-section">
           <h6>Acquires</h6>
           {
-            this.state.program
+            this.state.execution.AcquireProgramKey
               ? <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
                   onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
               : <p>Select an acquire program</p>

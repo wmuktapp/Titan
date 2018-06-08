@@ -138,7 +138,7 @@ def schedule_update(schedule_key):
 
 @app.route('/api/acquire-programs')
 def acquire_programs_list():
-    return get_acquire_programs()
+    return jsonify(get_acquire_programs())
 
 
 # Potential new endpoints:
@@ -436,34 +436,6 @@ def get_schedule(id):
         }
     }
 
-    # return {
-    #     'id': id,
-    #     'name': 'Schedule %i' % id,
-    #     'nextScheduled': get_next_date(),
-    #     'scheduleEnd': get_next_date(),
-    #     'client': 'Client %s' % az(),
-    #     'dataSource': 'Data source %i' % id,
-    #     'dataSet': 'Dataset %s' % az(),
-    #     'loadDate': get_load_date(),
-    #     'enabled': random() > .2,
-    #     'interval': {
-    #         'hours': randint(1, 23),
-    #         'minutes': randint(1, 59),
-    #         'seconds': randint(1, 59)
-    #     },
-    #     'days': {
-    #         'Monday': random() > .3,
-    #         'Tuesday': random() > .3,
-    #         'Wednesday': random() > .3,
-    #         'Thursday': random() > .3,
-    #         'Friday': random() > .3,
-    #         'Saturday': random() > .3,
-    #         'Sunday': random() > .3
-    #     },
-    #     'program': randint(1, 5),
-    #     'extract': randint(1, 5)
-    # }
-
 
 def get_next_date():
     return datetime.now() + timedelta(days=randint(0, 7))
@@ -481,11 +453,27 @@ def get_acquire_programs():
     for i in range(1, 6):
         data.append(get_acquire_program(i))
 
-    return jsonify(data)
+    return {
+        'data': data
+    }
 
 def get_acquire_program(id):
-    return {
-        'id': id,
-        'name': 'Program %i' % id,
-        'dataSource': 'Data source %i' % id
+
+    acquire_program = {
+        'AcquireProgramKey': id,
+        'AcquireProgramPythonName': 'PythonProgram%s' % az(),
+        'AcquireProgramFriendlyName': 'My Acquire Program %s' % az(),
+        'AcquireProgramDataSource': 'Data Source %s' % az(),
+        'AcquireProgramEnabled': random() > .2,
+        'Options': []
     }
+
+    option_count = randint(0, 4)
+
+    for i in range(0, option_count):
+        acquire_program['Options'].append({
+            'AcquireProgramOptionName': 'Option Name %s' % az(),
+            'AcquireProgramOptionRequired': random() > .2
+        })
+
+    return acquire_program
