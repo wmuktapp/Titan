@@ -39,11 +39,6 @@ class ScheduleForm extends React.Component {
         AcquireProgramKey: ''
       },
 
-      interval: {
-        hours: 0,
-        minutes: 0,
-        seconds: 0
-      },
       days: {
         Monday: true,
         Tuesday: true,
