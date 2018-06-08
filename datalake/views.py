@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from flask import jsonify, redirect, render_template, request, current_app
+from flask import jsonify, redirect, render_template, request
 from markupsafe import Markup
 from random import random, randint
 from time import sleep
@@ -17,7 +17,8 @@ def index():
 
 @app.route('/monitoring')
 def monitoring():
-    return render_template('monitoring.html', access_token=get_access_token())
+    return render_template('monitoring.html', access_token=get_access_token(),
+                           cookie='AppServiceAuthSession=%s' % request.cookies.get('AppServiceAuthSession'))
 
 @app.route('/monitoring/executions/<int:execution_key>')
 def monitoring_execution(execution_key):
@@ -146,7 +147,7 @@ def acquire_programs_list():
 # Access Token
 
 def get_access_token():
-    return request.headers.get("X-Ms-Token-Aad-Access-Token", "")
+    return 'Bearer %s' % request.headers.get('X-Ms-Token-Aad-Access-Token', '')
 
 
 # SAMPLE DATA
