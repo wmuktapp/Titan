@@ -110,14 +110,17 @@ def execution_retry():
 @app.route('/api/schedules')
 def schedules_list():
     # TODO support filtering by querystring?
-    return get_schedules()
+
+    limit = 100
+
+    return jsonify(get_schedules(limit))
 
 
 @app.route('/api/schedules', methods=['POST'])
 def schedule_create():
     # TODO create schedule?
     return jsonify({
-        'id': randint(1, 1000)
+        'id': key()
     })
 
 
@@ -204,7 +207,7 @@ def get_execution_data(start_date, end_date):
                     extract_state = get_state(prev_state=acquire_state)
 
                     data_set_data[temp_date.strftime('%Y-%m-%d')] = {
-                        'ExecutionKey': randint(1, 1000),
+                        'ExecutionKey': key(),
                         'AcquireProgramKey': randint(1, 5),
                         'AcquireStartTime': get_time(),
                         'AcquireStatus': acquire_state,
@@ -237,20 +240,20 @@ def get_execution(id):
 
     execution = {
         'ExecutionKey': id,
-        'ExecutionContainerGroupName': 'Container %s' % 'ABCDE'[randint(0, 4)],
-        'ScheduledExecutionKey': randint(1, 1000),
+        'ExecutionContainerGroupName': 'Container %s' % az(),
+        'ScheduledExecutionKey': key(),
         'ExecutionScheduledTime': '14:23:35',
         'ExecutionStartTime': '14:23:52',
         'ExecutionEndTime': '14:27:29',
         'ExecutionSuccessful': (random() < .5),
-        'ExecutionClientName': 'Client %s' % 'ABCDE'[randint(0, 4)],
-        'ExecutionDataSourceName': 'Data Source %s' % 'ABCDE'[randint(0, 4)],
-        'ExecutionDataSetName': 'Data Set %s' % 'ABCDE'[randint(0, 4)],
+        'ExecutionClientName': 'Client %s' % az(),
+        'ExecutionDataSourceName': 'Data Source %s' % az(),
+        'ExecutionDataSetName': 'Data Set %s' % az(),
         'ExecutionLoadDate': datetime.now(),
         'ExecutionVersion': randint(1, 3),
-        'ExecutionUser': 'User %s' % 'ABCDE'[randint(0, 4)],
-        'AcquireProgramKey': randint(1, 1000),
-        'AcquireProgramFriendlyName': 'My Acquire Program %s' % 'ABCDE'[randint(0, 4)]
+        'ExecutionUser': 'User %s' % az(),
+        'AcquireProgramKey': key(),
+        'AcquireProgramFriendlyName': 'My Acquire Program %s' % az()
     }
 
     acquires = []
@@ -259,7 +262,7 @@ def get_execution(id):
     for i in range(0, acquire_count):
 
         acquire = {
-            'AcquireKey': randint(1, 1000),
+            'AcquireKey': key(),
             'AcquireStartTime': '12:34:56',
             'AcquireEndTime': '12:51:15',
             'AcquireStatus': get_state(),
@@ -270,15 +273,15 @@ def get_execution(id):
         option_count = randint(1, 5)
         for j in range(0, option_count):
             acquire['Options'].append({
-                'AcquireOptionName': 'Name %i' % j,
-                'AcquireOptionValue': 'Value %i' % j
+                'AcquireOptionName': 'Name %i' % az(),
+                'AcquireOptionValue': 'Value %i' % az()
             })
 
         acquires.append(acquire)
 
     extract = {
-        'ExtractKey': randint(1, 1000),
-        'ExtractDestination': 'Destination %s' % 'ABCDE'[randint(0, 4)],
+        'ExtractKey': key(),
+        'ExtractDestination': 'Destination %s' % az(),
         'ExtractStartTime': '19:23:35',
         'ExtractEndTime': '19:38:16',
         'ExtractStatus': get_state(),
@@ -289,8 +292,8 @@ def get_execution(id):
     option_count = randint(1, 5)
     for i in range(0, option_count):
         extract['Options'].append({
-            'ExtractOptionName': 'Name %i' % i,
-            'ExtractOptionValue': 'Value %i' % i
+            'ExtractOptionName': 'Name %i' % az(),
+            'ExtractOptionValue': 'Value %i' % az()
         })
 
     return {
@@ -301,7 +304,12 @@ def get_execution(id):
         }
     }
 
+def az():
+    letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    return letters[randint(1, len(letters)) - 1]
 
+def key():
+    return randint(1, 1000)
 
 # State randomiser
 def get_state(prev_state=None):
@@ -331,61 +339,131 @@ def get_state(prev_state=None):
 
 # Schedules
 
-def get_schedules():
+def get_schedules(limit):
 
     # Small delay
     sleep(1)
 
     schedules = []
 
-    row_count = 50
+    for i in range(0, limit):
 
-    for i in range(1, row_count + 1):
+        schedules.append({
+            'ScheduledExecutionKey': key(),
+            'ScheduledExecutionName': 'Execution %s' % az(),
+            'ScheduledExecutionNextScheduled': get_next_date(),
+            'ScheduledExecutionScheduleEnd': get_next_date(),
+            'ScheduledExecutionClientName': 'Client Name %s' % az(),
+            'ScheduledExecutionDataSourceName': 'Data Source %s' % az(),
+            'ScheduledExecutionDataSetName': 'Data Set %s' % az(),
+            'ScheduledExecutionNextLoadDate': get_load_date(),
+            'ScheduledExecutionEnabled': random() > .2,
+            'ScheduledExecutionUser': 'User %s' % az(),
+            'ScheduledExecutionStatus': get_state()
+        })
 
-        id = randint(1, 1000)
-
-        schedule = get_schedule(id)
-
-        schedules.append(schedule)
-
-    return jsonify(schedules)
+    return schedules
 
 
 def get_schedule(id):
 
-    return {
-        'id': id,
-        'name': 'Schedule %i' % id,
-        'nextScheduled': get_next_date(),
-        'scheduleEnd': get_next_date(),
-        'client': 'Client %s' % 'ABCDE'[randint(0, 4)],
-        'dataSource': 'Data source %i' % id,
-        'dataSet': 'Dataset %s' % 'ABCDE'[randint(0, 4)],
-        'loadDate': get_load_date(),
-        'enabled': random() > .2,
-        'interval': {
-            'hours': randint(1, 23),
-            'minutes': randint(1, 59),
-            'seconds': randint(1, 59)
-        },
-        'days': {
-            'Monday': random() > .3,
-            'Tuesday': random() > .3,
-            'Wednesday': random() > .3,
-            'Thursday': random() > .3,
-            'Friday': random() > .3,
-            'Saturday': random() > .3,
-            'Sunday': random() > .3
-        },
-        'program': randint(1, 5),
-        'extract': randint(1, 5)
+    execution = {
+        'ScheduledExecutionKey': id,
+        'ScheduledExecutionName': 'Schedule %s' % az(),
+        'ScheduledExecutionNextScheduled': get_next_date(),
+        'ScheduledExecutionScheduleEnd': get_next_date(),
+        'ScheduledExecutionClientName': 'Client %s' % az(),
+        'ScheduledExecutionDataSourceName': 'Data Source %s' % az(),
+        'ScheduledExecutionDataSetName': 'Data Set %s' % az(),
+        'ScheduledExecutionNextLoadDate': get_load_date(),
+        'ScheduledExecutionEnabled': random() > .2,
+        'ScheduledExecutionUser': 'User %s' % az(),
+        'ScheduledIntervalKey': key(),
+        'ScheduledIntervalMI': randint(0, 59),
+        'ScheduledIntervalHH': randint(0, 59),
+        'ScheduledIntervalDD': randint(0, 7),
+        'ScheduledMondayEnabled': random() > .3,
+        'ScheduledTuesdayEnabled': random() > .3,
+        'ScheduledWednesdayEnabled': random() > .3,
+        'ScheduledThursdayEnabled': random() > .3,
+        'ScheduledFridayEnabled': random() > .3,
+        'ScheduledSaturdayEnabled': random() > .3,
+        'ScheduledSundayEnabled': random() > .3,
+        'AcquireProgramKey': key(),
+        'AcquireProgramFriendlyName': 'My Acquire Program %s' % az(),
+        'ScheduledExecutionStatus': get_state()
     }
 
-def get_interval():
+    acquires = []
+    acquire_count = randint(0, 4)
 
-    if random() > .5:
-        return 'Daily'
-    return 'Weekly'
+    for i in range(0, acquire_count):
+
+        acquire = {
+            'ScheduledAcquireKey': key(),
+            'ScheduledAcquireName': 'Acquire Name %s' % az(),
+            'Options': []
+        }
+
+        option_count = randint(0, 4)
+        for j in range(0, option_count):
+            acquire['Options'].append({
+                'ScheduledAcquireOptionName': 'Option Name %s' % az(),
+                'ScheduledAcquireOptionValue': 'Option Value %s' % az()
+            })
+
+        acquires.append(acquire)
+
+    extract = {
+        'ScheduledExtractKey': key(),
+        'ScheduledExtractDestination': 'Destination %s' % az(),
+        'Options': []
+    }
+
+    option_count = randint(0, 4)
+
+    for k in range(0, option_count):
+        extract['Options'].append({
+            'ScheduledExtractOptionName': 'Option Name %s' % az(),
+            'ScheduledExtractOptionValue': 'Option Value %s' % az()
+        })
+
+    return {
+        'data': {
+            'execution': execution,
+            'acquires': acquires,
+            'extract': extract
+        }
+    }
+
+    # return {
+    #     'id': id,
+    #     'name': 'Schedule %i' % id,
+    #     'nextScheduled': get_next_date(),
+    #     'scheduleEnd': get_next_date(),
+    #     'client': 'Client %s' % az(),
+    #     'dataSource': 'Data source %i' % id,
+    #     'dataSet': 'Dataset %s' % az(),
+    #     'loadDate': get_load_date(),
+    #     'enabled': random() > .2,
+    #     'interval': {
+    #         'hours': randint(1, 23),
+    #         'minutes': randint(1, 59),
+    #         'seconds': randint(1, 59)
+    #     },
+    #     'days': {
+    #         'Monday': random() > .3,
+    #         'Tuesday': random() > .3,
+    #         'Wednesday': random() > .3,
+    #         'Thursday': random() > .3,
+    #         'Friday': random() > .3,
+    #         'Saturday': random() > .3,
+    #         'Sunday': random() > .3
+    #     },
+    #     'program': randint(1, 5),
+    #     'extract': randint(1, 5)
+    # }
+
 
 def get_next_date():
     return datetime.now() + timedelta(days=randint(0, 7))
