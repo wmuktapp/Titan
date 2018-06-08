@@ -19,17 +19,20 @@ class ScheduleForm extends React.Component {
     super(props);
 
     this.state = {
-      id: this.props.id,
 
-      name: '',
+      execution: {
+        ScheduledExecutionKey: this.props.id,
+        ScheduledExecutionName: '',
+        ScheduledExecutionNextScheduled: null,
+        ScheduledExecutionScheduleEnd: null,
+        ScheduledExecutionClientName: '',
+        ScheduledExecutionDataSourceName: '',
+        ScheduledExecutionDataSetName: '',
+        ScheduledExecutionNextLoadDate: null,
+        ScheduledExecutionEnabled: true
+      },
+
       program: '',
-      nextScheduled: null,
-      scheduleEnd: null,
-      client: '',
-      dataSource: '',
-      dataSet: '',
-      loadDate: null,
-      enabled: true,
       interval: {
         hours: 0,
         minutes: 0,
@@ -61,7 +64,7 @@ class ScheduleForm extends React.Component {
       loading: false
     };
 
-    this.onChange = this.onChange.bind(this);
+    this.onExecutionChange = this.onExecutionChange.bind(this);
     this.onChangeProgram = this.onChangeProgram.bind(this);
     this.updateInterval = this.updateInterval.bind(this);
     this.updateNextScheduled = this.updateNextScheduled.bind(this);
@@ -86,39 +89,48 @@ class ScheduleForm extends React.Component {
     // Get acquire prohrams
     Ajax.fetch('/api/acquire-programs')
       .then(res => res.json())
-      .then((results) => {
+      .then(results => {
         this.setState({
           availablePrograms: results
         });
       })
 
-    if (this.state.id) {
+    if (this.state.execution.ScheduledExecutionKey) {
 
-      Ajax.fetch('/api/schedules/' + this.state.id)
+      Ajax.fetch(`/api/schedules/${this.state.execution.ScheduledExecutionKey}`)
         .then(res => res.json())
-        .then((result) => {
+        .then(result => {
+
+          const execution = result.data.execution;
 
           // TODO Make this a method in dateUtils?
-          result.nextScheduled = moment(new Date(result.nextScheduled));
-          result.scheduleEnd = moment(new Date(result.scheduleEnd));
-          result.loadDate = moment(new Date(result.loadDate));
+          execution.ScheduledExecutionNextScheduled = moment(new Date(execution.ScheduledExecutionNextScheduled));
+          execution.ScheduledExecutionScheduleEnd = moment(new Date(execution.ScheduledExecutionScheduleEnd));
+          execution.ScheduledExecutionNextLoadDate = moment(new Date(execution.ScheduledExecutionNextLoadDate));
 
-          this.setState(result);
           this.setState({
+            execution: execution,
             loading: false
           });
         });
     }
   }
 
-  onChange(event) {
+  onExecutionChange(event) {
     const target = event.target,
       name = target.name,
       value = target.value;
 
+    const execution = this.state.execution;
+    execution[name] = value;
+
     this.setState({
-      [name]: value
+      execution: execution
     });
+  }
+
+  onChange() {
+    // TODO
   }
 
   // Special case for program
@@ -133,7 +145,7 @@ class ScheduleForm extends React.Component {
       dataSource: dataSource,
       acquires: []
     });
-    this.onChange(...arguments);
+    this.onExecutionChange(...arguments);
   }
 
   updateInterval(hours, minutes, seconds) {
@@ -147,20 +159,26 @@ class ScheduleForm extends React.Component {
   }
 
   updateNextScheduled(value) {
+    const execution = this.state.execution;
+    execution.ScheduledExecutionNextScheduled = value;
     this.setState({
-      nextScheduled: value
+      execution: execution
     });
   }
 
   updateScheduleEnd(value) {
+    const execution = this.state.execution;
+    execution.ScheduledExecutionScheduleEnd = value;
     this.setState({
-      scheduleEnd: value
+      execution: execution
     });
   }
 
   updateNextLoadDate(value) {
+    const execution = this.state.execution;
+    execution.ScheduledExecutionNextLoadDate = value;
     this.setState({
-      loadDate: value
+      execution: execution
     });
   }
 
@@ -221,8 +239,12 @@ class ScheduleForm extends React.Component {
     })
       .then(res => res.json())
       .then((response) => {
+
+        const execution = this.state.execution;
+        execution.ScheduledExecutionKey = execution.ScheduledExecutionKey || response.ScheduledExecutionKey;
+
         this.setState({
-          id: this.state.id || response.id,
+          execution: execution,
           updated: true
         });
       });
@@ -236,12 +258,14 @@ class ScheduleForm extends React.Component {
     // Dialog about unsaved values?
 
     // Redirect to adhoc form, pre-populated
-    window.location.href = '/adhoc?schedule=' + this.state.id;
+    window.location.href = `/adhoc?schedule=${this.state.execution.ScheduledExecutionKey}`;
   }
 
   render() {
 
     // NOTE: Handles both insert and update
+
+    const execution = this.state.execution;
 
     // Acquire options
     const programOptions = this.state.availablePrograms.map(
@@ -253,11 +277,11 @@ class ScheduleForm extends React.Component {
 
         { this.state.updated && <p>Schedule updated</p> }
 
-        <h5>{ this.state.id ? 'Update Schedule' : 'New Schedule' }</h5>
+        <h5>{ execution.ScheduledExecutionKey ? 'Update Schedule' : 'New Schedule' }</h5>
 
         <div>
           <label>Name</label>
-          <input type="text" name="name" value={this.state.name} onChange={this.onChange} />
+          <input type="text" name="ScheduledExecutionName" value={execution.ScheduledExecutionName} onChange={this.onExecutionChange} />
         </div>
         <div>
           <label>Program</label>
@@ -268,31 +292,31 @@ class ScheduleForm extends React.Component {
         </div>
         <div>
           <label>Next scheduled</label>
-          <DatePicker selected={this.state.nextScheduled} dateFormat="DD/MM/YYYY" onChange={this.updateNextScheduled} />
+          <DatePicker selected={execution.ScheduledExecutionNextScheduled} dateFormat="DD/MM/YYYY" onChange={this.updateNextScheduled} />
         </div>
         <div>
           <label>Schedule end</label>
-          <DatePicker selected={this.state.scheduleEnd} dateFormat="DD/MM/YYYY" onChange={this.updateScheduleEnd} />
+          <DatePicker selected={execution.ScheduledExecutionScheduleEnd} dateFormat="DD/MM/YYYY" onChange={this.updateScheduleEnd} />
         </div>
         <div>
           <label>Client</label>
-          <input type="text" name="client" value={this.state.client} onChange={this.onChange} />
+          <input type="text" name="ScheduledExecutionClientName" value={execution.ScheduledExecutionClientName} onChange={this.onExecutionChange} />
         </div>
         <div>
           <label>Data source</label>
-          <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.onChange} disabled={!!this.state.program} />
+          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.onExecutionChange} disabled={!!this.state.program} />
         </div>
         <div>
           <label>Data set</label>
-          <input type="text" name="dataSet" value={this.state.dataSet} onChange={this.onChange} />
+          <input type="text" name="ScheduledExecutionDataSetName" value={execution.ScheduledExecutionDataSetName} onChange={this.onExecutionChange} />
         </div>
         <div>
           <label>Next load date</label>
-          <DatePicker selected={this.state.loadDate} dateFormat="DD/MM/YYYY" onChange={this.updateNextLoadDate} />
+          <DatePicker selected={execution.ScheduledExecutionNextLoadDate} dateFormat="DD/MM/YYYY" onChange={this.updateNextLoadDate} />
         </div>
         <div>
           <label>
-            <input type="checkbox" name="enabled" checked={this.enabled} onChange={this.onChange} />
+            <input type="checkbox" name="ScheduledExecutionEnabled" checked={this.ScheduledExecutionEnabled} onChange={this.onExecutionChange} />
             <span className="label-body">Enabled</span>
           </label>
         </div>
@@ -321,7 +345,7 @@ class ScheduleForm extends React.Component {
         </div>
 
         <div>
-          <input type="submit" value={ this.state.id ? 'Update' : 'Create' } />
+          <input type="submit" value={ execution.ScheduledExecutionKey ? 'Update' : 'Create' } />
           <button onClick={this.executeNow} className="btn-now">
             Execute now
             <span className="fas fa-angle-right btn-now-icon" />
