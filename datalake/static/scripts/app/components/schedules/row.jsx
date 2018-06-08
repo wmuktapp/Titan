@@ -12,7 +12,7 @@ class ScheduleTableRow extends React.Component {
     return (
       <tr>
         <td>
-          <a href={`/schedules/${schedule.id}`}>{schedule.ScheduledExecutionName}</a>
+          <a href={`/schedules/${schedule.ScheduledExecutionKey}`}>{schedule.ScheduledExecutionName}</a>
         </td>
         <td>{nextDate}</td>
         <td>{schedule.ScheduledExecutionClientName}</td>
