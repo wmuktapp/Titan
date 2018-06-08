@@ -11,14 +11,19 @@ app = datalake.create_app()
 
 # Page URLs
 
+@app.after_request
+def after_request(response):
+    response.set_cookie("AppServiceAuthSession", request.cookies.get("AppServiceAuthSession", ""))
+    return response
+
+
 @app.route('/')
 def index():
     return redirect('/monitoring')
 
 @app.route('/monitoring')
 def monitoring():
-    return render_template('monitoring.html', access_token=get_access_token(),
-                           cookie='AppServiceAuthSession=%s' % request.cookies.get('AppServiceAuthSession'))
+    return render_template('monitoring.html', access_token=get_access_token())
 
 @app.route('/monitoring/executions/<int:execution_key>')
 def monitoring_execution(execution_key):
