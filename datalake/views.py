@@ -1,4 +1,3 @@
-from datalake import app as datalake_app
 from datetime import datetime, timedelta
 from flask import jsonify, redirect, render_template, request, current_app
 from markupsafe import Markup
@@ -9,7 +8,6 @@ import datalake
 
 
 app = datalake.create_app()
-
 
 # Page URLs
 
@@ -150,10 +148,7 @@ def acquire_programs_list():
 # Access Token
 
 def get_access_token():
-    # Only required in the live environment
-    if current_app.config['DATALAKE_AUTH_REQUIRED']:
-        return datalake_app.get_access_token()
-    return ''
+    return request.headers.get("X-Ms-Token-Aad-Access-Token", "")
 
 
 # SAMPLE DATA
