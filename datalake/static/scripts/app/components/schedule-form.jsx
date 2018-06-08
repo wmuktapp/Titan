@@ -30,10 +30,15 @@ class ScheduleForm extends React.Component {
         ScheduledExecutionDataSetName: '',
         ScheduledExecutionNextLoadDate: null,
         ScheduledExecutionEnabled: true,
+
+        ScheduledIntervalKey: null,
+        ScheduledIntervalMI: 0,
+        ScheduledIntervalHH: 0,
+        ScheduledIntervalDD: 0,
+
         AcquireProgramKey: ''
       },
 
-      // program: '',
       interval: {
         hours: 0,
         minutes: 0,
@@ -152,13 +157,16 @@ class ScheduleForm extends React.Component {
     this.onExecutionChange(...arguments);
   }
 
-  updateInterval(hours, minutes, seconds) {
+  updateInterval(days, hours, minutes) {
+
+    const execution = this.state.execution;
+
+    execution.ScheduledIntervalDD = days;
+    execution.ScheduledIntervalHH = hours;
+    execution.ScheduledIntervalMI = minutes;
+
     this.setState({
-      interval: {
-        hours: hours,
-        minutes: minutes,
-        seconds: seconds
-      }
+      execution: execution
     });
   }
 
@@ -326,8 +334,8 @@ class ScheduleForm extends React.Component {
         </div>
         <div className="form-section">
           <h6>Interval</h6>
-          <IntervalPicker hours={this.state.interval.hours} minutes={this.state.interval.minutes}
-            seconds={this.state.interval.seconds} onUpdate={this.updateInterval} />
+          <IntervalPicker days={execution.ScheduledIntervalDD} hours={execution.ScheduledIntervalHH}
+            minutes={execution.ScheduledIntervalMI} onUpdate={this.updateInterval} />
         </div>
         <div className="form-section">
           <h6>Days</h6>

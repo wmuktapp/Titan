@@ -6,9 +6,20 @@ class IntervalPicker extends React.Component {
 
   constructor(props) {
     super(props);
+    this.onChangeDays = this.onChangeDays.bind(this);
     this.onChangeHours = this.onChangeHours.bind(this);
     this.onChangeMinutes = this.onChangeMinutes.bind(this);
-    this.onChangeSeconds = this.onChangeSeconds.bind(this);
+  }
+
+  onChangeDays(event) {
+
+    // Ensure value is non-negative
+    let days = event.target.value;
+    if (days < 0) {
+      days = 0;
+    }
+
+    this.props.onUpdate(days, this.props.hours, this.props.minutes);
   }
 
   onChangeHours(event) {
@@ -21,7 +32,7 @@ class IntervalPicker extends React.Component {
       hours = 23;
     }
 
-    this.props.onUpdate(hours, this.props.minutes, this.props.seconds);
+    this.props.onUpdate(this.props.days, hours, this.props.minutes);
   }
 
   onChangeMinutes(event) {
@@ -34,31 +45,19 @@ class IntervalPicker extends React.Component {
       minutes = 59;
     }
 
-    this.props.onUpdate(this.props.hours, minutes, this.props.seconds);
+    this.props.onUpdate(this.props.days, this.props.hours, minutes);
   }
 
-  onChangeSeconds(event) {
-
-    // Ensure value is between 0 and 59
-    let seconds = event.target.value;
-    if (seconds < 0) {
-      seconds = 0;
-    } else if (seconds > 59) {
-      seconds = 59;
-    }
-
-    this.props.onUpdate(this.props.hours, this.props.minutes, seconds);
-  }
 
   render() {
     return (
       <div className="interval-picker">
+        <label className="interval-picker-label">Days</label>
+        <input type="number" className="interval-picker-input" value={this.props.days} onChange={this.onChangeDays} />
         <label className="interval-picker-label">Hours</label>
         <input type="number" className="interval-picker-input" value={this.props.hours} onChange={this.onChangeHours} />
         <label className="interval-picker-label">Minutes</label>
         <input type="number" className="interval-picker-input" value={this.props.minutes} onChange={this.onChangeMinutes} />
-        <label className="interval-picker-label">Seconds</label>
-        <input type="number" className="interval-picker-input" value={this.props.seconds} onChange={this.onChangeSeconds} />
       </div>
     );
   }
