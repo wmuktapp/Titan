@@ -468,7 +468,7 @@ def get_acquire_program(id):
         'Options': []
     }
 
-    option_count = randint(0, 4)
+    option_count = randint(1, 4)
 
     for i in range(1, option_count):
         acquire_program['Options'].append({
