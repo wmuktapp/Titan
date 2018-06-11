@@ -157,11 +157,6 @@ class AdhocForm extends React.Component {
 
     const program = programOptions.find(option => option.value === execution.AcquireProgramKey);
 
-    // Acquire option names
-    const acquireOptionNames = program
-      ? program.options.map(option => option.AcquireProgramOptionName)
-      : [];
-
     // TODO calculate whether to show Execute button based on other values
 
     // TODO calculate extractFields based on other values?
@@ -207,7 +202,7 @@ class AdhocForm extends React.Component {
           {
             this.state.program
             ? <AcquireList
-                optionNames={acquireOptionNames}
+                options={program.options}
                 acquires={this.state.acquires}
                 onChange={this.updateAcquires} />
             : <p>Select an acquire program</p>

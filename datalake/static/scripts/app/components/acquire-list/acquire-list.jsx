@@ -32,9 +32,9 @@ class AcquireList extends React.Component {
 
     const newAcquire = {
       ScheduledAcquireName: name,
-      Options: this.props.optionNames.map(name => {
+      Options: this.props.options.map(option => {
         return {
-          ScheduledAcquireOptionName: name,
+          ScheduledAcquireOptionName: option.AcquireProgramOptionName,
           ScheduledAcquireOptionValue: ''
         }
       })
