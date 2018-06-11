@@ -35,7 +35,9 @@ class AcquireItem extends React.Component {
         <div className="acquire-properties">
           {rows}
         </div>
-        <a onClick={this.remove} className="acquire-item-remove">Remove</a>
+        <a onClick={this.remove} className="acquire-item-remove">
+          <span className="fas fa-times" />
+        </a>
       </div>
     );
   }
