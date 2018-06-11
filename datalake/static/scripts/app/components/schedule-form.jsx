@@ -51,7 +51,6 @@ class ScheduleForm extends React.Component {
       extract: '',
 
       acquires: [],
-      acquireProperties: ['property1', 'property2', 'property3'],
 
       extractDestination: '',
       extractFields: {
@@ -96,7 +95,13 @@ class ScheduleForm extends React.Component {
           return {
             id: program.AcquireProgramKey,
             name: program.AcquireProgramFriendlyName,
-            dataSource: program.AcquireProgramDataSource
+            dataSource: program.AcquireProgramDataSource,
+            options: program.Options.map(option => {
+              return {
+                name: option.AcquireProgramOptionName,
+                required: option.AcquireProgramOptionRequired
+              };
+            })
           };
         });
 
@@ -202,27 +207,7 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  addAcquire() {
-    const acquires = this.state.acquires;
-    acquires.push({
-      fields: this.state.acquireProperties.reduce((obj, option) => { obj[option] = ''; return obj; }, {})
-    });
-    this.setState({
-      acquires: acquires
-    });
-  }
-
-  removeAcquire(index) {
-    let acquires = this.state.acquires;
-    acquires.splice(index, 1);
-    this.setState({
-      acquires: acquires
-    });
-  }
-
-  updateAcquireItem(index, name, value) {
-    const acquires = this.state.acquires;
-    acquires[index].fields[name] = value;
+  updateAcquires(acquires) {
     this.setState({
       acquires: acquires
     });
@@ -279,10 +264,19 @@ class ScheduleForm extends React.Component {
 
     const execution = this.state.execution;
 
-    // Acquire options
+    // Acquire program dropdown options
     const programOptions = this.state.availablePrograms.map(
       option => <option key={option.id} value={option.id}>{option.name}</option>
     );
+
+
+    // Acquire option names
+    const key = this.state.execution.AcquireProgramKey;
+    const acquireOptionNames = key
+      ? this.state.availablePrograms
+          .find(program => program.id === key).options
+          .map(option => option.name)
+      : [];
 
     return (
       <form className="schedule-form" onSubmit={this.onSubmit}>
@@ -345,8 +339,10 @@ class ScheduleForm extends React.Component {
           <h6>Acquires</h6>
           {
             this.state.execution.AcquireProgramKey
-              ? <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
-                  onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+              ? <AcquireList
+                  optionNames={acquireOptionNames}
+                  acquires={this.state.acquires}
+                  onChange={this.updateAcquires} />
               : <p>Select an acquire program</p>
           }
         </div>

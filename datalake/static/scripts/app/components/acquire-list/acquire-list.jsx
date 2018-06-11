@@ -8,6 +8,10 @@ class AcquireList extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      acquires: this.props.acquires
+    };
+
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
     this.itemChange = this.itemChange.bind(this);
@@ -15,28 +19,62 @@ class AcquireList extends React.Component {
 
   // Add another acquire to list
   add() {
-    this.props.onAdd();
+
+    const acquires = this.state.acquires;
+
+    const newAcquire = {
+      ScheduledAcquireName: name,
+      Options: this.props.optionNames.map(name => {
+        return {
+          ScheduledAcquireOptionName: name,
+          ScheduledAcquireOptionValue: ''
+        }
+      })
+    };
+
+    acquires.push(newAcquire);
+
+    this.setState({
+      acquires: acquires
+    });
+
+    this.props.onChange(acquires);
   }
 
   remove(index) {
-    this.props.onRemove(index);
+
+    let acquires = this.state.acquires;
+    acquires.splice(index, 1);
+    this.setState({
+      acquires: acquires
+    });
+
+    this.props.onChange(acquires);
   }
 
   itemChange(index, name, value) {
-    this.props.onItemChange(index, name, value);
+    const acquires = this.state.acquires;
+    acquires[index].Options
+      .find(option => option.ScheduledAcquireOptionName === name).ScheduledAcquireOptionValue = value;
+
+    this.setState({
+      acquires: acquires
+    });
+
+    this.props.onChange(acquires);
   }
 
   render() {
 
-    const acquireItems = this.props.acquires.map((acquire, index) => {
-      return <AcquireItem key={index} fields={acquire.fields} expanded={acquire.expanded}
+    const acquireItems = this.state.acquires.map((acquire, index) => {
+      return <AcquireItem key={index} acquire={acquire}
         index={index} remove={this.remove} onChange={this.itemChange} />
     });
 
     return (
       <div className="acquire-list">
         { acquireItems }
-        { !this.props.acquires.length && <p>No acquires</p> }
+        { !this.state.acquires.length && <p>No acquires</p> }
         <a onClick={this.add}>+ Add another</a>
       </div>
     );
@@ -44,3 +82,4 @@ class AcquireList extends React.Component {
 }
 
 export default AcquireList;
+  
