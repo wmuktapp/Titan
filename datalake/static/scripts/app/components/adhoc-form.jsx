@@ -6,10 +6,9 @@ import Ajax from '../utils/ajax';
 import moment from 'moment';
 import Select from 'react-select';
 
+// Import styles
 import 'react-select/dist/react-select.css';
-
-// Datepicker styles
-require('react-datepicker/dist/react-datepicker.css');
+import 'react-datepicker/dist/react-datepicker.css';
 
 class AdhocForm extends React.Component {
 

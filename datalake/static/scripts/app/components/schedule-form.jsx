@@ -8,12 +8,11 @@ import Select from 'react-select';
 import Ajax from '../utils/ajax';
 import moment from 'moment';
 
+// Import styles
 import 'react-select/dist/react-select.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
-// react-datepicker stylesheet
-require('react-datepicker/dist/react-datepicker.css');
-
-require('./schedule-form.css');
+import './schedule-form.css';
 
 class ScheduleForm extends React.Component {
 
