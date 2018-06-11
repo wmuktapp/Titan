@@ -68,8 +68,6 @@ class AdhocForm extends React.Component {
 
     if (this.state.schedule) {
       
-      // TODO query server, update state
-
       Ajax.fetch('/api/schedules/' + this.state.schedule)
         .then(res => res.json())
         .then((results) => {
