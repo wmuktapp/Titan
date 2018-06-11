@@ -133,6 +133,7 @@ class ScheduleForm extends React.Component {
   onChangeProgram(program) {
 
     const execution = this.state.execution;
+    execution.AcquireProgramKey = program ? program.value : 0;
     execution.ScheduledExecutionDataSourceName = program ? program.dataSource : '';
 
     this.setState({
