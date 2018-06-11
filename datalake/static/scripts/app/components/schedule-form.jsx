@@ -71,9 +71,7 @@ class ScheduleForm extends React.Component {
     this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
     this.updateNextLoadDate = this.updateNextLoadDate.bind(this);
     this.updateDay = this.updateDay.bind(this);
-    this.addAcquire = this.addAcquire.bind(this);
-    this.removeAcquire = this.removeAcquire.bind(this);
-    this.updateAcquireItem = this.updateAcquireItem.bind(this);
+    this.updateAcquires = this.updateAcquires.bind(this);
     this.selectExtractDestination = this.selectExtractDestination.bind(this);
     this.updateExtractField = this.updateExtractField.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -272,7 +270,7 @@ class ScheduleForm extends React.Component {
 
     // Acquire option names
     const key = this.state.execution.AcquireProgramKey;
-    const acquireOptionNames = key
+    const acquireOptionNames = key && !!this.state.availablePrograms.length
       ? this.state.availablePrograms
           .find(program => program.id === key).options
           .map(option => option.name)
