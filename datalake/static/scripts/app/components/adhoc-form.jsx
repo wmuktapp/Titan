@@ -81,6 +81,8 @@ class AdhocForm extends React.Component {
   // Special case for program
   handleProgramChange(program) {
 
+    // TODO deal with updated field names
+
     const dataSource = program ? program.dataSource : '';
 
     this.setState({
@@ -153,9 +155,11 @@ class AdhocForm extends React.Component {
       };
     });
 
+    const program = programOptions.find(option => option.value === execution.AcquireProgramKey);
+
     // Acquire option names
-    const acquireOptionNames = this.state.program
-      ? this.state.program.options.map(option => option.AcquireProgramOptionName)
+    const acquireOptionNames = program
+      ? program.options.map(option => option.AcquireProgramOptionName)
       : [];
 
     // TODO calculate whether to show Execute button based on other values
@@ -172,8 +176,7 @@ class AdhocForm extends React.Component {
         <div>
           <label>Program</label>
           <Select
-            name="program"
-            value={this.state.program}
+            value={program}
             onChange={this.handleProgramChange}
             options={programOptions}
             className="titan-react-select"

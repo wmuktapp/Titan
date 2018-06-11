@@ -60,7 +60,6 @@ class ScheduleForm extends React.Component {
         'Extract field 3': ''
       },
 
-      program: null,
       availablePrograms: [],
 
       loading: false
@@ -114,8 +113,6 @@ class ScheduleForm extends React.Component {
           });
         });
     }
-
-    // TODO set state.program (requires separate component?)
   }
 
   onExecutionChange(event) {
@@ -139,7 +136,6 @@ class ScheduleForm extends React.Component {
     execution.ScheduledExecutionDataSourceName = program ? program.dataSource : '';
 
     this.setState({
-      program: program,
       execution: execution,
       acquires: []
     });
@@ -257,9 +253,11 @@ class ScheduleForm extends React.Component {
       };
     });
 
+    const program = programOptions.find(option => option.value === execution.AcquireProgramKey);
+
     // Acquire option names
-    const acquireOptionNames = this.state.program
-      ? this.state.program.options.map(option => option.AcquireProgramOptionName)
+    const acquireOptionNames = program
+      ? program.options.map(option => option.AcquireProgramOptionName)
       : [];
 
     return (
@@ -276,8 +274,7 @@ class ScheduleForm extends React.Component {
         <div>
           <label>Program</label>
           <Select
-            name="AcquireProgramKey"
-            value={this.state.program}
+            value={program}
             onChange={this.onChangeProgram}
             options={programOptions}
             className="titan-react-select"
