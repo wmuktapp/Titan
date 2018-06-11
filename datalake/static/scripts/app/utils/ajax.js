@@ -1,4 +1,6 @@
 
+import { adalApiFetch } from './adal-config';
+
 function getAccessToken() {
     return authorisation.accessToken;
 }
@@ -10,14 +12,18 @@ const Ajax = {
         // Default request options
         const requestOptions = {
             headers: {
-                "Authorization": getAccessToken()
+                // "Authorization": getAccessToken()
             }
         };
 
         // Merge objects
         Object.assign(requestOptions, options);
 
-        return window.fetch(url, requestOptions);
+        // adalFetch(this.authContext, this.config.endpoints.api, window.fetch, url, options);
+
+        return adalApiFetch(window.fetch, url, requestOptions);
+
+        // return window.fetch(url, requestOptions);
     }
 
 };
