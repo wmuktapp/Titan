@@ -153,7 +153,7 @@ class AdhocForm extends React.Component {
     })
       .then(() => {
         console.log('execution successful!');
-      })
+      });
 
     event.preventDefault();
   }
