@@ -470,7 +470,7 @@ def get_acquire_program(id):
 
     option_count = randint(0, 4)
 
-    for i in range(0, option_count):
+    for i in range(1, option_count):
         acquire_program['Options'].append({
             'AcquireProgramOptionName': 'Option Name %s' % az(),
             'AcquireProgramOptionRequired': random() > .2
