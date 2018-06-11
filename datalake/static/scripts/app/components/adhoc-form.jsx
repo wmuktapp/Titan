@@ -177,6 +177,7 @@ class AdhocForm extends React.Component {
             value={this.state.program}
             onChange={this.handleProgramChange}
             options={programOptions}
+            className="titan-react-select"
           />
         </div>
         <div>

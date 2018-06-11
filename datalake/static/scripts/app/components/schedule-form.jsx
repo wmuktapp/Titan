@@ -278,6 +278,7 @@ class ScheduleForm extends React.Component {
             value={this.state.program}
             onChange={this.onChangeProgram}
             options={programOptions}
+            className="titan-react-select"
           />
         </div>
         <div>

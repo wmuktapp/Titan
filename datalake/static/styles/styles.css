@@ -192,3 +192,10 @@ form .label-body {
 .react-datepicker__navigation:hover {
     border-color: transparent;
 }
+
+/* react-select overrides */
+
+.titan-react-select {
+    width: 214px;
+    margin-bottom: 1.5rem;
+}
