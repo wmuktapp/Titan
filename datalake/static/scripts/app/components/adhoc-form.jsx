@@ -35,9 +35,7 @@ class AdhocForm extends React.Component {
     this.handleProgramChange = this.handleProgramChange.bind(this);
     this.handleLoadDateChange = this.handleLoadDateChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.addAcquire = this.addAcquire.bind(this);
-    this.removeAcquire = this.removeAcquire.bind(this);
-    this.updateAcquireItem = this.updateAcquireItem.bind(this);
+    this.updateAcquires = this.updateAcquires.bind(this);
     this.onSelectExtractDestination = this.onSelectExtractDestination.bind(this);
     this.onUpdateExtractField = this.onUpdateExtractField.bind(this);
   }
@@ -47,9 +45,24 @@ class AdhocForm extends React.Component {
     // Get available acquire programs
     Ajax.fetch('/api/acquire-programs')
       .then(res => res.json())
-      .then((results) => {
+      .then(results => {
+        
+        const availablePrograms = results.data.map(program => {
+          return {
+            id: program.AcquireProgramKey,
+            name: program.AcquireProgramFriendlyName,
+            dataSource: program.AcquireProgramDataSource,
+            options: program.Options.map(option => {
+              return {
+                name: option.AcquireProgramOptionName,
+                required: option.AcquireProgramOptionRequired
+              };
+            })
+          };
+        });
+
         this.setState({
-          availablePrograms: results
+          availablePrograms: availablePrograms
         });
       });
 
@@ -93,6 +106,7 @@ class AdhocForm extends React.Component {
       acquires: [],
       extractFields: []
     });
+
     this.handleChange(...arguments);
   }
 
@@ -104,32 +118,7 @@ class AdhocForm extends React.Component {
     });
   }
 
-  addAcquire() {
-
-    const acquire = {
-      fields: this.state.acquireProperties.reduce((obj, option) => { obj[option] = ''; return obj; }, {})
-    }
-
-    const acquires = this.state.acquires;
-    acquires.push(acquire);
-
-    this.setState({
-      acquires: acquires
-    });
-
-  }
-
-  removeAcquire(index) {
-    let acquires = this.state.acquires;
-    acquires.splice(index, 1);
-    this.setState({
-      acquires: acquires
-    });
-  }
-
-  updateAcquireItem(index, name, value) {
-    let acquires = this.state.acquires;
-    acquires[index].fields[name] = value;
+  updateAcquires(acquires) {
     this.setState({
       acquires: acquires
     });
@@ -177,6 +166,13 @@ class AdhocForm extends React.Component {
       return <option key={index} value={program.id}>{program.name}</option>;
     });
 
+    const key = Number(this.state.program);
+    const acquireOptionNames = (key && !!this.state.availablePrograms.length)
+      ? this.state.availablePrograms
+          .find(program => program.id === key).options
+          .map(option => option.name)
+      : [];
+
     // TODO calculate whether to show Execute button based on other values
 
     // TODO calculate extractFields based on other values?
@@ -219,8 +215,10 @@ class AdhocForm extends React.Component {
           <h6>Acquires</h6>
           {
             this.state.program
-            ? <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
-                onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
+            ? <AcquireList
+                optionNames={acquireOptionNames}
+                acquires={this.state.acquires}
+                onChange={this.updateAcquires} />
             : <p>Select an acquire program</p>
           }
         </div>
