@@ -5,7 +5,6 @@ import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import DatePicker from 'react-datepicker';
 import Ajax from '../utils/ajax';
-import dateUtils from '../utils/date-utils';
 import moment from 'moment';
 
 // react-datepicker stylesheet
@@ -116,7 +115,7 @@ class ScheduleForm extends React.Component {
 
           const execution = result.data.execution;
 
-          // TODO Make this a method in dateUtils?
+          // TODO Make this a method in DateUtils?
           execution.ScheduledExecutionNextScheduled = moment(new Date(execution.ScheduledExecutionNextScheduled));
           execution.ScheduledExecutionScheduleEnd = moment(new Date(execution.ScheduledExecutionScheduleEnd));
           execution.ScheduledExecutionNextLoadDate = moment(new Date(execution.ScheduledExecutionNextLoadDate));
