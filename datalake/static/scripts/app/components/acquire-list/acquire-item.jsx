@@ -21,6 +21,8 @@ class AcquireItem extends React.Component {
 
   render() {
 
+    // TODO show when fields are required
+
     const rows = this.props.acquire.Options.map((option, index) => {
       return (
         <div key={index} className="acquire-property">
