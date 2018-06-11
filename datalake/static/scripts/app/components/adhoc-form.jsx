@@ -4,6 +4,9 @@ import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import Ajax from '../utils/ajax';
 import moment from 'moment';
+import Select from 'react-select';
+
+import 'react-select/dist/react-select.css';
 
 // Datepicker styles
 require('react-datepicker/dist/react-datepicker.css');
@@ -46,23 +49,8 @@ class AdhocForm extends React.Component {
     Ajax.fetch('/api/acquire-programs')
       .then(res => res.json())
       .then(results => {
-        
-        const availablePrograms = results.data.map(program => {
-          return {
-            id: program.AcquireProgramKey,
-            name: program.AcquireProgramFriendlyName,
-            dataSource: program.AcquireProgramDataSource,
-            options: program.Options.map(option => {
-              return {
-                name: option.AcquireProgramOptionName,
-                required: option.AcquireProgramOptionRequired
-              };
-            })
-          };
-        });
-
         this.setState({
-          availablePrograms: availablePrograms
+          availablePrograms: results.data
         });
       });
 
@@ -92,20 +80,16 @@ class AdhocForm extends React.Component {
   }
 
   // Special case for program
-  handleProgramChange(event) {
+  handleProgramChange(program) {
 
-    const program = Number(event.target.value);
-    const dataSource = program
-      ? this.state.availablePrograms.find((obj) => { return obj.id === program; }).dataSource
-      : '';
+    const dataSource = program ? program.dataSource : '';
 
     this.setState({
+      program: program,
       dataSource: dataSource,
       acquires: [],
       extractFields: []
     });
-
-    this.handleChange(...arguments);
   }
 
   // Special case for load date
@@ -160,15 +144,19 @@ class AdhocForm extends React.Component {
 
   render() {
 
-    const programOptions = this.state.availablePrograms.map((program, index) => {
-      return <option key={index} value={program.id}>{program.name}</option>;
+    // Acquire program dropdown options
+    const programOptions = this.state.availablePrograms.map(program => {
+      return {
+        value: program.AcquireProgramKey,
+        label: program.AcquireProgramFriendlyName,
+        dataSource: program.AcquireProgramDataSource,
+        options: program.Options
+      };
     });
 
-    const key = Number(this.state.program);
-    const acquireOptionNames = (key && !!this.state.availablePrograms.length)
-      ? this.state.availablePrograms
-          .find(program => program.id === key).options
-          .map(option => option.name)
+    // Acquire option names
+    const acquireOptionNames = this.state.program
+      ? this.state.program.options.map(option => option.AcquireProgramOptionName)
       : [];
 
     // TODO calculate whether to show Execute button based on other values
@@ -184,10 +172,12 @@ class AdhocForm extends React.Component {
       <form onSubmit={this.handleSubmit}>
         <div>
           <label>Program</label>
-          <select name="program" value={this.state.program} onChange={this.handleProgramChange}>
-            <option value=""></option>
-            { programOptions }
-          </select>
+          <Select
+            name="program"
+            value={this.state.program}
+            onChange={this.handleProgramChange}
+            options={programOptions}
+          />
         </div>
         <div>
           <label>Load date</label>

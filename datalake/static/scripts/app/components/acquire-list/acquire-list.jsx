@@ -17,6 +17,14 @@ class AcquireList extends React.Component {
     this.itemChange = this.itemChange.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.acquires !== this.state.acquires) {
+      this.setState({
+        acquires: nextProps.acquires
+      });
+    } 
+  }
+
   // Add another acquire to list
   add() {
 

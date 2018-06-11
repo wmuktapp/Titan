@@ -4,8 +4,11 @@ import IntervalPicker from './interval-picker.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import DatePicker from 'react-datepicker';
+import Select from 'react-select';
 import Ajax from '../utils/ajax';
 import moment from 'moment';
+
+import 'react-select/dist/react-select.css';
 
 // react-datepicker stylesheet
 require('react-datepicker/dist/react-datepicker.css');
@@ -87,23 +90,8 @@ class ScheduleForm extends React.Component {
     Ajax.fetch('/api/acquire-programs')
       .then(res => res.json())
       .then(result => {
-
-        const availablePrograms = result.data.map(program => {
-          return {
-            id: program.AcquireProgramKey,
-            name: program.AcquireProgramFriendlyName,
-            dataSource: program.AcquireProgramDataSource,
-            options: program.Options.map(option => {
-              return {
-                name: option.AcquireProgramOptionName,
-                required: option.AcquireProgramOptionRequired
-              };
-            })
-          };
-        });
-
         this.setState({
-          availablePrograms: availablePrograms
+          availablePrograms: result.data
         });
       })
 
@@ -142,21 +130,16 @@ class ScheduleForm extends React.Component {
   }
 
   // Special case for program
-  onChangeProgram(event) {
-
-    const program = Number(event.target.value);
-    const dataSource = program
-      ? this.state.availablePrograms.find((obj) => { return obj.id === program; }).dataSource
-      : '';
+  onChangeProgram(program) {
 
     const execution = this.state.execution;
-    execution.ScheduledExecutionDataSourceName = dataSource;
+    execution.ScheduledExecutionDataSourceName = program ? program.dataSource : '';
 
     this.setState({
+      program: program,
       execution: execution,
       acquires: []
     });
-    this.onExecutionChange(...arguments);
   }
 
   updateInterval(days, hours, minutes) {
@@ -262,16 +245,18 @@ class ScheduleForm extends React.Component {
     const execution = this.state.execution;
 
     // Acquire program dropdown options
-    const programOptions = this.state.availablePrograms.map(
-      option => <option key={option.id} value={option.id}>{option.name}</option>
-    );
+    const programOptions = this.state.availablePrograms.map(program => {
+      return {
+        value: program.AcquireProgramKey,
+        label: program.AcquireProgramFriendlyName,
+        dataSource: program.AcquireProgramDataSource,
+        options: program.Options
+      };
+    });
 
     // Acquire option names
-    const key = this.state.execution.AcquireProgramKey;
-    const acquireOptionNames = (key && !!this.state.availablePrograms.length)
-      ? this.state.availablePrograms
-          .find(program => program.id === key).options
-          .map(option => option.name)
+    const acquireOptionNames = this.state.program
+      ? this.state.program.options.map(option => option.AcquireProgramOptionName)
       : [];
 
     return (
@@ -287,10 +272,12 @@ class ScheduleForm extends React.Component {
         </div>
         <div>
           <label>Program</label>
-          <select name="AcquireProgramKey" value={execution.AcquireProgramKey} onChange={this.onChangeProgram}>
-            <option value=""></option>
-            { programOptions }
-          </select>
+          <Select
+            name="AcquireProgramKey"
+            value={this.state.program}
+            onChange={this.onChangeProgram}
+            options={programOptions}
+          />
         </div>
         <div>
           <label>Next scheduled</label>
