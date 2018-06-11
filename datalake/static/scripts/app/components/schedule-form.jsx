@@ -87,9 +87,9 @@ class ScheduleForm extends React.Component {
     // Get acquire prohrams
     Ajax.fetch('/api/acquire-programs')
       .then(res => res.json())
-      .then(results => {
+      .then(result => {
 
-        const availablePrograms = results.data.map(program => {
+        const availablePrograms = result.data.map(program => {
           return {
             id: program.AcquireProgramKey,
             name: program.AcquireProgramFriendlyName,
@@ -267,10 +267,9 @@ class ScheduleForm extends React.Component {
       option => <option key={option.id} value={option.id}>{option.name}</option>
     );
 
-
     // Acquire option names
     const key = this.state.execution.AcquireProgramKey;
-    const acquireOptionNames = key && !!this.state.availablePrograms.length
+    const acquireOptionNames = (key && !!this.state.availablePrograms.length)
       ? this.state.availablePrograms
           .find(program => program.id === key).options
           .map(option => option.name)
