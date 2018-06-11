@@ -49,15 +49,12 @@ class ScheduleForm extends React.Component {
         Saturday: true,
         Sunday: true
       },
-      extract: '',
 
       acquires: [],
-
-      extractDestination: '',
-      extractFields: {
-        'Extract field 1': '',
-        'Extract field 2': '',
-        'Extract field 3': ''
+      extract: {
+        ScheduledExtractKey: null,
+        ScheduledExtractDestination: 0,
+        Options: []
       },
 
       availablePrograms: [],
@@ -110,6 +107,7 @@ class ScheduleForm extends React.Component {
           this.setState({
             execution: execution,
             acquires: result.data.acquires,
+            extracts: result.data.extracts,
             loading: false
           });
         });
@@ -256,6 +254,8 @@ class ScheduleForm extends React.Component {
 
     const program = programOptions.find(option => option.value === execution.AcquireProgramKey);
 
+    const extractFields = this.state.extract.Options;
+
     return (
       <form className="schedule-form" onSubmit={this.onSubmit}>
 
@@ -322,14 +322,18 @@ class ScheduleForm extends React.Component {
               ? <AcquireList
                   options={program.options}
                   acquires={this.state.acquires}
-                  onChange={this.updateAcquires} />
+                  onChange={this.updateAcquires}
+                />
               : <p>Select an acquire program</p>
           }
         </div>
         <div className="form-section">
           <h6>Extract</h6>
-          <ExtractForm destination={this.state.extractDestination} selectDestination={this.selectExtractDestination}
-            fields={this.state.extractFields} updateField={this.updateExtractField} />
+          <ExtractForm
+            destination={this.state.extract.ScheduledExtractDestination}
+            onChange={this.updateExtractField}
+            fields={extractFields}
+          />
         </div>
 
         <div>

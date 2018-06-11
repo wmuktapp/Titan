@@ -4,23 +4,36 @@ class ExtractForm extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      destination: props.destination,
+      fields: props.fields
+    };
+
     this.onDestinationChange = this.onDestinationChange.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
   }
 
   onDestinationChange(e) {
-    this.props.selectDestination(e.target.value);
+
+    const state = this.state;
+    state.destination = e.target.value;
+    this.setState(state);
+
+    this.props.onChange(state)
   }
 
   onFieldChange(e) {
     const target = e.target;
-    this.props.updateField(target.name, target.value);
+
+    // TODO update state.fields
+    // this.props.updateField(target.name, target.value);
   }
 
   render() {
 
     let rows = [];
-    const destinations = [ // TODO get these from props
+    const destinations = [ // TODO get these from props?
       'FTP',
       'Database',
       'Dropbox'
@@ -32,23 +45,23 @@ class ExtractForm extends React.Component {
     });
 
     rows.push(
-      <div key="destination" className="row">
+      <div key="destination">
         <label>Destination</label>
-        <select value={this.props.destination} onChange={this.onDestinationChange}>
+        <select value={this.state.destination} onChange={this.onDestinationChange}>
           <option value=""></option>
           { destinationOptions }
         </select>
       </div>
     );
 
-    if (this.props.destination) {
+    if (this.state.destination) {
 
       // Dynamic fields
-      const dynamicFieldRows = Object.keys(this.props.fields).map((key, index) => {
+      const dynamicFieldRows = Object.keys(this.state.fields).map((key, index) => {
         return (
-          <div key={'df-' + index} className="row">
+          <div key={index}>
             <label>{key}</label>
-            <input type="text" name={key} value={this.props.fields[key]} onChange={this.onFieldChange} />
+            <input type="text" name={key} value={this.state.fields[key]} onChange={this.onFieldChange} />
           </div>
         );
       });
