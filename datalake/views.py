@@ -399,20 +399,11 @@ def get_schedule(id):
 
     for i in range(0, acquire_count):
 
-        acquire = {
+        acquires.append({
             'ScheduledAcquireKey': key(),
             'ScheduledAcquireName': 'Acquire Name %s' % az(),
-            'Options': []
-        }
-
-        option_count = randint(1, 4)
-        for j in range(0, option_count):
-            acquire['Options'].append({
-                'ScheduledAcquireOptionName': 'Option Name %s' % az(),
-                'ScheduledAcquireOptionValue': 'Option Value %s' % az()
-            })
-
-        acquires.append(acquire)
+            'Options': get_scheduled_acquire_options()
+        })
 
     extract = {
         'ScheduledExtractKey': key(),
@@ -459,21 +450,44 @@ def get_acquire_programs():
 
 def get_acquire_program(id):
 
-    acquire_program = {
+    return {
         'AcquireProgramKey': id,
         'AcquireProgramPythonName': 'PythonProgram%s' % az(),
         'AcquireProgramFriendlyName': 'My Acquire Program %s' % az(),
         'AcquireProgramDataSource': 'Data Source %s' % az(),
         'AcquireProgramEnabled': random() > .2,
-        'Options': []
+        'Options': get_acquire_program_options()
     }
 
-    option_count = randint(1, 4)
 
-    for i in range(0, option_count):
-        acquire_program['Options'].append({
-            'AcquireProgramOptionName': 'Option Name %s' % az(),
-            'AcquireProgramOptionRequired': random() > .2
-        })
+# These two methods return static data, so that available options match pre-entered options
 
-    return acquire_program
+def get_acquire_program_options():
+
+    return [{
+            'AcquireProgramOptionName': 'Name A',
+            'AcquireProgramOptionRequired': True
+        }, {
+            'AcquireProgramOptionName': 'Name B',
+            'AcquireProgramOptionRequired': True
+        }, {
+            'AcquireProgramOptionName': 'Name C',
+            'AcquireProgramOptionRequired': False
+        }
+    ]
+
+
+def get_scheduled_acquire_options():
+
+    return [{
+            'ScheduledAcquireOptionName': 'Name A',
+            'ScheduledAcquireOptionValue': 'Value A'
+        }, {
+            'ScheduledAcquireOptionName': 'Name B',
+            'ScheduledAcquireOptionValue': 'Value B'
+        }, {
+            'ScheduledAcquireOptionName': 'Name C',
+            'ScheduledAcquireOptionValue': 'Value C'
+        }
+    ]
+

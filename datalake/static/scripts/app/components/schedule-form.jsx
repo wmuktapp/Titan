@@ -109,6 +109,7 @@ class ScheduleForm extends React.Component {
 
           this.setState({
             execution: execution,
+            acquires: result.data.acquires,
             loading: false
           });
         });
