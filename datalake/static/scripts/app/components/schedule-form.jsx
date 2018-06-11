@@ -37,7 +37,7 @@ class ScheduleForm extends React.Component {
         ScheduledIntervalHH: 0,
         ScheduledIntervalDD: 0,
 
-        AcquireProgramKey: ''
+        AcquireProgramKey: 0
       },
 
       days: {
@@ -60,6 +60,7 @@ class ScheduleForm extends React.Component {
         'Extract field 3': ''
       },
 
+      program: null,
       availablePrograms: [],
 
       loading: false
@@ -92,7 +93,7 @@ class ScheduleForm extends React.Component {
         this.setState({
           availablePrograms: result.data
         });
-      })
+      });
 
     if (this.state.execution.ScheduledExecutionKey) {
 
@@ -113,6 +114,8 @@ class ScheduleForm extends React.Component {
           });
         });
     }
+
+    // TODO set state.program (requires separate component?)
   }
 
   onExecutionChange(event) {
