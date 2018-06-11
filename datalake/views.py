@@ -380,7 +380,7 @@ def get_schedule(id):
         'ScheduledExecutionUser': 'User %s' % az(),
         'ScheduledIntervalKey': key(),
         'ScheduledIntervalMI': randint(0, 59),
-        'ScheduledIntervalHH': randint(0, 59),
+        'ScheduledIntervalHH': randint(0, 23),
         'ScheduledIntervalDD': randint(0, 7),
         'ScheduledMondayEnabled': random() > .3,
         'ScheduledTuesdayEnabled': random() > .3,
@@ -405,7 +405,7 @@ def get_schedule(id):
             'Options': []
         }
 
-        option_count = randint(0, 4)
+        option_count = randint(1, 4)
         for j in range(0, option_count):
             acquire['Options'].append({
                 'ScheduledAcquireOptionName': 'Option Name %s' % az(),
