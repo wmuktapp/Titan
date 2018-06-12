@@ -141,11 +141,10 @@ def acquire_programs_list():
     return jsonify(get_acquire_programs())
 
 
-# Potential new endpoints:
-# /schedules/distinct/<col>
-#   GET: retrieve distinct column values (for filtering)
-# /acquire-programs/<key>
-#   GET: retrieve individual instance
+@app.route('/api/extract-programs')
+def extract_programs_list():
+    return jsonify(get_extract_programs())
+
 
 
 # Access Token
@@ -407,7 +406,7 @@ def get_schedule(id):
 
     extract = {
         'ScheduledExtractKey': key(),
-        'ScheduledExtractDestination': 'Destination %s' % az(),
+        'ScheduledExtractDestination': get_extract_program(),
         'Options': []
     }
 
@@ -491,3 +490,20 @@ def get_scheduled_acquire_options():
         }
     ]
 
+
+def get_extract_programs():
+    return get_available_extract_programs()
+
+
+def get_extract_program():
+    # Return a program at random
+    programs = get_available_extract_programs()
+    return programs[randint(0, len(programs) - 1)]
+
+
+def get_available_extract_programs():
+    return [
+        'Database',
+        'FTP',
+        'Dropbox'
+    ]
