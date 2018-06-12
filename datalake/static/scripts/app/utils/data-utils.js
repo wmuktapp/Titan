@@ -1,6 +1,32 @@
 
 const DataUtils = {
 
+  // Convert data in execution object into simpler weekday data
+  getWeekDays(execution) {
+    return {
+      Monday: execution.ScheduledMondayEnabled,
+      Tuesday: execution.ScheduledTuesdayEnabled,
+      Wednesday: execution.ScheduledWednesdayEnabled,
+      Thursday: execution.ScheduledThursdayEnabled,
+      Friday: execution.ScheduledFridayEnabled,
+      Saturday: execution.ScheduledSaturdayEnabled,
+      Sunday: execution.ScheduledSundayEnabled
+    }
+  },
+
+  // Convert simple weekday data into properties to be merged into an execution object literal
+  getExecutionDays(days) {
+    return {
+      ScheduledMondayEnabled: days.Monday,
+      ScheduledTuesdayEnabled: days.Tuesday,
+      ScheduledWednesdayEnabled: days.Wednesday,
+      ScheduledThursdayEnabled: days.Thursday,
+      ScheduledFridayEnabled: days.Friday,
+      ScheduledSaturdayEnabled: days.Saturday,
+      ScheduledSundayEnabled: days.Sunday
+    }
+  },
+
   mergeData(data1, data2) {
     return this.__mergeObjects(data1, data2);
   },

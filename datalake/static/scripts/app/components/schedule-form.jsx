@@ -6,6 +6,7 @@ import ExtractForm from './extract/extract-form.jsx';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import Ajax from '../utils/ajax';
+import DataUtils from '../utils/data-utils';
 import moment from 'moment';
 
 // Import styles
@@ -37,17 +38,15 @@ class ScheduleForm extends React.Component {
         ScheduledIntervalHH: 0,
         ScheduledIntervalDD: 0,
 
-        AcquireProgramKey: 0
-      },
+        ScheduledMondayEnabled: false,
+        ScheduledTuesdayEnabled: false,
+        ScheduledWednesdayEnabled: false,
+        ScheduledThursdayEnabled: false,
+        ScheduledFridayEnabled: false,
+        ScheduledSaturdayEnabled: false,
+        ScheduledSundayEnabled: false,
 
-      days: {
-        Monday: true,
-        Tuesday: true,
-        Wednesday: true,
-        Thursday: true,
-        Friday: true,
-        Saturday: true,
-        Sunday: true
+        AcquireProgramKey: 0
       },
 
       acquires: [],
@@ -68,7 +67,7 @@ class ScheduleForm extends React.Component {
     this.updateNextScheduled = this.updateNextScheduled.bind(this);
     this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
     this.updateNextLoadDate = this.updateNextLoadDate.bind(this);
-    this.updateDay = this.updateDay.bind(this);
+    this.updateDays = this.updateDays.bind(this);
     this.updateAcquires = this.updateAcquires.bind(this);
     this.updateExtractDestination = this.updateExtractDestination.bind(this);
     this.updateExtractOptions = this.updateExtractOptions.bind(this);
@@ -177,12 +176,13 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  updateDay(day, enabled) {
-    const days = this.state.days;
-    days[day] = enabled;
-    this.setState({
-      days: days
-    });
+  updateDays(days) {
+
+    const execution = this.state.execution,
+      executionDays = DataUtils.getExecutionDays(days);
+    Object.assign(execution, executionDays);
+
+    this.setState({ execution });
   }
 
   updateAcquires(acquires) {
@@ -244,6 +244,9 @@ class ScheduleForm extends React.Component {
     // NOTE: Handles both insert and update
 
     const execution = this.state.execution;
+
+    // Simpler days object
+    const days = DataUtils.getWeekDays(execution);
 
     // Acquire program dropdown options
     const programOptions = this.state.availablePrograms.map(program => {
@@ -316,7 +319,7 @@ class ScheduleForm extends React.Component {
         </div>
         <div className="form-section">
           <h6>Days</h6>
-          <ScheduleDays key="days" days={this.state.days} onChange={this.updateDay} />
+          <ScheduleDays key="days" days={days} onChange={this.updateDays} />
         </div>
         <div className="form-section">
           <h6>Acquires</h6>

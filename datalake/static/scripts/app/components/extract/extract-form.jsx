@@ -44,6 +44,8 @@ class ExtractForm extends React.Component {
 
     // Pass the destination and options to the parent
 
+    const name = destination ? destination.value : '';
+
     // Reset options
     const options = destination
       ? this.state.availableDestinations
@@ -56,11 +58,7 @@ class ExtractForm extends React.Component {
           })
       : [];
 
-    const state = this.state;
-    state.destination = destination ? destination.value : '';
-    state.options = options;
-
-    this.props.onDestinationChange(state.destination, options);
+    this.props.onDestinationChange(name, options);
   }
 
   onOptionChange(e) {
@@ -68,8 +66,7 @@ class ExtractForm extends React.Component {
     const options = this.state.options;
 
     options
-      .find(option => option.ScheduledExtractOptionName === target.name)
-      .ScheduledExtractOptionValue = target.value;
+      .find(option => option.ScheduledExtractOptionName === target.name).ScheduledExtractOptionValue = target.value;
 
     this.props.onOptionsChange(options);
   }
@@ -93,7 +90,7 @@ class ExtractForm extends React.Component {
       const dest = this.state.availableDestinations.find(d => d.ExtractProgramPythonName === this.state.destination);
       const options = dest ? dest.Options : [];
 
-      const _rows = options.map((option, index) => {
+      const optionRows = options.map((option, index) => {
 
         const name = option.ExtractProgramOptionName;
         const value = this.state.options
@@ -108,7 +105,7 @@ class ExtractForm extends React.Component {
 
       });
 
-      rows = rows.concat(_rows);
+      rows = rows.concat(optionRows);
     }
 
     return (
