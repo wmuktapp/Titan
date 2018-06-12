@@ -407,16 +407,8 @@ def get_schedule(id):
     extract = {
         'ScheduledExtractKey': key(),
         'ScheduledExtractDestination': get_extract_program(),
-        'Options': []
+        'Options': get_extract_program_option_values()
     }
-
-    option_count = randint(0, 4)
-
-    for k in range(0, option_count):
-        extract['Options'].append({
-            'ScheduledExtractOptionName': 'Option Name %s' % az(),
-            'ScheduledExtractOptionValue': 'Option Value %s' % az()
-        })
 
     return {
         'data': {
@@ -492,7 +484,21 @@ def get_scheduled_acquire_options():
 
 
 def get_extract_programs():
-    return get_available_extract_programs()
+
+    data = []
+    programs = get_available_extract_programs()
+
+    for program in programs:
+
+        data.append({
+            'ExtractProgramPythonName': 'ProgramName %s' % az(),
+            'ExtractProgramFriendlyName': 'My Program %s' % az(),
+            'Options': get_extract_program_options()
+        })
+
+    return {
+        'data': data
+    }
 
 
 def get_extract_program():
@@ -506,4 +512,34 @@ def get_available_extract_programs():
         'Database',
         'FTP',
         'Dropbox'
+    ]
+
+
+def get_extract_program_options():
+
+    return [{
+            'ExtractProgramOptionName': 'Name A',
+            'ExtractProgramOptionRequired': True
+        }, {
+            'ExtractProgramOptionName': 'Name B',
+            'ExtractProgramOptionRequired': True
+        }, {
+            'ExtractProgramOptionName': 'Name C',
+            'ExtractProgramOptionRequired': False
+        }
+    ]
+
+
+def get_extract_program_option_values():
+
+    return [{
+            'ScheduledExtractOptionName': 'Name A',
+            'ScheduledExtractOptionValue': 'Value %s' % az()
+        }, {
+            'ScheduledExtractOptionName': 'Name B',
+            'ScheduledExtractOptionValue': 'Value %s' % az()
+        }, {
+            'ScheduledExtractOptionName': 'Name C',
+            'ScheduledExtractOptionValue': 'Value %s' % az()
+        }
     ]
