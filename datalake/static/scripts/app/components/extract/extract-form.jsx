@@ -44,7 +44,11 @@ class ExtractForm extends React.Component {
 
     const state = this.state;
     state.destination = destination ? destination.value : '';
+    
+    // Not sure whether this is needed
     this.setState(state);
+
+    // TODO this also requires options to be passed to the parent
 
     this.props.onDestinationChange(state.destination);
   }
@@ -73,36 +77,44 @@ class ExtractForm extends React.Component {
       label: this.state.destination
     };
 
-    rows.push(
-      <div key="destination">
-        <label>Destination</label>
-        <Select
-          value={destinationValue}
-          options={destinationOptions}
-          onChange={this.onDestinationChange}
-          className="titan-react-select"
-        />
-      </div>
-    );
-
     if (this.state.destination) {
 
-      // Dynamic options
-      const dynamicOptionRows = this.state.options.map((option, index) => {
+      // How do we handle the options being reset in the parent component?  Does it need to know
+      // the names of the options for each destination?  Or should we manage that within this
+      // component?
+
+      const dest = this.state.availableDestinations.find(d => d.ExtractProgramPythonName === this.state.destination);
+      const options = dest ? dest.Options : [];
+
+      const _rows = options.map((option, index) => {
+
+        const name = option.ExtractProgramOptionName;
+        const value = this.state.options
+          .find(o => o.ScheduledExtractOptionName === name).ScheduledExtractOptionValue;
+
         return (
           <div key={index}>
-            <label>{option.ScheduledExtractOptionName}</label>
-            <input type="text" name={option.ScheduledExtractOptionName}
-              value={option.ScheduledExtractOptionValue} onChange={this.onOptionChange} />
+            <label>{name}</label>
+            <input type="text" name={name} value={value} onChange={this.onOptionChange} />
           </div>
         );
+
       });
 
-      rows = rows.concat(dynamicOptionRows);
+      rows = rows.concat(_rows);
     }
 
     return (
       <div className="extract-form">
+        <div key="destination">
+          <label>Destination</label>
+          <Select
+            value={destinationValue}
+            options={destinationOptions}
+            onChange={this.onDestinationChange}
+            className="titan-react-select"
+          />
+        </div>
         {rows}
       </div>
     );
