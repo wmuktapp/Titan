@@ -85,7 +85,7 @@ class ExtractForm extends React.Component {
       };
     });
 
-    // TODO return the correct object from destinationObjects
+    // Find the correct object from destinationObjects
     const destinationValue = destinationOptions.find(o => o.value === this.state.destination);
 
     if (this.state.destination) {
