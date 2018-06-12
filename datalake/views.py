@@ -1,6 +1,5 @@
-from datalake import app as datalake_app
 from datetime import datetime, timedelta
-from flask import jsonify, redirect, render_template, request, current_app
+from flask import jsonify, redirect, render_template, request
 from markupsafe import Markup
 from random import random, randint
 from time import sleep
@@ -10,8 +9,13 @@ import datalake
 
 app = datalake.create_app()
 
-
 # Page URLs
+
+@app.after_request
+def after_request(response):
+    response.set_cookie("AppServiceAuthSession", request.cookies.get("AppServiceAuthSession", ""))
+    return response
+
 
 @app.route('/')
 def index():
@@ -19,30 +23,30 @@ def index():
 
 @app.route('/monitoring')
 def monitoring():
-    return render_template('monitoring.html', access_token=get_access_token())
+    return render_template('monitoring.html', adal_config=get_adal_config())
 
 @app.route('/monitoring/executions/<int:execution_key>')
 def monitoring_execution(execution_key):
     # TODO return full set of data for execution?
     # TODO add link to related schedule page, if applicable
     data = Markup({ 'executionKey': execution_key })
-    return render_template('execution.html', access_token=get_access_token(), data=data)
+    return render_template('execution.html', adal_config=get_adal_config(), data=data)
 
 @app.route('/schedules')
 def schedules():
-    return render_template('schedules.html', access_token=get_access_token())
+    return render_template('schedules.html', adal_config=get_adal_config())
 
 @app.route('/schedules/<int:schedule_key>')
 def schedule_details(schedule_key):
 
     # NOTE: 'run now' button, links to the adhoc page pre-filled (if possible)
     data = Markup({ 'scheduleKey': schedule_key })
-    return render_template('schedule.html', access_token=get_access_token(), data=data)
+    return render_template('schedule.html', adal_config=get_adal_config(), data=data)
 
 @app.route('/schedules/add')
 def schedule_add():
     data = Markup({})
-    return render_template('schedule.html', access_token=get_access_token(), data=data)
+    return render_template('schedule.html', adal_config=get_adal_config(), data=data)
 
 @app.route('/adhoc')
 def adhoc():
@@ -55,7 +59,7 @@ def adhoc():
 
     data = Markup(data)
 
-    return render_template('adhoc.html', access_token=get_access_token(), data=data)
+    return render_template('adhoc.html', adal_config=get_adal_config(), data=data)
 
 
 # API URLs
@@ -147,13 +151,27 @@ def extract_programs_list():
 
 
 
-# Access Token
+# Access Token REMOVE THIS
 
 def get_access_token():
-    # Only required in the live environment
-    if current_app.config['DATALAKE_AUTH_REQUIRED']:
-        return datalake_app.get_access_token()
-    return ''
+    return 'Bearer %s' % request.headers.get('X-Ms-Token-Aad-Access-Token', '')
+
+
+# ADAL Config
+
+def get_adal_config():
+
+    tenant_id = app.config['DATALAKE_AD_TENANT_ID']
+    client_id = app.config['DATALAKE_AD_CLIENT_ID']
+
+    return Markup({
+        'tenant': tenant_id,
+        'clientId': client_id,
+        'endpoints': {
+            'api': client_id
+        },
+        'cacheLocation': 'localStorage'
+    })
 
 
 # SAMPLE DATA

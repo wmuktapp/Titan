@@ -13,14 +13,6 @@ def get_security_context():
     return credentials, subscription_id
 
 
-def get_access_token():
-    credentials = azure_active_directory.ServicePrincipalCredentials(flask.current_app.config["TEST_CLIENT_ID"],
-                                                                     flask.current_app.config["TEST_CLIENT_SECRET"],
-                                                                     tenant=flask.current_app.config["TEST_TENANT_ID"])
-    session = credentials.signed_session()
-    return session.headers.get("Authorization")
-
-
 def list_blobs(service, container, prefix):
     marker = None
     while marker != "":
