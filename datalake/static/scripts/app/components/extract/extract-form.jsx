@@ -66,6 +66,8 @@ class ExtractForm extends React.Component {
         label: destination.ExtractProgramFriendlyName
       };
     });
+
+    // TODO return the correct object from destinationObjects
     const destinationValue = {
       value: this.state.destination,
       label: this.state.destination
