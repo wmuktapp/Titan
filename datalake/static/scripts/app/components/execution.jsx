@@ -4,7 +4,7 @@ import ExecutionAcquireDetails from './execution/acquire-details.jsx';
 import ExecutionExtractDetails from './execution/extract-details.jsx';
 import Ajax from '../utils/ajax';
 
-require('./execution.css');
+import './execution.css';
 
 class Execution extends React.Component {
 

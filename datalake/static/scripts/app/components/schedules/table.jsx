@@ -1,6 +1,6 @@
 import React from 'react';
 import ColumnFilter from '../column-filter/filter.jsx'
-import dateUtils from '../../utils/date-utils';
+import ScheduleTableRow from './row.jsx';
 
 class ScheduleTable extends React.Component {
 
@@ -30,30 +30,10 @@ class ScheduleTable extends React.Component {
     );
 
     const body = this.props.schedules.length
-      ? this.props.schedules.map((schedule, index) => {
-
-        const href = '/schedules/' + schedule.id;
-        const nextDate = dateUtils.dateToString(new Date(schedule.nextScheduled));
-        const loadDate = dateUtils.dateToString(new Date(schedule.loadDate));
-
-        return (
-          <tr key={index}>
-            <td>
-              <a href={href}>{schedule.name}</a>
-            </td>
-            <td>{nextDate}</td>
-            <td>{schedule.client}</td>
-            <td>{schedule.dataSet}</td>
-            <td>{loadDate}</td>
-            <td>
-              <input type="checkbox" disabled={true} checked={schedule.enabled} />
-            </td>
-          </tr>
-        );
-      })
+      ? this.props.schedules.map((schedule, index) => <ScheduleTableRow key={index} schedule={schedule} />)
       : <tr>
-        <td className="schedule-loading" colSpan="6">{ this.props.loading ? 'Loading...' : 'No schedules' }</td>
-      </tr>;
+          <td className="schedule-loading" colSpan="6">{ this.props.loading ? 'Loading...' : 'No schedules' }</td>
+        </tr>;
 
     return (
       <table className="schedule-table">

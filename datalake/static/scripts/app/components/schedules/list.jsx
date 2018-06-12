@@ -2,7 +2,7 @@ import React from 'react';
 import ScheduleTable from './table.jsx';
 import Ajax from '../../utils/ajax';
 
-require('./schedule.css');
+import './schedule.css';
 
 class ScheduleList extends React.Component {
 
@@ -52,8 +52,8 @@ class ScheduleList extends React.Component {
   // Get a list of all clients included in the given list of schedules
   getUniqueClients(schedules) {
     return schedules.reduce((clients, schedule) => {
-      if (clients.indexOf(schedule.client) === -1) {
-        clients.push(schedule.client);
+      if (clients.indexOf(schedule.ScheduledExecutionClientName) === -1) {
+        clients.push(schedule.ScheduledExecutionClientName);
       }
       return clients;
     }, []).sort();
@@ -62,8 +62,8 @@ class ScheduleList extends React.Component {
   // Get a list of all datasets included in the given list of schedules
   getUniqueDataSets(schedules) {
     return schedules.reduce((dataSets, schedule) => {
-      if (dataSets.indexOf(schedule.dataSet) === -1) {
-        dataSets.push(schedule.dataSet);
+      if (dataSets.indexOf(schedule.ScheduledExecutionDataSetName) === -1) {
+        dataSets.push(schedule.ScheduledExecutionDataSetName);
       }
       return dataSets;
     }, []).sort();
@@ -78,12 +78,12 @@ class ScheduleList extends React.Component {
 
     // Filter by client
     schedules = schedules.filter((schedule) => {
-      return this.state.selectedClients.indexOf(schedule.client) !== -1; 
+      return this.state.selectedClients.indexOf(schedule.ScheduledExecutionClientName) !== -1; 
     });
 
     // Filter by dataset
     schedules = schedules.filter((schedule) => {
-      return this.state.selectedDataSets.indexOf(schedule.dataSet) !== -1; 
+      return this.state.selectedDataSets.indexOf(schedule.ScheduledExecutionDataSetName) !== -1; 
     });
 
     return (

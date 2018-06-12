@@ -7,7 +7,7 @@ import DataUtils from '../utils/data-utils';
 import dateUtils from '../utils/date-utils';
 import Dialog from '../utils/dialog.jsx';
 
-require('./monitor.css');
+import './monitor.css';
 
 class Monitor extends React.Component {
 

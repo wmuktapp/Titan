@@ -2,7 +2,7 @@ import React from 'react';
 import FilterButton from './filter-button.jsx';
 import FilterMenu from './filter-menu.jsx';
 
-require('./filter.css');
+import './filter.css';
 
 class ColumnFilter extends React.Component {
 

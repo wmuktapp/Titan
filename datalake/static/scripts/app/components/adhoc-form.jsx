@@ -3,18 +3,51 @@ import DatePicker from 'react-datepicker';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import Ajax from '../utils/ajax';
+import DataUtils from '../utils/data-utils';
 import moment from 'moment';
+import Select from 'react-select';
 
-// Datepicker styles
-require('react-datepicker/dist/react-datepicker.css');
+// Import styles
+import 'react-select/dist/react-select.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
 class AdhocForm extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
+
+      execution: {
+        ScheduledExecutionKey: 0, // props?
+        ScheduledExecutionName: '',
+        ScheduledExecutionNextScheduled: null,
+        ScheduledExecutionScheduleEnd: null,
+        ScheduledExecutionClientName: '',
+        ScheduledExecutionDataSourceName: '',
+        ScheduledExecutionDataSetName: '',
+        ScheduledExecutionNextLoadDate: null,
+        ScheduledExecutionEnabled: true,
+        ScheduledExecutionUser: '',
+        ScheduledIntervalKey: null,
+        ScheduledIntervalMI: 0,
+        ScheduledIntervalHH: 0,
+        ScheduledIntervalDD: 0,
+        ScheduledMondayEnabled: false,
+        ScheduledTuesdayEnabled: false,
+        ScheduledWednesdayEnabled: false,
+        ScheduledThursdayEnabled: false,
+        ScheduledFridayEnabled: false,
+        ScheduledSaturdayEnabled: false,
+        ScheduledSundayEnabled: false,
+        AcquireProgramKey: 0
+      },
+      acquires: [],
+      extract: {
+        ScheduledExtractDestination: null,
+        Options: []
+      },
+
       schedule: props.schedule,
-      program: '',
       loadDate: null,
       client: '',
       dataSource: '',
@@ -35,11 +68,9 @@ class AdhocForm extends React.Component {
     this.handleProgramChange = this.handleProgramChange.bind(this);
     this.handleLoadDateChange = this.handleLoadDateChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.addAcquire = this.addAcquire.bind(this);
-    this.removeAcquire = this.removeAcquire.bind(this);
-    this.updateAcquireItem = this.updateAcquireItem.bind(this);
-    this.onSelectExtractDestination = this.onSelectExtractDestination.bind(this);
-    this.onUpdateExtractField = this.onUpdateExtractField.bind(this);
+    this.updateAcquires = this.updateAcquires.bind(this);
+    this.onUpdateExtractDestination = this.onUpdateExtractDestination.bind(this);
+    this.onUpdateExtractOptions = this.onUpdateExtractOptions.bind(this);
   }
 
   componentDidMount() {
@@ -47,23 +78,30 @@ class AdhocForm extends React.Component {
     // Get available acquire programs
     Ajax.fetch('/api/acquire-programs')
       .then(res => res.json())
-      .then((results) => {
+      .then(result => {
         this.setState({
-          availablePrograms: results
+          availablePrograms: result.data
         });
       });
 
     if (this.state.schedule) {
-      
-      // TODO query server, update state
 
       Ajax.fetch('/api/schedules/' + this.state.schedule)
         .then(res => res.json())
-        .then((results) => {
+        .then(result => {
 
-          results.loadDate = moment(new Date(results.loadDate));
+          const execution = result.data.execution;
 
-          this.setState(results);
+          // results.loadDate = moment(new Date(results.data.loadDate));
+          execution.ScheduledExecutionNextScheduled = moment(new Date(execution.ScheduledExecutionNextScheduled));
+          execution.ScheduledExecutionScheduleEnd = moment(new Date(execution.ScheduledExecutionScheduleEnd));
+          execution.ScheduledExecutionNextLoadDate = moment(new Date(execution.ScheduledExecutionNextLoadDate));
+
+          this.setState({
+            execution: execution,
+            acquires: result.data.acquires,
+            extract: result.data.extract
+          });
         });
     }
 
@@ -71,87 +109,49 @@ class AdhocForm extends React.Component {
 
   handleChange(event) {
 
-    const target = event.target,
-      value = target.value,
-      name = target.name;
+    const execution = this.state.execution;
+    execution[event.target.name] = event.target.value;
 
-    this.setState({
-      [name]: value
-    });
+    this.setState({ execution });
   }
 
   // Special case for program
-  handleProgramChange(event) {
+  handleProgramChange(program) {
 
-    const program = Number(event.target.value);
-    const dataSource = program
-      ? this.state.availablePrograms.find((obj) => { return obj.id === program; }).dataSource
-      : '';
+    const execution = this.state.execution;
+    execution.AcquireProgramKey = program ? program.value : 0;
+    execution.ScheduledExecutionDataSourceName = program ? program.dataSource : '';
 
     this.setState({
-      dataSource: dataSource,
-      acquires: [],
-      extractFields: []
+      execution: execution,
+      acquires: []
     });
-    this.handleChange(...arguments);
   }
 
   // Special case for load date
   // TODO only permit dates in the past?
   handleLoadDateChange(date) {
-    this.setState({
-      loadDate: date
-    });
+
+    const execution = this.state.execution;
+    execution.ScheduledExecutionNextLoadDate = date;
+    this.setState({ execution });
   }
 
-  addAcquire() {
-
-    const acquire = {
-      fields: this.state.acquireProperties.reduce((obj, option) => { obj[option] = ''; return obj; }, {})
-    }
-
-    const acquires = this.state.acquires;
-    acquires.push(acquire);
-
-    this.setState({
-      acquires: acquires
-    });
-
+  updateAcquires(acquires) {
+    this.setState({ acquires });
   }
 
-  removeAcquire(index) {
-    let acquires = this.state.acquires;
-    acquires.splice(index, 1);
-    this.setState({
-      acquires: acquires
-    });
+  onUpdateExtractDestination(destination, options) {
+    const extract = this.state.extract;
+    extract.ScheduledExtractDestination = destination;
+    extract.Options = options;
+    this.setState({ extract });
   }
 
-  updateAcquireItem(index, name, value) {
-    let acquires = this.state.acquires;
-    acquires[index].fields[name] = value;
-    this.setState({
-      acquires: acquires
-    });
-  }
-
-  onSelectExtractDestination(destination) {
-    this.setState({
-      extractDestination: destination,
-      extractFields: {
-        'Extract field 1': '',
-        'Extract field 2': '',
-        'Extract field 3': ''
-      }
-    });
-  }
-
-  onUpdateExtractField(name, value) {
-    const extractFields = this.state.extractFields;
-    extractFields[name] = value;
-    this.setState({
-      extractFields: extractFields
-    });
+  onUpdateExtractOptions(options) {
+    const extract = this.state.extract;
+    extract.Options = options;
+    this.setState({ extract });
   }
 
   handleSubmit(event) {
@@ -166,20 +166,23 @@ class AdhocForm extends React.Component {
     })
       .then(() => {
         console.log('execution successful!');
-      })
+      });
 
     event.preventDefault();
   }
 
   render() {
 
-    const programOptions = this.state.availablePrograms.map((program, index) => {
-      return <option key={index} value={program.id}>{program.name}</option>;
-    });
+    const execution = this.state.execution;
+
+    // Acquire program dropdown options
+    const programOptions = DataUtils.getAcquireProgramOptions(this.state.availablePrograms);
+
+    const program = programOptions.find(option => option.value === execution.AcquireProgramKey);
+
+    const extractOptions = this.state.extract.Options;
 
     // TODO calculate whether to show Execute button based on other values
-
-    // TODO calculate extractFields based on other values?
 
     if (this.state.submitted) {
       // TODO update this to contain status of execution (requires result from server)
@@ -190,46 +193,54 @@ class AdhocForm extends React.Component {
       <form onSubmit={this.handleSubmit}>
         <div>
           <label>Program</label>
-          <select name="program" value={this.state.program} onChange={this.handleProgramChange}>
-            <option value=""></option>
-            { programOptions }
-          </select>
+          <Select
+            value={program}
+            onChange={this.handleProgramChange}
+            options={programOptions}
+            className="titan-react-select"
+          />
         </div>
         <div>
           <label>Load date</label>
-          <DatePicker selected={this.state.loadDate} dateFormat="DD/MM/YYYY" onChange={this.handleLoadDateChange} />
+          <DatePicker selected={execution.ScheduledExecutionNextLoadDate} dateFormat="DD/MM/YYYY" onChange={this.handleLoadDateChange} />
         </div>
         <div>
           <label>Client</label>
-          <input type="text" name="client" value={this.state.client} onChange={this.handleChange} />
+          <input type="text" name="ScheduledExecutionClientName" value={execution.ScheduledExecutionClientName} onChange={this.handleChange} />
         </div>
         <div>
           <label>Data source</label>
-          <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.handleChange} disabled={!!this.state.program} />
+          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.handleChange} disabled={!!this.state.program} />
         </div>
         <div>
           <label>Data set</label>
-          <input type="text" name="dataSet" value={this.state.dataSet} onChange={this.handleChange} />
+          <input type="text" name="ScheduledExecutionDataSetName" value={execution.ScheduledExecutionDataSetName} onChange={this.handleChange} />
         </div>
         <div>
           <label>User</label>
-          <input type="text" name="user" value={this.state.user} onChange={this.handleChange} />
+          <input type="text" name="ScheduledExecutionUser" value={execution.ScheduledExecutionUser} onChange={this.handleChange} />
         </div>
         <div className="form-section">
           <h6>Acquires</h6>
           {
-            this.state.program
-            ? <AcquireList acquires={this.state.acquires} onAdd={this.addAcquire}
-                onRemove={this.removeAcquire} onItemChange={this.updateAcquireItem} />
-            : <p>Select an acquire program</p>
+            program
+              ? <AcquireList
+                  options={program.options}
+                  acquires={this.state.acquires}
+                  onChange={this.updateAcquires} />
+              : <p>No acquire program selected</p>
           }
         </div>
         <div className="form-section">
           <h6>Extract</h6>
           {
-            this.state.program
-              ? <ExtractForm destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination}
-                  fields={this.state.extractFields} updateField={this.onUpdateExtractField} />
+            program
+              ? <ExtractForm
+                  destination={this.state.extract.ScheduledExtractDestination}
+                  onDestinationChange={this.onUpdateExtractDestination}
+                  options={extractOptions}
+                  onOptionsChange={this.onUpdateExtractOptions}
+                />
               : <p className="empty-msg">No acquire program selected</p>
           }
         </div>

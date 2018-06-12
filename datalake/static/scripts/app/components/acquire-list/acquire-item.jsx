@@ -21,11 +21,13 @@ class AcquireItem extends React.Component {
 
   render() {
 
-    const rows = Object.keys(this.props.fields).map((key) => {
+    // TODO show when fields are required
+
+    const rows = this.props.acquire.Options.map((option, index) => {
       return (
-        <div key={key} className="acquire-property">
-          <label>{key}</label>
-          <input type="text" name={key} value={this.props.fields[key]} onChange={this.onChange} />
+        <div key={index} className="acquire-property">
+          <label>{option.ScheduledAcquireOptionName}</label>
+          <input type="text" name={option.ScheduledAcquireOptionName} value={option.ScheduledAcquireOptionValue} onChange={this.onChange} />
         </div>
       );
     });
@@ -35,7 +37,9 @@ class AcquireItem extends React.Component {
         <div className="acquire-properties">
           {rows}
         </div>
-        <a onClick={this.remove} className="acquire-item-remove">Remove</a>
+        <a onClick={this.remove} className="acquire-item-remove">
+          <span className="fas fa-times" />
+        </a>
       </div>
     );
   }

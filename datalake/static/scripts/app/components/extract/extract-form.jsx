@@ -1,63 +1,124 @@
 import React from 'react';
+import Select from 'react-select';
+import Ajax from '../../utils/ajax';
 
 class ExtractForm extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      availableDestinations: [],
+      destination: props.destination,
+      options: props.options
+    };
+
     this.onDestinationChange = this.onDestinationChange.bind(this);
-    this.onFieldChange = this.onFieldChange.bind(this);
+    this.onOptionChange = this.onOptionChange.bind(this);
   }
 
-  onDestinationChange(e) {
-    this.props.selectDestination(e.target.value);
+  componentDidMount() {
+    Ajax.fetch('/api/extract-programs')
+      .then(res => res.json())
+      .then(result => {
+        this.setState({
+          availableDestinations: result.data
+        });
+      });
   }
 
-  onFieldChange(e) {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.destination !== this.state.destination) {
+      this.setState({
+        destination: nextProps.destination
+      });
+    }
+    if (nextProps.options !== this.state.options) {
+      this.setState({
+        options: nextProps.options
+      });
+    }
+  }
+
+  onDestinationChange(destination) {
+
+    // Pass the destination and options to the parent
+
+    const name = destination ? destination.label : '';
+
+    // Reset options
+    const options = destination
+      ? this.state.availableDestinations
+          .find(d => d.ExtractProgramFriendlyName === destination.label)
+          .Options.map(option => {
+            return {
+              ScheduledExtractOptionName: option.ExtractProgramOptionName,
+              ScheduledExtractOptionValue: ''
+            };
+          })
+      : [];
+
+    this.props.onDestinationChange(name, options);
+  }
+
+  onOptionChange(e) {
     const target = e.target;
-    this.props.updateField(target.name, target.value);
+    const options = this.state.options;
+
+    options
+      .find(option => option.ScheduledExtractOptionName === target.name).ScheduledExtractOptionValue = target.value;
+
+    this.props.onOptionsChange(options);
   }
 
   render() {
 
     let rows = [];
-    const destinations = [ // TODO get these from props
-      'FTP',
-      'Database',
-      'Dropbox'
-    ];
 
-    // Destination
-    const destinationOptions = destinations.map((source, index) => {
-      return <option key={index} value={source}>{source}</option>;
+    const destinationOptions = this.state.availableDestinations.map(destination => {
+      return {
+        value: destination.ExtractProgramPythonName,
+        label: destination.ExtractProgramFriendlyName
+      };
     });
 
-    rows.push(
-      <div key="destination" className="row">
-        <label>Destination</label>
-        <select value={this.props.destination} onChange={this.onDestinationChange}>
-          <option value=""></option>
-          { destinationOptions }
-        </select>
-      </div>
-    );
+    // Find the correct object from destinationObjects
+    const destinationValue = destinationOptions.find(o => o.label === this.state.destination);
 
-    if (this.props.destination) {
+    if (this.state.destination) {
 
-      // Dynamic fields
-      const dynamicFieldRows = Object.keys(this.props.fields).map((key, index) => {
+      const dest = this.state.availableDestinations.find(d => d.ExtractProgramFriendlyName === this.state.destination);
+      const options = dest ? dest.Options : [];
+
+      const optionRows = options.map((option, index) => {
+
+        const name = option.ExtractProgramOptionName;
+        const value = this.state.options
+          .find(o => o.ScheduledExtractOptionName === name).ScheduledExtractOptionValue;
+
         return (
-          <div key={'df-' + index} className="row">
-            <label>{key}</label>
-            <input type="text" name={key} value={this.props.fields[key]} onChange={this.onFieldChange} />
+          <div key={index}>
+            <label>{name}</label>
+            <input type="text" name={name} value={value} onChange={this.onOptionChange} />
           </div>
         );
+
       });
 
-      rows = rows.concat(dynamicFieldRows);
+      rows = rows.concat(optionRows);
     }
 
     return (
       <div className="extract-form">
+        <div key="destination">
+          <label>Destination</label>
+          <Select
+            value={destinationValue}
+            options={destinationOptions}
+            onChange={this.onDestinationChange}
+            className="titan-react-select"
+          />
+        </div>
         {rows}
       </div>
     );
