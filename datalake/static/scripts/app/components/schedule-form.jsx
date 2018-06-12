@@ -191,9 +191,10 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  updateExtractDestination(destination) {
+  updateExtractDestination(destination, options) {
     const extract = this.state.extract;
     extract.ScheduledExtractDestination = destination;
+    extract.Options = options;
     this.setState({
       extract: extract
     });

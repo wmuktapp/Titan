@@ -42,15 +42,28 @@ class ExtractForm extends React.Component {
 
   onDestinationChange(destination) {
 
+    // Reset options
+    const options = destination
+      ? this.state.availableDestinations
+          .find(d => d.ExtractProgramPythonName === destination.value)
+          .Options.map(option => {
+            return {
+              ScheduledExtractOptionName: option.ExtractProgramOptionName,
+              ScheduledExtractOptionValue: ''
+            };
+          })
+      : [];
+
     const state = this.state;
     state.destination = destination ? destination.value : '';
-    
+    state.options = options;
+
     // Not sure whether this is needed
     this.setState(state);
 
     // TODO this also requires options to be passed to the parent
 
-    this.props.onDestinationChange(state.destination);
+    this.props.onDestinationChange(state.destination, options);
   }
 
   onOptionChange(e) {

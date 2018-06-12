@@ -491,7 +491,7 @@ def get_extract_programs():
     for program in programs:
 
         data.append({
-            'ExtractProgramPythonName': 'ProgramName %s' % az(),
+            'ExtractProgramPythonName': program,
             'ExtractProgramFriendlyName': 'My Program %s' % az(),
             'Options': get_extract_program_options()
         })
@@ -509,9 +509,9 @@ def get_extract_program():
 
 def get_available_extract_programs():
     return [
-        'Database',
-        'FTP',
-        'Dropbox'
+        'program-1',
+        'program-2',
+        'program-3'
     ]
 
 
