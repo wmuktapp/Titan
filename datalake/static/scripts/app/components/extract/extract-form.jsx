@@ -1,4 +1,6 @@
 import React from 'react';
+import Select from 'react-select';
+import Ajax from '../../utils/ajax';
 
 class ExtractForm extends React.Component {
 
@@ -6,12 +8,23 @@ class ExtractForm extends React.Component {
     super(props);
 
     this.state = {
+      availableDestinations: [],
       destination: props.destination,
       options: props.options
     };
 
     this.onDestinationChange = this.onDestinationChange.bind(this);
     this.onOptionChange = this.onOptionChange.bind(this);
+  }
+
+  componentDidMount() {
+    Ajax.fetch('/api/extract-programs')
+      .then(res => res.json())
+      .then(result => {
+        this.setState({
+          availableDestinations: result.data
+        });
+      });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -27,10 +40,10 @@ class ExtractForm extends React.Component {
     }
   }
 
-  onDestinationChange(e) {
+  onDestinationChange(destination) {
 
     const state = this.state;
-    state.destination = e.target.value;
+    state.destination = destination ? destination.value : '';
     this.setState(state);
 
     this.props.onDestinationChange(state.destination);
@@ -46,24 +59,27 @@ class ExtractForm extends React.Component {
   render() {
 
     let rows = [];
-    const destinations = [ // TODO get these from props?
-      'FTP',
-      'Database',
-      'Dropbox'
-    ];
 
-    // Destination
-    const destinationOptions = destinations.map((source, index) => {
-      return <option key={index} value={source}>{source}</option>;
+    const destinationOptions = this.state.availableDestinations.map(destination => {
+      return {
+        value: destination.ExtractProgramPythonName,
+        label: destination.ExtractProgramFriendlyName
+      };
     });
+    const destinationValue = {
+      value: this.state.destination,
+      label: this.state.destination
+    };
 
     rows.push(
       <div key="destination">
         <label>Destination</label>
-        <select value={this.state.destination} onChange={this.onDestinationChange}>
-          <option value=""></option>
-          { destinationOptions }
-        </select>
+        <Select
+          value={destinationValue}
+          options={destinationOptions}
+          onChange={this.onDestinationChange}
+          className="titan-react-select"
+        />
       </div>
     );
 
