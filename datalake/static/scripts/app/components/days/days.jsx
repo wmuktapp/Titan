@@ -1,6 +1,6 @@
 import React from 'react';
 
-require('./days.css');
+import './days.css';
 
 class ScheduleDays extends React.Component {
 

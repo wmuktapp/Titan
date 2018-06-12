@@ -1,6 +1,6 @@
 import React from 'react';
 
-require('./interval-picker.css');
+import './interval-picker.css';
 
 class IntervalPicker extends React.Component {
 

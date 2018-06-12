@@ -2,7 +2,7 @@ import React from 'react';
 import ScheduleTable from './table.jsx';
 import Ajax from '../../utils/ajax';
 
-require('./schedule.css');
+import './schedule.css';
 
 class ScheduleList extends React.Component {
 

@@ -3,7 +3,7 @@ import MonitoringGridExecutionAcquire from './execution-acquire.jsx';
 import MonitoringGridExecutionExtract from './execution-extract.jsx';
 import dateUtils from '../../utils/date-utils';
 
-require('./execution.css');
+import './execution.css';
 
 class MonitoringGridExecution extends React.Component {
 

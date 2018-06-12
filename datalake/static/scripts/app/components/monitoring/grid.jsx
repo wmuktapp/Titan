@@ -3,7 +3,7 @@ import MonitoringGridHeader from './header.jsx';
 import MonitoringGridClient from './client.jsx';
 import DateUtils from '../../utils/date-utils';
 
-require('./grid.css');
+import './grid.css';
 
 class MonitoringGrid extends React.Component {
 

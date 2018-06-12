@@ -1,7 +1,7 @@
 import React from 'react';
 import dateUtils from '../../utils/date-utils';
 
-require('./header.css');
+import './header.css';
 
 class MonitoringGridHeader extends React.Component {
 
