@@ -180,10 +180,10 @@ def get_execution_data(start_date, end_date):
     ]
 
     data_sets = [
-        'Data set 1%i' % randint(0, 9),
-        'Data set 2%i' % randint(0, 9),
-        'Data set 3%i' % randint(0, 9),
-        'Data set 4%i' % randint(0, 9)
+        'Data set %i' % randint(1, 10),
+        'Data set %i' % randint(11, 20),
+        'Data set %i' % randint(21, 30),
+        'Data set %i' % randint(31, 40)
     ]
 
     for client in clients:
