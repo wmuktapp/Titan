@@ -318,7 +318,7 @@ class ScheduleForm extends React.Component {
         <div className="form-section">
           <h6>Acquires</h6>
           {
-            this.state.execution.AcquireProgramKey
+            program
               ? <AcquireList
                   options={program.options}
                   acquires={this.state.acquires}
