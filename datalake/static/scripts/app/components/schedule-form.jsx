@@ -34,7 +34,7 @@ class ScheduleForm extends React.Component {
         ScheduledExecutionEnabled: true,
 
         ScheduledIntervalKey: null,
-        ScheduledIntervalMI: 0,""
+        ScheduledIntervalMI: 0,
         ScheduledIntervalHH: 0,
         ScheduledIntervalDD: 0,
 
@@ -323,17 +323,21 @@ class ScheduleForm extends React.Component {
                   acquires={this.state.acquires}
                   onChange={this.updateAcquires}
                 />
-              : <p>Select an acquire program</p>
+              : <p>No acquire program selected</p>
           }
         </div>
         <div className="form-section">
           <h6>Extract</h6>
-          <ExtractForm
-            destination={this.state.extract.ScheduledExtractDestination}
-            onDestinationChange={this.updateExtractDestination}
-            options={extractOptions}
-            onOptionsChange={this.updateExtractOptions}
-          />
+          {
+            program
+              ? <ExtractForm
+                  destination={this.state.extract.ScheduledExtractDestination}
+                  onDestinationChange={this.updateExtractDestination}
+                  options={extractOptions}
+                  onOptionsChange={this.updateExtractOptions}
+                />
+              : <p className="empty-msg">No acquire program selected</p>
+          }
         </div>
 
         <div>
