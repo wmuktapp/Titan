@@ -16,7 +16,6 @@ class AdhocForm extends React.Component {
     super(props);
     this.state = {
       schedule: props.schedule,
-      program: '',
       loadDate: null,
       client: '',
       dataSource: '',
@@ -54,7 +53,7 @@ class AdhocForm extends React.Component {
       });
 
     if (this.state.schedule) {
-      
+
       Ajax.fetch('/api/schedules/' + this.state.schedule)
         .then(res => res.json())
         .then((results) => {
@@ -200,7 +199,7 @@ class AdhocForm extends React.Component {
         <div className="form-section">
           <h6>Acquires</h6>
           {
-            this.state.program
+            program
             ? <AcquireList
                 options={program.options}
                 acquires={this.state.acquires}
@@ -211,7 +210,7 @@ class AdhocForm extends React.Component {
         <div className="form-section">
           <h6>Extract</h6>
           {
-            this.state.program
+            program
               ? <ExtractForm destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination}
                   fields={this.state.extractFields} updateField={this.onUpdateExtractField} />
               : <p className="empty-msg">No acquire program selected</p>
