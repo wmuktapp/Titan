@@ -90,11 +90,16 @@ class AdhocForm extends React.Component {
         .then(res => res.json())
         .then(result => {
 
+          const execution = result.data.execution;
+
           // results.loadDate = moment(new Date(results.data.loadDate));
+          execution.ScheduledExecutionNextScheduled = moment(new Date(execution.ScheduledExecutionNextScheduled));
+          execution.ScheduledExecutionScheduleEnd = moment(new Date(execution.ScheduledExecutionScheduleEnd));
+          execution.ScheduledExecutionNextLoadDate = moment(new Date(execution.ScheduledExecutionNextLoadDate));
 
           this.setState({
-            execution: result.data.execution,
-            acquires: result.data.execution,
+            execution: execution,
+            acquires: result.data.acquires,
             extract: result.data.extract
           });
         });
@@ -104,13 +109,10 @@ class AdhocForm extends React.Component {
 
   handleChange(event) {
 
-    const target = event.target,
-      value = target.value,
-      name = target.name;
+    const execution = this.state.execution;
+    execution[event.target.name] = event.target.value;
 
-    this.setState({
-      [name]: value
-    });
+    this.setState({ execution });
   }
 
   // Special case for program
@@ -129,32 +131,27 @@ class AdhocForm extends React.Component {
   // Special case for load date
   // TODO only permit dates in the past?
   handleLoadDateChange(date) {
-    this.setState({
-      loadDate: date
-    });
+
+    const execution = this.state.execution;
+    execution.ScheduledExecutionNextLoadDate = date;
+    this.setState({ execution });
   }
 
   updateAcquires(acquires) {
-    this.setState({
-      acquires: acquires
-    });
+    this.setState({ acquires });
   }
 
   onUpdateExtractDestination(destination, options) {
     const extract = this.state.extract;
     extract.ScheduledExtractDestination = destination;
     extract.Options = options;
-    this.setState({
-      extract: extract
-    });
+    this.setState({ extract });
   }
 
   onUpdateExtractOptions(options) {
     const extract = this.state.extract;
     extract.Options = options;
-    this.setState({
-      extract: extract
-    });
+    this.setState({ extract });
   }
 
   handleSubmit(event) {
@@ -187,8 +184,6 @@ class AdhocForm extends React.Component {
 
     // TODO calculate whether to show Execute button based on other values
 
-    // TODO calculate extractFields based on other values?
-
     if (this.state.submitted) {
       // TODO update this to contain status of execution (requires result from server)
       return <p>Adhoc execution triggered</p>;
@@ -207,23 +202,23 @@ class AdhocForm extends React.Component {
         </div>
         <div>
           <label>Load date</label>
-          <DatePicker selected={this.state.loadDate} dateFormat="DD/MM/YYYY" onChange={this.handleLoadDateChange} />
+          <DatePicker selected={execution.ScheduledExecutionNextLoadDate} dateFormat="DD/MM/YYYY" onChange={this.handleLoadDateChange} />
         </div>
         <div>
           <label>Client</label>
-          <input type="text" name="client" value={this.state.client} onChange={this.handleChange} />
+          <input type="text" name="ScheduledExecutionClientName" value={execution.ScheduledExecutionClientName} onChange={this.handleChange} />
         </div>
         <div>
           <label>Data source</label>
-          <input type="text" name="dataSource" value={this.state.dataSource} onChange={this.handleChange} disabled={!!this.state.program} />
+          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.handleChange} disabled={!!this.state.program} />
         </div>
         <div>
           <label>Data set</label>
-          <input type="text" name="dataSet" value={this.state.dataSet} onChange={this.handleChange} />
+          <input type="text" name="ScheduledExecutionDataSetName" value={execution.ScheduledExecutionDataSetName} onChange={this.handleChange} />
         </div>
         <div>
           <label>User</label>
-          <input type="text" name="user" value={this.state.user} onChange={this.handleChange} />
+          <input type="text" name="ScheduledExecutionUser" value={execution.ScheduledExecutionUser} onChange={this.handleChange} />
         </div>
         <div className="form-section">
           <h6>Acquires</h6>
