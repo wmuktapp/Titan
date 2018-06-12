@@ -70,8 +70,8 @@ class ScheduleForm extends React.Component {
     this.updateNextLoadDate = this.updateNextLoadDate.bind(this);
     this.updateDay = this.updateDay.bind(this);
     this.updateAcquires = this.updateAcquires.bind(this);
-    this.selectExtractDestination = this.selectExtractDestination.bind(this);
-    this.updateExtractField = this.updateExtractField.bind(this);
+    this.updateExtractDestination = this.updateExtractDestination.bind(this);
+    this.updateExtractOptions = this.updateExtractOptions.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.executeNow = this.executeNow.bind(this);
   }
@@ -107,7 +107,7 @@ class ScheduleForm extends React.Component {
           this.setState({
             execution: execution,
             acquires: result.data.acquires,
-            extracts: result.data.extracts,
+            extract: result.data.extract,
             loading: false
           });
         });
@@ -191,17 +191,19 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  selectExtractDestination(destination) {
+  updateExtractDestination(destination) {
+    const extract = this.state.extract;
+    extract.ScheduledExtractDestination = destination;
     this.setState({
-      extractDestination: destination
+      extract: extract
     });
   }
 
-  updateExtractField(name, value) {
-    const extractFields = this.state.extractFields;
-    extractFields[name] = value;
+  updateExtractOptions(options) {
+    const extract = this.state.extract;
+    extract.Options = options;
     this.setState({
-      extractFields: extractFields
+      extract: extract
     });
   }
 
@@ -254,7 +256,7 @@ class ScheduleForm extends React.Component {
 
     const program = programOptions.find(option => option.value === execution.AcquireProgramKey);
 
-    const extractFields = this.state.extract.Options;
+    const extractOptions = this.state.extract.Options;
 
     return (
       <form className="schedule-form" onSubmit={this.onSubmit}>
@@ -331,8 +333,9 @@ class ScheduleForm extends React.Component {
           <h6>Extract</h6>
           <ExtractForm
             destination={this.state.extract.ScheduledExtractDestination}
-            onChange={this.updateExtractField}
-            fields={extractFields}
+            onDestinationChange={this.updateExtractDestination}
+            options={extractOptions}
+            onOptionsChange={this.updateExtractOptions}
           />
         </div>
 

@@ -7,11 +7,24 @@ class ExtractForm extends React.Component {
 
     this.state = {
       destination: props.destination,
-      fields: props.fields
+      options: props.options
     };
 
     this.onDestinationChange = this.onDestinationChange.bind(this);
-    this.onFieldChange = this.onFieldChange.bind(this);
+    this.onOptionChange = this.onOptionChange.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.destination !== this.state.destination) {
+      this.setState({
+        destination: nextProps.destination
+      });
+    }
+    if (nextProps.options !== this.state.options) {
+      this.setState({
+        options: nextProps.options
+      });
+    }
   }
 
   onDestinationChange(e) {
@@ -20,10 +33,10 @@ class ExtractForm extends React.Component {
     state.destination = e.target.value;
     this.setState(state);
 
-    this.props.onChange(state)
+    this.props.onDestinationChange(state.destination);
   }
 
-  onFieldChange(e) {
+  onOptionChange(e) {
     const target = e.target;
 
     // TODO update state.fields
@@ -56,17 +69,18 @@ class ExtractForm extends React.Component {
 
     if (this.state.destination) {
 
-      // Dynamic fields
-      const dynamicFieldRows = Object.keys(this.state.fields).map((key, index) => {
+      // Dynamic options
+      const dynamicOptionRows = this.state.options.map((option, index) => {
         return (
           <div key={index}>
-            <label>{key}</label>
-            <input type="text" name={key} value={this.state.fields[key]} onChange={this.onFieldChange} />
+            <label>{option.ScheduledExtractOptionName}</label>
+            <input type="text" name={option.ScheduledExtractOptionName}
+              value={option.ScheduledExtractOptionValue} onChange={this.onOptionChange} />
           </div>
         );
       });
 
-      rows = rows.concat(dynamicFieldRows);
+      rows = rows.concat(dynamicOptionRows);
     }
 
     return (
