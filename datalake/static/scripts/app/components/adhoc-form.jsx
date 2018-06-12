@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import Ajax from '../utils/ajax';
+import DataUtils from '../utils/data-utils';
 import moment from 'moment';
 import Select from 'react-select';
 
@@ -15,6 +16,37 @@ class AdhocForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+
+      execution: {
+        ScheduledExecutionKey: 0, // props?
+        ScheduledExecutionName: '',
+        ScheduledExecutionNextScheduled: null,
+        ScheduledExecutionScheduleEnd: null,
+        ScheduledExecutionClientName: '',
+        ScheduledExecutionDataSourceName: '',
+        ScheduledExecutionDataSetName: '',
+        ScheduledExecutionNextLoadDate: null,
+        ScheduledExecutionEnabled: true,
+        ScheduledExecutionUser: '',
+        ScheduledIntervalKey: null,
+        ScheduledIntervalMI: 0,
+        ScheduledIntervalHH: 0,
+        ScheduledIntervalDD: 0,
+        ScheduledMondayEnabled: false,
+        ScheduledTuesdayEnabled: false,
+        ScheduledWednesdayEnabled: false,
+        ScheduledThursdayEnabled: false,
+        ScheduledFridayEnabled: false,
+        ScheduledSaturdayEnabled: false,
+        ScheduledSundayEnabled: false,
+        AcquireProgramKey: 0
+      },
+      acquires: [],
+      extract: {
+        ScheduledExtractDestination: null,
+        Options: []
+      },
+
       schedule: props.schedule,
       loadDate: null,
       client: '',
@@ -37,8 +69,8 @@ class AdhocForm extends React.Component {
     this.handleLoadDateChange = this.handleLoadDateChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateAcquires = this.updateAcquires.bind(this);
-    this.onSelectExtractDestination = this.onSelectExtractDestination.bind(this);
-    this.onUpdateExtractField = this.onUpdateExtractField.bind(this);
+    this.onUpdateExtractDestination = this.onUpdateExtractDestination.bind(this);
+    this.onUpdateExtractOptions = this.onUpdateExtractOptions.bind(this);
   }
 
   componentDidMount() {
@@ -46,9 +78,9 @@ class AdhocForm extends React.Component {
     // Get available acquire programs
     Ajax.fetch('/api/acquire-programs')
       .then(res => res.json())
-      .then(results => {
+      .then(result => {
         this.setState({
-          availablePrograms: results.data
+          availablePrograms: result.data
         });
       });
 
@@ -56,11 +88,15 @@ class AdhocForm extends React.Component {
 
       Ajax.fetch('/api/schedules/' + this.state.schedule)
         .then(res => res.json())
-        .then((results) => {
+        .then(result => {
 
-          results.loadDate = moment(new Date(results.loadDate));
+          // results.loadDate = moment(new Date(results.data.loadDate));
 
-          this.setState(results);
+          this.setState({
+            execution: result.data.execution,
+            acquires: result.data.execution,
+            extract: result.data.extract
+          });
         });
     }
 
@@ -80,15 +116,13 @@ class AdhocForm extends React.Component {
   // Special case for program
   handleProgramChange(program) {
 
-    // TODO deal with updated field names
-
-    const dataSource = program ? program.dataSource : '';
+    const execution = this.state.execution;
+    execution.AcquireProgramKey = program ? program.value : 0;
+    execution.ScheduledExecutionDataSourceName = program ? program.dataSource : '';
 
     this.setState({
-      program: program,
-      dataSource: dataSource,
-      acquires: [],
-      extractFields: []
+      execution: execution,
+      acquires: []
     });
   }
 
@@ -106,22 +140,20 @@ class AdhocForm extends React.Component {
     });
   }
 
-  onSelectExtractDestination(destination) {
+  onUpdateExtractDestination(destination, options) {
+    const extract = this.state.extract;
+    extract.ScheduledExtractDestination = destination;
+    extract.Options = options;
     this.setState({
-      extractDestination: destination,
-      extractFields: {
-        'Extract field 1': '',
-        'Extract field 2': '',
-        'Extract field 3': ''
-      }
+      extract: extract
     });
   }
 
-  onUpdateExtractField(name, value) {
-    const extractFields = this.state.extractFields;
-    extractFields[name] = value;
+  onUpdateExtractOptions(options) {
+    const extract = this.state.extract;
+    extract.Options = options;
     this.setState({
-      extractFields: extractFields
+      extract: extract
     });
   }
 
@@ -144,17 +176,14 @@ class AdhocForm extends React.Component {
 
   render() {
 
+    const execution = this.state.execution;
+
     // Acquire program dropdown options
-    const programOptions = this.state.availablePrograms.map(program => {
-      return {
-        value: program.AcquireProgramKey,
-        label: program.AcquireProgramFriendlyName,
-        dataSource: program.AcquireProgramDataSource,
-        options: program.Options
-      };
-    });
+    const programOptions = DataUtils.getAcquireProgramOptions(this.state.availablePrograms);
 
     const program = programOptions.find(option => option.value === execution.AcquireProgramKey);
+
+    const extractOptions = this.state.extract.Options;
 
     // TODO calculate whether to show Execute button based on other values
 
@@ -211,8 +240,12 @@ class AdhocForm extends React.Component {
           <h6>Extract</h6>
           {
             program
-              ? <ExtractForm destination={this.state.extractDestination} selectDestination={this.onSelectExtractDestination}
-                  fields={this.state.extractFields} updateField={this.onUpdateExtractField} />
+              ? <ExtractForm
+                  destination={this.state.extract.ScheduledExtractDestination}
+                  onDestinationChange={this.onUpdateExtractDestination}
+                  options={extractOptions}
+                  onOptionsChange={this.onUpdateExtractOptions}
+                />
               : <p className="empty-msg">No acquire program selected</p>
           }
         </div>

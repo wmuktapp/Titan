@@ -27,6 +27,17 @@ const DataUtils = {
     }
   },
 
+  getAcquireProgramOptions(programs) {
+    return programs.map(program => {
+      return {
+        value: program.AcquireProgramKey,
+        label: program.AcquireProgramFriendlyName,
+        dataSource: program.AcquireProgramDataSource,
+        options: program.Options
+      };
+    });
+  },
+
   mergeData(data1, data2) {
     return this.__mergeObjects(data1, data2);
   },

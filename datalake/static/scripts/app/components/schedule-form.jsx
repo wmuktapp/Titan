@@ -34,7 +34,7 @@ class ScheduleForm extends React.Component {
         ScheduledExecutionEnabled: true,
 
         ScheduledIntervalKey: null,
-        ScheduledIntervalMI: 0,
+        ScheduledIntervalMI: 0,""
         ScheduledIntervalHH: 0,
         ScheduledIntervalDD: 0,
 
@@ -249,14 +249,7 @@ class ScheduleForm extends React.Component {
     const days = DataUtils.getWeekDays(execution);
 
     // Acquire program dropdown options
-    const programOptions = this.state.availablePrograms.map(program => {
-      return {
-        value: program.AcquireProgramKey,
-        label: program.AcquireProgramFriendlyName,
-        dataSource: program.AcquireProgramDataSource,
-        options: program.Options
-      };
-    });
+    const programOptions = DataUtils.getAcquireProgramOptions(this.state.availablePrograms);
 
     const program = programOptions.find(option => option.value === execution.AcquireProgramKey);
 
