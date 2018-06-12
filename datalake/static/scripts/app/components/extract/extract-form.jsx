@@ -90,10 +90,6 @@ class ExtractForm extends React.Component {
 
     if (this.state.destination) {
 
-      // How do we handle the options being reset in the parent component?  Does it need to know
-      // the names of the options for each destination?  Or should we manage that within this
-      // component?
-
       const dest = this.state.availableDestinations.find(d => d.ExtractProgramPythonName === this.state.destination);
       const options = dest ? dest.Options : [];
 
