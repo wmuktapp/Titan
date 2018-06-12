@@ -44,12 +44,12 @@ class ExtractForm extends React.Component {
 
     // Pass the destination and options to the parent
 
-    const name = destination ? destination.value : '';
+    const name = destination ? destination.label : '';
 
     // Reset options
     const options = destination
       ? this.state.availableDestinations
-          .find(d => d.ExtractProgramPythonName === destination.value)
+          .find(d => d.ExtractProgramFriendlyName === destination.label)
           .Options.map(option => {
             return {
               ScheduledExtractOptionName: option.ExtractProgramOptionName,
@@ -83,11 +83,11 @@ class ExtractForm extends React.Component {
     });
 
     // Find the correct object from destinationObjects
-    const destinationValue = destinationOptions.find(o => o.value === this.state.destination);
+    const destinationValue = destinationOptions.find(o => o.label === this.state.destination);
 
     if (this.state.destination) {
 
-      const dest = this.state.availableDestinations.find(d => d.ExtractProgramPythonName === this.state.destination);
+      const dest = this.state.availableDestinations.find(d => d.ExtractProgramFriendlyName === this.state.destination);
       const options = dest ? dest.Options : [];
 
       const optionRows = options.map((option, index) => {
