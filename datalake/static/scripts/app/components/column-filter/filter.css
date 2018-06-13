@@ -11,6 +11,10 @@
     color: #aaa;
 }
 
+.filter-icon-sub {
+    font-size: 65%;
+}
+
 .filter-menu {
     position: absolute;
     z-index: 1000;

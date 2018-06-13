@@ -76,9 +76,12 @@ class ColumnFilter extends React.Component {
   }
 
   render() {
+
+    const filtered = !!this.state.values.find(value => !value.selected);
+
     return (
       <span className="column-filter">
-        <FilterButton toggle={this.toggle} />
+        <FilterButton toggle={this.toggle} filtered={filtered} />
         <FilterMenu open={this.state.open} values={this.state.values} onSelect={this.select}
           onSelectAll={this.selectAll} onDeselectAll={this.deselectAll} />
         <div className={'filter-cover' + (this.state.open && ' filter-cover-open')} onClick={this.close} />
