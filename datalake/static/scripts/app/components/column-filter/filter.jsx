@@ -10,7 +10,7 @@ class ColumnFilter extends React.Component {
     super(props);
     this.state = {
       open: false,
-      values: this.props.values.map((value) => {
+      values: this.props.values.map(value => {
         return { name: value, selected: true }
       })
     };
@@ -35,7 +35,7 @@ class ColumnFilter extends React.Component {
 
   select(name, selected) {
     const values = this.state.values;
-    const value = values.find((value) => value.name === name);
+    const value = values.find(value => value.name === name);
     value.selected = selected;
     this.setState({
       values: values
@@ -45,7 +45,7 @@ class ColumnFilter extends React.Component {
   }
 
   selectAll() {
-    const values = this.state.values.map((value) => {
+    const values = this.state.values.map(value => {
       value.selected = true;
       return value;
     });
@@ -57,7 +57,7 @@ class ColumnFilter extends React.Component {
   }
 
   deselectAll() {
-    const values = this.state.values.map((value) => {
+    const values = this.state.values.map(value => {
       value.selected = false;
       return value;
     });
