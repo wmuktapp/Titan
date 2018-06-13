@@ -1,5 +1,6 @@
 import React from 'react';
-import {render} from 'react-dom';
+import { render } from 'react-dom';
+import { wrapWithAdal } from './utils/adal-config';
 import ScheduleList from './components/schedules/list.jsx';
 import ScrollToTop from './utils/scroll-to-top.jsx';
 
@@ -9,6 +10,7 @@ class SchedulesApp extends React.Component {
   }
 }
 
-render(<SchedulesApp />, document.getElementById('schedules'));
-
-render(<ScrollToTop />, document.getElementById('back-to-top-wrap'));
+wrapWithAdal(() => {
+  render(<SchedulesApp />, document.getElementById('schedules'));
+  render(<ScrollToTop />, document.getElementById('back-to-top-wrap'));
+})

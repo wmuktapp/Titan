@@ -1,5 +1,6 @@
 import React from 'react';
-import {render} from 'react-dom';
+import { render } from 'react-dom';
+import { wrapWithAdal } from './utils/adal-config';
 import Execution from './components/execution.jsx';
 
 class ExecutionApp extends React.Component {
@@ -9,4 +10,6 @@ class ExecutionApp extends React.Component {
   }
 }
 
-render(<ExecutionApp />, document.getElementById('execution'));
+wrapWithAdal(() => {
+  render(<ExecutionApp />, document.getElementById('execution'));
+});
