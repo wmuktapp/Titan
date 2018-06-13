@@ -8,7 +8,13 @@ class ScheduleTable extends React.Component {
 
     const head = (
       <tr>
-        <th>Schedule</th>
+        <th>
+          Schedule
+          {
+            !!this.props.executions.length &&
+              <ColumnFilter values={this.props.executions} onChange={this.props.filterExecutions} />
+          }
+        </th>
         <th>Next scheduled date</th>
         <th>
           Client
