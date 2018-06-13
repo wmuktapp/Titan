@@ -13,12 +13,17 @@ class ScheduleList extends React.Component {
       loading: true,
       selectedExecutions: [],
       selectedClients: [],
-      selectedDataSets: []
+      selectedDataSets: [],
+      selectedEnabled: {
+        selectedTrue: true,
+        selectedFalse: true
+      }
     };
 
     this.onExecutionFilterChange = this.onExecutionFilterChange.bind(this);
     this.onClientFilterChange = this.onClientFilterChange.bind(this);
     this.onDataSetFilterChange = this.onDataSetFilterChange.bind(this);
+    this.onEnabledFilterChange = this.onEnabledFilterChange.bind(this);
   }
 
   componentDidMount() {
@@ -55,6 +60,12 @@ class ScheduleList extends React.Component {
   onDataSetFilterChange(dataSets) {
     this.setState({
       selectedDataSets: dataSets
+    });
+  }
+
+  onEnabledFilterChange(values) {
+    this.setState({
+      selectedEnabled: values
     });
   }
 
@@ -112,12 +123,20 @@ class ScheduleList extends React.Component {
       return this.state.selectedDataSets.indexOf(schedule.ScheduledExecutionDataSetName) !== -1; 
     });
 
+    if (!this.state.selectedEnabled.selectedTrue) {
+      schedules = schedules.filter(schedule => !schedule.ScheduledExecutionEnabled);
+    }
+    if (!this.state.selectedEnabled.selectedFalse) {
+      schedules = schedules.filter(schedule => schedule.ScheduledExecutionEnabled);
+    }
+
     return (
       <div className="schedule-list">
         <ScheduleTable schedules={schedules} loading={this.state.loading}
           executions={executions} filterExecutions={this.onExecutionFilterChange}
           clients={clients} filterClients={this.onClientFilterChange}
           dataSets={dataSets} filterDataSets={this.onDataSetFilterChange}
+          filterEnabled={this.onEnabledFilterChange}
         />
       </div>
     );

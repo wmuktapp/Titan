@@ -1,5 +1,6 @@
 import React from 'react';
 import ColumnListFilter from '../column-filter/list-filter.jsx'
+import ColumnFlagFilter from '../column-filter/flag-filter.jsx'
 import ScheduleTableRow from './row.jsx';
 
 class ScheduleTable extends React.Component {
@@ -31,7 +32,10 @@ class ScheduleTable extends React.Component {
           }
         </th>
         <th>Load date</th>
-        <th>Enabled?</th>
+        <th>
+          Enabled?
+          <ColumnFlagFilter trueLabel="Enabled" falseLabel="Disabled" onChange={this.props.filterEnabled} />
+        </th>
       </tr>
     );
 
