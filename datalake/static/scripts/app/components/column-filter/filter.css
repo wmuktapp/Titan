@@ -88,6 +88,12 @@
     display: block;
 }
 
+/* Flag-specific problems */
+
+.filter-menu-flag ::-webkit-scrollbar {
+    width: 0;
+}
+
 /* Date-specific properties */
 
 .filter-menu-date {
@@ -96,4 +102,8 @@
 
 .react-datepicker.filter-menu-datepicker {
     border: none;
+}
+
+.filter-menu-date ::-webkit-scrollbar {
+    width: 0;
 }

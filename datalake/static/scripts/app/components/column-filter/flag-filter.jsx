@@ -46,7 +46,7 @@ class ColumnFlagFilter extends React.Component {
     const filtered = !(this.state.selectedTrue && this.state.selectedFalse);
 
     return (
-      <ColumnFilter filtered={filtered}>
+      <ColumnFilter filtered={filtered} menuClassName="filter-menu-flag">
         <div className={'filter-menu-row' + (this.state.selectedTrue ? ' filter-menu-row-selected' : '')}>
           <label>
             <input type="checkbox" checked={this.state.selectedTrue} onChange={this.toggleTrue} />
