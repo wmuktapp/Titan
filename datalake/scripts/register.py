@@ -30,12 +30,18 @@ def main(acquire_program_key, python_name, friendly_name, data_source_name, auth
         "AcquireProgramDataSourceName": data_source_name,
         "AcquireProgramAuthor": author,
         "AcquireProgramEnabled": enabled,
-        "Options":
-            [{
-                "AcquireProgramOptionName": max(option.opts, key=len),
-                "AcquireProgramOptionRequired": option.required
-            } for option in command.params]
+        "Options": []
     }
+    options = acquire_program["Options"]
+    for option in command.params:
+        name = max(option.opts, key=len)
+        # We don't want to store load date as this variable won't be set by the user configuration of the acquire step
+        if name == "--load-date":
+            continue
+        options.append({
+            "AcquireProgramOptionName": name,
+            "AcquireProgramOptionRequired": option.required
+        })
     with flask_app.flask_app_context():
         if acquire_program_key is None:
             flask_app.logger.info("Register new acquire program...")
