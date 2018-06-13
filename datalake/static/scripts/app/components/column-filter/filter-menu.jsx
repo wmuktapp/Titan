@@ -28,7 +28,7 @@ class FilterMenu extends React.Component {
 
       const id = 'filter-value-' + index; // TODO more robust unique ID?
 
-      return <div key={index} className="filter-menu-row">
+      return <div key={index} className={ 'filter-menu-row' + (value.selected ? ' filter-menu-row-selected' : '') }>
         <input id={id} type="checkbox" name={value.name} checked={value.selected} onChange={this.select} />
         <label htmlFor={id}>{value.name}</label>
       </div>;
@@ -47,7 +47,9 @@ class FilterMenu extends React.Component {
               Deselect all
             </a>
           </div>
-          {options}
+          <div className="filter-menu-options">
+            {options}
+          </div>
         </div>
       );
     }

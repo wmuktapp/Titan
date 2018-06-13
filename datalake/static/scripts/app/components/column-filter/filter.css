@@ -39,14 +39,19 @@
     margin-right: .3em;
 }
 
+.filter-menu-options {
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
 .filter-menu-row {
     position: relative;
 }
 
 .filter-menu-row input[type=checkbox] {
     position: absolute;
-    left: 1em;
-    top: 1em;
+    left: .7em;
+    top: .65em;
 }
 
 .filter-menu-row label {
@@ -54,12 +59,18 @@
     box-sizing: border-box;
     width: 100%;
     margin: 0;
-    padding: 1em 1em 1em 3em;
+    padding: .6em .6em .6em 2.6em;
     cursor: pointer;
+    font-weight: normal;
+    color: #888;
 }
 
 .filter-menu-row label:hover {
     background-color: rgba(91, 160, 181, .1);
+}
+
+.filter-menu-row.filter-menu-row-selected label {
+    color: inherit;
 }
 
 .filter-cover {
