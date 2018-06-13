@@ -87,3 +87,13 @@
 .filter-cover-open {
     display: block;
 }
+
+/* Date-specific properties */
+
+.filter-menu-date {
+    width: initial;
+}
+
+.react-datepicker.filter-menu-datepicker {
+    border: none;
+}

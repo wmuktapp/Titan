@@ -32,8 +32,8 @@ class ColumnDateFilter extends React.Component {
     const controls = <a className="filter-menu-link" onClick={this.clear}>Clear</a>;
 
     return (
-      <ColumnFilter filtered={!!this.state.date} controls={controls}>
-        <DatePicker inline={true} selected={this.state.date} onChange={this.select} />
+      <ColumnFilter filtered={!!this.state.date} controls={controls} menuClassName="filter-menu-date">
+        <DatePicker inline={true} selected={this.state.date} onChange={this.select} calendarClassName="filter-menu-datepicker" />
       </ColumnFilter>
     );
   }

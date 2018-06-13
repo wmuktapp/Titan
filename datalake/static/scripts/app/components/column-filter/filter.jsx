@@ -31,7 +31,7 @@ class ColumnFilter extends React.Component {
     return (
       <span className="column-filter">
         <FilterButton toggle={this.toggle} filtered={this.props.filtered} />
-        <FilterMenu open={this.state.open} controls={this.props.controls}>
+        <FilterMenu open={this.state.open} controls={this.props.controls} className={this.props.menuClassName}>
           { this.props.children }
         </FilterMenu>
         <div className={'filter-cover' + (this.state.open && ' filter-cover-open')} onClick={this.close} />
