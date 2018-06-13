@@ -15,7 +15,7 @@ class ScheduleTable extends React.Component {
               <ColumnListFilter values={this.props.executions} onChange={this.props.filterExecutions} />
           }
         </th>
-        <th>Next scheduled date</th>
+        <th>Next scheduled</th>
         <th>
           Client
           {
