@@ -1,6 +1,7 @@
 
 .column-filter {
-    /*position: relative;*/
+    display: inline-block;
+    min-width: 46px;
 }
 
 .filter-button {
