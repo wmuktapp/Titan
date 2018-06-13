@@ -1,6 +1,7 @@
 import React from 'react';
-import ColumnListFilter from '../column-filter/list-filter.jsx'
-import ColumnFlagFilter from '../column-filter/flag-filter.jsx'
+import ColumnDateFilter from '../column-filter/date-filter.jsx';
+import ColumnFlagFilter from '../column-filter/flag-filter.jsx';
+import ColumnListFilter from '../column-filter/list-filter.jsx';
 import ScheduleTableRow from './row.jsx';
 
 class ScheduleTable extends React.Component {
@@ -16,7 +17,10 @@ class ScheduleTable extends React.Component {
               <ColumnListFilter values={this.props.executions} onChange={this.props.filterExecutions} />
           }
         </th>
-        <th>Next scheduled</th>
+        <th>
+          Next scheduled
+          <ColumnDateFilter onChange={this.props.filterNextScheduledDate} />
+        </th>
         <th>
           Client
           {
@@ -31,7 +35,10 @@ class ScheduleTable extends React.Component {
               <ColumnListFilter values={this.props.dataSets} onChange={this.props.filterDataSets} />
           }
         </th>
-        <th>Load date</th>
+        <th>
+          Load date
+          <ColumnDateFilter onChange={this.props.filterLoadDate} />
+        </th>
         <th>
           Enabled?
           <ColumnFlagFilter trueLabel="Enabled" falseLabel="Disabled" onChange={this.props.filterEnabled} />

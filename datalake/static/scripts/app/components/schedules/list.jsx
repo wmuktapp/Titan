@@ -12,17 +12,21 @@ class ScheduleList extends React.Component {
       schedules: [],
       loading: true,
       selectedExecutions: [],
+      selectedNextScheduledDate: null,
       selectedClients: [],
       selectedDataSets: [],
+      selectedLoadDate: null,
       selectedEnabled: {
         selectedTrue: true,
         selectedFalse: true
       }
     };
 
+    this.onNextScheduledDateFilterChange = this.onNextScheduledDateFilterChange.bind(this);
     this.onExecutionFilterChange = this.onExecutionFilterChange.bind(this);
     this.onClientFilterChange = this.onClientFilterChange.bind(this);
     this.onDataSetFilterChange = this.onDataSetFilterChange.bind(this);
+    this.onLoadDateFilterChange = this.onLoadDateFilterChange.bind(this);
     this.onEnabledFilterChange = this.onEnabledFilterChange.bind(this);
   }
 
@@ -33,8 +37,17 @@ class ScheduleList extends React.Component {
     Ajax.fetch('/api/schedules')
       .then(res => res.json())
       .then(results => {
+
+        let schedules = results;
+        schedules = schedules.map(schedule => {
+          schedule.ScheduledExecutionNextScheduled = new Date(schedule.ScheduledExecutionNextScheduled);
+          schedule.ScheduledExecutionNextLoadDate = new Date(schedule.ScheduledExecutionNextLoadDate);
+          return schedule;
+        });
+
+
         this.setState({
-          schedules: results,
+          schedules: schedules,
           loading: false,
           selectedExecutions: this.getUniqueExecutions(results),
           selectedClients: this.getUniqueClients(results),
@@ -44,6 +57,12 @@ class ScheduleList extends React.Component {
   }
 
   // Filter update methods
+
+  onNextScheduledDateFilterChange(date) {
+    this.setState({
+      selectedNextScheduledDate: date
+    });
+  }
 
   onExecutionFilterChange(executions) {
     this.setState({
@@ -60,6 +79,12 @@ class ScheduleList extends React.Component {
   onDataSetFilterChange(dataSets) {
     this.setState({
       selectedDataSets: dataSets
+    });
+  }
+
+  onLoadDateFilterChange(date) {
+    this.setState({
+      selectedLoadDate: date
     });
   }
 
@@ -101,12 +126,20 @@ class ScheduleList extends React.Component {
 
   render() {
 
+    // TODO can we remove the need for these?
     const
       executions = this.getUniqueExecutions(this.state.schedules),
       clients = this.getUniqueClients(this.state.schedules),
       dataSets = this.getUniqueDataSets(this.state.schedules);
 
     let schedules = this.state.schedules;
+
+    // Filter by next scheduled date
+    if (this.state.selectedNextScheduledDate) {
+      schedules = schedules.filter(schedule => {
+        return this.state.selectedNextScheduledDate.isSame(schedule.ScheduledExecutionNextScheduled, 'day');
+      });
+    }
 
     // Filter by execution
     schedules = schedules.filter((schedule) => {
@@ -123,6 +156,14 @@ class ScheduleList extends React.Component {
       return this.state.selectedDataSets.indexOf(schedule.ScheduledExecutionDataSetName) !== -1; 
     });
 
+    // Filter by load date
+    if (this.state.selectedLoadDate) {
+      schedules = schedules.filter(schedule => {
+        return this.state.selectedLoadDate.isSame(schedule.ScheduledExecutionNextLoadDate, 'day');
+      });
+    }
+
+    // Filtered by enabled status
     if (!this.state.selectedEnabled.selectedTrue) {
       schedules = schedules.filter(schedule => !schedule.ScheduledExecutionEnabled);
     }
@@ -133,10 +174,12 @@ class ScheduleList extends React.Component {
     return (
       <div className="schedule-list">
         <ScheduleTable schedules={schedules} loading={this.state.loading}
+          filterNextScheduledDate={this.onNextScheduledDateFilterChange}
           executions={executions} filterExecutions={this.onExecutionFilterChange}
           clients={clients} filterClients={this.onClientFilterChange}
           dataSets={dataSets} filterDataSets={this.onDataSetFilterChange}
           filterEnabled={this.onEnabledFilterChange}
+          filterLoadDate={this.onLoadDateFilterChange}
         />
       </div>
     );
