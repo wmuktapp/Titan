@@ -295,8 +295,8 @@ def get_execution(id):
         option_count = randint(1, 5)
         for j in range(0, option_count):
             acquire['Options'].append({
-                'AcquireOptionName': 'Name %i' % az(),
-                'AcquireOptionValue': 'Value %i' % az()
+                'AcquireOptionName': 'Name %s' % az(),
+                'AcquireOptionValue': 'Value %s' % az()
             })
 
         acquires.append(acquire)
@@ -314,8 +314,8 @@ def get_execution(id):
     option_count = randint(1, 5)
     for i in range(0, option_count):
         extract['Options'].append({
-            'ExtractOptionName': 'Name %i' % az(),
-            'ExtractOptionValue': 'Value %i' % az()
+            'ExtractOptionName': 'Name %s' % az(),
+            'ExtractOptionValue': 'Value %s' % az()
         })
 
     return {
