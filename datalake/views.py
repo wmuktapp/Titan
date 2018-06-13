@@ -161,8 +161,13 @@ def get_access_token():
 
 def get_adal_config():
 
-    tenant_id = app.config['DATALAKE_AD_TENANT_ID']
-    client_id = app.config['DATALAKE_AD_CLIENT_ID']
+    tenant_id = app.config.get('DATALAKE_AD_TENANT_ID', '')
+    client_id = app.config.get('DATALAKE_AD_CLIENT_ID', '')
+
+    if tenant_id is None:
+        tenant_id = ''
+    if client_id is None:
+        client_id = ''
 
     return Markup({
         'tenant': tenant_id,
