@@ -1,5 +1,5 @@
 import React from 'react';
-import ColumnFilter from '../column-filter/filter.jsx'
+import ColumnListFilter from '../column-filter/list-filter.jsx'
 import ScheduleTableRow from './row.jsx';
 
 class ScheduleTable extends React.Component {
@@ -12,7 +12,7 @@ class ScheduleTable extends React.Component {
           Schedule
           {
             !!this.props.executions.length &&
-              <ColumnFilter values={this.props.executions} onChange={this.props.filterExecutions} />
+              <ColumnListFilter values={this.props.executions} onChange={this.props.filterExecutions} />
           }
         </th>
         <th>Next scheduled date</th>
@@ -20,14 +20,14 @@ class ScheduleTable extends React.Component {
           Client
           {
             !!this.props.clients.length &&
-              <ColumnFilter values={this.props.clients} onChange={this.props.filterClients} />
+              <ColumnListFilter values={this.props.clients} onChange={this.props.filterClients} />
           }
         </th>
         <th>
           Dataset
           {
             !!this.props.dataSets.length &&
-              <ColumnFilter values={this.props.dataSets} onChange={this.props.filterDataSets} />
+              <ColumnListFilter values={this.props.dataSets} onChange={this.props.filterDataSets} />
           }
         </th>
         <th>Load date</th>
