@@ -1,7 +1,6 @@
 import React from 'react';
-import {render} from 'react-dom';
-import { runWithAdal } from 'react-adal';
-import { authContext } from './utils/adal-config';
+import { render } from 'react-dom';
+import { wrapWithAdal } from './utils/adal-config';
 import Monitor from './components/monitor.jsx';
 
 class MonitoringApp extends React.Component {
@@ -10,6 +9,6 @@ class MonitoringApp extends React.Component {
   }
 }
 
-runWithAdal(authContext, () => {
+wrapWithAdal(() => {
   render(<MonitoringApp />, document.getElementById('monitoring'));
 });
