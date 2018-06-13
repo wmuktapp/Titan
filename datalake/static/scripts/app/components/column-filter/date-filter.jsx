@@ -29,7 +29,10 @@ class ColumnDateFilter extends React.Component {
 
   render() {
 
-    const controls = <a className="filter-menu-link" onClick={this.clear}>Clear</a>;
+    const controls = <a className="filter-menu-link" onClick={this.clear}>
+      <span className="fas fa-times filter-menu-icon" />
+      Clear
+    </a>;
 
     return (
       <ColumnFilter filtered={!!this.state.date} controls={controls} menuClassName="filter-menu-date">
