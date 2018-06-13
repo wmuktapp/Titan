@@ -19,11 +19,7 @@ const Ajax = {
         // Merge objects
         Object.assign(requestOptions, options);
 
-        // adalFetch(this.authContext, this.config.endpoints.api, window.fetch, url, options);
-
         return adalApiFetch(window.fetch, url, requestOptions);
-
-        // return window.fetch(url, requestOptions);
     }
 
 };
