@@ -6,8 +6,8 @@ class ScheduleTableRow extends React.Component {
   render() {
 
     const schedule = this.props.schedule;
-    const nextDate = DateUtils.dateToString(new Date(schedule.ScheduledExecutionNextScheduled)),
-      loadDate = DateUtils.dateToString(new Date(schedule.ScheduledExecutionNextLoadDate));
+    const nextDate = DateUtils.dateToString(schedule.ScheduledExecutionNextScheduled),
+      loadDate = DateUtils.dateToString(schedule.ScheduledExecutionNextLoadDate);
 
     return (
       <tr>

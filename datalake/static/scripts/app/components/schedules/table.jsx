@@ -1,5 +1,7 @@
 import React from 'react';
-import ColumnFilter from '../column-filter/filter.jsx'
+import ColumnDateFilter from '../column-filter/date-filter.jsx';
+import ColumnFlagFilter from '../column-filter/flag-filter.jsx';
+import ColumnListFilter from '../column-filter/list-filter.jsx';
 import ScheduleTableRow from './row.jsx';
 
 class ScheduleTable extends React.Component {
@@ -8,24 +10,39 @@ class ScheduleTable extends React.Component {
 
     const head = (
       <tr>
-        <th>Schedule</th>
-        <th>Next scheduled date</th>
+        <th>
+          Schedule
+          {
+            !!this.props.executions.length &&
+              <ColumnListFilter values={this.props.executions} onChange={this.props.filterExecutions} />
+          }
+        </th>
+        <th>
+          Next scheduled
+          <ColumnDateFilter onChange={this.props.filterNextScheduledDate} />
+        </th>
         <th>
           Client
           {
             !!this.props.clients.length &&
-              <ColumnFilter values={this.props.clients} onChange={this.props.filterClients} />
+              <ColumnListFilter values={this.props.clients} onChange={this.props.filterClients} />
           }
         </th>
         <th>
           Dataset
           {
             !!this.props.dataSets.length &&
-              <ColumnFilter values={this.props.dataSets} onChange={this.props.filterDataSets} />
+              <ColumnListFilter values={this.props.dataSets} onChange={this.props.filterDataSets} />
           }
         </th>
-        <th>Load date</th>
-        <th>Enabled?</th>
+        <th>
+          Load date
+          <ColumnDateFilter onChange={this.props.filterLoadDate} />
+        </th>
+        <th>
+          Enabled?
+          <ColumnFlagFilter trueLabel="Enabled" falseLabel="Disabled" onChange={this.props.filterEnabled} />
+        </th>
       </tr>
     );
 
