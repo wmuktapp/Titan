@@ -42,11 +42,17 @@
 .filter-menu-controls {
     font-weight: normal;
     font-size: 12px;
-    padding: .5em;
-    margin: 0 .5em;
+    padding: .5em 1em;
+    margin: 0;
     display: flex;
     justify-content: space-evenly;
     border-bottom: 1px solid #f6f6f6;
+}
+
+.filter-menu-link-disabled,
+.filter-menu-link-disabled:hover {
+    color: #aaa;
+    cursor: default;
 }
 
 .filter-menu-icon  {
@@ -108,6 +114,11 @@
 }
 
 /* Date-specific properties */
+
+.filter-controls-date {
+    background-color: #f0f0f0;
+    border-bottom: none;
+}
 
 .filter-menu-date {
     width: initial;

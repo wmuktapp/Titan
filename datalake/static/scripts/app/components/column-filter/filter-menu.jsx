@@ -12,7 +12,7 @@ class FilterMenu extends React.Component {
       <div className={'filter-menu ' + (this.props.className || '')}>
         {
           this.props.controls &&
-            <div className="filter-menu-controls">
+            <div className={'filter-menu-controls ' + (this.props.controlsClassName || '')}>
               { this.props.controls }
             </div>
         }

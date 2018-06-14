@@ -16,10 +16,14 @@ class ColumnDateFilter extends React.Component {
   }
 
   clear() {
-    this.setState({
-      date: null
-    });
-    this.props.onChange(null);
+
+    // Ignore if no date is selected
+    if (this.state.date) {
+      this.setState({
+        date: null
+      });
+      this.props.onChange(null);
+    }
   }
 
   select(date) {
@@ -29,13 +33,15 @@ class ColumnDateFilter extends React.Component {
 
   render() {
 
-    const controls = <a className="filter-menu-link" onClick={this.clear}>
+    const controls = <a className={'filter-menu-link' + (this.state.date ? '' : ' filter-menu-link-disabled')}
+      onClick={this.clear}>
       <span className="fas fa-times filter-menu-icon" />
       Clear
     </a>;
 
     return (
-      <ColumnFilter filtered={!!this.state.date} controls={controls} menuClassName="filter-menu-date">
+      <ColumnFilter filtered={!!this.state.date} controls={controls}
+        controlsClassName="filter-controls-date" menuClassName="filter-menu-date">
         <DatePicker inline={true} selected={this.state.date} onChange={this.select} calendarClassName="filter-menu-datepicker" />
       </ColumnFilter>
     );
