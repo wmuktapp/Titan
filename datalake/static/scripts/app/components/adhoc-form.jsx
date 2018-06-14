@@ -2,6 +2,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
+import Alert from './alert/alert.jsx';
 import Ajax from '../utils/ajax';
 import DataUtils from '../utils/data-utils';
 import moment from 'moment';
@@ -186,7 +187,12 @@ class AdhocForm extends React.Component {
 
     if (this.state.submitted) {
       // TODO update this to contain status of execution (requires result from server)
-      return <p>Adhoc execution triggered</p>;
+      // return <p>Adhoc execution triggered</p>;
+      return (
+        <Alert title="Execution Triggered" type="success">
+          <p>Adhoc execution triggered</p>
+        </Alert>
+      );
     }
 
     return (

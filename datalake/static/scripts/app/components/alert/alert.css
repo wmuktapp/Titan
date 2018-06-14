@@ -1,0 +1,45 @@
+
+.alert {
+    margin: 0 0 .5em;
+    padding: 1em;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: .2em;
+}
+
+.alert-header {
+    width: 100%;
+    margin: 0;
+}
+
+.alert-title {
+    float: left;
+    margin: 0;
+    color: inherit;
+}
+
+.alert-close {
+    float: right;
+}
+
+.alert-close-icon {
+    margin-right: .2em;
+}
+
+.alert-content p {
+    margin: 0;
+}
+
+.alert-success {
+    border-color: #10a231;
+    color: #10a231;
+    background-color: rgba(16, 162, 49, .1);
+}
+
+.alert-success .alert-close {
+    color: #10a231;
+}
+
+.alert-success .alert-close:hover {
+    color: #40a231;
+}
