@@ -154,7 +154,7 @@ def extract_programs_list():
 # Access Token REMOVE THIS
 
 def get_access_token():
-    return 'Bearer %s' % request.headers.get('X-Ms-Token-Aad-Access-Token', '')
+    return request.headers.get('X-Ms-Token-Aad-Access-Token', '')
 
 
 # ADAL Config
