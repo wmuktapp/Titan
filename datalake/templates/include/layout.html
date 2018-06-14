@@ -30,7 +30,8 @@
         {% endblock %}
 
         <script type="text/javascript">
-            var adalConfig = {{ adal_config }};
+            var authorisation = { accessToken: '{{ access_token }}' };
+            var adalConfig = { endpoints: {}};
         </script>
 
     </head>

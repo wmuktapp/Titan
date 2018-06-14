@@ -12,14 +12,15 @@ const Ajax = {
         // Default request options
         const requestOptions = {
             headers: {
-                // "Authorization": getAccessToken()
+                "Authorization": getAccessToken()
             }
         };
 
         // Merge objects
         Object.assign(requestOptions, options);
 
-        return adalApiFetch(window.fetch, url, requestOptions);
+        // return adalApiFetch(window.fetch, url, requestOptions);
+        return window.fetch(url, requestOptions);
     }
 
 };
