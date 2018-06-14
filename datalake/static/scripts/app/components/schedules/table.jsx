@@ -8,47 +8,49 @@ class ScheduleTable extends React.Component {
 
   render() {
 
+    const showFilters = !this.props.loading;
+
     const head = (
       <tr>
         <th>
           Schedule
           {
-            !this.props.loading &&
+            showFilters &&
               <ColumnListFilter values={this.props.executions} onChange={this.props.filterExecutions} />
           }
         </th>
         <th>
           Next scheduled
           {
-            !this.props.loading &&
+            showFilters &&
             <ColumnDateFilter onChange={this.props.filterNextScheduledDate} />
           }
         </th>
         <th>
           Client
           {
-            !this.props.loading &&
+            showFilters &&
               <ColumnListFilter values={this.props.clients} onChange={this.props.filterClients} />
           }
         </th>
         <th>
           Dataset
           {
-            !this.props.loading &&
+            showFilters &&
               <ColumnListFilter values={this.props.dataSets} onChange={this.props.filterDataSets} />
           }
         </th>
         <th>
           Load date
           {
-            !this.props.loading &&
+            showFilters &&
               <ColumnDateFilter onChange={this.props.filterLoadDate} />
           }
         </th>
         <th>
           Enabled?
           {
-            !this.props.loading &&
+            showFilters &&
               <ColumnFlagFilter trueLabel="Enabled" falseLabel="Disabled" onChange={this.props.filterEnabled} />
           }
         </th>
