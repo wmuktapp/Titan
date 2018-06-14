@@ -3,6 +3,7 @@ import ColumnDateFilter from '../column-filter/date-filter.jsx';
 import ColumnFlagFilter from '../column-filter/flag-filter.jsx';
 import ColumnListFilter from '../column-filter/list-filter.jsx';
 import ScheduleTableRow from './row.jsx';
+import moment from 'moment';
 
 class ScheduleTable extends React.Component {
 
@@ -23,7 +24,7 @@ class ScheduleTable extends React.Component {
           Next scheduled
           {
             showFilters &&
-            <ColumnDateFilter onChange={this.props.filterNextScheduledDate} />
+            <ColumnDateFilter onChange={this.props.filterNextScheduledDate} minDate={moment()} />
           }
         </th>
         <th>

@@ -42,7 +42,11 @@ class ColumnDateFilter extends React.Component {
     return (
       <ColumnFilter filtered={!!this.state.date} controls={controls}
         controlsClassName="filter-controls-date" menuClassName="filter-menu-date">
-        <DatePicker inline={true} selected={this.state.date} onChange={this.select} calendarClassName="filter-menu-datepicker" />
+        <DatePicker inline={true}
+          selected={this.state.date} onChange={this.select}
+          minDate={this.props.minDate} maxDate={this.props.maxDate}
+          calendarClassName="filter-menu-datepicker"
+        />
       </ColumnFilter>
     );
   }
