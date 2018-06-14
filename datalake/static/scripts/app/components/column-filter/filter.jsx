@@ -30,7 +30,7 @@ class ColumnFilter extends React.Component {
   render() {
     return (
       <span className="column-filter">
-        <FilterButton toggle={this.toggle} filtered={this.props.filtered} />
+        <FilterButton toggle={this.toggle} open={this.state.open} filtered={this.props.filtered} />
         <FilterMenu open={this.state.open} controls={this.props.controls} className={this.props.menuClassName}>
           { this.props.children }
         </FilterMenu>

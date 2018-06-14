@@ -5,11 +5,24 @@
 }
 
 .filter-button {
+    position: relative;
     height: 24px;
     line-height: 24px;
     margin: 0 .8em;
     padding: 0 .4em;
+    background-color: #fff;
     color: #aaa;
+}
+
+.filter-button-open {
+    z-index: 1000;
+}
+
+.filter-button-open,
+.filter-button-open:focus {
+    background-color: #5ba0b5;
+    color: #fff;
+    border-color: #5ba0b5;
 }
 
 .filter-icon-sub {
