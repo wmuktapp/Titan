@@ -13,35 +13,44 @@ class ScheduleTable extends React.Component {
         <th>
           Schedule
           {
-            !!this.props.executions.length &&
+            !this.props.loading &&
               <ColumnListFilter values={this.props.executions} onChange={this.props.filterExecutions} />
           }
         </th>
         <th>
           Next scheduled
-          <ColumnDateFilter onChange={this.props.filterNextScheduledDate} />
+          {
+            !this.props.loading &&
+            <ColumnDateFilter onChange={this.props.filterNextScheduledDate} />
+          }
         </th>
         <th>
           Client
           {
-            !!this.props.clients.length &&
+            !this.props.loading &&
               <ColumnListFilter values={this.props.clients} onChange={this.props.filterClients} />
           }
         </th>
         <th>
           Dataset
           {
-            !!this.props.dataSets.length &&
+            !this.props.loading &&
               <ColumnListFilter values={this.props.dataSets} onChange={this.props.filterDataSets} />
           }
         </th>
         <th>
           Load date
-          <ColumnDateFilter onChange={this.props.filterLoadDate} />
+          {
+            !this.props.loading &&
+              <ColumnDateFilter onChange={this.props.filterLoadDate} />
+          }
         </th>
         <th>
           Enabled?
-          <ColumnFlagFilter trueLabel="Enabled" falseLabel="Disabled" onChange={this.props.filterEnabled} />
+          {
+            !this.props.loading &&
+              <ColumnFlagFilter trueLabel="Enabled" falseLabel="Disabled" onChange={this.props.filterEnabled} />
+          }
         </th>
       </tr>
     );
