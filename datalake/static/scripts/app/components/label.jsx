@@ -1,6 +1,7 @@
 import React from 'react';
 import './label.css';
 
+// Creates a label, handles the 'required' asterisk
 function Label(props) {
   return <label className="label">
       { props.children }
