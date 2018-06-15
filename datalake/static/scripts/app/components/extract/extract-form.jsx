@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
+import Label from '../label.jsx';
 import Ajax from '../../utils/ajax';
 
 class ExtractForm extends React.Component {
@@ -78,7 +79,8 @@ class ExtractForm extends React.Component {
     const destinationOptions = this.state.availableDestinations.map(destination => {
       return {
         value: destination.ExtractProgramPythonName,
-        label: destination.ExtractProgramFriendlyName
+        label: destination.ExtractProgramFriendlyName,
+        options: destination.Options
       };
     });
 
@@ -96,9 +98,13 @@ class ExtractForm extends React.Component {
         const value = this.state.options
           .find(o => o.ScheduledExtractOptionName === name).ScheduledExtractOptionValue;
 
+        // Field required?
+        const required = destinationValue.options
+          .find(field => name === field.ExtractProgramOptionName).ExtractProgramOptionRequired;
+
         return (
           <div key={index}>
-            <label>{name}</label>
+            <Label required={required}>{name}</Label>
             <input type="text" name={name} value={value} onChange={this.onOptionChange} />
           </div>
         );

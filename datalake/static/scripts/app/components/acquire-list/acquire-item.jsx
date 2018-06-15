@@ -1,4 +1,5 @@
 import React from 'react';
+import Label from '../label.jsx';
 
 class AcquireItem extends React.Component {
 
@@ -26,7 +27,7 @@ class AcquireItem extends React.Component {
     const rows = this.props.acquire.Options.map((option, index) => {
       return (
         <div key={index} className="acquire-property">
-          <label>{option.ScheduledAcquireOptionName}</label>
+          <Label>{option.ScheduledAcquireOptionName}</Label>
           <input type="text" name={option.ScheduledAcquireOptionName} value={option.ScheduledAcquireOptionValue} onChange={this.onChange} />
         </div>
       );
