@@ -4,10 +4,10 @@ from markupsafe import Markup
 from random import random, randint
 from time import sleep
 
-import datalake
+import titan
 
 
-app = datalake.create_app()
+app = titan.create_app()
 
 # Page URLs
 
@@ -161,8 +161,8 @@ def get_access_token():
 
 def get_adal_config():
 
-    tenant_id = app.config.get('DATALAKE_AD_TENANT_ID', '')
-    client_id = app.config.get('DATALAKE_AD_CLIENT_ID', '')
+    tenant_id = app.config.get('TITAN_AD_TENANT_ID', '')
+    client_id = app.config.get('TITAN_AD_CLIENT_ID', '')
 
     if tenant_id is None:
         tenant_id = ''

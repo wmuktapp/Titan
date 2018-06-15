@@ -24,16 +24,16 @@ def list_blobs(service, container, prefix):
 
 def execute(details):
     flask_app = flask.current_app
-    container_name = flask_app.config["DATALAKE_AZURE_CONTAINER_NAME"]
+    container_name = flask_app.config["TITAN_AZURE_CONTAINER_NAME"]
     launch_container(
-        resource_group_name=flask_app.config["DATALAKE_AZURE_CONTAINER_RSG_NAME"],
+        resource_group_name=flask_app.config["TITAN_AZURE_CONTAINER_RSG_NAME"],
         container_group_prefix=container_name,
-        os_type=flask_app.config["DATALAKE_AZURE_CONTAINER_OS_TYPE"],
-        location=flask_app.config["DATALAKE_AZURE_CONTAINER_LOCATION"],
+        os_type=flask_app.config["TITAN_AZURE_CONTAINER_OS_TYPE"],
+        location=flask_app.config["TITAN_AZURE_CONTAINER_LOCATION"],
         container_name=container_name,
-        image_name=flask_app.config["DATALAKE_AZURE_CONTAINER_IMAGE_NAME"],
-        memory_in_gb=flask_app.config["DATALAKE_AZURE_CONTAINER_MEMORY_GB"],
-        cpu_count=flask_app.config["DATALAKE_AZURE_CONTAINER_CPU_COUNT"],
+        image_name=flask_app.config["TITAN_AZURE_CONTAINER_IMAGE_NAME"],
+        memory_in_gb=flask_app.config["TITAN_AZURE_CONTAINER_MEMORY_GB"],
+        cpu_count=flask_app.config["TITAN_AZURE_CONTAINER_CPU_COUNT"],
         configuration=json.dumps(details)
     )
 
@@ -82,7 +82,7 @@ def launch_container(resource_group_name, container_group_prefix, os_type, locat
     flask.current_app.logger.info("Preparing to launch container; %s" % container_group_name)
     resources = models.ResourceRequirements(requests=models.ResourceRequests(memory_in_gb=memory_in_gb, cpu=cpu_count))
     container = models.Container(name=container_name, image=image_name, resources=resources, command=["execute"],
-                                 environment_variables=[models.EnvironmentVariable("DATALAKE_STDIN", configuration)])
+                                 environment_variables=[models.EnvironmentVariable("TITAN_STDIN", configuration)])
     container_group = models.ContainerGroup(containers=[container], os_type=os_type, location=location,
                                             restart_policy="Never")
     credentials, subscription_id = get_security_context()

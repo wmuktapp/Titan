@@ -1,7 +1,7 @@
 {
-  "name": "datalake",
+  "name": "titan",
   "version": "1.0.0",
-  "description": "\"# DataLake\"",
+  "description": "\"# Titan\"",
   "main": "index.js",
   "directories": {
     "doc": "docs",
@@ -13,18 +13,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/adamcunnington/DataLake.git"
+    "url": "git+https://github.com/adamcunnington/Titan.git"
   },
   "keywords": [
     "data",
-    "datalake"
+    "titan"
   ],
   "author": "Dan Jones",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/adamcunnington/DataLake/issues"
+    "url": "https://github.com/adamcunnington/Titan/issues"
   },
-  "homepage": "https://github.com/adamcunnington/DataLake#readme",
+  "homepage": "https://github.com/adamcunnington/Titan#readme",
   "dependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",

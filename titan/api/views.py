@@ -3,8 +3,8 @@ import importlib
 
 import flask
 
-from datalake import api, app, models
-from datalake.api import decorators
+from titan import api, app, models
+from titan.api import decorators
 
 
 def _nested_default_dict():
@@ -131,7 +131,7 @@ def get_executions():
 def get_extract_programs():
     response = {"data": []}
     for python_name, friendly_name in (("extract-azure-sql", "Azure SQL"), ):
-        program = importlib.import_module("datalake.extract.%s" % python_name)
+        program = importlib.import_module("titan.extract.%s" % python_name)
         response["data"].append({
             "ExtractProgramPythonName": python_name,
             "ExtractProgramFriendlyName": friendly_name,

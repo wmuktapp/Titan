@@ -1,8 +1,8 @@
 import click
 import importlib
 
-from datalake import models
-import datalake
+from titan import models
+import titan
 
 
 @click.command()
@@ -23,7 +23,7 @@ def main(acquire_program_key, python_name, friendly_name, data_source_name, auth
         command = program.__main__.main
     else:
         command = program.main
-    flask_app = datalake.create_app("register")
+    flask_app = titan.create_app("register")
     acquire_program = {
         "AcquireProgramPythonName": python_name,
         "AcquireProgramFriendlyName": friendly_name,

@@ -1,8 +1,8 @@
 from azure.mgmt import containerinstance
 from msrestazure import azure_exceptions
 
-from datalake import app, models
-import datalake
+from titan import app, models
+import titan
 
 
 def _get_client():
@@ -12,7 +12,7 @@ def _get_client():
 
 def _clean_up_containers(flask_app):
     client = _get_client()
-    resource_group_name = flask_app.config["DATALAKE_AZURE_CONTAINER_RSG_NAME"]
+    resource_group_name = flask_app.config["TITAN_AZURE_CONTAINER_RSG_NAME"]
     running_container_groups = [row["ExecutionContainerGroupName"] for row in models.get_running_container_groups()]
     for partial_container_group in client.container_groups.list():
         container_group = client.container_groups.get(resource_group_name, partial_container_group.name)
@@ -30,7 +30,7 @@ def _clean_up_containers(flask_app):
 
 def _clean_up_logs(flask_app):
     client = _get_client()
-    resource_group_name = flask_app.config["DATALAKE_AZURE_CONTAINER_RSG_NAME"]
+    resource_group_name = flask_app.config["TITAN_AZURE_CONTAINER_RSG_NAME"]
     for running_container_group in models.get_running_container_groups():
         execution_key = running_container_group["ExecutionKey"]
         container_group_name = running_container_group["ExecutionContainerGroupName"]
@@ -59,7 +59,7 @@ def _process_queue(flask_app):
 
 
 def main():
-    flask_app = datalake.create_app("orchestrate")
+    flask_app = titan.create_app("orchestrate")
     flask_app.logger.info("Orchestrator started")
     flask_app.logger.info("Cleaning up completed container instances...")
     _clean_up_containers(flask_app)

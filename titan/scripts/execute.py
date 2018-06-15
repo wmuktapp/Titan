@@ -3,8 +3,8 @@ import os
 import json
 import subprocess
 
-from datalake import models
-import datalake
+from titan import models
+import titan
 
 
 def _execute_program(flask_app, program, end_log_function, log_key, options=(), timeout=None):
@@ -34,7 +34,7 @@ def _process_acquire(flask_app, execution_key, acquire_program, acquire, load_da
     options["--load-date"] = load_date
     acquire_key = _call_models_function(flask_app, models.start_acquire_log, acquire)["AcquireKey"]
     _execute_program(flask_app, "python -m %s" % acquire_program, models.end_acquire_log, acquire_key,
-                     options=options, timeout=flask_app.config.get("DATALAKE_ACQUIRE_TIMEOUT_SECONDS"))
+                     options=options, timeout=flask_app.config.get("TITAN_ACQUIRE_TIMEOUT_SECONDS"))
 
 
 def _process_acquires(flask_app, data):
@@ -57,19 +57,19 @@ def _process_extract(flask_app, execution_key, extract):
                                                                 extract)["ExtractKey"]
     options = extract.get("Options")
     _execute_program(flask_app, extract.get("ExtractDestination"), models.end_extract_log, extract_key, options=options,
-                     timeout=flask_app.config.get("DATALAKE_EXTRACT_TIMEOUT_SECONDS"))
+                     timeout=flask_app.config.get("TITAN_EXTRACT_TIMEOUT_SECONDS"))
 
 
 def _update_env_var(data):
-    os.putenv("DATALAKE_STDIN", json.dumps(data))
+    os.putenv("TITAN_STDIN", json.dumps(data))
 
 
 def main():
-    data = json.loads(os.getenv("DATALAKE_STDIN"))
+    data = json.loads(os.getenv("TITAN_STDIN"))
     execution = data["execution"]
     acquires = data["acquires"]
     extract = data["extract"]
-    flask_app = datalake.create_app("execute")
+    flask_app = titan.create_app("execute")
     flask_app.logger.info("Starting execution log")
     result = _call_models_function(flask_app, models.start_execution_log, execution)
     execution["ExecutionVersion"] = result["ExecutionVersion"]

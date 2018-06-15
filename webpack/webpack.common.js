@@ -1,8 +1,8 @@
 var webpack = require('webpack');
 var path = require('path');
 
-var BUILD_DIR = path.resolve(__dirname, '../datalake/static/scripts/public');
-var APP_DIR = path.resolve(__dirname, '../datalake/static/scripts/app');
+var BUILD_DIR = path.resolve(__dirname, '../titan/static/scripts/public');
+var APP_DIR = path.resolve(__dirname, '../titan/static/scripts/app');
 
 var config = {
   entry: {

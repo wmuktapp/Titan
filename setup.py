@@ -2,7 +2,7 @@ import setuptools
 
 
 setuptools.setup(
-    name="DataLake",
+    name="Titan",
     author="Adam Cunnington",
     license="MIT",
     packages=setuptools.find_packages(),
@@ -19,10 +19,10 @@ setuptools.setup(
     ],
     entry_points={
         "console_scripts": [
-            "execute = datalake.scripts.execute:main",
-            "orchestrate = datalake.scripts.orchestrate:main",
-            "register = datalake.scripts.register:main",
-            "extract-azure-sql = datalake.extract.azuresql:main"
+            "execute = titan.scripts.execute:main",
+            "orchestrate = titan.scripts.orchestrate:main",
+            "register = titan.scripts.register:main",
+            "extract-azure-sql = titan.extract.azuresql:main"
         ]
     }
 )

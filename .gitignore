@@ -120,4 +120,4 @@ Pipfile
 node_modules/
 
 ### Public JS ###
-datalake/static/scripts/public/
+titan/static/scripts/public/
