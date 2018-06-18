@@ -153,7 +153,7 @@ class Monitor extends React.Component {
             retryList: [],
             loading: false,
             data: result.data,
-            message: 'Acquire programs restarted.  Check back in a few minutes to see progress.'
+            message: 'Executions restarted.  Check back in a few minutes to see progress.'
           });
         },
         (error) => {
