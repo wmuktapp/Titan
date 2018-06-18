@@ -27,6 +27,7 @@ const DataUtils = {
     }
   },
 
+  // Converts a list of acquire programs into a format to be used by react-select
   getAcquireProgramOptions(programs) {
     return programs.map(program => {
       return {
@@ -47,6 +48,7 @@ const DataUtils = {
 
     const mergedObject = {};
 
+    // Not an object?  No merging necessary
     if (typeof object1 !== 'object' || typeof object2 !== 'object') {
       return object1;
     }
