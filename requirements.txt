@@ -1,5 +1,5 @@
 -i https://pypi.org/simple
-git+git://github.com/adamcunnington/Titan.git@develop#egg=Titan
+git+https://github.com/adamcunnington/Titan.git@develop#egg=Titan
 adal==1.0.1
 applicationinsights==0.11.4
 asn1crypto==0.24.0
@@ -86,7 +86,7 @@ cryptography==2.2.2
 entrypoints==0.2.3
 flask-sqlalchemy==2.3.2
 flask==1.0.2
-futures==3.2.0
+futures==3.1.1
 idna==2.7
 isodate==0.6.0
 itsdangerous==0.24
