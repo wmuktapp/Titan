@@ -32,6 +32,7 @@ const DataUtils = {
       return {
         value: program.AcquireProgramKey,
         label: program.AcquireProgramFriendlyName,
+        disabled: !program.AcquireProgramEnabled,
         dataSource: program.AcquireProgramDataSource,
         options: program.Options
       };
