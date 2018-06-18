@@ -290,7 +290,7 @@ class ScheduleForm extends React.Component {
         </div>
         <div>
           <Label>Data source</Label>
-          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.onExecutionChange} disabled={!!this.state.program} />
+          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.onExecutionChange} disabled={!!program} />
         </div>
         <div>
           <Label>Data set</Label>

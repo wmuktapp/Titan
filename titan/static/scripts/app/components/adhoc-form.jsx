@@ -216,7 +216,7 @@ class AdhocForm extends React.Component {
         </div>
         <div>
           <label>Data source</label>
-          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.handleChange} disabled={!!this.state.program} />
+          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.handleChange} disabled={!!program} />
         </div>
         <div>
           <label>Data set</label>
