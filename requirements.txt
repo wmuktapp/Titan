@@ -1,5 +1,4 @@
 -i https://pypi.org/simple
-git+https://github.com/adamcunnington/Titan.git@develop#egg=Titan
 adal==1.0.1
 applicationinsights==0.11.4
 asn1crypto==0.24.0
