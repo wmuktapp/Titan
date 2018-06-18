@@ -1,4 +1,5 @@
 -i https://pypi.org/simple
+-e .
 adal==1.0.1
 applicationinsights==0.11.4
 asn1crypto==0.24.0

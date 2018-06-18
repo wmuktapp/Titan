@@ -42,7 +42,7 @@ def main(acquire_program_key, python_name, friendly_name, data_source_name, auth
             "AcquireProgramOptionName": name,
             "AcquireProgramOptionRequired": option.required
         })
-    with flask_app.flask_app_context():
+    with flask_app.app_context():
         if acquire_program_key is None:
             flask_app.logger.info("Register new acquire program...")
             models.insert_acquire_program(acquire_program)
