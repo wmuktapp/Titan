@@ -48,44 +48,38 @@ export function getExecutionDays(days) {
   }
 }
 
-const DataUtils = {
+// Merge two data objects 
+export function mergeData(data1, data2) {
+  return this.__mergeObjects(data1, data2);
+}
 
-  // Merge two data objects 
-  mergeData(data1, data2) {
-    return this.__mergeObjects(data1, data2);
-  },
+function __mergeObjects(object1, object2) {
 
-  __mergeObjects(object1, object2) {
+  const mergedObject = {};
 
-    const mergedObject = {};
-
-    // Not an object?  No merging necessary
-    if (typeof object1 !== 'object' || typeof object2 !== 'object') {
-      return object1;
-    }
-
-    // Add all items from object 1, merging with object 2 when appropriate
-    for (var key in object1) {
-
-      if (object2.hasOwnProperty(key)) {
-        // Ooooh recursion.  Be careful!
-        mergedObject[key] = this.__mergeObjects(object1[key], object2[key]);
-      } else {
-        // Only in object 1 - just add to the object
-        mergedObject[key] = object1[key];
-      }
-    }
-
-    // Add any remaining values in object2
-    for (var key in object2) {
-      if (!object1.hasOwnProperty(key)) {
-        mergedObject[key] = object2[key];
-      }
-    }
-
-    return mergedObject;
+  // Not an object?  No merging necessary
+  if (typeof object1 !== 'object' || typeof object2 !== 'object') {
+    return object1;
   }
 
-};
+  // Add all items from object 1, merging with object 2 when appropriate
+  for (var key in object1) {
 
-export default DataUtils;
+    if (object2.hasOwnProperty(key)) {
+      // Ooooh recursion.  Be careful!
+      mergedObject[key] = this.__mergeObjects(object1[key], object2[key]);
+    } else {
+      // Only in object 1 - just add to the object
+      mergedObject[key] = object1[key];
+    }
+  }
+
+  // Add any remaining values in object2
+  for (var key in object2) {
+    if (!object1.hasOwnProperty(key)) {
+      mergedObject[key] = object2[key];
+    }
+  }
+
+  return mergedObject;
+}

@@ -3,7 +3,7 @@ import MonitoringControls from './monitoring/controls.jsx';
 import MonitoringGrid from './monitoring/grid.jsx';
 
 import Ajax from '../utils/ajax';
-import DataUtils from '../utils/data-utils';
+import { mergeData } from '../utils/data-utils';
 import dateUtils from '../utils/date-utils';
 import Dialog from '../utils/dialog.jsx';
 
@@ -78,7 +78,7 @@ class Monitor extends React.Component {
     const callback = (result) => {
       this.setState({
         loading: false,
-        data: DataUtils.mergeData(this.state.data, result.data)
+        data: mergeData(this.state.data, result.data)
       });
     };
     this.fetchData(this.state.dates, callback)
