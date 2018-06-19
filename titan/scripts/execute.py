@@ -33,7 +33,7 @@ def _process_acquire(flask_app, execution_key, acquire_program, acquire, load_da
     options = acquire.get("Options")
     options["--load-date"] = load_date
     acquire_key = _call_models_function(flask_app, models.start_acquire_log, acquire)["AcquireKey"]
-    _execute_program(flask_app, "python -m %s" % acquire_program, models.end_acquire_log, acquire_key,
+    _execute_program(flask_app, acquire_program, models.end_acquire_log, acquire_key,
                      options=options, timeout=flask_app.config.get("TITAN_ACQUIRE_TIMEOUT_SECONDS"))
 
 
