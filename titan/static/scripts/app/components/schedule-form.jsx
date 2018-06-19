@@ -10,6 +10,8 @@ import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import moment from 'moment';
 
+import { getExecutionData } from '../utils/data-utils';
+
 // Import styles
 import 'react-select/dist/react-select.css';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -211,10 +213,12 @@ class ScheduleForm extends React.Component {
 
   onSubmit(event) {
 
+    const data = getExecutionData(this.state);
+
     // Send insert/update to server
     Ajax.fetch('/api/schedules', {
       method: 'POST',
-      data: JSON.stringify(this.state)
+      body: JSON.stringify(data)
     })
       .then(res => res.json())
       .then(response => {
