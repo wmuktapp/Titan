@@ -1,4 +1,18 @@
 
+
+// Converts a list of acquire programs into a format to be used by react-select
+export function getAcquireProgramOptions(programs) {
+  return programs.map(program => {
+    return {
+      value: program.AcquireProgramKey,
+      label: program.AcquireProgramFriendlyName,
+      disabled: !program.AcquireProgramEnabled,
+      dataSource: program.AcquireProgramDataSource,
+      options: program.Options
+    };
+  });
+}
+
 // Pulls data to be submitted
 export function getExecutionData(data) {
   return {
@@ -34,19 +48,6 @@ const DataUtils = {
       ScheduledSaturdayEnabled: days.Saturday,
       ScheduledSundayEnabled: days.Sunday
     }
-  },
-
-  // Converts a list of acquire programs into a format to be used by react-select
-  getAcquireProgramOptions(programs) {
-    return programs.map(program => {
-      return {
-        value: program.AcquireProgramKey,
-        label: program.AcquireProgramFriendlyName,
-        disabled: !program.AcquireProgramEnabled,
-        dataSource: program.AcquireProgramDataSource,
-        options: program.Options
-      };
-    });
   },
 
   // Merge two data objects 

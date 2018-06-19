@@ -4,11 +4,10 @@ import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import Alert from './alert/alert.jsx';
 import Ajax from '../utils/ajax';
-import DataUtils from '../utils/data-utils';
 import moment from 'moment';
 import Select from 'react-select';
 
-import { getExecutionData } from '../utils/data-utils';
+import { getAcquireProgramOptions, getExecutionData } from '../utils/data-utils';
 
 // Import styles
 import 'react-select/dist/react-select.css';
@@ -181,7 +180,7 @@ class AdhocForm extends React.Component {
     const execution = this.state.execution;
 
     // Acquire program dropdown options
-    const programOptions = DataUtils.getAcquireProgramOptions(this.state.availablePrograms);
+    const programOptions = getAcquireProgramOptions(this.state.availablePrograms);
 
     const program = programOptions.find(option => option.value === execution.AcquireProgramKey);
 

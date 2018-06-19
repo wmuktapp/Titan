@@ -10,7 +10,7 @@ import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import moment from 'moment';
 
-import { getExecutionData } from '../utils/data-utils';
+import { getAcquireProgramOptions, getExecutionData } from '../utils/data-utils';
 
 // Import styles
 import 'react-select/dist/react-select.css';
@@ -254,7 +254,7 @@ class ScheduleForm extends React.Component {
     const days = DataUtils.getWeekDays(execution);
 
     // Acquire program dropdown options
-    const programOptions = DataUtils.getAcquireProgramOptions(this.state.availablePrograms);
+    const programOptions = getAcquireProgramOptions(this.state.availablePrograms);
 
     const program = programOptions.find(option => option.value === execution.AcquireProgramKey);
 
