@@ -5,12 +5,11 @@ import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import Label from './label.jsx';
 import Ajax from '../utils/ajax';
-import DataUtils from '../utils/data-utils';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import moment from 'moment';
 
-import { getAcquireProgramOptions, getExecutionData } from '../utils/data-utils';
+import { getAcquireProgramOptions, getExecutionData, getWeekDays, getExecutionDays } from '../utils/data-utils';
 
 // Import styles
 import 'react-select/dist/react-select.css';
@@ -182,7 +181,7 @@ class ScheduleForm extends React.Component {
   updateDays(days) {
 
     const execution = this.state.execution,
-      executionDays = DataUtils.getExecutionDays(days);
+      executionDays = getExecutionDays(days);
     Object.assign(execution, executionDays);
 
     this.setState({ execution });
@@ -251,7 +250,7 @@ class ScheduleForm extends React.Component {
     const execution = this.state.execution;
 
     // Simpler days object
-    const days = DataUtils.getWeekDays(execution);
+    const days = getWeekDays(execution);
 
     // Acquire program dropdown options
     const programOptions = getAcquireProgramOptions(this.state.availablePrograms);
