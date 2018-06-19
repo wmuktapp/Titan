@@ -31,7 +31,7 @@
 }
 
 .alert-success {
-    border-color: #10a231;
+    border-color: rgba(16, 162, 49, .2);
     color: #10a231;
     background-color: rgba(16, 162, 49, .1);
 }
@@ -40,6 +40,12 @@
     color: #10a231;
 }
 
-.alert-success .alert-close:hover {
-    color: #40a231;
+.alert-error {
+    border-color: rgba(158, 50, 58, .2);
+    color: #9e323a;
+    background-color: rgba(158, 50, 58, .1);
+}
+
+.alert-error .alert-close {
+    color: inherit;
 }
