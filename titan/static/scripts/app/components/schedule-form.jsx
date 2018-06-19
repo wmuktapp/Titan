@@ -1,20 +1,19 @@
 import React from 'react';
+import DatePicker from 'react-datepicker';
+import Select from 'react-select';
+import moment from 'moment';
 import ScheduleDays from './days/days.jsx';
 import IntervalPicker from './interval-picker.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import Label from './label.jsx';
 import Ajax from '../utils/ajax';
-import DatePicker from 'react-datepicker';
-import Select from 'react-select';
-import moment from 'moment';
 
 import { getAcquireProgramOptions, getExecutionData, getWeekDays, getExecutionDays } from '../utils/data-utils';
 
 // Import styles
 import 'react-select/dist/react-select.css';
 import 'react-datepicker/dist/react-datepicker.css';
-
 import './schedule-form.css';
 
 class ScheduleForm extends React.Component {
