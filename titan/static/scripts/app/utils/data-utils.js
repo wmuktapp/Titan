@@ -1,4 +1,13 @@
 
+// Pulls data to be submitted
+export function getExecutionData(data) {
+  return {
+    execution: data.execution,
+    acquires: data.acquires,
+    extract: data.extract
+  };
+}
+
 const DataUtils = {
 
   // Convert data in execution object into simpler weekday data
@@ -39,15 +48,6 @@ const DataUtils = {
       };
     });
   },
-
-  // Pulls data to be submitted
-  getExecutionData(data) {
-    return {
-      execution: data.execution,
-      acquires: data.acquires,
-      extract: data.extract
-    };
-  }
 
   // Merge two data objects 
   mergeData(data1, data2) {
