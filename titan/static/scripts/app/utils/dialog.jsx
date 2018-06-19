@@ -28,9 +28,12 @@ class Dialog extends React.Component {
           <div className="dialog-contents">
             { this.props.children }
           </div>
-          <div className="dialog-controls">
-            <button className="button button-primary" onClick={this.ok}>Ok</button>
-          </div>
+          {
+            this.props.onOk &&
+              <div className="dialog-controls">
+                <button className="button button-primary" onClick={this.ok}>Ok</button>
+              </div>
+          }
         </div>
         <div className="dialog-cover" onClick={this.close}></div>
       </div>

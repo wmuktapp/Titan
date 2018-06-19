@@ -30,7 +30,8 @@ class Monitor extends React.Component {
       loading: true,
       data: [],
       retryList: [],
-      message: null
+      message: null,
+      dialogHasOk: true
     };
 
     // Bind events
@@ -139,7 +140,8 @@ class Monitor extends React.Component {
     }
 
     this.setState({
-      loading: true
+      message: 'Restarting executions...',
+      dialogHasOk: false
     });
 
     fetch('/api/executions/retry', {
@@ -148,12 +150,13 @@ class Monitor extends React.Component {
         'executions': this.state.retryList
       })
     }).then(res => res.json())
-      .then((result) => {
+      .then(result => {
           this.setState({
             retryList: [],
-            loading: false,
+            requestingRetry: false,
             data: result.data,
-            message: 'Executions restarted.  Check back in a few minutes to see progress.'
+            message: 'Executions restarted.  Check back in a few minutes to see progress.',
+            dialogHasOk: true
           });
         },
         (error) => {
@@ -173,6 +176,8 @@ class Monitor extends React.Component {
 
     // TODO pass retryList to MonitoringGrid, use it to handle checked / unchecked state
 
+    const dialogOk = this.state.dialogHasOk ? this.onDialogClose : null;
+
     return (
       <div className="monitor-grid">
         <MonitoringControls dates={this.state.dates} selectDates={this.showDates} />
@@ -187,7 +192,7 @@ class Monitor extends React.Component {
         }
         {
           this.state.message &&
-            <Dialog onClose={this.onDialogClose} onOk={this.onDialogClose}>
+            <Dialog onClose={this.onDialogClose} onOk={dialogOk}>
               <p>{this.state.message}</p>
             </Dialog>
         }
