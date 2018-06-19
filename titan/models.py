@@ -10,13 +10,12 @@ db = flask_sqlalchemy.SQLAlchemy()
 def _execute_stored_procedure(transaction, name, params=None, output_params=None):
     sql_text = "EXEC %s " % name
     sql_text += ", ".join("@%s=:%s" % (param, param) for param in params)
-    sql_text += ";"
     if output_params:
         name_types = output_params.items()
         sql_text_prefix = "DECLARE "
         sql_text_prefix += ", ".join("@%s %s" % (name, _type) for name, _type in name_types) + ";"
 
-        sql_text_suffix = ", " + ", ".join("@%s OUT" % name for name, _ in name_types) + ";"
+        sql_text_suffix = ", " + ", ".join("@%s=@%s OUT" % (name, name) for name, _ in name_types) + ";"
         sql_text_suffix += "SELECT "
         sql_text_suffix += ", ".join("@%s AS %s" % (name, name) for name, _ in name_types)
 
