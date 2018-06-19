@@ -12,5 +12,4 @@ class SchedulesApp extends React.Component {
 
 wrapWithAdal(() => {
   render(<SchedulesApp />, document.getElementById('schedules'));
-  render(<ScrollToTop />, document.getElementById('back-to-top-wrap'));
-})
+});

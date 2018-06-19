@@ -10,7 +10,8 @@ var config = {
     execution: APP_DIR + '/execution.jsx',
     schedules: APP_DIR + '/schedules.jsx',
     schedule: APP_DIR + '/schedule.jsx',
-    adhoc: APP_DIR + '/adhoc.jsx'
+    adhoc: APP_DIR + '/adhoc.jsx',
+    scrollToTop: APP_DIR + '/scroll-to-top.jsx'
   },
   output: {
     path: BUILD_DIR,
