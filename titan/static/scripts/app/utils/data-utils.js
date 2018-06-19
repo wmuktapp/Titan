@@ -40,6 +40,16 @@ const DataUtils = {
     });
   },
 
+  // Pulls data to be submitted
+  getExecutionData(data) {
+    return {
+      execution: data.execution,
+      acquires: data.acquires,
+      extract: data.extract
+    };
+  }
+
+  // Merge two data objects 
   mergeData(data1, data2) {
     return this.__mergeObjects(data1, data2);
   },
