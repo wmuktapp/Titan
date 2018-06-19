@@ -28,19 +28,23 @@
 
 .monitoring-dataset {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch;
     font-size: 12px;
     margin-left: 2em;
     border-bottom: 1px solid #f0f0f0;
 }
 
 .monitoring-dataset-label {
+    max-width: 250px;
+    align-self: center;
     vertical-align: text-bottom;
 }
 
 .monitoring-executions {
-    align-self: flex-end;
+    /*display: flex;*/
+    /*align-self: flex-end;*/
 }
 
 .monitoring-title-highlight {

@@ -290,7 +290,7 @@ class ScheduleForm extends React.Component {
         </div>
         <div>
           <Label>Data source</Label>
-          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.onExecutionChange} disabled={!!this.state.program} />
+          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.onExecutionChange} disabled={!!program} />
         </div>
         <div>
           <Label>Data set</Label>
@@ -329,16 +329,12 @@ class ScheduleForm extends React.Component {
         </div>
         <div className="form-section">
           <h6>Extract</h6>
-          {
-            program
-              ? <ExtractForm
-                  destination={this.state.extract.ScheduledExtractDestination}
-                  onDestinationChange={this.updateExtractDestination}
-                  options={extractOptions}
-                  onOptionsChange={this.updateExtractOptions}
-                />
-              : <p className="empty-msg">No acquire program selected</p>
-          }
+          <ExtractForm
+            destination={this.state.extract.ScheduledExtractDestination}
+            onDestinationChange={this.updateExtractDestination}
+            options={extractOptions}
+            onOptionsChange={this.updateExtractOptions}
+          />
         </div>
 
         <div>
