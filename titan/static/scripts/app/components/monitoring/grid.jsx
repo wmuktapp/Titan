@@ -11,7 +11,7 @@ class MonitoringGrid extends React.Component {
 
     const highlight = DateUtils.isYesterday(this.props.dates.end);
 
-    const clients = Object.keys(this.props.data).map((key) => {
+    const rows = Object.keys(this.props.data).map(key => {
 
       const datum = this.props.data[key];
 
@@ -21,7 +21,7 @@ class MonitoringGrid extends React.Component {
     return (
       <div className="monitoring-grid">
         <MonitoringGridHeader dates={this.props.dates} />
-        { clients }
+        { rows }
       </div>
     );
   }
