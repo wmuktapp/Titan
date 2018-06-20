@@ -12,6 +12,7 @@ setuptools.setup(
         "click",
         "flask",
         "flask_sqlalchemy",
+        "msrestazure",
         "pyodbc",
         "python-dotenv",
         "sqlalchemy",

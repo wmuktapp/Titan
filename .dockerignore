@@ -1,6 +1,5 @@
 .venv
 docs
-instance
 node_modules
 tests
 webpack
