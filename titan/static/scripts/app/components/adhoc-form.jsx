@@ -216,7 +216,7 @@ class AdhocForm extends React.Component {
         </div>
         <div>
           <label>Data source</label>
-          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.handleChange} disabled={!!this.state.program} />
+          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.handleChange} disabled={!!program} />
         </div>
         <div>
           <label>Data set</label>
@@ -239,16 +239,12 @@ class AdhocForm extends React.Component {
         </div>
         <div className="form-section">
           <h6>Extract</h6>
-          {
-            program
-              ? <ExtractForm
-                  destination={this.state.extract.ScheduledExtractDestination}
-                  onDestinationChange={this.onUpdateExtractDestination}
-                  options={extractOptions}
-                  onOptionsChange={this.onUpdateExtractOptions}
-                />
-              : <p className="empty-msg">No acquire program selected</p>
-          }
+          <ExtractForm
+            destination={this.state.extract.ScheduledExtractDestination}
+            onDestinationChange={this.onUpdateExtractDestination}
+            options={extractOptions}
+            onOptionsChange={this.onUpdateExtractOptions}
+          />
         </div>
         <div>
           <input type="submit" value="Execute" />

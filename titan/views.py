@@ -411,7 +411,7 @@ def get_schedule(id):
         'ScheduledFridayEnabled': random() > .3,
         'ScheduledSaturdayEnabled': random() > .3,
         'ScheduledSundayEnabled': random() > .3,
-        'AcquireProgramKey': randint(1, 5),
+        'AcquireProgramKey': randint(1, 4),
         'AcquireProgramFriendlyName': 'My Acquire Program %s' % az(),
         'ScheduledExecutionStatus': get_state()
     }
@@ -469,7 +469,7 @@ def get_acquire_program(id):
         'AcquireProgramPythonName': 'PythonProgram%s' % az(),
         'AcquireProgramFriendlyName': 'My Acquire Program %s' % az(),
         'AcquireProgramDataSource': 'Data Source %s' % az(),
-        'AcquireProgramEnabled': random() > .2,
+        'AcquireProgramEnabled': (id != 5),
         'Options': get_acquire_program_options()
     }
 

@@ -49,9 +49,14 @@
             {% block main %}{% endblock %}
         </main>
 
+
+
         <footer>
             Created by Dan Jones for Wavemaker UK
         </footer>
+
+        <div id="scroll-to-top"></div>
+        <script src="{{ url_for('static', filename='scripts/public/scrollToTop.js') }}"></script>
 
         {% block scripts %}{% endblock %}
     </body>
