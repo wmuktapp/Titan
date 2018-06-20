@@ -1,27 +1,31 @@
-FROM python:3.6-alpine
+FROM python:3.6
 
 ### APP INSTALLATION ###
 WORKDIR /titan/
 
 ADD . /titan/
 
-# PYODBC dependency
-RUN apk --no-cache add unixodbc-dev libffi-dev openssl-dev build-base
+# System Utilities
+RUN apt-get update && \
+    apt-get install -y apt-transport-https
+
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+
+RUN curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list
+
+# PYODBC dependencies
+RUN apt-get update && \
+    ACCEPT_EULA=Y apt-get install -y msodbcsql17 unixodbc-dev
 
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
 ### APP EXTENSIONS INSTALLATION ###
 
-RUN apk --no-cache --virtual .build add git
-
 WORKDIR /acquire-programs/AdWordsReportDownloader/
 
 RUN git clone https://github.com/wmuktapp/Titan-AdWordsReportDownloader.git .
 
-RUN apk --no-cache add libxml2-dev libxslt-dev
-
 RUN pip install --trusted-host pypi.python.org .
 
 ### CLEAN UP ###
-RUN rm -rf /acquire-programs /var/cache/apk/* /var/tmp/* /tmp/*
-RUN apk del .build
+RUN rm -rf /acquire-programs /var/lib/apt/lists/* /var/tmp/* /tmp/*
