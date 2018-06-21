@@ -5,6 +5,7 @@ import dotenv
 import flask
 
 from titan import api, app, config, models
+from titan.api import views
 
 
 def create_app(source="webserver"):

@@ -32,9 +32,9 @@ def monitoring_execution(execution_key):
     data = Markup({ 'executionKey': execution_key })
     return render_template('execution.html', adal_config=get_adal_config(), data=data)
 
-@app.route('/schedules')
+@app.route("/schedules")
 def schedules():
-    return render_template('schedules.html', adal_config=get_adal_config())
+    return render_template("schedules.html", adal_config=get_adal_config())
 
 @app.route('/schedules/<int:schedule_key>')
 def schedule_details(schedule_key):
@@ -111,21 +111,21 @@ def execution_retry():
     return get_execution_data(start_date, end_date)
 
 
-@app.route('/api/schedules/')
+"""@app.route('/api/schedules')
 def schedules_list():
     # TODO support filtering by querystring?
 
     limit = 0
 
-    return jsonify(get_schedules(limit))
+    return jsonify(get_schedules(limit))"""
 
 
-@app.route('/api/schedules/', methods=['POST'])
+"""@app.route('/api/schedules', methods=['POST'])
 def schedule_create():
     # TODO create schedule?
     return jsonify({
         'id': key()
-    })
+    })"""
 
 
 @app.route('/api/schedules/<int:schedule_key>')
@@ -177,6 +177,12 @@ def get_adal_config():
         },
         'cacheLocation': 'localStorage'
     })
+
+
+
+
+
+
 
 
 # SAMPLE DATA
