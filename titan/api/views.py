@@ -241,11 +241,19 @@ def insert_scheduled_execution():
 @api.api_blueprint.route("/executions/retry", methods=["POST"])
 @decorators.to_json
 def retry_executions():
-    # TODO: What if one or more of the keys are invalid? Not needed if just the web front end passing in data.
+    invalid_keys = []
+    valid_execution_details = []
     for key in flask.request.get_json(force=True)["data"]:
         rows = models.get_execution(key)
         if rows:
-            app.execute(app.format_execution(rows))
+            valid_execution_details.append(rows)
+        else:
+            invalid_keys.append(key)
+    if invalid_keys:
+        return {"error": {"message": "the following keys are invalid as no execution details could be located: %s" %
+                invalid_keys}}, 400, None
+    for rows in valid_execution_details:
+        app.execute(app.format_execution(rows))
     return {}, 201, None
 
 
