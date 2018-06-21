@@ -27,8 +27,8 @@ export const requiredExecutionFields = [
   'ScheduledExecutionName',
   'ScheduledExecutionClientName',
   'ScheduledExecutionDataSourceName',
-  'ScheduledExecutionDataSetName'
-  // TODO add ScheduledExecutionNextLoadDate
+  'ScheduledExecutionDataSetName',
+  'ScheduledExecutionNextLoadDate'
 ];
 
 // Convert data in execution object into simpler weekday data

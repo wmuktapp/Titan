@@ -1,6 +1,6 @@
 import React from 'react';
 import Label from '../label.jsx';
-import './text-field.css';
+import './index.css';
 
 class TextField extends React.Component {
 

@@ -6,7 +6,8 @@ import ScheduleDays from './days/days.jsx';
 import IntervalPicker from './interval-picker.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
-import TextField from './text-field/text-field.jsx'; 
+import TextField from './form-field/text-field.jsx';
+import DateField from './form-field/date-field.jsx';
 import Label from './label.jsx';
 import Ajax from '../utils/ajax';
 
@@ -250,7 +251,10 @@ class ScheduleForm extends React.Component {
     const invalidFields = [];
 
     for (let field of requiredExecutionFields) {
-      if (this.state.execution[field].trim().length === 0) {
+
+      const value = this.state.execution[field];
+
+      if (value === null || value.trim().length === 0) {
         invalidFields.push(field);
       }
     }
@@ -338,18 +342,35 @@ class ScheduleForm extends React.Component {
           onChange={this.onExecutionChange}
         />
 
-        <div>
-          <Label>Data source</Label>
-          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.onExecutionChange} disabled={!!program} />
-        </div>
-        <div>
-          <Label>Data set</Label>
-          <input type="text" name="ScheduledExecutionDataSetName" value={execution.ScheduledExecutionDataSetName} onChange={this.onExecutionChange} />
-        </div>
-        <div>
-          <Label>Next load date</Label>
-          <DatePicker selected={execution.ScheduledExecutionNextLoadDate} dateFormat="DD/MM/YYYY" onChange={this.updateNextLoadDate} />
-        </div>
+        <TextField
+          label="Data source"
+          name="ScheduledExecutionDataSourceName"
+          value={execution.ScheduledExecutionDataSourceName}
+          required={this.isRequired('ScheduledExecutionDataSourceName')}
+          validate={this.isInvalid('ScheduledExecutionDataSourceName')}
+          disabled={!!program}
+          onChange={this.onExecutionChange}
+        />
+
+
+        <TextField
+          label="Data set"
+          name="ScheduledExecutionDataSetName"
+          value={execution.ScheduledExecutionDataSetName}
+          required={this.isRequired('ScheduledExecutionDataSetName')}
+          validate={this.isInvalid('ScheduledExecutionDataSetName')}
+          onChange={this.onExecutionChange}
+        />
+
+        <DateField
+          label="Next load date"
+          name="ScheduledExecutionNextLoadDate"
+          value={execution.ScheduledExecutionNextLoadDate}
+          required={this.isRequired('ScheduledExecutionNextLoadDate')}
+          validate={this.isInvalid('ScheduledExecutionNextLoadDate')}
+          onChange={this.updateNextLoadDate}
+        />
+
         <div>
           <label>
             <input type="checkbox" name="ScheduledExecutionEnabled" checked={this.ScheduledExecutionEnabled} onChange={this.onExecutionChange} />
