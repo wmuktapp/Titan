@@ -10,6 +10,7 @@ setuptools.setup(
         "applicationinsights",
         "azure-mgmt-containerinstance",
         "azure-mgmt-resource",
+        "azure-storage-blob",
         "click",
         "flask",
         "flask_sqlalchemy",
@@ -24,7 +25,7 @@ setuptools.setup(
             "execute = titan.scripts.execute:main",
             "orchestrate = titan.scripts.orchestrate:main",
             "register = titan.scripts.register:main",
-            "extract-azure-sql = titan.extract.azuresql:main"
+            "azuresql = titan.extract.azuresql:main"
         ]
     }
 )

@@ -130,7 +130,7 @@ def get_executions():
 @decorators.to_json
 def get_extract_programs():
     response = {"data": []}
-    for python_name, friendly_name in (("extract-azure-sql", "Azure SQL"), ):
+    for python_name, friendly_name in (("azuresql", "Azure SQL"), ):
         program = importlib.import_module("titan.extract.%s" % python_name)
         response["data"].append({
             "ExtractProgramPythonName": python_name,
@@ -146,7 +146,7 @@ def get_extract_programs():
     return response
 
 
-@api.api_blueprint.route("/schedules/<int:key>", metods=["GET"])
+@api.api_blueprint.route("/schedules/<int:key>", methods=["GET"])
 @decorators.to_json
 def get_scheduled_execution(key):
     rows = models.get_scheduled_execution(key)
@@ -213,7 +213,7 @@ def get_scheduled_executions():
     params = {}
     for k in ("page_number", "page_size"):
         value = flask.request.args.get(k)
-        if k is not None:
+        if value is not None:
             params[k] = value
     return {"data": [dict(row) for row in models.get_scheduled_executions(**params)]}
 

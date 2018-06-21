@@ -120,12 +120,12 @@ def schedules_list():
     return jsonify(get_schedules(limit))"""
 
 
-@app.route('/api/schedules', methods=['POST'])
+"""@app.route('/api/schedules', methods=['POST'])
 def schedule_create():
     # TODO create schedule?
     return jsonify({
         'id': key()
-    })
+    })"""
 
 
 @app.route('/api/schedules/<int:schedule_key>')
