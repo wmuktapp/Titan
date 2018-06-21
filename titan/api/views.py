@@ -1,6 +1,7 @@
 import collections
 import importlib
 
+from sqlalchemy import exc
 import flask
 
 from titan import api, app, models
@@ -225,12 +226,15 @@ def insert_scheduled_execution():
     execution = data.get("execution", {})
     acquires = data.get("acquires", [])
     extract = data.get("extract", {})
-    with models.db.engine.begin() as transaction:
-        result, _ = models.insert_scheduled_execution(transaction, execution, extract)
-        scheduled_execution_key = result["ScheduledExecutionKey"]
-        for acquire in acquires:
-            acquire["ScheduledExecutionKey"] = scheduled_execution_key
-            _, _ = models.insert_scheduled_acquire(transaction, acquire)
+    try:
+        with models.db.engine.begin() as transaction:
+            result, _ = models.insert_scheduled_execution(transaction, execution, extract)
+            scheduled_execution_key = result["ScheduledExecutionKey"]
+            for acquire in acquires:
+                acquire["ScheduledExecutionKey"] = scheduled_execution_key
+                _, _ = models.insert_scheduled_acquire(transaction, acquire)
+    except exc.SQLAlchemyError as error:
+        return {"error": {"code": error.code, "message": str(error)}}, 400, None
     return {}, 201, None
 
 
