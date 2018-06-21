@@ -7,7 +7,7 @@ export function getAcquireProgramOptions(programs) {
       value: program.AcquireProgramKey,
       label: program.AcquireProgramFriendlyName,
       disabled: !program.AcquireProgramEnabled,
-      dataSource: program.AcquireProgramDataSource,
+      dataSource: program.AcquireProgramDataSourceName,
       options: program.Options
     };
   });
