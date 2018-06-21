@@ -19,7 +19,7 @@ class ExtractForm extends React.Component {
   }
 
   componentDidMount() {
-    Ajax.fetch('/api/extract-programs')
+    Ajax.fetch('/api/extract-programs/')
       .then(res => res.json())
       .then(result => {
         this.setState({
