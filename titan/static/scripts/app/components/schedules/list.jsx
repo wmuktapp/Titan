@@ -38,20 +38,18 @@ class ScheduleList extends React.Component {
       .then(res => res.json())
       .then(results => {
 
-        let schedules = results;
-        schedules = schedules.map(schedule => {
+        const schedules = results.data.map(schedule => {
           schedule.ScheduledExecutionNextScheduled = new Date(schedule.ScheduledExecutionNextScheduled);
           schedule.ScheduledExecutionNextLoadDate = new Date(schedule.ScheduledExecutionNextLoadDate);
           return schedule;
         });
 
-
         this.setState({
           schedules: schedules,
           loading: false,
-          selectedExecutions: this.getUniqueExecutions(results),
-          selectedClients: this.getUniqueClients(results),
-          selectedDataSets: this.getUniqueDataSets(results)
+          selectedExecutions: this.getUniqueExecutions(results.data),
+          selectedClients: this.getUniqueClients(results.data),
+          selectedDataSets: this.getUniqueDataSets(results.data)
         });
       });
   }
