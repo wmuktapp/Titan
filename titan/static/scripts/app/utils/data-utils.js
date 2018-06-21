@@ -22,6 +22,15 @@ export function getExecutionData(data) {
   };
 }
 
+// Fields required fo execution
+export const requiredExecutionFields = [
+  'ScheduledExecutionName',
+  'ScheduledExecutionClientName',
+  'ScheduledExecutionDataSourceName',
+  'ScheduledExecutionDataSetName',
+  'ScheduledExecutionNextLoadDate'
+];
+
 // Convert data in execution object into simpler weekday data
 export function getWeekDays(execution) {
   return {

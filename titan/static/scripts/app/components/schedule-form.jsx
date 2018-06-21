@@ -6,10 +6,11 @@ import ScheduleDays from './days/days.jsx';
 import IntervalPicker from './interval-picker.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
+import TextField from './text-field/text-field.jsx'; 
 import Label from './label.jsx';
 import Ajax from '../utils/ajax';
 
-import { getAcquireProgramOptions, getExecutionData, getWeekDays, getExecutionDays } from '../utils/data-utils';
+import { requiredExecutionFields, getAcquireProgramOptions, getExecutionData, getWeekDays, getExecutionDays } from '../utils/data-utils';
 
 // Import styles
 import 'react-select/dist/react-select.css';
@@ -59,7 +60,7 @@ class ScheduleForm extends React.Component {
 
       availablePrograms: [],
 
-      loading: false
+      invalidFields: []
     };
 
     this.onExecutionChange = this.onExecutionChange.bind(this);
@@ -77,10 +78,6 @@ class ScheduleForm extends React.Component {
   }
 
   componentDidMount() {
-
-    this.setState({
-      loading: true
-    });
 
     // Get acquire prohrams
     Ajax.fetch('/api/acquire-programs')
@@ -107,8 +104,7 @@ class ScheduleForm extends React.Component {
           this.setState({
             execution: execution,
             acquires: result.data.acquires,
-            extract: result.data.extract,
-            loading: false
+            extract: result.data.extract
           });
         });
     }
@@ -121,6 +117,16 @@ class ScheduleForm extends React.Component {
 
     const execution = this.state.execution;
     execution[name] = value;
+
+    // Remove field validation warning
+    let index = -1;
+    if ((index = this.state.invalidFields.indexOf(name)) > -1) {
+      const invalidFields = this.state.invalidFields;
+      invalidFields.splice(index, 1);
+      this.setState({
+        invalidFields: invalidFields
+      });
+    }
 
     this.setState({
       execution: execution
@@ -211,6 +217,14 @@ class ScheduleForm extends React.Component {
 
   onSubmit(event) {
 
+    event.preventDefault();
+
+    // Validate fields
+    if (!this.validateFields()) {
+      window.scrollTo(0, 0);
+      return;
+    }
+
     const data = getExecutionData(this.state);
 
     // Send insert/update to server
@@ -229,8 +243,31 @@ class ScheduleForm extends React.Component {
           updated: true
         });
       });
+  }
 
-    event.preventDefault();
+  validateFields() {
+    
+    const invalidFields = [];
+
+    for (let field of requiredExecutionFields) {
+      if (this.state.execution[field].trim().length === 0) {
+        invalidFields.push(field);
+      }
+    }
+
+    this.setState({
+      invalidFields: invalidFields
+    });
+
+    return invalidFields.length === 0;
+  }
+
+  isRequired(fieldName) {
+    return requiredExecutionFields.indexOf(fieldName) > -1;
+  }
+
+  isInvalid(fieldName) {
+    return this.state.invalidFields.indexOf(fieldName) > -1;
   }
 
   executeNow() {
@@ -265,10 +302,15 @@ class ScheduleForm extends React.Component {
 
         <h5>{ execution.ScheduledExecutionKey ? 'Update Schedule' : 'New Schedule' }</h5>
 
-        <div>
-          <Label required={true}>Name</Label>
-          <input type="text" name="ScheduledExecutionName" value={execution.ScheduledExecutionName} onChange={this.onExecutionChange} />
-        </div>
+        <TextField
+          label="Name"
+          name="ScheduledExecutionName"
+          value={execution.ScheduledExecutionName}
+          required={this.isRequired('ScheduledExecutionName')}
+          validate={this.isInvalid('ScheduledExecutionName')}
+          onChange={this.onExecutionChange}
+        />
+
         <div>
           <Label>Program</Label>
           <Select
@@ -286,10 +328,16 @@ class ScheduleForm extends React.Component {
           <Label>Schedule end</Label>
           <DatePicker selected={execution.ScheduledExecutionScheduleEnd} dateFormat="DD/MM/YYYY" onChange={this.updateScheduleEnd} />
         </div>
-        <div>
-          <Label>Client</Label>
-          <input type="text" name="ScheduledExecutionClientName" value={execution.ScheduledExecutionClientName} onChange={this.onExecutionChange} />
-        </div>
+
+        <TextField
+          label="Client"
+          name="ScheduledExecutionClientName"
+          value={execution.ScheduledExecutionClientName}
+          required={this.isRequired('ScheduledExecutionClientName')}
+          validate={this.isInvalid('ScheduledExecutionClientName')}
+          onChange={this.onExecutionChange}
+        />
+
         <div>
           <Label>Data source</Label>
           <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.onExecutionChange} disabled={!!program} />
