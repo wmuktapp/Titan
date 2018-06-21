@@ -16,9 +16,11 @@ export function getAcquireProgramOptions(programs) {
 // Pulls data to be submitted
 export function getExecutionData(data) {
   return {
-    execution: data.execution,
-    acquires: data.acquires,
-    extract: data.extract
+    data: {
+      execution: data.execution,
+      acquires: data.acquires,
+      extract: data.extract
+    }
   };
 }
 
