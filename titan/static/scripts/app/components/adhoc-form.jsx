@@ -78,7 +78,7 @@ class AdhocForm extends React.Component {
   componentDidMount() {
 
     // Get available acquire programs
-    Ajax.fetch('/api/acquire-programs')
+    Ajax.fetch('/api/acquire-programs/')
       .then(res => res.json())
       .then(result => {
         this.setState({
@@ -164,7 +164,7 @@ class AdhocForm extends React.Component {
 
     const data = getExecutionData(this.state);
 
-    Ajax.fetch('/api/executions', {
+    Ajax.fetch('/api/executions/', {
       method: 'POST',
       body: JSON.stringify(data)
     })

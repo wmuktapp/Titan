@@ -34,7 +34,7 @@ class ScheduleList extends React.Component {
 
     // On page load, retrieve a list of schedules
 
-    Ajax.fetch('/api/schedules')
+    Ajax.fetch('/api/schedules/')
       .then(res => res.json())
       .then(results => {
 
