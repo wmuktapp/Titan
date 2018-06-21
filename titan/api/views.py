@@ -12,7 +12,7 @@ def _nested_default_dict():
     return collections.defaultdict(_nested_default_dict)
 
 
-@api.api_blueprint.route("/execute", methods=["POST"])
+@api.api_blueprint.route("/executions/", methods=["POST"])
 @decorators.to_json
 def execute():
     data = flask.request.get_json(force=True).get("data", {"execution": {}, "acquires": [], "extract": {}})
