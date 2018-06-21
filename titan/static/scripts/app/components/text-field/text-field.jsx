@@ -24,6 +24,7 @@ class TextField extends React.Component {
           type="text"
           name={this.props.name}
           value={this.props.value}
+          disabled={this.props.disabled}
           onChange={this.props.onChange}
         />
       </div>
