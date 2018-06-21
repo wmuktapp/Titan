@@ -81,7 +81,7 @@ class ScheduleForm extends React.Component {
   componentDidMount() {
 
     // Get acquire prohrams
-    Ajax.fetch('/api/acquire-programs')
+    Ajax.fetch('/api/acquire-programs/')
       .then(res => res.json())
       .then(result => {
         this.setState({
@@ -229,7 +229,7 @@ class ScheduleForm extends React.Component {
     const data = getExecutionData(this.state);
 
     // Send insert/update to server
-    Ajax.fetch('/api/schedules', {
+    Ajax.fetch('/api/schedules/', {
       method: 'POST',
       body: JSON.stringify(data)
     })
