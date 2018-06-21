@@ -64,14 +64,14 @@ def adhoc():
 
 # API URLs
 
-@app.route('/api/executions')
+@app.route('/api/executions/')
 def executions_list():
 
-    start_date = request.args.get('start')
-    end_date = request.args.get('end')
+    end_date = request.args.get('end_date')
 
-    start_date = datetime.strptime(start_date, '%Y-%m-%d')
+    # start_date = datetime.strptime(end_date - timedelta(days=4), '%Y-%m-%d')
     end_date = datetime.strptime(end_date, '%Y-%m-%d')
+    start_date = end_date - timedelta(days=4)
 
     return get_execution_data(start_date, end_date)
 
@@ -111,16 +111,16 @@ def execution_retry():
     return get_execution_data(start_date, end_date)
 
 
-@app.route('/api/schedules')
+@app.route('/api/schedules/')
 def schedules_list():
     # TODO support filtering by querystring?
 
-    limit = 100
+    limit = 0
 
     return jsonify(get_schedules(limit))
 
 
-@app.route('/api/schedules', methods=['POST'])
+@app.route('/api/schedules/', methods=['POST'])
 def schedule_create():
     # TODO create schedule?
     return jsonify({
@@ -384,7 +384,9 @@ def get_schedules(limit):
             'ScheduledExecutionStatus': get_state()
         })
 
-    return schedules
+    return {
+        'data': schedules
+    }
 
 
 def get_schedule(id):

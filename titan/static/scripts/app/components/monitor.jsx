@@ -92,9 +92,13 @@ class Monitor extends React.Component {
       loading: true
     });
 
+    // const url = '/api/executions/'
+    //   + '?start=' + dateUtils.dateToIso8601(dates.start)
+    //   + '&end=' + dateUtils.dateToIso8601(dates.end);
+
+    // TODO make this dynamic
     const url = '/api/executions/'
-      + '?start=' + dateUtils.dateToIso8601(dates.start)
-      + '&end=' + dateUtils.dateToIso8601(dates.end);
+      + '?end_date=' + dateUtils.dateToIso8601(dates.end);
 
     // Request data
     Ajax.fetch(url)
