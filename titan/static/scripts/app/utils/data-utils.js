@@ -31,6 +31,14 @@ export const requiredExecutionFields = [
   'ScheduledExecutionNextLoadDate'
 ];
 
+export function validateField(value) {
+  if (typeof value.trim === 'function') {
+    return value.trim().length > 0;
+  } else {
+    return value !== null;
+  }
+}
+
 // Convert data in execution object into simpler weekday data
 export function getWeekDays(execution) {
   return {

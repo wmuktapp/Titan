@@ -11,7 +11,7 @@ import DateField from './form-field/date-field.jsx';
 import Label from './label.jsx';
 import Ajax from '../utils/ajax';
 
-import { requiredExecutionFields, getAcquireProgramOptions, getExecutionData, getWeekDays, getExecutionDays } from '../utils/data-utils';
+import { requiredExecutionFields, getAcquireProgramOptions, getExecutionData, getWeekDays, getExecutionDays, validateField } from '../utils/data-utils';
 
 // Import styles
 import 'react-select/dist/react-select.css';
@@ -254,7 +254,7 @@ class ScheduleForm extends React.Component {
 
       const value = this.state.execution[field];
 
-      if (value === null || value.trim().length === 0) {
+      if (!validateField(value)) {
         invalidFields.push(field);
       }
     }
