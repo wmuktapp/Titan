@@ -258,10 +258,13 @@ def update_scheduled_execution(key):
     execution.update(params)
     acquires = data.get("acquires", [])
     extract = data.get("extract", {})
-    with models.db.engine.begin() as transaction:
-        result, _ = models.update_scheduled_execution(transaction, execution, extract)
-        _ = models.delete_scheduled_acquires(transaction, params)
-        for acquire in acquires:
-            acquire.update(params)
-            _, _ = models.insert_scheduled_acquire(transaction, acquire)
+    try:
+        with models.db.engine.begin() as transaction:
+            result, _ = models.update_scheduled_execution(transaction, execution, extract)
+            _ = models.delete_scheduled_acquires(transaction, params)
+            for acquire in acquires:
+                acquire.update(params)
+                _, _ = models.insert_scheduled_acquire(transaction, acquire)
+    except exc.SQLAlchemyError as error:
+        return {"error": {"code": error.code, "message": str(error)}}, 400, None
     return {}, 201, None
