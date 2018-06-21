@@ -42,11 +42,6 @@
     vertical-align: text-bottom;
 }
 
-.monitoring-executions {
-    /*display: flex;*/
-    /*align-self: flex-end;*/
-}
-
 .monitoring-title-highlight {
     position: relative;
 }
@@ -56,10 +51,21 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: 105px;
+    width: 10.5rem;
     height: 100%;
     box-sizing: border-box;
     background-color: rgba(249, 174, 66, .15);
     border-left: 1px solid rgba(249, 174, 66, .2);
     border-right: 1px solid rgba(249, 174, 66, .2);
+}
+
+@media (max-width: 960px) {
+    .monitoring-dataset-label {
+        width: 150px;
+        height: 40px;
+        overflow: hidden;
+    }
+    .monitoring-title-highlight:after {
+        width: 9rem;
+    }
 }

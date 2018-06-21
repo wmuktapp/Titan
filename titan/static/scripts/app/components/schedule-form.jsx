@@ -1,19 +1,21 @@
 import React from 'react';
+import DatePicker from 'react-datepicker';
+import Select from 'react-select';
+import moment from 'moment';
 import ScheduleDays from './days/days.jsx';
 import IntervalPicker from './interval-picker.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
+import TextField from './form-field/text-field.jsx';
+import DateField from './form-field/date-field.jsx';
 import Label from './label.jsx';
 import Ajax from '../utils/ajax';
-import DataUtils from '../utils/data-utils';
-import DatePicker from 'react-datepicker';
-import Select from 'react-select';
-import moment from 'moment';
+
+import { requiredExecutionFields, getAcquireProgramOptions, getExecutionData, getWeekDays, getExecutionDays } from '../utils/data-utils';
 
 // Import styles
 import 'react-select/dist/react-select.css';
 import 'react-datepicker/dist/react-datepicker.css';
-
 import './schedule-form.css';
 
 class ScheduleForm extends React.Component {
@@ -59,7 +61,7 @@ class ScheduleForm extends React.Component {
 
       availablePrograms: [],
 
-      loading: false
+      invalidFields: []
     };
 
     this.onExecutionChange = this.onExecutionChange.bind(this);
@@ -77,10 +79,6 @@ class ScheduleForm extends React.Component {
   }
 
   componentDidMount() {
-
-    this.setState({
-      loading: true
-    });
 
     // Get acquire prohrams
     Ajax.fetch('/api/acquire-programs')
@@ -107,8 +105,7 @@ class ScheduleForm extends React.Component {
           this.setState({
             execution: execution,
             acquires: result.data.acquires,
-            extract: result.data.extract,
-            loading: false
+            extract: result.data.extract
           });
         });
     }
@@ -121,6 +118,16 @@ class ScheduleForm extends React.Component {
 
     const execution = this.state.execution;
     execution[name] = value;
+
+    // Remove field validation warning
+    let index = -1;
+    if ((index = this.state.invalidFields.indexOf(name)) > -1) {
+      const invalidFields = this.state.invalidFields;
+      invalidFields.splice(index, 1);
+      this.setState({
+        invalidFields: invalidFields
+      });
+    }
 
     this.setState({
       execution: execution
@@ -180,7 +187,7 @@ class ScheduleForm extends React.Component {
   updateDays(days) {
 
     const execution = this.state.execution,
-      executionDays = DataUtils.getExecutionDays(days);
+      executionDays = getExecutionDays(days);
     Object.assign(execution, executionDays);
 
     this.setState({ execution });
@@ -211,10 +218,20 @@ class ScheduleForm extends React.Component {
 
   onSubmit(event) {
 
+    event.preventDefault();
+
+    // Validate fields
+    if (!this.validateFields()) {
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    const data = getExecutionData(this.state);
+
     // Send insert/update to server
     Ajax.fetch('/api/schedules', {
       method: 'POST',
-      data: JSON.stringify(this.state)
+      body: JSON.stringify(data)
     })
       .then(res => res.json())
       .then(response => {
@@ -227,8 +244,34 @@ class ScheduleForm extends React.Component {
           updated: true
         });
       });
+  }
 
-    event.preventDefault();
+  validateFields() {
+    
+    const invalidFields = [];
+
+    for (let field of requiredExecutionFields) {
+
+      const value = this.state.execution[field];
+
+      if (value === null || value.trim().length === 0) {
+        invalidFields.push(field);
+      }
+    }
+
+    this.setState({
+      invalidFields: invalidFields
+    });
+
+    return invalidFields.length === 0;
+  }
+
+  isRequired(fieldName) {
+    return requiredExecutionFields.indexOf(fieldName) > -1;
+  }
+
+  isInvalid(fieldName) {
+    return this.state.invalidFields.indexOf(fieldName) > -1;
   }
 
   executeNow() {
@@ -247,10 +290,10 @@ class ScheduleForm extends React.Component {
     const execution = this.state.execution;
 
     // Simpler days object
-    const days = DataUtils.getWeekDays(execution);
+    const days = getWeekDays(execution);
 
     // Acquire program dropdown options
-    const programOptions = DataUtils.getAcquireProgramOptions(this.state.availablePrograms);
+    const programOptions = getAcquireProgramOptions(this.state.availablePrograms);
 
     const program = programOptions.find(option => option.value === execution.AcquireProgramKey);
 
@@ -263,10 +306,15 @@ class ScheduleForm extends React.Component {
 
         <h5>{ execution.ScheduledExecutionKey ? 'Update Schedule' : 'New Schedule' }</h5>
 
-        <div>
-          <Label required={true}>Name</Label>
-          <input type="text" name="ScheduledExecutionName" value={execution.ScheduledExecutionName} onChange={this.onExecutionChange} />
-        </div>
+        <TextField
+          label="Name"
+          name="ScheduledExecutionName"
+          value={execution.ScheduledExecutionName}
+          required={this.isRequired('ScheduledExecutionName')}
+          validate={this.isInvalid('ScheduledExecutionName')}
+          onChange={this.onExecutionChange}
+        />
+
         <div>
           <Label>Program</Label>
           <Select
@@ -284,22 +332,45 @@ class ScheduleForm extends React.Component {
           <Label>Schedule end</Label>
           <DatePicker selected={execution.ScheduledExecutionScheduleEnd} dateFormat="DD/MM/YYYY" onChange={this.updateScheduleEnd} />
         </div>
-        <div>
-          <Label>Client</Label>
-          <input type="text" name="ScheduledExecutionClientName" value={execution.ScheduledExecutionClientName} onChange={this.onExecutionChange} />
-        </div>
-        <div>
-          <Label>Data source</Label>
-          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.onExecutionChange} disabled={!!program} />
-        </div>
-        <div>
-          <Label>Data set</Label>
-          <input type="text" name="ScheduledExecutionDataSetName" value={execution.ScheduledExecutionDataSetName} onChange={this.onExecutionChange} />
-        </div>
-        <div>
-          <Label>Next load date</Label>
-          <DatePicker selected={execution.ScheduledExecutionNextLoadDate} dateFormat="DD/MM/YYYY" onChange={this.updateNextLoadDate} />
-        </div>
+
+        <TextField
+          label="Client"
+          name="ScheduledExecutionClientName"
+          value={execution.ScheduledExecutionClientName}
+          required={this.isRequired('ScheduledExecutionClientName')}
+          validate={this.isInvalid('ScheduledExecutionClientName')}
+          onChange={this.onExecutionChange}
+        />
+
+        <TextField
+          label="Data source"
+          name="ScheduledExecutionDataSourceName"
+          value={execution.ScheduledExecutionDataSourceName}
+          required={this.isRequired('ScheduledExecutionDataSourceName')}
+          validate={this.isInvalid('ScheduledExecutionDataSourceName')}
+          disabled={!!program}
+          onChange={this.onExecutionChange}
+        />
+
+
+        <TextField
+          label="Data set"
+          name="ScheduledExecutionDataSetName"
+          value={execution.ScheduledExecutionDataSetName}
+          required={this.isRequired('ScheduledExecutionDataSetName')}
+          validate={this.isInvalid('ScheduledExecutionDataSetName')}
+          onChange={this.onExecutionChange}
+        />
+
+        <DateField
+          label="Next load date"
+          name="ScheduledExecutionNextLoadDate"
+          value={execution.ScheduledExecutionNextLoadDate}
+          required={this.isRequired('ScheduledExecutionNextLoadDate')}
+          validate={this.isInvalid('ScheduledExecutionNextLoadDate')}
+          onChange={this.updateNextLoadDate}
+        />
+
         <div>
           <label>
             <input type="checkbox" name="ScheduledExecutionEnabled" checked={this.ScheduledExecutionEnabled} onChange={this.onExecutionChange} />

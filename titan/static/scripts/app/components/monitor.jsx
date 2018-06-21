@@ -1,9 +1,9 @@
 import React from 'react';
 import MonitoringControls from './monitoring/controls.jsx';
 import MonitoringGrid from './monitoring/grid.jsx';
-
+import Alert from './alert/alert.jsx'
 import Ajax from '../utils/ajax';
-import DataUtils from '../utils/data-utils';
+import { mergeData } from '../utils/data-utils';
 import dateUtils from '../utils/date-utils';
 import Dialog from '../utils/dialog.jsx';
 
@@ -23,6 +23,7 @@ class Monitor extends React.Component {
     end.setDate(end.getDate() - 1);
 
     this.state = {
+      hasError: false,
       dates: {
         start: start,
         end: end
@@ -78,7 +79,7 @@ class Monitor extends React.Component {
     const callback = (result) => {
       this.setState({
         loading: false,
-        data: DataUtils.mergeData(this.state.data, result.data)
+        data: mergeData(this.state.data, result.data)
       });
     };
     this.fetchData(this.state.dates, callback)
@@ -87,6 +88,7 @@ class Monitor extends React.Component {
   fetchData(dates, callback) {
 
     this.setState({
+      hasError: false,
       loading: true
     });
 
@@ -100,8 +102,10 @@ class Monitor extends React.Component {
       .then(
         callback,
         (error) => {
-          // TODO error handling
-          console.log('Error retrieving data');
+          console.error(error.message);
+          this.setState({
+            hasError: true
+          });
         }
       );
   }
@@ -173,6 +177,14 @@ class Monitor extends React.Component {
   }
 
   render() {
+
+    if (this.state.hasError) {
+      return (
+        <Alert type="error" title="Unable to load data">
+          <p>An error occurred while retrieving the monitoring data</p>
+        </Alert>
+      );
+    }
 
     // TODO pass retryList to MonitoringGrid, use it to handle checked / unchecked state
 
