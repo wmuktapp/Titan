@@ -27,6 +27,7 @@ export function getExecutionData(data) {
 // Fields required for execution
 export const requiredExecutionFields = [
   'ScheduledExecutionName',
+  'ScheduledExecutionNextScheduled',
   'ScheduledExecutionClientName',
   'ScheduledExecutionDataSourceName',
   'ScheduledExecutionDataSetName',
