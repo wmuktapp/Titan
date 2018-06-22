@@ -20,6 +20,10 @@ export function getExecutionData(data) {
   const execution = data.execution;
   delete execution.ScheduledIntervalKey;
 
+  execution.ScheduledExecutionNextScheduled = formatDateTime(execution.ScheduledExecutionNextScheduled);
+  execution.ScheduledExecutionScheduleEnd = formatDateTime(execution.ScheduledExecutionScheduleEnd);
+  execution.ScheduledExecutionNextLoadDate = formatDateTime(execution.ScheduledExecutionNextLoadDate);
+
   return {
     data: {
       execution: execution,
@@ -27,6 +31,17 @@ export function getExecutionData(data) {
       extract: data.extract
     }
   };
+}
+
+const dateFormat = 'YYYY-MM-DD HH:mm:ss';
+
+function formatDateTime(dateTime) {
+  if (typeof dateTime === 'string') {
+    return dateTime;
+  } else if (dateTime === null) {
+    return null;
+  }
+  return dateTime.format(dateFormat);
 }
 
 // Fields required for execution

@@ -1,7 +1,5 @@
 import React from 'react';
-import DatePicker from 'react-datepicker';
 import Select from 'react-select';
-import moment from 'moment';
 import ScheduleDays from './days/days.jsx';
 import IntervalPicker from './interval-picker.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
@@ -15,7 +13,6 @@ import { requiredExecutionFields, getAcquireProgramOptions, getExecutionData, ge
 
 // Import styles
 import 'react-select/dist/react-select.css';
-import 'react-datepicker/dist/react-datepicker.css';
 import './schedule-form.css';
 
 class ScheduleForm extends React.Component {
@@ -95,16 +92,8 @@ class ScheduleForm extends React.Component {
       Ajax.fetch(`/api/schedules/${this.state.execution.ScheduledExecutionKey}`)
         .then(res => res.json())
         .then(result => {
-
-          const execution = result.data.execution;
-
-          // TODO Make this a method in DateUtils?
-          execution.ScheduledExecutionNextScheduled = moment(new Date(execution.ScheduledExecutionNextScheduled));
-          execution.ScheduledExecutionScheduleEnd = moment(new Date(execution.ScheduledExecutionScheduleEnd));
-          execution.ScheduledExecutionNextLoadDate = moment(new Date(execution.ScheduledExecutionNextLoadDate));
-
           this.setState({
-            execution: execution,
+            execution: result.data.execution,
             acquires: result.data.acquires,
             extract: result.data.extract
           });
@@ -230,6 +219,8 @@ class ScheduleForm extends React.Component {
 
     const data = getExecutionData(this.state);
 
+    console.log(data)
+
     // Send insert/update to server
     Ajax.fetch('/api/schedules/', {
       method: 'POST',
@@ -237,6 +228,8 @@ class ScheduleForm extends React.Component {
     })
       .then(res => res.json())
       .then(response => {
+
+        // TODO handle returned execution data
 
         const execution = this.state.execution;
         execution.ScheduledExecutionKey = execution.ScheduledExecutionKey || response.ScheduledExecutionKey;
