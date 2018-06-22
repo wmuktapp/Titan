@@ -186,18 +186,6 @@ form .label-body {
     float: right;
 }
 
-
-/* React Datepicker overrides */
-
-.react-datepicker__navigation {
-    height: initial;
-    margin-bottom: 0;
-}
-
-.react-datepicker__navigation:hover {
-    border-color: transparent;
-}
-
 /* react-select overrides */
 
 .titan-react-select {
