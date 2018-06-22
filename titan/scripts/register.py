@@ -43,7 +43,7 @@ def main(python_name, friendly_name, data_source_name, author, click_command_fun
         options.append({
             "AcquireProgramOptionName": name,
             "AcquireProgramOptionRequired": option.required,
-            "AcquireProgramOptionType": option.type,
+            "AcquireProgramOptionType": option.type.name,
             "AcquireProgramOptionHelp": option.help
         })
     with flask_app.app_context():

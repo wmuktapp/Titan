@@ -144,7 +144,7 @@ def get_extract_programs():
                 {
                     "ExtractProgramOptionName": max(option.opts, key=len),
                     "ExtractProgramOptionRequired": option.required,
-                    "ExtractProgramOptionType": option.type,
+                    "ExtractProgramOptionType": option.type.name,
                     "ExtractProgramOptionHelp": option.help
                 }
                 for option in program.main.params
