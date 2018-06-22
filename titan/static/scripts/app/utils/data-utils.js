@@ -17,12 +17,23 @@ export function getAcquireProgramOptions(programs) {
 export function getExecutionData(data) {
 
   // Remove scheduled interval key
-  const execution = data.execution;
+  const execution = Object.assign({}, data.execution);
   delete execution.ScheduledIntervalKey;
 
+  // Format dates into strings (YYYY-MM-DD HH:mm:ss)
   execution.ScheduledExecutionNextScheduled = formatDateTime(execution.ScheduledExecutionNextScheduled);
   execution.ScheduledExecutionScheduleEnd = formatDateTime(execution.ScheduledExecutionScheduleEnd);
   execution.ScheduledExecutionNextLoadDate = formatDateTime(execution.ScheduledExecutionNextLoadDate);
+
+  // Remove interval values, if applicable
+  if (execution.ScheduledIntervalMI === 0
+      && execution.ScheduledIntervalHH === 0
+      && execution.ScheduledIntervalDD === 0) {
+    // All values are zero - remove entirely
+    delete execution.ScheduledIntervalMI;
+    delete execution.ScheduledIntervalHH;
+    delete execution.ScheduledIntervalDD;
+  }
 
   return {
     data: {
