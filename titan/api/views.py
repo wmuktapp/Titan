@@ -81,10 +81,12 @@ def get_execution(key):
             "ExtractEndTime": arbitrary_row["ExtractEndTime"],
             "ExtractStatus": arbitrary_row["ExtractStatus"],
             "ExtractErrorMessage": arbitrary_row["ExtractErrorMessage"],
-            "Options": {}
+            "Options": []
         } if extract_key is not None else {}
     }
     acquires = {}
+    acquire_options = {}
+    extract_options = {}
     for row in rows:
         acquire_key = row["AcquireKey"]
         if acquire_key is not None:
@@ -96,15 +98,27 @@ def get_execution(key):
                     "AcquireEndTime": row["AcquireEndTime"],
                     "AcquireStatus": row["AcquireStatus"],
                     "AcquireErrorMessage": row["AcquireErrorMessage"],
-                    "Options": {}
+                    "Options": []
                 }
-            acquire_option_name = row.get("AcquireOptionName")
+            acquire_option_name = row["ScheduledAcquireOptionName"]
             if acquire_option_name is not None:
-                acquire["Options"][acquire_option_name] = row["AcquireOptionValue"]
-        extract_option_name = row.get("ExtractOptionName")
+                acquire_option = acquire_options.get(acquire_option_name)
+                if acquire_option is None:
+                    acquire_option = acquire_options[acquire_option_name] = {
+                        "ScheduledAcquireOptionName": acquire_option_name,
+                        "ScheduledAcquireOptionValue": row["ScheduledAcquireOptionValue"]
+                    }
+                    acquire["Options"].append(acquire_option)
+        extract_option_name = row["ScheduledExtractOptionName"]
         if extract_option_name is not None:
-            details["extract"]["Options"][extract_option_name] = row["ExtractOptionValue"]
+            extract_option = extract_options.get(extract_option_name)
+            if extract_option is None:
+                extract_options[extract_option_name] = {
+                    "ScheduledExtractOptionName": extract_option_name,
+                    "ScheduledExtractOptionValue": row["ScheduledExtractOptionValue"]
+                }
     details["acquires"].extend(acquires.values())
+    details["extract"]["Options"].extend(extract_options.values())
     return {"data": details}
 
 
@@ -184,33 +198,47 @@ def get_scheduled_execution(key):
             "ScheduledSundayEnabled": arbitrary_row["ScheduledSundayEnabled"],
             "AcquireProgramKey": arbitrary_row["AcquireProgramKey"],
             "AcquireProgramFriendlyName": arbitrary_row["AcquireProgramFriendlyName"],
-            "Status": arbitrary_row["Status"]
+            "Status": arbitrary_row["ScheduledExecutionStatus"]
         },
         "acquires": [],
         "extract": {
             "ScheduledExtractKey": scheduled_extract_key,
             "ScheduledExtractDestination": arbitrary_row["ScheduledExtractDestination"],
-            "Options": {}
+            "Options": []
         } if scheduled_extract_key is not None else {}
     }
     acquires = {}
+    acquire_options = {}
+    extract_options = {}
     for row in rows:
-        acquire_key = row["AcquireKey"]
+        acquire_key = row["ScheduledAcquireKey"]
         if acquire_key is not None:
             acquire = acquires.get(acquire_key)
             if acquire is None:
-                acquires[acquire_key] = {
+                acquire = acquires[acquire_key] = {
                     "ScheduledAcquireKey": row["ScheduledAcquireKey"],
                     "ScheduledAcquireName": row["ScheduledAcquireName"],
-                    "Options": {}
+                    "Options": []
                 }
-            acquire_option_name = row.get("ScheduledAcquireOptionName")
+            acquire_option_name = row["ScheduledAcquireOptionName"]
             if acquire_option_name is not None:
-                acquire["Options"][acquire_option_name] = row["ScheduledAcquireOptionValue"]
-        extract_option_name = row.get("ScheduledExtractOptionName")
+                acquire_option = acquire_options.get(acquire_option_name)
+                if acquire_option is None:
+                    acquire_option = acquire_options[acquire_option_name] = {
+                        "ScheduledAcquireOptionName": acquire_option_name,
+                        "ScheduledAcquireOptionValue": row["ScheduledAcquireOptionValue"]
+                    }
+                    acquire["Options"].append(acquire_option)
+        extract_option_name = row["ScheduledExtractOptionName"]
         if extract_option_name is not None:
-            details["extract"]["Options"][extract_option_name] = row["ScheduledExtractOptionValue"]
+            extract_option = extract_options.get(extract_option_name)
+            if extract_option is None:
+                 extract_options[extract_option_name] = {
+                    "ScheduledExtractOptionName": extract_option_name,
+                    "ScheduledExtractOptionValue": row["ScheduledExtractOptionValue"]
+                }
     details["acquires"].extend(acquires.values())
+    details["extract"]["Options"].extend(extract_options.values())
     return {"data": details}
 
 
