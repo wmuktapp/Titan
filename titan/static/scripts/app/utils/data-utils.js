@@ -40,11 +40,14 @@ export const requiredExecutionFields = [
 ];
 
 export function validateField(value) {
-  if (typeof value.trim === 'function') {
-    return value.trim().length > 0;
-  } else {
-    return value !== null;
+
+  if (value === null) { // Object values
+    return false;
   }
+  if (typeof value.trim === 'function') { // String values
+    return value.trim().length > 0;
+  }
+  return true;
 }
 
 // Convert data in execution object into simpler weekday data
