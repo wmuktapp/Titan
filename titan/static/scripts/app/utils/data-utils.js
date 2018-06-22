@@ -36,7 +36,8 @@ export const requiredExecutionFields = [
   'ScheduledExecutionClientName',
   'ScheduledExecutionDataSourceName',
   'ScheduledExecutionDataSetName',
-  'ScheduledExecutionNextLoadDate'
+  'ScheduledExecutionNextLoadDate',
+  'ScheduledExecutionUser'
 ];
 
 export function validateField(value) {

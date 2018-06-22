@@ -34,6 +34,7 @@ class ScheduleForm extends React.Component {
         ScheduledExecutionDataSourceName: '',
         ScheduledExecutionDataSetName: '',
         ScheduledExecutionNextLoadDate: null,
+        ScheduledExecutionUser: '',
         ScheduledExecutionEnabled: true,
 
         ScheduledIntervalKey: null,
@@ -362,7 +363,6 @@ class ScheduleForm extends React.Component {
           onChange={this.onExecutionChange}
         />
 
-
         <TextField
           label="Data set"
           name="ScheduledExecutionDataSetName"
@@ -379,6 +379,15 @@ class ScheduleForm extends React.Component {
           required={this.isRequired('ScheduledExecutionNextLoadDate')}
           validate={this.isInvalid('ScheduledExecutionNextLoadDate')}
           onChange={this.updateNextLoadDate}
+        />
+
+        <TextField
+          label="User"
+          name="ScheduledExecutionUser"
+          value={execution.ScheduledExecutionUser}
+          required={this.isRequired('ScheduledExecutionUser')}
+          validate={this.isInvalid('ScheduledExecutionUser')}
+          onChange={this.onExecutionChange}
         />
 
         <div className="form-checkbox-field">
