@@ -52,7 +52,6 @@ class ScheduleForm extends React.Component {
 
       acquires: [],
       extract: {
-        ScheduledExtractKey: null,
         ScheduledExtractDestination: 0,
         Options: []
       },

@@ -436,7 +436,6 @@ def get_schedule(id):
         })
 
     extract = {
-        'ScheduledExtractKey': key(),
         'ScheduledExtractDestination': get_extract_program(),
         'Options': get_extract_program_option_values()
     }

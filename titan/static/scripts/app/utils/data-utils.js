@@ -35,11 +35,15 @@ export function getExecutionData(data) {
     delete execution.ScheduledIntervalDD;
   }
 
+  const acquires = Object.assign({}, data.acquires);
+
+  const extract = Object.assign({}, data.extract);
+
   return {
     data: {
       execution: execution,
-      acquires: data.acquires,
-      extract: data.extract
+      acquires: acquires,
+      extract: extract
     }
   };
 }
