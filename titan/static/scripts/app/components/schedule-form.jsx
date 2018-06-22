@@ -121,7 +121,7 @@ class ScheduleForm extends React.Component {
     execution[name] = value;
 
     // Remove field validation warning
-    let index = -1;
+    let index;
     if ((index = this.state.invalidFields.indexOf(name)) > -1) {
       const invalidFields = this.state.invalidFields;
       invalidFields.splice(index, 1);
