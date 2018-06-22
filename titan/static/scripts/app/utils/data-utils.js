@@ -15,13 +15,33 @@ export function getAcquireProgramOptions(programs) {
 
 // Pulls data to be submitted
 export function getExecutionData(data) {
+
+  // Remove scheduled interval key
+  const execution = data.execution;
+  delete execution.ScheduledIntervalKey;
+
+  execution.ScheduledExecutionNextScheduled = formatDateTime(execution.ScheduledExecutionNextScheduled);
+  execution.ScheduledExecutionScheduleEnd = formatDateTime(execution.ScheduledExecutionScheduleEnd);
+  execution.ScheduledExecutionNextLoadDate = formatDateTime(execution.ScheduledExecutionNextLoadDate);
+
   return {
     data: {
-      execution: data.execution,
+      execution: execution,
       acquires: data.acquires,
       extract: data.extract
     }
   };
+}
+
+const dateFormat = 'YYYY-MM-DD HH:mm:ss';
+
+function formatDateTime(dateTime) {
+  if (typeof dateTime === 'string') {
+    return dateTime;
+  } else if (dateTime === null) {
+    return null;
+  }
+  return dateTime.format(dateFormat);
 }
 
 // Fields required for execution
@@ -31,15 +51,19 @@ export const requiredExecutionFields = [
   'ScheduledExecutionClientName',
   'ScheduledExecutionDataSourceName',
   'ScheduledExecutionDataSetName',
-  'ScheduledExecutionNextLoadDate'
+  'ScheduledExecutionNextLoadDate',
+  'ScheduledExecutionUser'
 ];
 
 export function validateField(value) {
-  if (typeof value.trim === 'function') {
-    return value.trim().length > 0;
-  } else {
-    return value !== null;
+
+  if (value === null) { // Object values
+    return false;
   }
+  if (typeof value.trim === 'function') { // String values
+    return value.trim().length > 0;
+  }
+  return true;
 }
 
 // Convert data in execution object into simpler weekday data

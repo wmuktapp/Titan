@@ -10,7 +10,7 @@
 
 .acquire-item label {
     display: inline-block;
-    min-width: 8em;
+    min-width: 210px;
 }
 
 .acquire-item-remove {
