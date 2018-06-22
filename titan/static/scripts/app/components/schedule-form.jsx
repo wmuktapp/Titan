@@ -65,7 +65,6 @@ class ScheduleForm extends React.Component {
     };
 
     this.onExecutionChange = this.onExecutionChange.bind(this);
-    this.onEnabledChange = this.onEnabledChange.bind(this);
     this.onChangeProgram = this.onChangeProgram.bind(this);
     this.updateInterval = this.updateInterval.bind(this);
     this.updateNextScheduled = this.updateNextScheduled.bind(this);
@@ -113,9 +112,10 @@ class ScheduleForm extends React.Component {
   }
 
   onExecutionChange(event) {
+
     const target = event.target,
       name = target.name,
-      value = target.value;
+      value = target.hasOwnProperty('checked') ? target.checked : target.value;
 
     const execution = this.state.execution;
     execution[name] = value;
@@ -129,19 +129,6 @@ class ScheduleForm extends React.Component {
         invalidFields: invalidFields
       });
     }
-
-    this.setState({
-      execution: execution
-    });
-  }
-
-  onEnabledChange(event) {
-    const target = event.target,
-      name = target.name,
-      value = target.checked; // NOTE: different from above
-
-    const execution = this.state.execution;
-    execution[name] = value;
 
     this.setState({
       execution: execution
@@ -396,7 +383,7 @@ class ScheduleForm extends React.Component {
 
         <div className="form-checkbox-field">
           <label>
-            <input type="checkbox" name="ScheduledExecutionEnabled" checked={this.ScheduledExecutionEnabled} onChange={this.onEnabledChange} />
+            <input type="checkbox" name="ScheduledExecutionEnabled" checked={this.ScheduledExecutionEnabled} onChange={this.onExecutionChange} />
             <span className="label-body">Enabled</span>
           </label>
         </div>
