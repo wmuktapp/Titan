@@ -136,6 +136,7 @@ def insert_scheduled_acquire(transaction, acquire):
 def insert_scheduled_execution(transaction, execution, extract):
     execution_output_params = {"ScheduledExecutionKey": "INT", "ScheduledExtractKey": "INT"}
     options = extract.pop("Options", ())
+    execution["ScheduledExtractDestination"] = extract.pop("ScheduledExtractDestination")
     result = _execute_stored_procedure(transaction, "config.SP_InsertScheduledExecution", execution,
                                        execution_output_params).fetchone()
     option_results = _insert_scheduled_extract_options(transaction, result["ScheduledExtractKey"], options)
