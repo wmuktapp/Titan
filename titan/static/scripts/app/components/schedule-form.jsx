@@ -41,13 +41,13 @@ class ScheduleForm extends React.Component {
         ScheduledIntervalHH: 0,
         ScheduledIntervalDD: 0,
 
-        ScheduledMondayEnabled: false,
-        ScheduledTuesdayEnabled: false,
-        ScheduledWednesdayEnabled: false,
-        ScheduledThursdayEnabled: false,
-        ScheduledFridayEnabled: false,
-        ScheduledSaturdayEnabled: false,
-        ScheduledSundayEnabled: false,
+        ScheduledMondayEnabled: true,
+        ScheduledTuesdayEnabled: true,
+        ScheduledWednesdayEnabled: true,
+        ScheduledThursdayEnabled: true,
+        ScheduledFridayEnabled: true,
+        ScheduledSaturdayEnabled: true,
+        ScheduledSundayEnabled: true,
 
         AcquireProgramKey: 0
       },
