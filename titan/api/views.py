@@ -111,26 +111,23 @@ def get_execution(key):
 @api.api_blueprint.route("/executions/", methods=["GET"])
 @decorators.to_json
 def get_executions():
-    try:
-        params = {}
-        for k in ("end_date", "page_number", "page_size", "load_date_count"):
-            value = flask.request.args.get(k)
-            if value is not None:
-                params[k] = value
-        executions = models.get_executions(**params)
-        data = _nested_default_dict()
-        for row in executions:
-            client = data[row["ExecutionClientName"]]
-            data_source = client[row["ExecutionDataSourceName"]]
-            data_set = data_source[row["ExecutionDataSetName"]]
-            details = {}
-            for key in ("ExecutionKey", "AcquireProgramKey", "AcquireStartTime", "AcquireStatus", "ExtractStartTime",
-                        "ExtractStatus"):
-                details[key] = row[key]
-            data_set[row["ExecutionLoadDate"]] = details
-        return {"data": data}
-    except Exception as error:
-        return {"error": str(error)}
+    params = {}
+    for k in ("end_date", "page_number", "page_size", "load_date_count"):
+        value = flask.request.args.get(k)
+        if value is not None:
+            params[k] = value
+    executions = models.get_executions(**params)
+    data = _nested_default_dict()
+    for row in executions:
+        client = data[row["ExecutionClientName"]]
+        data_source = client[row["ExecutionDataSourceName"]]
+        data_set = data_source[row["ExecutionDataSetName"]]
+        details = {}
+        for key in ("ExecutionKey", "AcquireProgramKey", "AcquireStartTime", "AcquireStatus", "ExtractStartTime",
+                    "ExtractStatus"):
+            details[key] = row[key]
+        data_set[row["ExecutionLoadDate"]] = details
+    return {"data": data}
 
 
 @api.api_blueprint.route("/extract-programs/", methods=["GET"])
