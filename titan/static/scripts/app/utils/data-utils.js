@@ -15,9 +15,14 @@ export function getAcquireProgramOptions(programs) {
 
 // Pulls data to be submitted
 export function getExecutionData(data) {
+
+  // Remove scheduled interval key
+  const execution = data.execution;
+  delete execution.ScheduledIntervalKey;
+
   return {
     data: {
-      execution: data.execution,
+      execution: execution,
       acquires: data.acquires,
       extract: data.extract
     }
