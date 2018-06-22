@@ -327,6 +327,7 @@ class ScheduleForm extends React.Component {
           required={this.isRequired('ScheduledExecutionNextScheduled')}
           validate={this.isInvalid('ScheduledExecutionNextScheduled')}
           onChange={this.updateNextScheduled}
+          includeTime={true}
         />
         <DateField
           label="Schedule end"
@@ -335,6 +336,7 @@ class ScheduleForm extends React.Component {
           required={this.isRequired('ScheduledExecutionScheduleEnd')}
           validate={this.isInvalid('ScheduledExecutionScheduleEnd')}
           onChange={this.updateScheduleEnd}
+          includeTime={true}
         />
 
         <TextField
