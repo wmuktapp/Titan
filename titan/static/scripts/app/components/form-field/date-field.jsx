@@ -14,7 +14,8 @@ class DateField extends React.Component {
     const errorMessage = error ? 'This field is required' : '';
 
     return (
-      <FormRow required={this.props.required} label={this.props.label} error={errorMessage}>
+      <FormRow required={this.props.required} label={this.props.label} error={errorMessage}
+        tooltip="All dates and times are in UTC">
         <DatePicker
           dateFormat="DD/MM/YYYY"
           className={className}

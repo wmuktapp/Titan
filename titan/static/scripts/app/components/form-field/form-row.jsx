@@ -6,7 +6,7 @@ class FormRow extends React.Component {
   render() {
     return (
       <div>
-        <Label required={this.props.required}>{this.props.label}</Label>
+        <Label required={this.props.required} tooltip={this.props.tooltip}>{this.props.label}</Label>
         {
           this.props.error &&
             <p className="input-error-message">{this.props.error}</p>
