@@ -105,7 +105,7 @@ export function getExecutionDays(days) {
 
 // Merge two data objects 
 export function mergeData(data1, data2) {
-  return this.__mergeObjects(data1, data2);
+  return __mergeObjects(data1, data2);
 }
 
 function __mergeObjects(object1, object2) {
