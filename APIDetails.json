@@ -41,10 +41,13 @@ GET /acquire-programs/
             "AcquireProgramFriendlyName": str (req),
             "AcquireProgramDataSourceName": str (req),
             "AcquireProgramEnabled": bool (req),
+            "AcquireProgramHelp": str (req),
             "Options": [
                 {
                     "AcquireProgramOptionName": str (req),
-                    "AcquirePorgramOptionRequired": bool (req)
+                    "AcquireProgramOptionRequired": bool (req),
+                    "AcquireProgramOptionType": string (req),
+                    "AcquireProgramOptionHelp": string (req)
                 }
             ]
         }
@@ -130,10 +133,13 @@ GET /extract-programs/
         {
             "ExtractProgramPythonName": str (req),
             "ExtractProgramFriendlyName": str (req),
+            "ExtractProgramHelp": str (req),
             "Options": [
                 {
                     "ExtractProgramOptionName": str (req),
-                    "ExtractProgramOptionRequired": bool (req)
+                    "ExtractProgramOptionRequired": bool (req),
+                    "ExtractProgramOptionType": str (req),
+                    "ExtractProgramOptionHelp": str (req)
                 }
             ]
         }

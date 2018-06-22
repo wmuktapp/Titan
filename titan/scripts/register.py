@@ -31,6 +31,7 @@ def main(python_name, friendly_name, data_source_name, author, click_command_fun
         "AcquireProgramDataSourceName": data_source_name,
         "AcquireProgramAuthor": author,
         "AcquireProgramEnabled": enabled,
+        "AcquireProgramHelp": command.help,
         "Options": []
     }
     options = acquire_program["Options"]
@@ -41,7 +42,9 @@ def main(python_name, friendly_name, data_source_name, author, click_command_fun
             continue
         options.append({
             "AcquireProgramOptionName": name,
-            "AcquireProgramOptionRequired": option.required
+            "AcquireProgramOptionRequired": option.required,
+            "AcquireProgramOptionType": option.type,
+            "AcquireProgramOptionHelp": option.help
         })
     with flask_app.app_context():
         if acquire_program_key is None:

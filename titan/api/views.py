@@ -35,14 +35,17 @@ def get_acquire_programs():
                 "AcquireProgramFriendlyName": row["AcquireProgramFriendlyName"],
                 "AcquireProgramDataSourceName": row["AcquireProgramDataSourceName"],
                 "AcquireProgramEnabled": row["AcquireProgramEnabled"],
+                "AcquireProgramHelp": row["AcquireProgramHelp"],
                 "Options": []
             }
         option_name = row["AcquireProgramOptionName"]
         if option_name is not None:
             acquire_programs[key]["Options"].append({
                 "AcquireProgramOptionName": option_name,
-                "AcquireProgramOptionRequired": row["AcquireProgramOptionRequired"]}
-            )
+                "AcquireProgramOptionRequired": row["AcquireProgramOptionRequired"],
+                "AcquireProgramOptionType": row["AcquireProgramOptionType"],
+                "AcquireProgramOptionHelp": row["AcquireProgramOptionHelp"]
+            })
     return {"data": list(acquire_programs.values())}
 
 
@@ -136,10 +139,13 @@ def get_extract_programs():
         response["data"].append({
             "ExtractProgramPythonName": python_name,
             "ExtractProgramFriendlyName": friendly_name,
+            "ExtractProgramHelp": program.help,
             "Options": [
                 {
                     "ExtractProgramOptionName": max(option.opts, key=len),
-                    "ExtractProgramOptionRequired": option.required
+                    "ExtractProgramOptionRequired": option.required,
+                    "ExtractProgramOptionType": option.type,
+                    "ExtractProgramOptionHelp": option.help
                 }
                 for option in program.main.params
             ]
