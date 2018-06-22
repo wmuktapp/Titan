@@ -433,10 +433,13 @@ class ScheduleForm extends React.Component {
 
         <div>
           <input type="submit" value={ execution.ScheduledExecutionKey ? 'Update' : 'Create' } />
-          <button onClick={this.executeNow} className="btn-now">
-            Execute now
-            <span className="fas fa-angle-right btn-now-icon" />
-          </button>
+          {
+            this.props.id &&
+              <button onClick={this.executeNow} className="btn-now">
+                Execute now
+                <span className="fas fa-angle-right btn-now-icon" />
+              </button>
+          }
         </div>
 
       </form>
