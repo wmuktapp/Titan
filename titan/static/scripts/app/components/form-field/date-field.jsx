@@ -1,7 +1,6 @@
 import React from 'react';
+import FormRow from './form-row.jsx';
 import DatePicker from 'react-datepicker';
-import Label from '../label.jsx';
-import './index.css';
 
 class DateField extends React.Component {
 
@@ -12,14 +11,10 @@ class DateField extends React.Component {
       && this.props.value === null;
 
     const className = error ? 'input-error' : '';
+    const errorMessage = error ? 'This field is required' : '';
 
     return (
-      <div>
-        <Label required={this.props.required}>{this.props.label}</Label>
-        {
-          error &&
-            <p className="input-error-message">This field is required</p>
-        }
+      <FormRow required={this.props.required} label={this.props.label} error={errorMessage}>
         <DatePicker
           dateFormat="DD/MM/YYYY"
           className={className}
@@ -29,7 +24,7 @@ class DateField extends React.Component {
           disabled={this.props.disabled}
           onChange={this.props.onChange}
         />
-      </div>
+      </FormRow>
     );
   }
 }

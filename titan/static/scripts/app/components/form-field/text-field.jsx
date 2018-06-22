@@ -1,6 +1,5 @@
 import React from 'react';
-import Label from '../label.jsx';
-import './index.css';
+import FormRow from './form-row.jsx';
 
 class TextField extends React.Component {
 
@@ -11,14 +10,10 @@ class TextField extends React.Component {
       && this.props.value.length === 0;
 
     const className = error ? 'input-error' : '';
+    const errorMessage = error ? 'This field is required' : '';
 
     return (
-      <div>
-        <Label required={this.props.required}>{this.props.label}</Label>
-        {
-          error &&
-            <p className="input-error-message">This field is required</p>
-        }
+      <FormRow required={this.props.required} label={this.props.label} error={errorMessage}>
         <input
           className={className}
           type="text"
@@ -27,7 +22,7 @@ class TextField extends React.Component {
           disabled={this.props.disabled}
           onChange={this.props.onChange}
         />
-      </div>
+      </FormRow>
     );
   }
 }
