@@ -77,6 +77,11 @@ def _generate_sql_text(replace, blobs):
               "be created on the database (if not already existing) to be used to connect to the azure blob storage.")
 def main(connection_string, table_name, replace, field_delimiter, row_delimiter, text_qualifier, code_page,
          credential_name, data_source_name):
+    """Initial a BULK INSERT transaction from the Azure SQL database to retrieve files from Titan's Blob storage.
+
+    If there are multiple files, the BULK INSERTs will be wrapped inside of a single transaction.
+
+    """
     flask_app = titan.create_app("azuresql")
     container_name = flask_app.config["TITAN_AZURE_BLOB_CONTAINER_NAME"]
     blob_location = flask_app.config["TITAN_AZURE_BLOB_ENDPOINT"] + "/" + container_name
