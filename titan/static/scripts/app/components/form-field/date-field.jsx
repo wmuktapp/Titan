@@ -3,7 +3,7 @@ import FormRow from './form-row.jsx';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import './react-datepicker-overrides.css';
+import '../react-datepicker-overrides.css';
 
 class DateField extends React.Component {
 
