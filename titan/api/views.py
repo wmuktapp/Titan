@@ -139,7 +139,7 @@ def get_extract_programs():
         response["data"].append({
             "ExtractProgramPythonName": python_name,
             "ExtractProgramFriendlyName": friendly_name,
-            "ExtractProgramHelp": program.help,
+            "ExtractProgramHelp": program.main.help,
             "Options": [
                 {
                     "ExtractProgramOptionName": max(option.opts, key=len),
