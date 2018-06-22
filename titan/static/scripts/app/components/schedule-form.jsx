@@ -394,7 +394,7 @@ class ScheduleForm extends React.Component {
           onChange={this.updateNextLoadDate}
         />
 
-        <div>
+        <div className="form-checkbox-field">
           <label>
             <input type="checkbox" name="ScheduledExecutionEnabled" checked={this.ScheduledExecutionEnabled} onChange={this.onEnabledChange} />
             <span className="label-body">Enabled</span>

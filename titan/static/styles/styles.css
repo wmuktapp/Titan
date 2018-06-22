@@ -158,6 +158,11 @@ th, td {
 
 form .label-body {
     vertical-align: text-bottom;
+    font-weight: inherit;
+}
+
+.form-checkbox-field {
+    width: 214px;
 }
 
 .text-success {
