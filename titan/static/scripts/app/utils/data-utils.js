@@ -35,7 +35,8 @@ export function getExecutionData(data) {
     delete execution.ScheduledIntervalDD;
   }
 
-  const acquires = Object.assign({}, data.acquires);
+  // Important - this is an array, not an object literal
+  const acquires = data.acquires;
 
   const extract = Object.assign({}, data.extract);
 
