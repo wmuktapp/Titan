@@ -1,7 +1,5 @@
 import React from 'react';
-import DatePicker from 'react-datepicker';
 import Select from 'react-select';
-import moment from 'moment';
 import ScheduleDays from './days/days.jsx';
 import IntervalPicker from './interval-picker.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
@@ -15,7 +13,6 @@ import { requiredExecutionFields, getAcquireProgramOptions, getExecutionData, ge
 
 // Import styles
 import 'react-select/dist/react-select.css';
-import 'react-datepicker/dist/react-datepicker.css';
 import './schedule-form.css';
 
 class ScheduleForm extends React.Component {
@@ -34,6 +31,7 @@ class ScheduleForm extends React.Component {
         ScheduledExecutionDataSourceName: '',
         ScheduledExecutionDataSetName: '',
         ScheduledExecutionNextLoadDate: null,
+        ScheduledExecutionUser: '',
         ScheduledExecutionEnabled: true,
 
         ScheduledIntervalKey: null,
@@ -41,13 +39,13 @@ class ScheduleForm extends React.Component {
         ScheduledIntervalHH: 0,
         ScheduledIntervalDD: 0,
 
-        ScheduledMondayEnabled: false,
-        ScheduledTuesdayEnabled: false,
-        ScheduledWednesdayEnabled: false,
-        ScheduledThursdayEnabled: false,
-        ScheduledFridayEnabled: false,
-        ScheduledSaturdayEnabled: false,
-        ScheduledSundayEnabled: false,
+        ScheduledMondayEnabled: true,
+        ScheduledTuesdayEnabled: true,
+        ScheduledWednesdayEnabled: true,
+        ScheduledThursdayEnabled: true,
+        ScheduledFridayEnabled: true,
+        ScheduledSaturdayEnabled: true,
+        ScheduledSundayEnabled: true,
 
         AcquireProgramKey: 0
       },
@@ -65,7 +63,6 @@ class ScheduleForm extends React.Component {
     };
 
     this.onExecutionChange = this.onExecutionChange.bind(this);
-    this.onEnabledChange = this.onEnabledChange.bind(this);
     this.onChangeProgram = this.onChangeProgram.bind(this);
     this.updateInterval = this.updateInterval.bind(this);
     this.updateNextScheduled = this.updateNextScheduled.bind(this);
@@ -95,16 +92,8 @@ class ScheduleForm extends React.Component {
       Ajax.fetch(`/api/schedules/${this.state.execution.ScheduledExecutionKey}`)
         .then(res => res.json())
         .then(result => {
-
-          const execution = result.data.execution;
-
-          // TODO Make this a method in DateUtils?
-          execution.ScheduledExecutionNextScheduled = moment(new Date(execution.ScheduledExecutionNextScheduled));
-          execution.ScheduledExecutionScheduleEnd = moment(new Date(execution.ScheduledExecutionScheduleEnd));
-          execution.ScheduledExecutionNextLoadDate = moment(new Date(execution.ScheduledExecutionNextLoadDate));
-
           this.setState({
-            execution: execution,
+            execution: result.data.execution,
             acquires: result.data.acquires,
             extract: result.data.extract
           });
@@ -113,15 +102,16 @@ class ScheduleForm extends React.Component {
   }
 
   onExecutionChange(event) {
+
     const target = event.target,
       name = target.name,
-      value = target.value;
+      value = target.hasOwnProperty('checked') ? target.checked : target.value;
 
     const execution = this.state.execution;
     execution[name] = value;
 
     // Remove field validation warning
-    let index = -1;
+    let index;
     if ((index = this.state.invalidFields.indexOf(name)) > -1) {
       const invalidFields = this.state.invalidFields;
       invalidFields.splice(index, 1);
@@ -129,19 +119,6 @@ class ScheduleForm extends React.Component {
         invalidFields: invalidFields
       });
     }
-
-    this.setState({
-      execution: execution
-    });
-  }
-
-  onEnabledChange(event) {
-    const target = event.target,
-      name = target.name,
-      value = target.checked; // NOTE: different from above
-
-    const execution = this.state.execution;
-    execution[name] = value;
 
     this.setState({
       execution: execution
@@ -250,6 +227,8 @@ class ScheduleForm extends React.Component {
       .then(res => res.json())
       .then(response => {
 
+        // TODO handle returned execution data
+
         const execution = this.state.execution;
         execution.ScheduledExecutionKey = execution.ScheduledExecutionKey || response.ScheduledExecutionKey;
 
@@ -338,14 +317,25 @@ class ScheduleForm extends React.Component {
             className="titan-react-select"
           />
         </div>
-        <div>
-          <Label>Next scheduled</Label>
-          <DatePicker selected={execution.ScheduledExecutionNextScheduled} dateFormat="DD/MM/YYYY" onChange={this.updateNextScheduled} />
-        </div>
-        <div>
-          <Label>Schedule end</Label>
-          <DatePicker selected={execution.ScheduledExecutionScheduleEnd} dateFormat="DD/MM/YYYY" onChange={this.updateScheduleEnd} />
-        </div>
+
+        <DateField
+          label="Next scheduled"
+          name="ScheduledExecutionNextScheduled"
+          value={execution.ScheduledExecutionNextScheduled}
+          required={this.isRequired('ScheduledExecutionNextScheduled')}
+          validate={this.isInvalid('ScheduledExecutionNextScheduled')}
+          onChange={this.updateNextScheduled}
+          includeTime={true}
+        />
+        <DateField
+          label="Schedule end"
+          name="ScheduledExecutionScheduleEnd"
+          value={execution.ScheduledExecutionScheduleEnd}
+          required={this.isRequired('ScheduledExecutionScheduleEnd')}
+          validate={this.isInvalid('ScheduledExecutionScheduleEnd')}
+          onChange={this.updateScheduleEnd}
+          includeTime={true}
+        />
 
         <TextField
           label="Client"
@@ -366,7 +356,6 @@ class ScheduleForm extends React.Component {
           onChange={this.onExecutionChange}
         />
 
-
         <TextField
           label="Data set"
           name="ScheduledExecutionDataSetName"
@@ -385,9 +374,18 @@ class ScheduleForm extends React.Component {
           onChange={this.updateNextLoadDate}
         />
 
-        <div>
+        <TextField
+          label="User"
+          name="ScheduledExecutionUser"
+          value={execution.ScheduledExecutionUser}
+          required={this.isRequired('ScheduledExecutionUser')}
+          validate={this.isInvalid('ScheduledExecutionUser')}
+          onChange={this.onExecutionChange}
+        />
+
+        <div className="form-checkbox-field">
           <label>
-            <input type="checkbox" name="ScheduledExecutionEnabled" checked={this.ScheduledExecutionEnabled} onChange={this.onEnabledChange} />
+            <input type="checkbox" name="ScheduledExecutionEnabled" checked={this.ScheduledExecutionEnabled} onChange={this.onExecutionChange} />
             <span className="label-body">Enabled</span>
           </label>
         </div>
@@ -424,10 +422,13 @@ class ScheduleForm extends React.Component {
 
         <div>
           <input type="submit" value={ execution.ScheduledExecutionKey ? 'Update' : 'Create' } />
-          <button onClick={this.executeNow} className="btn-now">
-            Execute now
-            <span className="fas fa-angle-right btn-now-icon" />
-          </button>
+          {
+            this.props.id &&
+              <button onClick={this.executeNow} className="btn-now">
+                Execute now
+                <span className="fas fa-angle-right btn-now-icon" />
+              </button>
+          }
         </div>
 
       </form>

@@ -1,6 +1,7 @@
 import React from 'react';
 import MonitoringControls from './monitoring/controls.jsx';
 import MonitoringGrid from './monitoring/grid.jsx';
+import MonitoringFooter from './monitoring/footer.jsx';
 import Alert from './alert/alert.jsx'
 import Ajax from '../utils/ajax';
 import { mergeData } from '../utils/data-utils';
@@ -92,11 +93,7 @@ class Monitor extends React.Component {
       loading: true
     });
 
-    // const url = '/api/executions/'
-    //   + '?start=' + dateUtils.dateToIso8601(dates.start)
-    //   + '&end=' + dateUtils.dateToIso8601(dates.end);
-
-    // TODO make this dynamic
+    // TODO make this dynamic, add page number
     const url = '/api/executions/'
       + '?end_date=' + dateUtils.dateToIso8601(dates.end);
 
@@ -199,12 +196,17 @@ class Monitor extends React.Component {
         <MonitoringControls dates={this.state.dates} selectDates={this.showDates} />
         <MonitoringGrid dates={this.state.dates} data={this.state.data} select={this.selectExecution} />
         {
-          this.state.loading
-            ? <p className="monitor-loading">Loading...</p>
-            : <div className="monitor-controls-footer">
-                <a onClick={this.showMore} className="monitoring-control-more">Show more</a>
-                <a onClick={this.retryExecutions} className={'monitor-btn-retry' + (!!this.state.retryList.length ? '' : ' monitor-btn-disabled')}>Retry</a>
-              </div>
+          this.state.loading &&
+            <p className="monitor-loading">Loading...</p>
+        }
+        {
+          !!this.state.data.length &&
+            <MonitoringFooter retryList={this.state.retryList}
+              showMore={this.showMore} retryExecutions={this.retryExecutions} />
+        }
+        {
+          !!this.state.data && !this.state.loading &&
+            <p className="monitor-empty">No monitoring data found</p>
         }
         {
           this.state.message &&

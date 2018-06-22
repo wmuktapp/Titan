@@ -12,6 +12,7 @@ import { getAcquireProgramOptions, getExecutionData } from '../utils/data-utils'
 // Import styles
 import 'react-select/dist/react-select.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import './react-datepicker-overrides.css';
 
 class AdhocForm extends React.Component {
 

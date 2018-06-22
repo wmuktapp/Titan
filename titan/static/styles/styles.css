@@ -158,6 +158,11 @@ th, td {
 
 form .label-body {
     vertical-align: text-bottom;
+    font-weight: inherit;
+}
+
+.form-checkbox-field {
+    width: 214px;
 }
 
 .text-success {
@@ -179,18 +184,6 @@ form .label-body {
 
 .btn-new-schedule {
     float: right;
-}
-
-
-/* React Datepicker overrides */
-
-.react-datepicker__navigation {
-    height: initial;
-    margin-bottom: 0;
-}
-
-.react-datepicker__navigation:hover {
-    border-color: transparent;
 }
 
 /* react-select overrides */

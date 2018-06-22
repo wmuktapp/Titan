@@ -15,30 +15,66 @@ export function getAcquireProgramOptions(programs) {
 
 // Pulls data to be submitted
 export function getExecutionData(data) {
+
+  // Remove scheduled interval key
+  const execution = Object.assign({}, data.execution);
+  delete execution.ScheduledIntervalKey;
+
+  // Format dates into strings (YYYY-MM-DD HH:mm:ss)
+  execution.ScheduledExecutionNextScheduled = formatDateTime(execution.ScheduledExecutionNextScheduled);
+  execution.ScheduledExecutionScheduleEnd = formatDateTime(execution.ScheduledExecutionScheduleEnd);
+  execution.ScheduledExecutionNextLoadDate = formatDateTime(execution.ScheduledExecutionNextLoadDate);
+
+  // Remove interval values, if applicable
+  if (execution.ScheduledIntervalMI === 0
+      && execution.ScheduledIntervalHH === 0
+      && execution.ScheduledIntervalDD === 0) {
+    // All values are zero - remove entirely
+    delete execution.ScheduledIntervalMI;
+    delete execution.ScheduledIntervalHH;
+    delete execution.ScheduledIntervalDD;
+  }
+
   return {
     data: {
-      execution: data.execution,
+      execution: execution,
       acquires: data.acquires,
       extract: data.extract
     }
   };
 }
 
+const dateFormat = 'YYYY-MM-DD HH:mm:ss';
+
+function formatDateTime(dateTime) {
+  if (typeof dateTime === 'string') {
+    return dateTime;
+  } else if (dateTime === null) {
+    return null;
+  }
+  return dateTime.format(dateFormat);
+}
+
 // Fields required for execution
 export const requiredExecutionFields = [
   'ScheduledExecutionName',
+  'ScheduledExecutionNextScheduled',
   'ScheduledExecutionClientName',
   'ScheduledExecutionDataSourceName',
   'ScheduledExecutionDataSetName',
-  'ScheduledExecutionNextLoadDate'
+  'ScheduledExecutionNextLoadDate',
+  'ScheduledExecutionUser'
 ];
 
 export function validateField(value) {
-  if (typeof value.trim === 'function') {
-    return value.trim().length > 0;
-  } else {
-    return value !== null;
+
+  if (value === null) { // Object values
+    return false;
   }
+  if (typeof value.trim === 'function') { // String values
+    return value.trim().length > 0;
+  }
+  return true;
 }
 
 // Convert data in execution object into simpler weekday data
@@ -69,7 +105,7 @@ export function getExecutionDays(days) {
 
 // Merge two data objects 
 export function mergeData(data1, data2) {
-  return this.__mergeObjects(data1, data2);
+  return __mergeObjects(data1, data2);
 }
 
 function __mergeObjects(object1, object2) {
