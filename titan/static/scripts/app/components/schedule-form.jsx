@@ -338,14 +338,23 @@ class ScheduleForm extends React.Component {
             className="titan-react-select"
           />
         </div>
-        <div>
-          <Label>Next scheduled</Label>
-          <DatePicker selected={execution.ScheduledExecutionNextScheduled} dateFormat="DD/MM/YYYY" onChange={this.updateNextScheduled} />
-        </div>
-        <div>
-          <Label>Schedule end</Label>
-          <DatePicker selected={execution.ScheduledExecutionScheduleEnd} dateFormat="DD/MM/YYYY" onChange={this.updateScheduleEnd} />
-        </div>
+
+        <DateField
+          label="Next scheduled"
+          name="ScheduledExecutionNextScheduled"
+          value={execution.ScheduledExecutionNextScheduled}
+          required={this.isRequired('ScheduledExecutionNextScheduled')}
+          validate={this.isInvalid('ScheduledExecutionNextScheduled')}
+          onChange={this.updateNextScheduled}
+        />
+        <DateField
+          label="Schedule end"
+          name="ScheduledExecutionScheduleEnd"
+          value={execution.ScheduledExecutionScheduleEnd}
+          required={this.isRequired('ScheduledExecutionScheduleEnd')}
+          validate={this.isInvalid('ScheduledExecutionScheduleEnd')}
+          onChange={this.updateScheduleEnd}
+        />
 
         <TextField
           label="Client"
