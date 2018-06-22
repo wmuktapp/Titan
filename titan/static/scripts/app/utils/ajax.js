@@ -10,13 +10,13 @@ const Ajax = {
     fetch(url, options) {
 
         // Default request options
-        // const requestOptions = {
-        //     headers: {
-        //         "Authorization": getAccessToken()
-        //     }
-        // };
+         const requestOptions = {
+             headers: {
+                 "Authorization": getAccessToken()
+             }
+         };
 
-        const requestOptions = {};
+        // const requestOptions = {};
 
         // Merge objects
         Object.assign(requestOptions, options);
