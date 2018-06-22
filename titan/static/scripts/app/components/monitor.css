@@ -10,6 +10,12 @@
     color: #aaa;
 }
 
+.monitor-empty {
+    padding: 1.5em;
+    text-align: center;
+    color: #aaa;
+}
+
 .monitor-btn-retry {
     float: right;
 }

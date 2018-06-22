@@ -219,8 +219,6 @@ class ScheduleForm extends React.Component {
 
     const data = getExecutionData(this.state);
 
-    console.log(data)
-
     // Send insert/update to server
     Ajax.fetch('/api/schedules/', {
       method: 'POST',
@@ -327,6 +325,7 @@ class ScheduleForm extends React.Component {
           required={this.isRequired('ScheduledExecutionNextScheduled')}
           validate={this.isInvalid('ScheduledExecutionNextScheduled')}
           onChange={this.updateNextScheduled}
+          includeTime={true}
         />
         <DateField
           label="Schedule end"
@@ -335,6 +334,7 @@ class ScheduleForm extends React.Component {
           required={this.isRequired('ScheduledExecutionScheduleEnd')}
           validate={this.isInvalid('ScheduledExecutionScheduleEnd')}
           onChange={this.updateScheduleEnd}
+          includeTime={true}
         />
 
         <TextField
