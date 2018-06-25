@@ -133,6 +133,8 @@ class ScheduleForm extends React.Component {
       > 0;
   }
 
+  // TODO move this logic into RepeatForm
+
   addRepeat() {
 
     // Add default interval and day values to this.state
@@ -158,6 +160,8 @@ class ScheduleForm extends React.Component {
   }
 
   removeRepeat() {
+
+    // Set interval values to zero (they'll be cleared in DataUtils later)
     const execution = this.state.execution;
     Object.assign(execution, {
         ScheduledIntervalDD: 0,
