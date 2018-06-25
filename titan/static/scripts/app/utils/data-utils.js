@@ -33,6 +33,13 @@ export function getExecutionData(data) {
     delete execution.ScheduledIntervalMI;
     delete execution.ScheduledIntervalHH;
     delete execution.ScheduledIntervalDD;
+    delete execution.ScheduledMondayEnabled;
+    delete execution.ScheduledTuesdayEnabled;
+    delete execution.ScheduledWednesdayEnabled;
+    delete execution.ScheduledThursdayEnabled;
+    delete execution.ScheduledFridayEnabled;
+    delete execution.ScheduledSaturdayEnabled;
+    delete execution.ScheduledSundayEnabled;
   }
 
   // Important - this is an array, not an object literal
