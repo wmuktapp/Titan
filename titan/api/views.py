@@ -185,7 +185,6 @@ def get_scheduled_execution(key):
             "ScheduledExecutionNextLoadDate": arbitrary_row["ScheduledExecutionNextLoadDate"],
             "ScheduledExecutionEnabled": arbitrary_row["ScheduledExecutionEnabled"],
             "ScheduledExecutionUser": arbitrary_row["ScheduledExecutionUser"],
-            "ScheduledIntervalKey": arbitrary_row["ScheduledIntervalKey"],
             "ScheduledIntervalMI": arbitrary_row["ScheduledIntervalMI"],
             "ScheduledIntervalHH": arbitrary_row["ScheduledIntervalHH"],
             "ScheduledIntervalDD": arbitrary_row["ScheduledIntervalDD"],
@@ -197,12 +196,9 @@ def get_scheduled_execution(key):
             "ScheduledSaturdayEnabled": arbitrary_row["ScheduledSaturdayEnabled"],
             "ScheduledSundayEnabled": arbitrary_row["ScheduledSundayEnabled"],
             "AcquireProgramKey": arbitrary_row["AcquireProgramKey"],
-            "AcquireProgramFriendlyName": arbitrary_row["AcquireProgramFriendlyName"],
-            "Status": arbitrary_row["ScheduledExecutionStatus"]
         },
         "acquires": [],
         "extract": {
-            "ScheduledExtractKey": scheduled_extract_key,
             "ScheduledExtractDestination": arbitrary_row["ScheduledExtractDestination"],
             "Options": []
         } if scheduled_extract_key is not None else {}
@@ -216,7 +212,6 @@ def get_scheduled_execution(key):
             acquire = acquires.get(acquire_key)
             if acquire is None:
                 acquire = acquires[acquire_key] = {
-                    "ScheduledAcquireKey": row["ScheduledAcquireKey"],
                     "ScheduledAcquireName": row["ScheduledAcquireName"],
                     "Options": []
                 }
