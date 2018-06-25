@@ -1,4 +1,4 @@
-
+import moment from 'moment';
 
 // Converts a list of acquire programs into a format to be used by react-select
 export function getAcquireProgramOptions(programs) {
@@ -60,7 +60,7 @@ const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
 function formatDateTime(dateTime) {
   if (typeof dateTime === 'string') {
-    return dateTime;
+    return moment(dateTime).format(dateFormat);
   } else if (dateTime === null) {
     return null;
   }
