@@ -28,25 +28,24 @@ def monitoring():
 @app.route('/monitoring/executions/<int:execution_key>')
 def monitoring_execution(execution_key):
     # TODO return full set of data for execution?
-    # TODO add link to related schedule page, if applicable
     data = Markup({ 'executionKey': execution_key })
-    return render_template('execution.html', adal_config=get_adal_config(), data=data)
+    return render_template('execution.html', access_token=get_access_token(), data=data)
 
 @app.route("/schedules")
 def schedules():
-    return render_template("schedules.html", adal_config=get_adal_config())
+    return render_template("schedules.html", access_token=get_access_token())
 
 @app.route('/schedules/<int:schedule_key>')
 def schedule_details(schedule_key):
 
     # NOTE: 'run now' button, links to the adhoc page pre-filled (if possible)
     data = Markup({ 'scheduleKey': schedule_key })
-    return render_template('schedule.html', adal_config=get_adal_config(), data=data)
+    return render_template('schedule.html', access_token=get_access_token(), data=data)
 
 @app.route('/schedules/add')
 def schedule_add():
     data = Markup({})
-    return render_template('schedule.html', adal_config=get_adal_config(), data=data)
+    return render_template('schedule.html', access_token=get_access_token(), data=data)
 
 @app.route('/adhoc')
 def adhoc():
@@ -59,7 +58,7 @@ def adhoc():
 
     data = Markup(data)
 
-    return render_template('adhoc.html', adal_config=get_adal_config(), data=data)
+    return render_template('adhoc.html', access_token=get_access_token(), data=data)
 
 
 # API URLs
@@ -69,7 +68,6 @@ def executions_list():
 
     end_date = request.args.get('end_date')
 
-    # start_date = datetime.strptime(end_date - timedelta(days=4), '%Y-%m-%d')
     end_date = datetime.strptime(end_date, '%Y-%m-%d')
     start_date = end_date - timedelta(days=4)
 
@@ -151,38 +149,10 @@ def extract_programs_list():
 
 
 
-# Access Token REMOVE THIS
+# Access Token
 
 def get_access_token():
     return "Bearer %s" % request.headers.get("X-MS-TOKEN-AAD-ID-TOKEN", "")
-
-
-# ADAL Config
-
-def get_adal_config():
-
-    tenant_id = app.config.get('TITAN_AD_TENANT_ID', '')
-    client_id = app.config.get('TITAN_AD_CLIENT_ID', '')
-
-    if tenant_id is None:
-        tenant_id = ''
-    if client_id is None:
-        client_id = ''
-
-    return Markup({
-        'tenant': tenant_id,
-        'clientId': client_id,
-        'endpoints': {
-            'api': client_id
-        },
-        'cacheLocation': 'localStorage'
-    })
-
-
-
-
-
-
 
 
 # SAMPLE DATA

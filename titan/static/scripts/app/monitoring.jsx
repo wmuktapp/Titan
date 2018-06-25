@@ -1,6 +1,5 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { wrapWithAdal } from './utils/adal-config';
 import Monitor from './components/monitor.jsx';
 
 class MonitoringApp extends React.Component {
@@ -9,6 +8,4 @@ class MonitoringApp extends React.Component {
   }
 }
 
-wrapWithAdal(() => {
-  render(<MonitoringApp />, document.getElementById('monitoring'));
-});
+render(<MonitoringApp />, document.getElementById('monitoring'));

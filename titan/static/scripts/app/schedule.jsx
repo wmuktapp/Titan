@@ -1,6 +1,5 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { wrapWithAdal } from './utils/adal-config';
 import ScheduleForm from './components/schedule-form.jsx';
 
 class ScheduleApp extends React.Component {
@@ -10,6 +9,4 @@ class ScheduleApp extends React.Component {
   }
 }
 
-wrapWithAdal(() => {
-  render(<ScheduleApp />, document.getElementById('schedule'));
-});
+render(<ScheduleApp />, document.getElementById('schedule'));
