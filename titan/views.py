@@ -28,7 +28,6 @@ def monitoring():
 @app.route('/monitoring/executions/<int:execution_key>')
 def monitoring_execution(execution_key):
     # TODO return full set of data for execution?
-    # TODO add link to related schedule page, if applicable
     data = Markup({ 'executionKey': execution_key })
     return render_template('execution.html', access_token=get_access_token(), data=data)
 
@@ -69,7 +68,6 @@ def executions_list():
 
     end_date = request.args.get('end_date')
 
-    # start_date = datetime.strptime(end_date - timedelta(days=4), '%Y-%m-%d')
     end_date = datetime.strptime(end_date, '%Y-%m-%d')
     start_date = end_date - timedelta(days=4)
 
