@@ -155,34 +155,6 @@ def get_access_token():
     return "Bearer %s" % request.headers.get("X-MS-TOKEN-AAD-ID-TOKEN", "")
 
 
-# ADAL Config
-
-def get_adal_config():
-
-    tenant_id = app.config.get('TITAN_AD_TENANT_ID', '')
-    client_id = app.config.get('TITAN_AD_CLIENT_ID', '')
-
-    if tenant_id is None:
-        tenant_id = ''
-    if client_id is None:
-        client_id = ''
-
-    return Markup({
-        'tenant': tenant_id,
-        'clientId': client_id,
-        'endpoints': {
-            'api': client_id
-        },
-        'cacheLocation': 'localStorage'
-    })
-
-
-
-
-
-
-
-
 # SAMPLE DATA
 
 # Executions
