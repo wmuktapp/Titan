@@ -35,12 +35,16 @@ class AcquireItem extends React.Component {
 
     return (
       <div className="acquire-item u-cf">
-        <div className="acquire-properties">
-          {rows}
-        </div>
         <a onClick={this.remove} className="acquire-item-remove">
           <span className="fas fa-times" />
         </a>
+        <div className="acquire-name">
+          <Label required={true}>Acquire Name</Label>
+          <input type="text" className="acquire-name-input" />
+        </div>
+        <div className="acquire-properties">
+          {rows}
+        </div>
       </div>
     );
   }

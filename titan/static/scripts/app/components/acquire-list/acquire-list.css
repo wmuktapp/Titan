@@ -8,7 +8,16 @@
     padding: 1em 0 0;
 }
 
-.acquire-item label {
+.acquire-name {
+    display: inline-block;
+    width: 411px;
+}
+
+.acquire-name-input {
+    width: 100%;
+}
+
+.acquire-properties label {
     display: inline-block;
     min-width: 210px;
 }
