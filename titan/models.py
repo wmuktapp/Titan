@@ -203,6 +203,7 @@ def update_scheduled_execution(transaction, execution, extract):
         "ScheduledExecutionUpdateRowCount": "INT",
         "ScheduledExtractUpdateRowCount": "INT",
         "ScheduledExtractDeleteRowCount": "INT",
+        "ScheduledExtractOptionDeleteRowCount": "INT",
         "ScheduledExtractKey": "INT"
     }
     options = extract.pop("Options", _DEFAULT)

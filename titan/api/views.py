@@ -256,7 +256,16 @@ def insert_scheduled_execution():
     data = flask.request.get_json(force=True).get("data", {})
     execution = data.get("execution", {})
     acquires = data.get("acquires", [])
+    # Remove any options where the value is an empty string as the user is trying to remove these
+    for acquire in acquires:
+        acquire["Options"] = [option for option in acquire["Options"] if option["ScheduledAcquireOptionValue"] != ""]
     extract = data.get("extract", {})
+    # If a blank value was passed, the user is trying to remove the value. None is the explicit way to tell the db this
+    if extract.get("ScheduledExtractDestination") == "":
+        extract["ScheduledExtractDestination"] = None
+    # Remove any empty string keys as the user does not want to set these values
+    if "Options" in extract:
+        extract["Options"] = [option for option in extract["Options"] if option["ScheduledExtractOptionValue"] != ""]
     try:
         with models.db.engine.begin() as transaction:
             result, _ = models.insert_scheduled_execution(transaction, execution, extract)
@@ -296,8 +305,16 @@ def update_scheduled_execution(key):
     execution = data.get("execution", {})
     execution.update(params)
     acquires = data.get("acquires", [])
+    # Remove any options where the value is an empty string as the user is trying to remove these
+    for acquire in acquires:
+        acquire["Options"] = [option for option in acquire["Options"] if option["ScheduledAcquireOptionValue"] != ""]
     extract = data.get("extract", {})
-    print(extract)
+    # If a blank value was passed, the user is trying to remove the value. None is the explicit way to tell the db this
+    if extract.get("ScheduledExtractDestination") == "":
+        extract["ScheduledExtractDestination"] = None
+    # Remove any empty string keys as the user does not want to set these values
+    if "Options" in extract:
+        extract["Options"] = [option for option in extract["Options"] if option["ScheduledExtractOptionValue"] != ""]
     try:
         with models.db.engine.begin() as transaction:
             models.update_scheduled_execution(transaction, execution, extract)
