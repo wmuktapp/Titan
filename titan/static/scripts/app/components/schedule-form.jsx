@@ -2,7 +2,6 @@ import React from 'react';
 import Select from 'react-select';
 import ScheduleDays from './days/days.jsx';
 import RepeatForm from './repeat-form/index.jsx';
-import IntervalPicker from './interval-picker.jsx';         // REMOVE (move to RepeatForm)
 import AcquireList from './acquire-list/acquire-list.jsx';  // REMOVE (move to RepeatForm)
 import ExtractForm from './extract/extract-form.jsx';
 import TextField from './form-field/text-field.jsx';
@@ -69,7 +68,6 @@ class ScheduleForm extends React.Component {
     this.addRepeat = this.addRepeat.bind(this);
     this.removeRepeat = this.removeRepeat.bind(this);
     this.updateRepeat = this.updateRepeat.bind(this);
-    this.updateInterval = this.updateInterval.bind(this); // REMOVE
     this.updateNextScheduled = this.updateNextScheduled.bind(this);
     this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
     this.updateNextLoadDate = this.updateNextLoadDate.bind(this);
@@ -152,7 +150,14 @@ class ScheduleForm extends React.Component {
   }
 
   addRepeat() {
+
+    const execution = this.state.execution;
+    execution.ScheduledIntervalDD = 0;
+    execution.ScheduledIntervalHH = 0;
+    execution.ScheduledIntervalMI = 0;
+
     this.setState({
+      execution: execution,
       includeRepeat: true
     });
   }
@@ -176,20 +181,6 @@ class ScheduleForm extends React.Component {
 
     // Update state
     this.setState({ execution });
-  }
-
-  // TODO remove this
-  updateInterval(days, hours, minutes) {
-
-    const execution = this.state.execution;
-
-    execution.ScheduledIntervalDD = days;
-    execution.ScheduledIntervalHH = hours;
-    execution.ScheduledIntervalMI = minutes;
-
-    this.setState({
-      execution: execution
-    });
   }
 
   updateNextScheduled(value) {
@@ -324,6 +315,17 @@ class ScheduleForm extends React.Component {
 
     const execution = this.state.execution;
 
+    // Repeat object
+    const repeat = {
+      interval: {
+        days: execution.ScheduledIntervalDD,
+        hours: execution.ScheduledIntervalHH,
+        minutes: execution.ScheduledIntervalMI
+      },
+      days: getWeekDays(execution)
+    };
+
+    // REMOVE
     // Simpler days object
     const days = getWeekDays(execution);
 
@@ -434,17 +436,14 @@ class ScheduleForm extends React.Component {
 
         <div className="form-section">
           <RepeatForm
+            value={repeat}
             includeRepeat={this.state.includeRepeat}
             onAddRepeat={this.addRepeat}
             onRemoveRepeat={this.removeRepeat}
+            onChange={this.updateRepeat}
           />
         </div>
 
-        <div className="form-section">
-          <h6>Interval</h6>
-          <IntervalPicker days={execution.ScheduledIntervalDD} hours={execution.ScheduledIntervalHH}
-            minutes={execution.ScheduledIntervalMI} onUpdate={this.updateInterval} />
-        </div>
         <div className="form-section">
           <h6>Days</h6>
           <ScheduleDays key="days" days={days} onChange={this.updateDays} />
