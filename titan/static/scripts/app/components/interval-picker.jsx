@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './interval-picker.css';
 
@@ -66,5 +67,11 @@ class IntervalPicker extends React.Component {
     );
   }
 }
+
+IntervalPicker.propTypes = {
+  days: PropTypes.number.isRequired,
+  hours: PropTypes.number.isRequired,
+  minutes: PropTypes.number.isRequired
+};
 
 export default IntervalPicker;
