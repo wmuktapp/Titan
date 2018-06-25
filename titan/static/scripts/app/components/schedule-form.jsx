@@ -99,7 +99,8 @@ class ScheduleForm extends React.Component {
           this.setState({
             execution: result.data.execution,
             acquires: result.data.acquires,
-            extract: result.data.extract
+            extract: result.data.extract,
+            includeRepeat: this.shouldIncludeRepeat(result.data.execution)
           });
         });
     }
@@ -140,6 +141,13 @@ class ScheduleForm extends React.Component {
       execution: execution,
       acquires: []
     });
+  }
+
+  shouldIncludeRepeat(execution) {
+    return execution.ScheduledIntervalDD
+        + execution.ScheduledIntervalHH
+        + execution.ScheduledIntervalMI
+      > 0;
   }
 
   addRepeat() {
