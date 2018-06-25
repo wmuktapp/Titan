@@ -51,9 +51,6 @@ class RepeatForm extends React.Component {
 
     const repeat = this.props.value;
 
-    // TODO
-    // - Warning message if interval === 0,0,0
-
     return (
       <div className="repeat-form">
         {
