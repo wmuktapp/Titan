@@ -14,7 +14,7 @@ class IntervalPicker extends React.Component {
   onChangeDays(event) {
 
     // Ensure value is non-negative
-    let days = event.target.value;
+    let days = this.getInt(event.target.value);
     if (days < 0) {
       days = 0;
     }
@@ -25,7 +25,7 @@ class IntervalPicker extends React.Component {
   onChangeHours(event) {
 
     // Ensure value is between 0 and 23
-    let hours = event.target.value;
+    let hours = this.getInt(event.target.value);
     if (hours < 0) {
       hours = 0;
     } else if (hours > 23) {
@@ -38,7 +38,7 @@ class IntervalPicker extends React.Component {
   onChangeMinutes(event) {
 
     // Ensure value is between 0 and 59
-    let minutes = event.target.value;
+    let minutes = this.getInt(event.target.value);
     if (minutes < 0) {
       minutes = 0;
     } else if (minutes > 59) {
@@ -48,6 +48,10 @@ class IntervalPicker extends React.Component {
     this.props.onUpdate(this.props.days, this.props.hours, minutes);
   }
 
+  getInt(value) {
+    let int = parseInt(value);
+    return !!int ? int : 0;
+  }
 
   render() {
     return (
