@@ -53,7 +53,7 @@ class RepeatForm extends React.Component {
       <div className="repeat-form">
         {
           this.props.includeRepeat
-            ? <a onClick={this.clearRepeat}>
+            ? <a onClick={this.clearRepeat} class="repeat-form-remove">
                 <span className="fas fa-times repeat-form-link-icon" />Remove
               </a>
             : <a onClick={this.addRepeat}>
