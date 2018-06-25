@@ -158,7 +158,15 @@ class ScheduleForm extends React.Component {
   }
 
   removeRepeat() {
+    const execution = this.state.execution;
+    Object.assign(execution, {
+        ScheduledIntervalDD: 0,
+        ScheduledIntervalHH: 0,
+        ScheduledIntervalMI: 0
+    });
+
     this.setState({
+      execution: execution,
       includeRepeat: false
     });
   }
