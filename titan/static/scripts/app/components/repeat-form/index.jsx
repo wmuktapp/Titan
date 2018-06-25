@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import IntervalPicker from './interval-picker.jsx';
+import DayPicker from './day-picker.jsx';
 
 import './index.css';
 
@@ -23,7 +24,6 @@ class RepeatForm extends React.Component {
   }
 
   updateInterval(days, hours, minutes) {
-    // TODO pass updated interval and days to props method
 
     const repeat = {
       interval: {
@@ -37,8 +37,14 @@ class RepeatForm extends React.Component {
     this.props.onChange(repeat);
   }
 
-  updateDays() {
-    // TODO pass updated interval and days to props method
+  updateDays(days) {
+
+    const repeat = {
+      interval: this.props.value.interval,
+      days: days
+    };
+
+    this.props.onChange(repeat);
   }
 
   render() {
@@ -46,14 +52,13 @@ class RepeatForm extends React.Component {
     const repeat = this.props.value;
 
     // TODO
-    // - DayPicker
     // - Warning message if interval === 0,0,0
 
     return (
       <div className="repeat-form">
         {
           this.props.includeRepeat
-            ? <a onClick={this.clearRepeat} class="repeat-form-remove">
+            ? <a onClick={this.clearRepeat} className="repeat-form-remove">
                 <span className="fas fa-times repeat-form-link-icon" />Remove
               </a>
             : <a onClick={this.addRepeat}>
@@ -70,11 +75,12 @@ class RepeatForm extends React.Component {
                 minutes={repeat.interval.minutes}
                 onChange={this.updateInterval}
               />
+              <h6>Days</h6>
+              <DayPicker
+                days={repeat.days}
+                onChange={this.updateDays}
+              />
             </div>
-        }
-        {
-          this.props.includeRepeat &&
-              <p>DayPicker goes here</p>
         }
       </div>
     );

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import './days.css';
+import './day-picker.css';
 
-class ScheduleDays extends React.Component {
+class DayPicker extends React.Component {
 
   constructor(props) {
     super(props);
@@ -57,4 +57,4 @@ class ScheduleDays extends React.Component {
   }
 }
 
-export default ScheduleDays;
+export default DayPicker;

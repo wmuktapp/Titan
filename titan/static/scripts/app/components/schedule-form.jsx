@@ -1,8 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
-import ScheduleDays from './days/days.jsx';
 import RepeatForm from './repeat-form/index.jsx';
-import AcquireList from './acquire-list/acquire-list.jsx';  // REMOVE (move to RepeatForm)
+import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import TextField from './form-field/text-field.jsx';
 import DateField from './form-field/date-field.jsx';
@@ -71,7 +70,6 @@ class ScheduleForm extends React.Component {
     this.updateNextScheduled = this.updateNextScheduled.bind(this);
     this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
     this.updateNextLoadDate = this.updateNextLoadDate.bind(this);
-    this.updateDays = this.updateDays.bind(this);         // REMOVE
     this.updateAcquires = this.updateAcquires.bind(this);
     this.updateExtractDestination = this.updateExtractDestination.bind(this);
     this.updateExtractOptions = this.updateExtractOptions.bind(this);
@@ -207,16 +205,6 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  // TODO remove this
-  updateDays(days) {
-
-    const execution = this.state.execution,
-      executionDays = getExecutionDays(days);
-    Object.assign(execution, executionDays);
-
-    this.setState({ execution });
-  }
-
   updateAcquires(acquires) {
     this.setState({
       acquires: acquires
@@ -324,10 +312,6 @@ class ScheduleForm extends React.Component {
       },
       days: getWeekDays(execution)
     };
-
-    // REMOVE
-    // Simpler days object
-    const days = getWeekDays(execution);
 
     // Acquire program dropdown options
     const programOptions = getAcquireProgramOptions(this.state.availablePrograms);
@@ -444,10 +428,6 @@ class ScheduleForm extends React.Component {
           />
         </div>
 
-        <div className="form-section">
-          <h6>Days</h6>
-          <ScheduleDays key="days" days={days} onChange={this.updateDays} />
-        </div>
         <div className="form-section">
           <h6>Acquires</h6>
           {
