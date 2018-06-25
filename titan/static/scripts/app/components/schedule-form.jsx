@@ -1,8 +1,9 @@
 import React from 'react';
 import Select from 'react-select';
 import ScheduleDays from './days/days.jsx';
-import IntervalPicker from './interval-picker.jsx';
-import AcquireList from './acquire-list/acquire-list.jsx';
+import RepeatForm from './repeat-form/index.jsx';
+import IntervalPicker from './interval-picker.jsx';         // REMOVE (move to RepeatForm)
+import AcquireList from './acquire-list/acquire-list.jsx';  // REMOVE (move to RepeatForm)
 import ExtractForm from './extract/extract-form.jsx';
 import TextField from './form-field/text-field.jsx';
 import DateField from './form-field/date-field.jsx';
@@ -58,11 +59,15 @@ class ScheduleForm extends React.Component {
 
       availablePrograms: [],
 
+      includeRepeat: false,
+
       invalidFields: []
     };
 
     this.onExecutionChange = this.onExecutionChange.bind(this);
     this.onChangeProgram = this.onChangeProgram.bind(this);
+    this.addRepeat = this.addRepeat.bind(this);
+    this.removeRepeat = this.removeRepeat.bind(this);
     this.updateInterval = this.updateInterval.bind(this);
     this.updateNextScheduled = this.updateNextScheduled.bind(this);
     this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
@@ -137,6 +142,19 @@ class ScheduleForm extends React.Component {
     });
   }
 
+  addRepeat() {
+    this.setState({
+      includeRepeat: true
+    });
+  }
+
+  removeRepeat() {
+    this.setState({
+      includeRepeat: false
+    });
+  }
+
+  // TODO merge with updateDays (--> updateRepeat)
   updateInterval(days, hours, minutes) {
 
     const execution = this.state.execution;
@@ -174,6 +192,7 @@ class ScheduleForm extends React.Component {
     });
   }
 
+  // TODO merge with updateInterval (--> updateRepeat)
   updateDays(days) {
 
     const execution = this.state.execution,
@@ -388,6 +407,15 @@ class ScheduleForm extends React.Component {
             <span className="label-body">Enabled</span>
           </label>
         </div>
+
+        <div className="form-section">
+          <RepeatForm
+            includeRepeat={this.state.includeRepeat}
+            onAddRepeat={this.addRepeat}
+            onRemoveRepeat={this.removeRepeat}
+          />
+        </div>
+
         <div className="form-section">
           <h6>Interval</h6>
           <IntervalPicker days={execution.ScheduledIntervalDD} hours={execution.ScheduledIntervalHH}
