@@ -14,7 +14,8 @@ class AcquireList extends React.Component {
 
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
-    this.itemChange = this.itemChange.bind(this);
+    this.itemNameChange = this.itemNameChange.bind(this);
+    this.itemOptionChange = this.itemOptionChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -42,41 +43,45 @@ class AcquireList extends React.Component {
 
     acquires.push(newAcquire);
 
-    this.setState({
-      acquires: acquires
-    });
+    this.setState({ acquires });
 
     this.props.onChange(acquires);
   }
 
   remove(index) {
-
     let acquires = this.state.acquires;
     acquires.splice(index, 1);
-    this.setState({
-      acquires: acquires
-    });
-
+    this.setState({ acquires });
     this.props.onChange(acquires);
   }
 
-  itemChange(index, name, value) {
+  itemNameChange(index, value) {
+    const acquires = this.state.acquires;
+    acquires[index].ScheduledAcquireName = value;
+    this.setState({ acquires });
+    this.props.onChange(acquires);
+  }
+
+  itemOptionChange(index, name, value) {
     const acquires = this.state.acquires;
     acquires[index].Options
       .find(option => option.ScheduledAcquireOptionName === name).ScheduledAcquireOptionValue = value;
 
-    this.setState({
-      acquires: acquires
-    });
-
+    this.setState({ acquires });
     this.props.onChange(acquires);
   }
 
   render() {
 
     const acquireItems = this.state.acquires.map((acquire, index) => {
-      return <AcquireItem key={index} acquire={acquire}
-        index={index} remove={this.remove} onChange={this.itemChange} />
+      return <AcquireItem
+        key={index}
+        acquire={acquire}
+        index={index}
+        remove={this.remove}
+        onNameChange={this.itemNameChange}
+        onOptionChange={this.itemOptionChange}
+      />
     });
 
     return (
