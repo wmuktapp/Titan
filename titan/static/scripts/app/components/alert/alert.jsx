@@ -43,9 +43,12 @@ class Alert extends React.Component {
             this.props.title &&
               <h5 className="alert-title">{this.props.title}</h5>
           }
-          <a onClick={this.close} className="alert-close">
-            <span className="fas fa-times alert-close-icon" />
-          </a>
+          {
+            this.props.canDismiss &&
+              <a onClick={this.close} className="alert-close">
+                <span className="fas fa-times alert-close-icon" />
+              </a>
+          }
         </div>
         <div className="alert-content">
           {this.props.children}
@@ -58,7 +61,14 @@ class Alert extends React.Component {
 }
 
 Alert.propTypes = {
+  canDismiss: PropTypes.bool,
+  title: PropTypes.string,
   type: PropTypes.oneOf(['success', 'info', 'warning', 'error'])
+};
+
+Alert.defaultProps = {
+  canDismiss: true,
+  type: 'info'
 };
 
 export default Alert;

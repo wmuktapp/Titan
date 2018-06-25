@@ -181,7 +181,7 @@ class Monitor extends React.Component {
 
     if (this.state.hasError) {
       return (
-        <Alert type="error" title="Unable to load data">
+        <Alert type="error" title="Unable to load data" canDismiss={false}>
           <p>An error occurred while retrieving the monitoring data</p>
         </Alert>
       );

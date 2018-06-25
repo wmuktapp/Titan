@@ -110,6 +110,10 @@ input[type=checkbox]:focus {
     outline: none;
 }
 
+input[type=radio] {
+    margin-bottom: 0;
+}
+
 input[type=text]:disabled {
     border-color: #e9ecee;
     background-color: #fafafa;

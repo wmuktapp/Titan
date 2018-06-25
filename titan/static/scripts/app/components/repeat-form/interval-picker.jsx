@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './interval-picker.css';
 
@@ -14,40 +15,44 @@ class IntervalPicker extends React.Component {
   onChangeDays(event) {
 
     // Ensure value is non-negative
-    let days = event.target.value;
+    let days = this.getInt(event.target.value);
     if (days < 0) {
       days = 0;
     }
 
-    this.props.onUpdate(days, this.props.hours, this.props.minutes);
+    this.props.onChange(days, this.props.hours, this.props.minutes);
   }
 
   onChangeHours(event) {
 
     // Ensure value is between 0 and 23
-    let hours = event.target.value;
+    let hours = this.getInt(event.target.value);
     if (hours < 0) {
       hours = 0;
     } else if (hours > 23) {
       hours = 23;
     }
 
-    this.props.onUpdate(this.props.days, hours, this.props.minutes);
+    this.props.onChange(this.props.days, hours, this.props.minutes);
   }
 
   onChangeMinutes(event) {
 
     // Ensure value is between 0 and 59
-    let minutes = event.target.value;
+    let minutes = this.getInt(event.target.value);
     if (minutes < 0) {
       minutes = 0;
     } else if (minutes > 59) {
       minutes = 59;
     }
 
-    this.props.onUpdate(this.props.days, this.props.hours, minutes);
+    this.props.onChange(this.props.days, this.props.hours, minutes);
   }
 
+  getInt(value) {
+    let int = parseInt(value);
+    return !!int ? int : 0;
+  }
 
   render() {
     return (
@@ -62,5 +67,11 @@ class IntervalPicker extends React.Component {
     );
   }
 }
+
+IntervalPicker.propTypes = {
+  days: PropTypes.number.isRequired,
+  hours: PropTypes.number.isRequired,
+  minutes: PropTypes.number.isRequired
+};
 
 export default IntervalPicker;

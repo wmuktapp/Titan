@@ -1,7 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
-import ScheduleDays from './days/days.jsx';
-import IntervalPicker from './interval-picker.jsx';
+import RepeatForm from './repeat-form/index.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import TextField from './form-field/text-field.jsx';
@@ -33,20 +32,6 @@ class ScheduleForm extends React.Component {
         ScheduledExecutionNextLoadDate: null,
         ScheduledExecutionUser: '',
         ScheduledExecutionEnabled: true,
-
-        ScheduledIntervalKey: null,
-        ScheduledIntervalMI: 0,
-        ScheduledIntervalHH: 0,
-        ScheduledIntervalDD: 0,
-
-        ScheduledMondayEnabled: true,
-        ScheduledTuesdayEnabled: true,
-        ScheduledWednesdayEnabled: true,
-        ScheduledThursdayEnabled: true,
-        ScheduledFridayEnabled: true,
-        ScheduledSaturdayEnabled: true,
-        ScheduledSundayEnabled: true,
-
         AcquireProgramKey: 0
       },
 
@@ -58,16 +43,19 @@ class ScheduleForm extends React.Component {
 
       availablePrograms: [],
 
+      includeRepeat: false,
+
       invalidFields: []
     };
 
     this.onExecutionChange = this.onExecutionChange.bind(this);
     this.onChangeProgram = this.onChangeProgram.bind(this);
-    this.updateInterval = this.updateInterval.bind(this);
+    this.addRepeat = this.addRepeat.bind(this);
+    this.removeRepeat = this.removeRepeat.bind(this);
+    this.updateRepeat = this.updateRepeat.bind(this);
     this.updateNextScheduled = this.updateNextScheduled.bind(this);
     this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
     this.updateNextLoadDate = this.updateNextLoadDate.bind(this);
-    this.updateDays = this.updateDays.bind(this);
     this.updateAcquires = this.updateAcquires.bind(this);
     this.updateExtractDestination = this.updateExtractDestination.bind(this);
     this.updateExtractOptions = this.updateExtractOptions.bind(this);
@@ -94,7 +82,8 @@ class ScheduleForm extends React.Component {
           this.setState({
             execution: result.data.execution,
             acquires: result.data.acquires,
-            extract: result.data.extract
+            extract: result.data.extract,
+            includeRepeat: this.shouldIncludeRepeat(result.data.execution)
           });
         });
     }
@@ -137,17 +126,60 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  updateInterval(days, hours, minutes) {
+  shouldIncludeRepeat(execution) {
+    return execution.ScheduledIntervalDD
+        + execution.ScheduledIntervalHH
+        + execution.ScheduledIntervalMI
+      > 0;
+  }
+
+  addRepeat() {
+
+    // Add default interval and day values to this.state
+    const execution = Object.assign(
+      this.state.execution, {
+        ScheduledIntervalDD: 0,
+        ScheduledIntervalHH: 0,
+        ScheduledIntervalMI: 0,
+        ScheduledMondayEnabled: true,
+        ScheduledTuesdayEnabled: true,
+        ScheduledWednesdayEnabled: true,
+        ScheduledThursdayEnabled: true,
+        ScheduledFridayEnabled: true,
+        ScheduledSaturdayEnabled: true,
+        ScheduledSundayEnabled: true
+      }
+    );
+
+    this.setState({
+      execution: execution,
+      includeRepeat: true
+    });
+  }
+
+  removeRepeat() {
+    this.setState({
+      includeRepeat: false
+    });
+  }
+
+  updateRepeat(repeat) {
 
     const execution = this.state.execution;
 
-    execution.ScheduledIntervalDD = days;
-    execution.ScheduledIntervalHH = hours;
-    execution.ScheduledIntervalMI = minutes;
+    Object.assign(
+      execution, {
+        // Update interval
+        ScheduledIntervalDD: repeat.interval.days,
+        ScheduledIntervalHH: repeat.interval.hours,
+        ScheduledIntervalMI: repeat.interval.minutes
+      },
+      // Update days
+      getExecutionDays(repeat.days)
+    );
 
-    this.setState({
-      execution: execution
-    });
+    // Update state
+    this.setState({ execution });
   }
 
   updateNextScheduled(value) {
@@ -172,15 +204,6 @@ class ScheduleForm extends React.Component {
     this.setState({
       execution: execution
     });
-  }
-
-  updateDays(days) {
-
-    const execution = this.state.execution,
-      executionDays = getExecutionDays(days);
-    Object.assign(execution, executionDays);
-
-    this.setState({ execution });
   }
 
   updateAcquires(acquires) {
@@ -217,10 +240,11 @@ class ScheduleForm extends React.Component {
     }
 
     const data = getExecutionData(this.state);
+    const key = this.state.execution.ScheduledExecutionKey;
 
     // Send insert/update to server
-    Ajax.fetch('/api/schedules/', {
-      method: 'POST',
+    Ajax.fetch('/api/schedules/' + (key || ''), {
+      method: key ? 'PUT' : 'POST',
       body: JSON.stringify(data)
     })
       .then(res => res.json())
@@ -281,8 +305,15 @@ class ScheduleForm extends React.Component {
 
     const execution = this.state.execution;
 
-    // Simpler days object
-    const days = getWeekDays(execution);
+    // Repeat object
+    const repeat = {
+      interval: {
+        days: execution.ScheduledIntervalDD,
+        hours: execution.ScheduledIntervalHH,
+        minutes: execution.ScheduledIntervalMI
+      },
+      days: getWeekDays(execution)
+    };
 
     // Acquire program dropdown options
     const programOptions = getAcquireProgramOptions(this.state.availablePrograms);
@@ -388,15 +419,17 @@ class ScheduleForm extends React.Component {
             <span className="label-body">Enabled</span>
           </label>
         </div>
+
         <div className="form-section">
-          <h6>Interval</h6>
-          <IntervalPicker days={execution.ScheduledIntervalDD} hours={execution.ScheduledIntervalHH}
-            minutes={execution.ScheduledIntervalMI} onUpdate={this.updateInterval} />
+          <RepeatForm
+            value={repeat}
+            includeRepeat={this.state.includeRepeat}
+            onAddRepeat={this.addRepeat}
+            onRemoveRepeat={this.removeRepeat}
+            onChange={this.updateRepeat}
+          />
         </div>
-        <div className="form-section">
-          <h6>Days</h6>
-          <ScheduleDays key="days" days={days} onChange={this.updateDays} />
-        </div>
+
         <div className="form-section">
           <h6>Acquires</h6>
           {

@@ -172,7 +172,8 @@ def get_extract_programs():
 def get_scheduled_execution(key):
     rows = models.get_scheduled_execution(key)
     arbitrary_row = rows[0]
-    scheduled_extract_key = arbitrary_row["ScheduledExtractKey"]
+    print(dict(arbitrary_row))
+    scheduled_extract_destination = arbitrary_row["ScheduledExtractDestination"]
     details = {
         "execution": {
             "ScheduledExecutionKey": arbitrary_row["ScheduledExecutionKey"],
@@ -199,20 +200,20 @@ def get_scheduled_execution(key):
         },
         "acquires": [],
         "extract": {
-            "ScheduledExtractDestination": arbitrary_row["ScheduledExtractDestination"],
+            "ScheduledExtractDestination": scheduled_extract_destination,
             "Options": []
-        } if scheduled_extract_key is not None else {}
+        } if scheduled_extract_destination is not None else {}
     }
     acquires = {}
     acquire_options = {}
     extract_options = {}
     for row in rows:
-        acquire_key = row["ScheduledAcquireKey"]
-        if acquire_key is not None:
-            acquire = acquires.get(acquire_key)
+        scheduled_acquire_name = row["ScheduledAcquireName"]
+        if scheduled_acquire_name is not None:
+            acquire = acquires.get(scheduled_acquire_name)
             if acquire is None:
-                acquire = acquires[acquire_key] = {
-                    "ScheduledAcquireName": row["ScheduledAcquireName"],
+                acquire = acquires[scheduled_acquire_name] = {
+                    "ScheduledAcquireName": scheduled_acquire_name,
                     "Options": []
                 }
             acquire_option_name = row["ScheduledAcquireOptionName"]
