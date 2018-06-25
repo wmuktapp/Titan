@@ -32,20 +32,6 @@ class ScheduleForm extends React.Component {
         ScheduledExecutionNextLoadDate: null,
         ScheduledExecutionUser: '',
         ScheduledExecutionEnabled: true,
-
-        ScheduledIntervalKey: null,
-        ScheduledIntervalMI: 0,
-        ScheduledIntervalHH: 0,
-        ScheduledIntervalDD: 0,
-
-        ScheduledMondayEnabled: true,
-        ScheduledTuesdayEnabled: true,
-        ScheduledWednesdayEnabled: true,
-        ScheduledThursdayEnabled: true,
-        ScheduledFridayEnabled: true,
-        ScheduledSaturdayEnabled: true,
-        ScheduledSundayEnabled: true,
-
         AcquireProgramKey: 0
       },
 
@@ -149,10 +135,21 @@ class ScheduleForm extends React.Component {
 
   addRepeat() {
 
-    const execution = this.state.execution;
-    execution.ScheduledIntervalDD = 0;
-    execution.ScheduledIntervalHH = 0;
-    execution.ScheduledIntervalMI = 0;
+    // Add default interval and day values to this.state
+    const execution = Object.assign(
+      this.state.execution, {
+        ScheduledIntervalDD: 0,
+        ScheduledIntervalHH: 0,
+        ScheduledIntervalMI: 0,
+        ScheduledMondayEnabled: true,
+        ScheduledTuesdayEnabled: true,
+        ScheduledWednesdayEnabled: true,
+        ScheduledThursdayEnabled: true,
+        ScheduledFridayEnabled: true,
+        ScheduledSaturdayEnabled: true,
+        ScheduledSundayEnabled: true
+      }
+    );
 
     this.setState({
       execution: execution,
@@ -167,15 +164,19 @@ class ScheduleForm extends React.Component {
   }
 
   updateRepeat(repeat) {
+
     const execution = this.state.execution;
 
-    // Update interval
-    execution.ScheduledIntervalDD = repeat.interval.days;
-    execution.ScheduledIntervalHH = repeat.interval.hours;
-    execution.ScheduledIntervalMI = repeat.interval.minutes;
-
-    // Update days
-    Object.assign(execution, getExecutionDays(repeat.days));
+    Object.assign(
+      execution, {
+        // Update interval
+        ScheduledIntervalDD: repeat.interval.days,
+        ScheduledIntervalHH: repeat.interval.hours,
+        ScheduledIntervalMI: repeat.interval.minutes
+      },
+      // Update days
+      getExecutionDays(repeat.days)
+    );
 
     // Update state
     this.setState({ execution });
