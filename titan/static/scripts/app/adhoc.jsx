@@ -1,6 +1,5 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { wrapWithAdal } from './utils/adal-config';
 import AdhocForm from './components/adhoc-form.jsx';
 
 class AdhocApp extends React.Component {
@@ -9,6 +8,4 @@ class AdhocApp extends React.Component {
   }
 }
 
-wrapWithAdal(() => {
-  render(<AdhocApp />, document.getElementById('adhoc'));
-});
+render(<AdhocApp />, document.getElementById('adhoc'));
