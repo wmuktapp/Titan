@@ -18,7 +18,7 @@ class AcquireProgram(object):
         self._blob_prefix = "/".join((self._data["ExecutionClientName"], self._data["ExecutionDataSourceName"],
                                       self._data["DataSetName"], self._data["ExecutionLoadDate"],
                                       self._data["ExecutionVersion"]))
-        self._file_name_format = "{TITAN_DATA_SET_NAME}_{TITAN_LOAD_DATE}"
+        self._file_name_format = "{TITAN_DATA_SET_NAME}_{TITAN_LOAD_DATE}.csv"
         self.logger = self._app.logger
 
     def get_blob_name(self, name_format=None, **params):
