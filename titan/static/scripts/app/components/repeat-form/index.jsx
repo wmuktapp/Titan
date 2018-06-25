@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import IntervalPicker from '../interval-picker/index.jsx';
+import IntervalPicker from './interval-picker.jsx';
 
 import './index.css';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './index.css';
+import './interval-picker.css';
 
 class IntervalPicker extends React.Component {
 
