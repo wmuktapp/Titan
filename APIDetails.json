@@ -161,7 +161,6 @@ GET /schedules/<int:key>
             "ScheduledExecutionNextLoadDate": date (req),
             "ScheduledExecutionEnabled": bool (req),
             "ScheduledExecutionUser": str (req),
-            "ScheduledIntervalKey": int,
             "ScheduledIntervalMI": int,
             "ScheduledIntervalHH": int,
             "ScheduledIntervalDD": int,
@@ -172,13 +171,10 @@ GET /schedules/<int:key>
             "ScheduledFridayEnabled": bool,
             "ScheduledSaturdayEnabled": bool,
             "ScheduledSundayEnabled": bool,
-            "AcquireProgramKey": int,
-            "AcquireProgramFriendlyName": str,
-            "ScheduledExecutionStatus": str (req)
+            "AcquireProgramKey": int
         },
         "acquires": [
             {
-                "ScheduledAcquireKey": int (req),
                 "ScheduledAcquireName": str (req),
                 "Options": [
                     {
@@ -189,7 +185,6 @@ GET /schedules/<int:key>
             }
         ],
         "extract": {
-            "ScheduledExtractKey": int (req),
             "ScheduledExtractDestination": str (req),
             "Options": [
                 {
@@ -235,7 +230,6 @@ POST /schedules/
             "ScheduledExecutionNextLoadDate": date (req),
             "ScheduledExecutionEnabled": bool (req),
             "ScheduledExecutionUser": str (req),
-            "ScheduledIntervalKey": int,
             "ScheduledIntervalMI": int,
             "ScheduledIntervalHH": int,
             "ScheduledIntervalDD": int,
