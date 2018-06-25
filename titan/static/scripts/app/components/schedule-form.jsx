@@ -240,10 +240,11 @@ class ScheduleForm extends React.Component {
     }
 
     const data = getExecutionData(this.state);
+    const key = this.state.execution.ScheduledExecutionKey;
 
     // Send insert/update to server
-    Ajax.fetch('/api/schedules/', {
-      method: this.state.execution.ScheduledExecutionKey ? 'PUT' : 'POST',
+    Ajax.fetch('/api/schedules/' + (key || ''), {
+      method: key ? 'PUT' : 'POST',
       body: JSON.stringify(data)
     })
       .then(res => res.json())
