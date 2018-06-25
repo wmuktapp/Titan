@@ -68,11 +68,12 @@ class ScheduleForm extends React.Component {
     this.onChangeProgram = this.onChangeProgram.bind(this);
     this.addRepeat = this.addRepeat.bind(this);
     this.removeRepeat = this.removeRepeat.bind(this);
-    this.updateInterval = this.updateInterval.bind(this);
+    this.updateRepeat = this.updateRepeat.bind(this);
+    this.updateInterval = this.updateInterval.bind(this); // REMOVE
     this.updateNextScheduled = this.updateNextScheduled.bind(this);
     this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
     this.updateNextLoadDate = this.updateNextLoadDate.bind(this);
-    this.updateDays = this.updateDays.bind(this);
+    this.updateDays = this.updateDays.bind(this);         // REMOVE
     this.updateAcquires = this.updateAcquires.bind(this);
     this.updateExtractDestination = this.updateExtractDestination.bind(this);
     this.updateExtractOptions = this.updateExtractOptions.bind(this);
@@ -162,7 +163,22 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  // TODO merge with updateDays (--> updateRepeat)
+  updateRepeat(repeat) {
+    const execution = this.state.execution;
+
+    // Update interval
+    execution.ScheduledIntervalDD = repeat.interval.days;
+    execution.ScheduledIntervalHH = repeat.interval.hours;
+    execution.ScheduledIntervalMI = repeat.interval.minutes;
+
+    // Update days
+    Object.assign(execution, getExecutionDays(repeat.days));
+
+    // Update state
+    this.setState({ execution });
+  }
+
+  // TODO remove this
   updateInterval(days, hours, minutes) {
 
     const execution = this.state.execution;
@@ -200,7 +216,7 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  // TODO merge with updateInterval (--> updateRepeat)
+  // TODO remove this
   updateDays(days) {
 
     const execution = this.state.execution,
