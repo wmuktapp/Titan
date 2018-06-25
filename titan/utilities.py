@@ -11,6 +11,7 @@ class AcquireProgram(object):
         self._app = titan.create_app()
         self._append_service = blob.AppendBlobService(account_name=self._app.config["TITAN_AZURE_BLOB_ACCOUNT_NAME"],
                                                     sas_token=self._app.config["TITAN_AZURE_BLOB_SAS_TOKEN"])
+        self._append_blobs = set()
         self._block_service = blob.BlockBlobService(account_name=self._app.config["TITAN_AZURE_BLOB_ACCOUNT_NAME"],
                                                    sas_token=self._app.config["TITAN_AZURE_BLOB_SAS_TOKEN"])
         self.container_name = self._app.config["TITAN_AZURE_BLOB_CONTAINER_NAME"]
@@ -29,6 +30,9 @@ class AcquireProgram(object):
     def append_blob_from_bytes(self, bytes, blob_name=None, count=None):
         if blob_name is None:
             blob_name = self.get_blob_name()
+        if blob_name not in self._append_blobs:
+            self._append_service.create_blob(self.container_name, blob_name, if_none_match="*")
+            self._append_blobs.add(blob_name)
         self.logger.info("Appending bytes to blob, %s" % blob_name)
         self._append_service.append_blob_from_bytes(self.container_name, blob_name, bytes, count=count)
 
