@@ -68,7 +68,7 @@ class RepeatForm extends React.Component {
                 days={repeat.interval.days}
                 hours={repeat.interval.hours}
                 minutes={repeat.interval.minutes}
-                onUpdate={this.updateInterval}
+                onChange={this.updateInterval}
               />
             </div>
         }

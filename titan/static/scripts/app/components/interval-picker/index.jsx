@@ -20,7 +20,7 @@ class IntervalPicker extends React.Component {
       days = 0;
     }
 
-    this.props.onUpdate(days, this.props.hours, this.props.minutes);
+    this.props.onChange(days, this.props.hours, this.props.minutes);
   }
 
   onChangeHours(event) {
@@ -33,7 +33,7 @@ class IntervalPicker extends React.Component {
       hours = 23;
     }
 
-    this.props.onUpdate(this.props.days, hours, this.props.minutes);
+    this.props.onChange(this.props.days, hours, this.props.minutes);
   }
 
   onChangeMinutes(event) {
@@ -46,7 +46,7 @@ class IntervalPicker extends React.Component {
       minutes = 59;
     }
 
-    this.props.onUpdate(this.props.days, this.props.hours, minutes);
+    this.props.onChange(this.props.days, this.props.hours, minutes);
   }
 
   getInt(value) {
