@@ -118,7 +118,8 @@ def get_execution(key):
                     "ScheduledExtractOptionValue": row["ScheduledExtractOptionValue"]
                 }
     details["acquires"].extend(acquires.values())
-    details["extract"]["Options"].extend(extract_options.values())
+    if extract_options:
+        details["extract"]["Options"].extend(extract_options.values())
     return {"data": details}
 
 
@@ -172,7 +173,6 @@ def get_extract_programs():
 def get_scheduled_execution(key):
     rows = models.get_scheduled_execution(key)
     arbitrary_row = rows[0]
-    print(dict(arbitrary_row))
     scheduled_extract_destination = arbitrary_row["ScheduledExtractDestination"]
     details = {
         "execution": {
@@ -234,7 +234,8 @@ def get_scheduled_execution(key):
                     "ScheduledExtractOptionValue": row["ScheduledExtractOptionValue"]
                 }
     details["acquires"].extend(acquires.values())
-    details["extract"]["Options"].extend(extract_options.values())
+    if extract_options:
+        details["extract"]["Options"].extend(extract_options.values())
     return {"data": details}
 
 
@@ -296,13 +297,14 @@ def update_scheduled_execution(key):
     execution.update(params)
     acquires = data.get("acquires", [])
     extract = data.get("extract", {})
+    print(extract)
     try:
         with models.db.engine.begin() as transaction:
-            result, _ = models.update_scheduled_execution(transaction, execution, extract)
-            _ = models.delete_scheduled_acquires(transaction, params)
+            models.update_scheduled_execution(transaction, execution, extract)
+            models.delete_scheduled_acquires(transaction, params)
             for acquire in acquires:
                 acquire.update(params)
-                _, _ = models.insert_scheduled_acquire(transaction, acquire)
+                models.insert_scheduled_acquire(transaction, acquire)
     except exc.SQLAlchemyError as error:
         return {"error": {"code": error.code, "message": str(error)}}, 400, None
     return {}, 201, None

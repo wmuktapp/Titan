@@ -213,5 +213,5 @@ def update_scheduled_execution(transaction, execution, extract):
         key_param = {"ScheduledExtractKey": result["ScheduledExtractKey"]}
         delete_result = _execute_stored_procedure(transaction, "config.SP_DeleteScheduledExtractOptions",
                                                   key_param, {"DeleteRowCount": "INT"}).fetchone()
-        option_results = _insert_scheduled_extract_options(transaction, key_param, options)
+        option_results = _insert_scheduled_extract_options(transaction, key_param["ScheduledExtractKey"], options)
     return result, delete_result, option_results

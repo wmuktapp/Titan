@@ -11,12 +11,6 @@ app = titan.create_app()
 
 # Page URLs
 
-@app.after_request
-def after_request(response):
-    response.set_cookie("AppServiceAuthSession", request.cookies.get("AppServiceAuthSession", ""))
-    return response
-
-
 @app.route('/')
 def index():
     return redirect('/monitoring')
@@ -109,21 +103,21 @@ def execution_retry():
     return get_execution_data(start_date, end_date)
 
 
-"""@app.route('/api/schedules')
+@app.route('/api/schedules')
 def schedules_list():
     # TODO support filtering by querystring?
 
     limit = 0
 
-    return jsonify(get_schedules(limit))"""
+    return jsonify(get_schedules(limit))
 
 
-"""@app.route('/api/schedules', methods=['POST'])
+@app.route('/api/schedules', methods=['POST'])
 def schedule_create():
     # TODO create schedule?
     return jsonify({
         'id': key()
-    })"""
+    })
 
 
 @app.route('/api/schedules/<int:schedule_key>')

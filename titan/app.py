@@ -32,9 +32,9 @@ def execute(details):
         location=flask_app.config["TITAN_AZURE_CONTAINER_LOCATION"],
         container_name=container_name,
         image_name=flask_app.config["TITAN_AZURE_CONTAINER_IMAGE_NAME"],
-        memory_in_gb=flask_app.config["TITAN_AZURE_CONTAINER_MEMORY_GB"],
+        memory_in_gb=flask_app.config["TITAN_AZURE_CONTAINER_RAM_GB"],
         cpu_count=flask_app.config["TITAN_AZURE_CONTAINER_CPU_COUNT"],
-        configuration=json.dumps(details)
+        configuration=details
     )
 
 
@@ -82,7 +82,8 @@ def launch_container(resource_group_name, container_group_prefix, os_type, locat
     flask.current_app.logger.info("Preparing to launch container; %s" % container_group_name)
     resources = models.ResourceRequirements(requests=models.ResourceRequests(memory_in_gb=memory_in_gb, cpu=cpu_count))
     container = models.Container(name=container_name, image=image_name, resources=resources, command=["execute"],
-                                 environment_variables=[models.EnvironmentVariable("TITAN_STDIN", configuration)])
+                                 environment_variables=[models.EnvironmentVariable("TITAN_STDIN",
+                                                                                   json.dumps(configuration))])
     container_group = models.ContainerGroup(containers=[container], os_type=os_type, location=location,
                                             restart_policy="Never")
     credentials, subscription_id = get_security_context()
