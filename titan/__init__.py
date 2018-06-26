@@ -27,6 +27,3 @@ def create_app(source="webserver"):
     models.db.init_app(flask_app)
 
     return flask_app
-
-
-# TODO: Implement error pages (add as views to views.py)
