@@ -67,8 +67,18 @@ class ExtractForm extends React.Component {
     const target = e.target;
     const options = this.state.options;
 
-    options
-      .find(option => option.ScheduledExtractOptionName === target.name).ScheduledExtractOptionValue = target.value;
+    let option = options.find(option => option.ScheduledExtractOptionName === target.name);
+
+    // Option not found?  Add it
+    if (!option) {
+      option = {
+        ScheduledExtractOptionName: target.name,
+        ScheduledExtractOptionValue: ''
+      };
+      options.push(option);
+    }
+
+    option.ScheduledExtractOptionValue = target.value;
 
     this.props.onOptionsChange(options);
   }
@@ -121,6 +131,7 @@ class ExtractForm extends React.Component {
           <TextField
             key={index}
             label={name}
+            name={name}
             value={value}
             required={required}
             onChange={this.onOptionChange}
