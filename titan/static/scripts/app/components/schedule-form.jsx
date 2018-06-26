@@ -37,7 +37,7 @@ class ScheduleForm extends React.Component {
 
       acquires: [],
       extract: {
-        ScheduledExtractDestination: 0,
+        ScheduledExtractDestination: '',
         Options: []
       },
 
@@ -45,9 +45,10 @@ class ScheduleForm extends React.Component {
 
       includeRepeat: false,
 
+      showInvalid: false,
       invalidFields: [],
-      acquiresInvalid: false,
-      extractInvalid: false
+      acquiresValid: true,
+      extractValid: true
     };
 
     this.onExecutionChange = this.onExecutionChange.bind(this);
@@ -196,6 +197,8 @@ class ScheduleForm extends React.Component {
     this.setState({ execution });
   }
 
+  // TODO merge these methods
+
   updateNextScheduled(value) {
     const execution = this.state.execution;
     execution.ScheduledExecutionNextScheduled = value;
@@ -226,20 +229,22 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  updateExtractDestination(destination, options) {
+  updateExtractDestination(destination, options, isValid) {
     const extract = this.state.extract;
     extract.ScheduledExtractDestination = destination;
     extract.Options = options;
     this.setState({
-      extract: extract
+      extract: extract,
+      extractValid: isValid
     });
   }
 
-  updateExtractOptions(options) {
+  updateExtractOptions(options, isValid) {
     const extract = this.state.extract;
     extract.Options = options;
     this.setState({
-      extract: extract
+      extract: extract,
+      extractValid: isValid
     });
   }
 
@@ -290,26 +295,19 @@ class ScheduleForm extends React.Component {
     }
 
     // Validate acquire options
-    const acquiresInvalid = !validateAcquires();
-
-    // Validate extract options
-    const extractInvalid = !validateExtract();
+    const acquiresInvalid = !this.validateAcquires();
 
     this.setState({
+      showInvalid: true,
       invalidFields: invalidFields,
-      acquiresInvalid: acquiresInvalid,
-      extractInvalid: extractInvalid
+      acquiresInvalid: acquiresInvalid
     });
 
-    return invalidFields.length === 0;
+    return this.state.extractValid
+      && invalidFields.length === 0;
   }
 
   validateAcquires() {
-    // TODO
-    return true;
-  }
-
-  validateExtract() {
     // TODO
     return true;
   }
@@ -479,7 +477,7 @@ class ScheduleForm extends React.Component {
             onDestinationChange={this.updateExtractDestination}
             options={this.state.extract.Options}
             onOptionsChange={this.updateExtractOptions}
-            validate={this.extractInvalid}
+            validate={this.state.showInvalid}
           />
         </div>
 

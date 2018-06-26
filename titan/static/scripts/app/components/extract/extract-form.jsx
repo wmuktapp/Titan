@@ -60,7 +60,7 @@ class ExtractForm extends React.Component {
           })
       : [];
 
-    this.props.onDestinationChange(name, options);
+    this.props.onDestinationChange(name, options, this.isValid());
   }
 
   onOptionChange(e) {
@@ -80,7 +80,43 @@ class ExtractForm extends React.Component {
 
     option.ScheduledExtractOptionValue = target.value;
 
-    this.props.onOptionsChange(options);
+    this.props.onOptionsChange(options, this.isValid());
+  }
+
+  getOptionsConfig() {
+    const dest = this.state.availableDestinations.find(d => d.ExtractProgramFriendlyName === this.state.destination);
+    return dest ? dest.Options : [];
+  }
+
+  // Get a list of the fields which are required
+  getRequiredOptions() {
+    return this.getOptionsConfig()
+      .filter(config => config.ExtractProgramOptionRequired)
+      .map(config => config.ExtractProgramOptionName);
+  }
+
+  // Check that the extract is valid
+  isValid() {
+
+    // If destination is blank, this is fine
+    if (!this.state.destination) {
+      return true;
+    }
+
+    const invalidOptions = [];
+    const requiredOptions = this.getRequiredOptions();
+    
+    // Cross-reference options with a list of required options
+    for (let optionName of requiredOptions) {
+
+      const option = this.state.options.find(option => option.ScheduledExtractOptionName === optionName);
+
+      if (!option || !option.ScheduledExtractOptionValue) {
+        invalidOptions.push(optionName);
+      }
+    }
+
+    return invalidOptions.length === 0;
   }
 
   render() {
@@ -105,8 +141,7 @@ class ExtractForm extends React.Component {
     if (this.state.destination) {
 
       // Get a list of all available options
-      const dest = this.state.availableDestinations.find(d => d.ExtractProgramFriendlyName === this.state.destination);
-      const optionsConfig = dest ? dest.Options : [];
+      const optionsConfig = this.getOptionsConfig();
 
       const optionRows = optionsConfig.map((optionConfig, index) => {
 
@@ -120,22 +155,16 @@ class ExtractForm extends React.Component {
         // Option not found? Create a blank value
         const value = option ? option.ScheduledExtractOptionValue : '';
 
-        // Field required?
-        const required = optionConfig.ExtractProgramOptionRequired;
-
-        // Tooltip
-        const tooltip = optionConfig.ExtractProgramOptionHelp;
-
         return (
           <TextField
             key={index}
             label={name}
             name={name}
             value={value}
-            required={required}
+            required={optionConfig.ExtractProgramOptionRequired}
             onChange={this.onOptionChange}
             validate={this.props.validate}
-            tooltip={tooltip}
+            tooltip={optionConfig.ExtractProgramOptionHelp}
           />
         );
 
