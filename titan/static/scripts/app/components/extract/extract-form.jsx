@@ -113,6 +113,9 @@ class ExtractForm extends React.Component {
         // Field required?
         const required = optionConfig.ExtractProgramOptionRequired;
 
+        // Tooltip
+        const tooltip = optionConfig.ExtractProgramOptionHelp;
+
         // TODO validate
         return (
           <TextField
@@ -121,6 +124,7 @@ class ExtractForm extends React.Component {
             value={value}
             required={required}
             onChange={this.onOptionChange}
+            tooltip={tooltip}
           />
         );
 
