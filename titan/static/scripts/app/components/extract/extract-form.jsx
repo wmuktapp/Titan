@@ -74,6 +74,10 @@ class ExtractForm extends React.Component {
 
   render() {
 
+    // NOTE:  We are passed a list of current values for the extract options, and a list containing
+    //        all fields and details on whether they are mandatory (along with an explanation). We
+    //        need to cross-reference the two so that blank options are still displayed.
+
     let rows = [];
 
     const destinationOptions = this.state.availableDestinations.map(destination => {
@@ -89,18 +93,24 @@ class ExtractForm extends React.Component {
 
     if (this.state.destination) {
 
+      // Get a list of all available options
       const dest = this.state.availableDestinations.find(d => d.ExtractProgramFriendlyName === this.state.destination);
-      const options = dest ? dest.Options : [];
+      const optionsConfig = dest ? dest.Options : [];
 
-      const optionRows = options.map((option, index) => {
+      const optionRows = optionsConfig.map((optionConfig, index) => {
 
-        const name = option.ExtractProgramOptionName;
-        const value = this.state.options
-          .find(o => o.ScheduledExtractOptionName === name).ScheduledExtractOptionValue;
+        // Option name
+        const name = optionConfig.ExtractProgramOptionName;
+
+        // Look for the existing value
+        const option = this.state.options
+          .find(option => option.ScheduledExtractOptionName === name);
+
+        // Option not found? Create a blank value
+        const value = option ? option.ScheduledExtractOptionValue : '';
 
         // Field required?
-        const required = destinationValue.options
-          .find(field => name === field.ExtractProgramOptionName).ExtractProgramOptionRequired;
+        const required = optionConfig.ExtractProgramOptionRequired;
 
         return (
           <div key={index}>
