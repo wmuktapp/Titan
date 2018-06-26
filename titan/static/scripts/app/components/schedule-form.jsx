@@ -202,9 +202,10 @@ class ScheduleForm extends React.Component {
     this.setState({ execution });
   }
 
-  updateAcquires(acquires) {
+  updateAcquires(acquires, valid) {
     this.setState({
-      acquires: acquires
+      acquires: acquires,
+      acquiresValid: valid
     });
   }
 
@@ -261,6 +262,8 @@ class ScheduleForm extends React.Component {
   }
 
   validateFields() {
+
+    // Check that all required fields have a value
     
     const invalidFields = [];
 
@@ -273,22 +276,15 @@ class ScheduleForm extends React.Component {
       }
     }
 
-    // Validate acquire options
-    const acquiresInvalid = !this.validateAcquires();
-
     this.setState({
       showInvalid: true,
-      invalidFields: invalidFields,
-      acquiresInvalid: acquiresInvalid
+      invalidFields: invalidFields
     });
 
-    return this.state.extractValid
+    // We also check acquire and extract fields
+    return this.state.acquiresValid
+      && this.state.extractValid
       && invalidFields.length === 0;
-  }
-
-  validateAcquires() {
-    // TODO
-    return true;
   }
 
   isRequired(fieldName) {
@@ -445,6 +441,8 @@ class ScheduleForm extends React.Component {
                   options={program.options}
                   acquires={this.state.acquires}
                   onChange={this.updateAcquires}
+                  options={program.options}
+                  showInvalid={this.state.showInvalid}
                 />
               : <p>No acquire program selected</p>
           }
