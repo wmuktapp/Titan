@@ -47,7 +47,7 @@ class ScheduleForm extends React.Component {
 
       invalidFields: [],
       acquiresInvalid: false,
-      extractsInvalid: false
+      extractInvalid: false
     };
 
     this.onExecutionChange = this.onExecutionChange.bind(this);
@@ -289,14 +289,29 @@ class ScheduleForm extends React.Component {
       }
     }
 
+    // Validate acquire options
+    const acquiresInvalid = !validateAcquires();
+
+    // Validate extract options
+    const extractInvalid = !validateExtract();
+
     this.setState({
-      invalidFields: invalidFields
+      invalidFields: invalidFields,
+      acquiresInvalid: acquiresInvalid,
+      extractInvalid: extractInvalid
     });
 
-    // TODO validate acquire options
-    // TODO validate extract options
-
     return invalidFields.length === 0;
+  }
+
+  validateAcquires() {
+    // TODO
+    return true;
+  }
+
+  validateExtract() {
+    // TODO
+    return true;
   }
 
   isRequired(fieldName) {
@@ -464,7 +479,7 @@ class ScheduleForm extends React.Component {
             onDestinationChange={this.updateExtractDestination}
             options={this.state.extract.Options}
             onOptionsChange={this.updateExtractOptions}
-            validate={this.extractsInvalid}
+            validate={this.extractInvalid}
           />
         </div>
 
