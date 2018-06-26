@@ -2,6 +2,16 @@ import flask
 import wrapt
 
 
+class JSONEncoder(flask.json.JSONEncoder):
+    def default(self, o):
+        try:
+            iterable = iter(o)
+        except TypeError:
+            return flask.json.JSONEncoder.default(self, o)
+        else:
+            return list(iterable)
+
+
 @wrapt.decorator
 def to_json(wrapped, _, args, kwargs):
     return_value = wrapped(*args, **kwargs)

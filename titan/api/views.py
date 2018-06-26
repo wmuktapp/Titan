@@ -17,6 +17,11 @@ def _nested_default_dict():
 @decorators.to_json
 def execute():
     data = flask.request.get_json(force=True).get("data", {"execution": {}, "acquires": [], "extract": {}})
+    for acquire in data["acquires"]:
+        acquire["Options"] = [option for option in acquire["Options"] if option["AcquireOptionValue"] != ""]
+    extract = data["extract"]
+    if "Options" in extract:
+        extract["Options"] = [option for option in extract["Options"] if option["ExtractOptionValue"] != ""]
     app.execute(data)
     return {}, 201, None
 
@@ -29,7 +34,7 @@ def get_acquire_programs():
         key = row["AcquireProgramKey"]
         acquire_program = acquire_programs.get(key)
         if acquire_program is None:
-            acquire_programs[key] = {
+            acquire_program = acquire_programs[key] = {
                 "AcquireProgramKey": key,
                 "AcquireProgramPythonName": row["AcquireProgramPythonName"],
                 "AcquireProgramFriendlyName": row["AcquireProgramFriendlyName"],
@@ -40,13 +45,13 @@ def get_acquire_programs():
             }
         option_name = row["AcquireProgramOptionName"]
         if option_name is not None:
-            acquire_programs[key]["Options"].append({
+            acquire_program["Options"].append({
                 "AcquireProgramOptionName": option_name,
                 "AcquireProgramOptionRequired": row["AcquireProgramOptionRequired"],
                 "AcquireProgramOptionType": row["AcquireProgramOptionType"],
                 "AcquireProgramOptionHelp": row["AcquireProgramOptionHelp"]
             })
-    return {"data": list(acquire_programs.values())}
+    return {"data": acquire_programs.values()}
 
 
 @api.api_blueprint.route("/executions/<int:key>", methods=["GET"])
@@ -55,7 +60,7 @@ def get_execution(key):
     rows = models.get_execution(key)
     arbitrary_row = rows[0]
     extract_key = arbitrary_row["ExtractKey"]
-    details = {
+    data = {
         "execution": {
             "ExecutionKey": arbitrary_row["ExecutionKey"],
             "ExecutionContainerGroupName": arbitrary_row["ExecutionContainerGroupName"],
@@ -81,46 +86,37 @@ def get_execution(key):
             "ExtractEndTime": arbitrary_row["ExtractEndTime"],
             "ExtractStatus": arbitrary_row["ExtractStatus"],
             "ExtractErrorMessage": arbitrary_row["ExtractErrorMessage"],
-            "Options": []
+            "Options": set()
         } if extract_key is not None else {}
     }
     acquires = {}
-    acquire_options = {}
-    extract_options = {}
     for row in rows:
         acquire_key = row["AcquireKey"]
         if acquire_key is not None:
             acquire = acquires.get(acquire_key)
             if acquire is None:
-                acquires[acquire_key] = {
+                acquire = acquires[acquire_key] = {
                     "AcquireKey": row["AcquireKey"],
                     "AcquireStartTime": row["AcquireStartTime"],
                     "AcquireEndTime": row["AcquireEndTime"],
                     "AcquireStatus": row["AcquireStatus"],
                     "AcquireErrorMessage": row["AcquireErrorMessage"],
-                    "Options": []
+                    "Options": set()
                 }
-            acquire_option_name = row["ScheduledAcquireOptionName"]
+            acquire_option_name = row["AcquireOptionName"]
             if acquire_option_name is not None:
-                acquire_option = acquire_options.get(acquire_option_name)
-                if acquire_option is None:
-                    acquire_option = acquire_options[acquire_option_name] = {
-                        "ScheduledAcquireOptionName": acquire_option_name,
-                        "ScheduledAcquireOptionValue": row["ScheduledAcquireOptionValue"]
-                    }
-                    acquire["Options"].append(acquire_option)
+                acquire["Options"].add({
+                    "AcquireOptionName": acquire_option_name,
+                    "AcquireOptionValue": row["AcquireOptionValue"]
+                })
         extract_option_name = row["ScheduledExtractOptionName"]
         if extract_option_name is not None:
-            extract_option = extract_options.get(extract_option_name)
-            if extract_option is None:
-                extract_options[extract_option_name] = {
-                    "ScheduledExtractOptionName": extract_option_name,
-                    "ScheduledExtractOptionValue": row["ScheduledExtractOptionValue"]
-                }
-    details["acquires"].extend(acquires.values())
-    if extract_options:
-        details["extract"]["Options"].extend(extract_options.values())
-    return {"data": details}
+            data["Extract"]["Options"].add({
+                "ExtractOptionName": extract_option_name,
+                "ExtractOptionValue": row["ExtractOptionValue"]
+            })
+    data["acquires"].extend(acquires.values())
+    return {"data": data}
 
 
 @api.api_blueprint.route("/executions/", methods=["GET"])
@@ -131,27 +127,20 @@ def get_executions():
         value = flask.request.args.get(k)
         if value is not None:
             params[k] = value
-    executions = models.get_executions(**params)
     data = _nested_default_dict()
-    for row in executions:
-        client = data[row["ExecutionClientName"]]
-        data_source = client[row["ExecutionDataSourceName"]]
-        data_set = data_source[row["ExecutionDataSetName"]]
-        details = {}
-        for key in ("ExecutionKey", "AcquireProgramKey", "AcquireStartTime", "AcquireStatus", "ExtractStartTime",
-                    "ExtractStatus"):
-            details[key] = row[key]
-        data_set[row["ExecutionLoadDate"]] = details
+    for row in models.get_executions(**params):
+        data[row.pop("ExecutionClientName")][row.pop("ExecutionDataSourceName")][row.pop("ExecutionDataSetName")][
+            row.pop("ExecutionLoadDate")] = row
     return {"data": data}
 
 
 @api.api_blueprint.route("/extract-programs/", methods=["GET"])
 @decorators.to_json
 def get_extract_programs():
-    response = {"data": []}
+    data = []
     for python_name, friendly_name in (("azuresql", "Azure SQL"), ):
         program = importlib.import_module("titan.extract.%s" % python_name)
-        response["data"].append({
+        data.append({
             "ExtractProgramPythonName": python_name,
             "ExtractProgramFriendlyName": friendly_name,
             "ExtractProgramHelp": program.main.help,
@@ -165,7 +154,7 @@ def get_extract_programs():
                 for option in program.main.params
             ]
         })
-    return response
+    return {"data": data}
 
 
 @api.api_blueprint.route("/schedules/<int:key>", methods=["GET"])
@@ -174,7 +163,7 @@ def get_scheduled_execution(key):
     rows = models.get_scheduled_execution(key)
     arbitrary_row = rows[0]
     scheduled_extract_destination = arbitrary_row["ScheduledExtractDestination"]
-    details = {
+    data = {
         "execution": {
             "ScheduledExecutionKey": arbitrary_row["ScheduledExecutionKey"],
             "ScheduledExecutionName": arbitrary_row["ScheduledExecutionName"],
@@ -201,12 +190,10 @@ def get_scheduled_execution(key):
         "acquires": [],
         "extract": {
             "ScheduledExtractDestination": scheduled_extract_destination,
-            "Options": []
+            "Options": set()
         } if scheduled_extract_destination is not None else {}
     }
     acquires = {}
-    acquire_options = {}
-    extract_options = {}
     for row in rows:
         scheduled_acquire_name = row["ScheduledAcquireName"]
         if scheduled_acquire_name is not None:
@@ -214,29 +201,22 @@ def get_scheduled_execution(key):
             if acquire is None:
                 acquire = acquires[scheduled_acquire_name] = {
                     "ScheduledAcquireName": scheduled_acquire_name,
-                    "Options": []
+                    "Options": set()
                 }
             acquire_option_name = row["ScheduledAcquireOptionName"]
             if acquire_option_name is not None:
-                acquire_option = acquire_options.get(acquire_option_name)
-                if acquire_option is None:
-                    acquire_option = acquire_options[acquire_option_name] = {
-                        "ScheduledAcquireOptionName": acquire_option_name,
-                        "ScheduledAcquireOptionValue": row["ScheduledAcquireOptionValue"]
-                    }
-                    acquire["Options"].append(acquire_option)
+                acquire["Options"].add({
+                    "ScheduledAcquireOptionName": acquire_option_name,
+                    "ScheduledAcquireOptionValue": row["ScheduledAcquireOptionValue"]
+                })
         extract_option_name = row["ScheduledExtractOptionName"]
         if extract_option_name is not None:
-            extract_option = extract_options.get(extract_option_name)
-            if extract_option is None:
-                 extract_options[extract_option_name] = {
-                    "ScheduledExtractOptionName": extract_option_name,
-                    "ScheduledExtractOptionValue": row["ScheduledExtractOptionValue"]
-                }
-    details["acquires"].extend(acquires.values())
-    if extract_options:
-        details["extract"]["Options"].extend(extract_options.values())
-    return {"data": details}
+            data["Extract"]["Options"].add({
+                "ScheduledExtractOptionName": extract_option_name,
+                "ScheduledExtractOptionValue": row["ScheduledExtractOptionValue"]
+            })
+    data["acquires"].extend(acquires.values())
+    return {"data": data}
 
 
 @api.api_blueprint.route("/schedules/", methods=["GET"])
@@ -256,23 +236,20 @@ def insert_scheduled_execution():
     data = flask.request.get_json(force=True).get("data", {})
     execution = data.get("execution", {})
     acquires = data.get("acquires", [])
-    # Remove any options where the value is an empty string as the user is trying to remove these
     for acquire in acquires:
         acquire["Options"] = [option for option in acquire["Options"] if option["ScheduledAcquireOptionValue"] != ""]
     extract = data.get("extract", {})
-    # If a blank value was passed, the user is trying to remove the value. None is the explicit way to tell the db this
     if extract.get("ScheduledExtractDestination") == "":
         extract["ScheduledExtractDestination"] = None
-    # Remove any empty string keys as the user does not want to set these values
     if "Options" in extract:
         extract["Options"] = [option for option in extract["Options"] if option["ScheduledExtractOptionValue"] != ""]
     try:
         with models.db.engine.begin() as transaction:
-            result, _ = models.insert_scheduled_execution(transaction, execution, extract)
+            result = models.insert_scheduled_execution(transaction, execution, extract)[0]
             scheduled_execution_key = result["ScheduledExecutionKey"]
             for acquire in acquires:
                 acquire["ScheduledExecutionKey"] = scheduled_execution_key
-                _, _ = models.insert_scheduled_acquire(transaction, acquire)
+                models.insert_scheduled_acquire(transaction, acquire)
     except exc.SQLAlchemyError as error:
         return {"error": {"code": error.code, "message": str(error)}}, 400, None
     return {}, 201, None
@@ -285,10 +262,7 @@ def retry_executions():
     valid_execution_details = []
     for key in flask.request.get_json(force=True)["data"]:
         rows = models.get_execution(key)
-        if rows:
-            valid_execution_details.append(rows)
-        else:
-            invalid_keys.append(key)
+        valid_execution_details.append(rows) if rows else invalid_keys.append(key)
     if invalid_keys:
         return {"error": {"message": "the following keys are invalid as no execution details could be located: %s" %
                 invalid_keys}}, 400, None
@@ -305,14 +279,11 @@ def update_scheduled_execution(key):
     execution = data.get("execution", {})
     execution.update(params)
     acquires = data.get("acquires", [])
-    # Remove any options where the value is an empty string as the user is trying to remove these
     for acquire in acquires:
         acquire["Options"] = [option for option in acquire["Options"] if option["ScheduledAcquireOptionValue"] != ""]
     extract = data.get("extract", {})
-    # If a blank value was passed, the user is trying to remove the value. None is the explicit way to tell the db this
     if extract.get("ScheduledExtractDestination") == "":
         extract["ScheduledExtractDestination"] = None
-    # Remove any empty string keys as the user does not want to set these values
     if "Options" in extract:
         extract["Options"] = [option for option in extract["Options"] if option["ScheduledExtractOptionValue"] != ""]
     try:

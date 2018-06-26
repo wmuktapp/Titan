@@ -5,11 +5,12 @@ import dotenv
 import flask
 
 from titan import api, app, config, models
-from titan.api import views
+from titan.api import decorators, views
 
 
 def create_app(source="webserver"):
     flask_app = flask.Flask("titan", instance_relative_config=True)
+    flask_app.json_encoder = decorators.JSONEncoder
 
     dotenv.load_dotenv(os.path.join(flask_app.instance_path, "..", "config.env"))
     environment = os.environ.get("TITAN_CONFIG_ENVIRONMENT")

@@ -110,20 +110,22 @@ GET /executions/<int:key>
 
 GET /executions/?page_number=1&page_size=100
 {
-    "data": [
-        {
-            "ExecutionKey": int (req),
-            "ExecutionClientName": str (req),
-            "ExecutionDataSourceName": str (req),
-            "ExecutionDataSetName": str (req),
-            "ExecutionLoadDate": date (req),
-            "AcquireProgramKey": int,
-            "AcquireStartTime" datetime,
-            "AcquireStatus": str (req),
-            "ExtractStartTime": datetime,
-            "ExtractStatus": str (req)
+    "data": {
+        "ExecutionClientName": {
+            "ExecutionDataSourceName": {
+                "ExecutionDataSetName": {
+                    "ExecutionLoadDate": {
+                        "ExecutionKey": int (req),
+                        "AcquireProgramKey": int,
+                        "AcquireStartTime" datetime,
+                        "AcquireStatus": str (req),
+                        "ExtractStartTime": datetime,
+                        "ExtractStatus": str (req)
+                    }
+                }
+            }
         }
-    ]
+    }
 }
 
 
