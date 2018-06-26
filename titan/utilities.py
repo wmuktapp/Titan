@@ -10,10 +10,10 @@ class AcquireProgram(object):
     def __init__(self):
         self._app = titan.create_app()
         self._append_service = blob.AppendBlobService(account_name=self._app.config["TITAN_AZURE_BLOB_ACCOUNT_NAME"],
-                                                    sas_token=self._app.config["TITAN_AZURE_BLOB_SAS_TOKEN"])
+                                                      sas_token=self._app.config["TITAN_AZURE_BLOB_SAS_TOKEN"])
         self._append_blobs = set()
         self._block_service = blob.BlockBlobService(account_name=self._app.config["TITAN_AZURE_BLOB_ACCOUNT_NAME"],
-                                                   sas_token=self._app.config["TITAN_AZURE_BLOB_SAS_TOKEN"])
+                                                    sas_token=self._app.config["TITAN_AZURE_BLOB_SAS_TOKEN"])
         self.container_name = self._app.config["TITAN_AZURE_BLOB_CONTAINER_NAME"]
         self._data = json.loads(os.getenv("TITAN_STDIN"))["execution"]
         self._blob_prefix = "/".join((self._data["ExecutionClientName"], self._data["ExecutionDataSourceName"],
