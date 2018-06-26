@@ -1,6 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 import Label from '../label.jsx';
+import TextField from '../form-field/text-field.jsx';
 import Ajax from '../../utils/ajax';
 
 class ExtractForm extends React.Component {
@@ -112,11 +113,15 @@ class ExtractForm extends React.Component {
         // Field required?
         const required = optionConfig.ExtractProgramOptionRequired;
 
+        // TODO validate
         return (
-          <div key={index}>
-            <Label required={required}>{name}</Label>
-            <input type="text" name={name} value={value} onChange={this.onOptionChange} />
-          </div>
+          <TextField
+            key={index}
+            label={name}
+            value={value}
+            required={required}
+            onChange={this.onOptionChange}
+          />
         );
 
       });
@@ -127,7 +132,7 @@ class ExtractForm extends React.Component {
     return (
       <div className="extract-form">
         <div key="destination">
-          <label>Destination</label>
+          <Label>Destination</Label>
           <Select
             value={destinationValue}
             options={destinationOptions}
