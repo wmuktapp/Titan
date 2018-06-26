@@ -7,6 +7,15 @@ import '../react-datepicker-overrides.css';
 
 class DateField extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange() {
+    this.props.onChange(this.props.name, ...arguments);
+  }
+
   render() {
 
     let value = this.props.value;
@@ -37,7 +46,7 @@ class DateField extends React.Component {
           name={this.props.name}
           selected={value}
           disabled={this.props.disabled}
-          onChange={this.props.onChange}
+          onChange={this.handleChange}
           showTimeSelect={this.props.includeTime}
         />
       </FormRow>

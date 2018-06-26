@@ -56,9 +56,7 @@ class ScheduleForm extends React.Component {
     this.addRepeat = this.addRepeat.bind(this);
     this.removeRepeat = this.removeRepeat.bind(this);
     this.updateRepeat = this.updateRepeat.bind(this);
-    this.updateNextScheduled = this.updateNextScheduled.bind(this);
-    this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
-    this.updateNextLoadDate = this.updateNextLoadDate.bind(this);
+    this.updateDateField = this.updateDateField.bind(this);
     this.updateAcquires = this.updateAcquires.bind(this);
     this.updateExtractDestination = this.updateExtractDestination.bind(this);
     this.updateExtractOptions = this.updateExtractOptions.bind(this);
@@ -197,30 +195,11 @@ class ScheduleForm extends React.Component {
     this.setState({ execution });
   }
 
-  // TODO merge these methods
-
-  updateNextScheduled(value) {
+  // Different method for date fields
+  updateDateField(name, value) {
     const execution = this.state.execution;
-    execution.ScheduledExecutionNextScheduled = value;
-    this.setState({
-      execution: execution
-    });
-  }
-
-  updateScheduleEnd(value) {
-    const execution = this.state.execution;
-    execution.ScheduledExecutionScheduleEnd = value;
-    this.setState({
-      execution: execution
-    });
-  }
-
-  updateNextLoadDate(value) {
-    const execution = this.state.execution;
-    execution.ScheduledExecutionNextLoadDate = value;
-    this.setState({
-      execution: execution
-    });
+    execution[name] = value;
+    this.setState({ execution });
   }
 
   updateAcquires(acquires) {
@@ -382,7 +361,7 @@ class ScheduleForm extends React.Component {
           value={execution.ScheduledExecutionNextScheduled}
           required={this.isRequired('ScheduledExecutionNextScheduled')}
           validate={this.isInvalid('ScheduledExecutionNextScheduled')}
-          onChange={this.updateNextScheduled}
+          onChange={this.updateDateField}
           includeTime={true}
         />
         <DateField
@@ -391,7 +370,7 @@ class ScheduleForm extends React.Component {
           value={execution.ScheduledExecutionScheduleEnd}
           required={this.isRequired('ScheduledExecutionScheduleEnd')}
           validate={this.isInvalid('ScheduledExecutionScheduleEnd')}
-          onChange={this.updateScheduleEnd}
+          onChange={this.updateDateField}
           includeTime={true}
         />
 
@@ -429,7 +408,7 @@ class ScheduleForm extends React.Component {
           value={execution.ScheduledExecutionNextLoadDate}
           required={this.isRequired('ScheduledExecutionNextLoadDate')}
           validate={this.isInvalid('ScheduledExecutionNextLoadDate')}
-          onChange={this.updateNextLoadDate}
+          onChange={this.updateDateField}
         />
 
         <TextField
