@@ -45,7 +45,9 @@ class ScheduleForm extends React.Component {
 
       includeRepeat: false,
 
-      invalidFields: []
+      invalidFields: [],
+      acquiresInvalid: false,
+      extractsInvalid: false
     };
 
     this.onExecutionChange = this.onExecutionChange.bind(this);
@@ -291,6 +293,9 @@ class ScheduleForm extends React.Component {
       invalidFields: invalidFields
     });
 
+    // TODO validate acquire options
+    // TODO validate extract options
+
     return invalidFields.length === 0;
   }
 
@@ -331,8 +336,6 @@ class ScheduleForm extends React.Component {
     const programOptions = getAcquireProgramOptions(this.state.availablePrograms);
 
     const program = programOptions.find(option => option.value === execution.AcquireProgramKey);
-
-    const extractOptions = this.state.extract.Options;
 
     return (
       <form className="schedule-form" onSubmit={this.onSubmit}>
@@ -459,8 +462,9 @@ class ScheduleForm extends React.Component {
           <ExtractForm
             destination={this.state.extract.ScheduledExtractDestination}
             onDestinationChange={this.updateExtractDestination}
-            options={extractOptions}
+            options={this.state.extract.Options}
             onOptionsChange={this.updateExtractOptions}
+            validate={this.extractsInvalid}
           />
         </div>
 

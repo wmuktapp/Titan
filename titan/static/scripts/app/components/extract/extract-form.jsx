@@ -1,6 +1,7 @@
 import React from 'react';
 import Select from 'react-select';
 import Label from '../label.jsx';
+import TextField from '../form-field/text-field.jsx';
 import Ajax from '../../utils/ajax';
 
 class ExtractForm extends React.Component {
@@ -66,13 +67,27 @@ class ExtractForm extends React.Component {
     const target = e.target;
     const options = this.state.options;
 
-    options
-      .find(option => option.ScheduledExtractOptionName === target.name).ScheduledExtractOptionValue = target.value;
+    let option = options.find(option => option.ScheduledExtractOptionName === target.name);
+
+    // Option not found?  Add it
+    if (!option) {
+      option = {
+        ScheduledExtractOptionName: target.name,
+        ScheduledExtractOptionValue: ''
+      };
+      options.push(option);
+    }
+
+    option.ScheduledExtractOptionValue = target.value;
 
     this.props.onOptionsChange(options);
   }
 
   render() {
+
+    // NOTE:  We are passed a list of current values for the extract options, and a list containing
+    //        all fields and details on whether they are mandatory (along with an explanation). We
+    //        need to cross-reference the two so that blank options are still displayed.
 
     let rows = [];
 
@@ -89,24 +104,39 @@ class ExtractForm extends React.Component {
 
     if (this.state.destination) {
 
+      // Get a list of all available options
       const dest = this.state.availableDestinations.find(d => d.ExtractProgramFriendlyName === this.state.destination);
-      const options = dest ? dest.Options : [];
+      const optionsConfig = dest ? dest.Options : [];
 
-      const optionRows = options.map((option, index) => {
+      const optionRows = optionsConfig.map((optionConfig, index) => {
 
-        const name = option.ExtractProgramOptionName;
-        const value = this.state.options
-          .find(o => o.ScheduledExtractOptionName === name).ScheduledExtractOptionValue;
+        // Option name
+        const name = optionConfig.ExtractProgramOptionName;
+
+        // Look for the existing value
+        const option = this.state.options
+          .find(option => option.ScheduledExtractOptionName === name);
+
+        // Option not found? Create a blank value
+        const value = option ? option.ScheduledExtractOptionValue : '';
 
         // Field required?
-        const required = destinationValue.options
-          .find(field => name === field.ExtractProgramOptionName).ExtractProgramOptionRequired;
+        const required = optionConfig.ExtractProgramOptionRequired;
+
+        // Tooltip
+        const tooltip = optionConfig.ExtractProgramOptionHelp;
 
         return (
-          <div key={index}>
-            <Label required={required}>{name}</Label>
-            <input type="text" name={name} value={value} onChange={this.onOptionChange} />
-          </div>
+          <TextField
+            key={index}
+            label={name}
+            name={name}
+            value={value}
+            required={required}
+            onChange={this.onOptionChange}
+            validate={this.props.validate}
+            tooltip={tooltip}
+          />
         );
 
       });
@@ -116,8 +146,8 @@ class ExtractForm extends React.Component {
 
     return (
       <div className="extract-form">
-        <div key="destination">
-          <label>Destination</label>
+        <div>
+          <Label>Destination</Label>
           <Select
             value={destinationValue}
             options={destinationOptions}

@@ -13,7 +13,7 @@ class TextField extends React.Component {
     const errorMessage = error ? 'This field is required' : '';
 
     return (
-      <FormRow required={this.props.required} label={this.props.label} error={errorMessage}>
+      <FormRow required={this.props.required} label={this.props.label} error={errorMessage} tooltip={this.props.tooltip}>
         <input
           className={className}
           type="text"

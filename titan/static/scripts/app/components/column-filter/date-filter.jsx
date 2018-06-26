@@ -3,6 +3,7 @@ import ColumnFilter from './filter.jsx';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
+import '../react-datepicker-overrides.css';
 
 class ColumnDateFilter extends React.Component {
 
