@@ -44,7 +44,7 @@ def _process_acquires(flask_app, data):
                         for row in _call_models_function(flask_app, models.get_acquire_programs)}
     acquire_program = acquire_programs[acquire_program_key]
     execution_key = execution["ExecutionKey"]
-    load_date = execution["ExecutionLoadDate"]
+    load_date = execution.get("ExecutionLoadDate")
     acquires = data["acquires"]
     for acquire in acquires:
         _process_acquire(flask_app, execution_key, acquire_program, acquire=acquire, load_date=load_date)
