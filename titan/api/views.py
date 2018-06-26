@@ -58,8 +58,11 @@ def get_acquire_programs():
 @decorators.to_json
 def get_execution(key):
     rows = models.get_execution(key)
+    if not rows:
+        flask.abort(404)
     arbitrary_row = rows[0]
     extract_key = arbitrary_row["ExtractKey"]
+    extract_options = []
     data = {
         "execution": {
             "ExecutionKey": arbitrary_row["ExecutionKey"],
@@ -86,7 +89,7 @@ def get_execution(key):
             "ExtractEndTime": arbitrary_row["ExtractEndTime"],
             "ExtractStatus": arbitrary_row["ExtractStatus"],
             "ExtractErrorMessage": arbitrary_row["ExtractErrorMessage"],
-            "Options": set()
+            "Options": extract_options
         } if extract_key is not None else {}
     }
     acquires = {}
@@ -101,20 +104,25 @@ def get_execution(key):
                     "AcquireEndTime": row["AcquireEndTime"],
                     "AcquireStatus": row["AcquireStatus"],
                     "AcquireErrorMessage": row["AcquireErrorMessage"],
-                    "Options": set()
+                    "Options": []
                 }
+            acquire_options = acquire["Options"]
             acquire_option_name = row["AcquireOptionName"]
             if acquire_option_name is not None:
-                acquire["Options"].add({
+                option = {
                     "AcquireOptionName": acquire_option_name,
                     "AcquireOptionValue": row["AcquireOptionValue"]
-                })
+                }
+                if option not in acquire_options:
+                    acquire_options.append(option)
         extract_option_name = row["ScheduledExtractOptionName"]
         if extract_option_name is not None:
-            data["Extract"]["Options"].add({
+            option = {
                 "ExtractOptionName": extract_option_name,
                 "ExtractOptionValue": row["ExtractOptionValue"]
-            })
+            }
+            if option not in extract_options:
+                extract_options.append(option)
     data["acquires"].extend(acquires.values())
     return {"data": data}
 
@@ -161,8 +169,11 @@ def get_extract_programs():
 @decorators.to_json
 def get_scheduled_execution(key):
     rows = models.get_scheduled_execution(key)
+    if not rows:
+        flask.abort(404)
     arbitrary_row = rows[0]
     scheduled_extract_destination = arbitrary_row["ScheduledExtractDestination"]
+    extract_options = []
     data = {
         "execution": {
             "ScheduledExecutionKey": arbitrary_row["ScheduledExecutionKey"],
@@ -190,7 +201,7 @@ def get_scheduled_execution(key):
         "acquires": [],
         "extract": {
             "ScheduledExtractDestination": scheduled_extract_destination,
-            "Options": set()
+            "Options": extract_options
         } if scheduled_extract_destination is not None else {}
     }
     acquires = {}
@@ -201,20 +212,25 @@ def get_scheduled_execution(key):
             if acquire is None:
                 acquire = acquires[scheduled_acquire_name] = {
                     "ScheduledAcquireName": scheduled_acquire_name,
-                    "Options": set()
+                    "Options": []
                 }
+            acquire_options = acquire["Options"]
             acquire_option_name = row["ScheduledAcquireOptionName"]
             if acquire_option_name is not None:
-                acquire["Options"].add({
+                option = {
                     "ScheduledAcquireOptionName": acquire_option_name,
                     "ScheduledAcquireOptionValue": row["ScheduledAcquireOptionValue"]
-                })
+                }
+                if option not in acquire_options:
+                    acquire_options.append(option)
         extract_option_name = row["ScheduledExtractOptionName"]
         if extract_option_name is not None:
-            data["Extract"]["Options"].add({
+            option = {
                 "ScheduledExtractOptionName": extract_option_name,
                 "ScheduledExtractOptionValue": row["ScheduledExtractOptionValue"]
-            })
+            }
+            if option not in extract_options:
+                extract_options.append(option)
     data["acquires"].extend(acquires.values())
     return {"data": data}
 

@@ -1,10 +1,14 @@
 import json
 import uuid
 
-import flask
 from azure.mgmt import containerinstance, resource
 from azure.mgmt.containerinstance import models
 from msrestazure import azure_active_directory
+import flask
+
+
+def get_id_token():
+    return "Bearer %s" % flask.request.headers.get("X-MS-TOKEN-AAD-ID-TOKEN", "")
 
 
 def get_security_context():
