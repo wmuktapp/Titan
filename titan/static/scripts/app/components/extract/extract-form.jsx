@@ -131,7 +131,7 @@ class ExtractForm extends React.Component {
 
     return (
       <div className="extract-form">
-        <div key="destination">
+        <div>
           <Label>Destination</Label>
           <Select
             value={destinationValue}
