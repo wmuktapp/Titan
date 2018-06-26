@@ -126,7 +126,6 @@ class ExtractForm extends React.Component {
         // Tooltip
         const tooltip = optionConfig.ExtractProgramOptionHelp;
 
-        // TODO validate
         return (
           <TextField
             key={index}
@@ -135,6 +134,7 @@ class ExtractForm extends React.Component {
             value={value}
             required={required}
             onChange={this.onOptionChange}
+            validate={this.props.validate}
             tooltip={tooltip}
           />
         );
