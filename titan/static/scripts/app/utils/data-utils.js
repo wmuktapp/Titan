@@ -60,11 +60,11 @@ const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
 function formatDateTime(dateTime) {
   if (typeof dateTime === 'string') {
-    return moment(dateTime).local().format(dateFormat);
+    return moment.utc(dateTime).format(dateFormat);
   } else if (dateTime === null) {
     return null;
   }
-  return dateTime.local().format(dateFormat);
+  return dateTime.format(dateFormat);
 }
 
 // Fields required for execution

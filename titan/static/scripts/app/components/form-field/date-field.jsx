@@ -13,7 +13,8 @@ class DateField extends React.Component {
 
     // Handle strings and moments
     if (typeof value === 'string') {
-      value = moment(new Date(value));
+      // IMPORTANT: Dates should always be assumed to be in UTC
+      value = moment.utc(value);
     }
 
     const error = this.props.required
