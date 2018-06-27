@@ -30,9 +30,9 @@ def _generate_sql_text(replace, blobs):
             TRUNCATE TABLE :table_name;
         """
     params = {}
-    for index, file_name in enumerate(blobs):
+    for index, blob in enumerate(blobs):
         param_name = "file_name_%s" % index
-        params[param_name] = file_name.name
+        params[param_name] = blob.name
         sql_text += """
             BULK INSERT :table_name
             FROM :%s
