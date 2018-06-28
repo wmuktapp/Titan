@@ -1,4 +1,4 @@
-POST /execute
+POST /executions/
 {
     "data": {
         "execution": {

@@ -12,7 +12,12 @@ def get_id_token():
 
 
 def get_security_context():
-    credentials = azure_active_directory.MSIAuthentication()
+    # TODO: ENABLE THIS ONCE LIVE and delete the below. credentials = azure_active_directory.MSIAuthentication()
+    config = flask.current_app.config
+    from azure.common.credentials import ServicePrincipalCredentials
+    credentials = ServicePrincipalCredentials(client_id=config["TITAN_AZURE_CLIENT_ID"],
+                                              secret=config["TITAN_AZURE_CLIENT_SECRET"],
+                                              tenant=config["TITAN_AZURE_TENANT_ID"])
     subscription_id = next(resource.SubscriptionClient(credentials).subscriptions.list())
     return credentials, subscription_id
 
