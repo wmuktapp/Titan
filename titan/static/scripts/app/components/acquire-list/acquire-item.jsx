@@ -1,5 +1,5 @@
 import React from 'react';
-import Label from '../label.jsx';
+import TextField from '../form-field/text-field.jsx';
 
 class AcquireItem extends React.Component {
 
@@ -27,28 +27,43 @@ class AcquireItem extends React.Component {
 
   render() {
 
-    // TODO use TextField component here?
+    const rows = this.props.options.map((option, index) => {
 
-    const rows = this.props.acquire.Options.map((option, index) => {
+      const optionName = option.AcquireProgramOptionName;
+
+      const selectedOption = this.props.acquire.Options
+        .find(_option => _option.ScheduledAcquireOptionName === optionName);
+
+      const value = !!selectedOption ? selectedOption.ScheduledAcquireOptionValue : '';
+
       return (
-        <div key={index} className="acquire-property">
-          <Label>{option.ScheduledAcquireOptionName}</Label>
-          <input type="text" name={option.ScheduledAcquireOptionName} value={option.ScheduledAcquireOptionValue} onChange={this.updateOption} />
-        </div>
+        <TextField
+          key={index}
+          compact={true}
+          label={optionName}
+          name={optionName}
+          value={value}
+          required={option.AcquireProgramOptionRequired}
+          validate={this.props.showInvalid}
+          onChange={this.updateOption}
+        />
       );
     });
-
-    // TODO use TextField for name
 
     return (
       <div className="acquire-item u-cf">
         <a onClick={this.remove} className="acquire-item-remove">
           <span className="fas fa-times" />
         </a>
-        <div className="acquire-name">
-          <Label required={true}>Acquire Name</Label>
-          <input type="text" className="acquire-name-input" value={this.props.acquire.ScheduledAcquireName} onChange={this.updateName} />
-        </div>
+        <TextField
+          label="Acquire Name"
+          className="acquire-name"
+          inputClassName="acquire-name-input"
+          value={this.props.acquire.ScheduledAcquireName}
+          required={true}
+          validate={this.props.showInvalid}
+          onChange={this.updateName}
+        />
         <div className="acquire-properties">
           <h6>Acquire Options</h6>
           {rows}

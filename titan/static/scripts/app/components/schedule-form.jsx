@@ -37,7 +37,7 @@ class ScheduleForm extends React.Component {
 
       acquires: [],
       extract: {
-        ScheduledExtractDestination: 0,
+        ScheduledExtractDestination: '',
         Options: []
       },
 
@@ -45,9 +45,10 @@ class ScheduleForm extends React.Component {
 
       includeRepeat: false,
 
+      showInvalid: false,
       invalidFields: [],
-      acquiresInvalid: false,
-      extractsInvalid: false
+      acquiresValid: true,
+      extractValid: true
     };
 
     this.onExecutionChange = this.onExecutionChange.bind(this);
@@ -55,9 +56,7 @@ class ScheduleForm extends React.Component {
     this.addRepeat = this.addRepeat.bind(this);
     this.removeRepeat = this.removeRepeat.bind(this);
     this.updateRepeat = this.updateRepeat.bind(this);
-    this.updateNextScheduled = this.updateNextScheduled.bind(this);
-    this.updateScheduleEnd = this.updateScheduleEnd.bind(this);
-    this.updateNextLoadDate = this.updateNextLoadDate.bind(this);
+    this.updateDateField = this.updateDateField.bind(this);
     this.updateAcquires = this.updateAcquires.bind(this);
     this.updateExtractDestination = this.updateExtractDestination.bind(this);
     this.updateExtractOptions = this.updateExtractOptions.bind(this);
@@ -196,50 +195,36 @@ class ScheduleForm extends React.Component {
     this.setState({ execution });
   }
 
-  updateNextScheduled(value) {
+  // Different method for date fields
+  updateDateField(name, value) {
     const execution = this.state.execution;
-    execution.ScheduledExecutionNextScheduled = value;
+    execution[name] = value;
+    this.setState({ execution });
+  }
+
+  updateAcquires(acquires, valid) {
     this.setState({
-      execution: execution
+      acquires: acquires,
+      acquiresValid: valid
     });
   }
 
-  updateScheduleEnd(value) {
-    const execution = this.state.execution;
-    execution.ScheduledExecutionScheduleEnd = value;
-    this.setState({
-      execution: execution
-    });
-  }
-
-  updateNextLoadDate(value) {
-    const execution = this.state.execution;
-    execution.ScheduledExecutionNextLoadDate = value;
-    this.setState({
-      execution: execution
-    });
-  }
-
-  updateAcquires(acquires) {
-    this.setState({
-      acquires: acquires
-    });
-  }
-
-  updateExtractDestination(destination, options) {
+  updateExtractDestination(destination, options, isValid) {
     const extract = this.state.extract;
     extract.ScheduledExtractDestination = destination;
     extract.Options = options;
     this.setState({
-      extract: extract
+      extract: extract,
+      extractValid: isValid
     });
   }
 
-  updateExtractOptions(options) {
+  updateExtractOptions(options, isValid) {
     const extract = this.state.extract;
     extract.Options = options;
     this.setState({
-      extract: extract
+      extract: extract,
+      extractValid: isValid
     });
   }
 
@@ -249,7 +234,8 @@ class ScheduleForm extends React.Component {
 
     // Validate fields
     if (!this.validateFields()) {
-      window.scrollTo(0, 0);
+      console.log('fields invalid')
+      this.goToTop();
       return;
     }
 
@@ -271,12 +257,21 @@ class ScheduleForm extends React.Component {
 
         this.setState({
           execution: execution,
+          showInvalid: false,
           updated: true
         });
       });
+
+    this.goToTop();
+  }
+
+  goToTop() {
+    window.scrollTo(0, 0);
   }
 
   validateFields() {
+
+    // Check that all required fields have a value
     
     const invalidFields = [];
 
@@ -290,13 +285,14 @@ class ScheduleForm extends React.Component {
     }
 
     this.setState({
+      showInvalid: true,
       invalidFields: invalidFields
     });
 
-    // TODO validate acquire options
-    // TODO validate extract options
-
-    return invalidFields.length === 0;
+    // We also check acquire and extract fields
+    return this.state.acquiresValid
+      && this.state.extractValid
+      && invalidFields.length === 0;
   }
 
   isRequired(fieldName) {
@@ -369,7 +365,7 @@ class ScheduleForm extends React.Component {
           value={execution.ScheduledExecutionNextScheduled}
           required={this.isRequired('ScheduledExecutionNextScheduled')}
           validate={this.isInvalid('ScheduledExecutionNextScheduled')}
-          onChange={this.updateNextScheduled}
+          onChange={this.updateDateField}
           includeTime={true}
         />
         <DateField
@@ -378,7 +374,7 @@ class ScheduleForm extends React.Component {
           value={execution.ScheduledExecutionScheduleEnd}
           required={this.isRequired('ScheduledExecutionScheduleEnd')}
           validate={this.isInvalid('ScheduledExecutionScheduleEnd')}
-          onChange={this.updateScheduleEnd}
+          onChange={this.updateDateField}
           includeTime={true}
         />
 
@@ -416,7 +412,7 @@ class ScheduleForm extends React.Component {
           value={execution.ScheduledExecutionNextLoadDate}
           required={this.isRequired('ScheduledExecutionNextLoadDate')}
           validate={this.isInvalid('ScheduledExecutionNextLoadDate')}
-          onChange={this.updateNextLoadDate}
+          onChange={this.updateDateField}
         />
 
         <TextField
@@ -453,6 +449,8 @@ class ScheduleForm extends React.Component {
                   options={program.options}
                   acquires={this.state.acquires}
                   onChange={this.updateAcquires}
+                  options={program.options}
+                  showInvalid={this.state.showInvalid}
                 />
               : <p>No acquire program selected</p>
           }
@@ -464,7 +462,7 @@ class ScheduleForm extends React.Component {
             onDestinationChange={this.updateExtractDestination}
             options={this.state.extract.Options}
             onOptionsChange={this.updateExtractOptions}
-            validate={this.extractsInvalid}
+            validate={this.state.showInvalid}
           />
         </div>
 

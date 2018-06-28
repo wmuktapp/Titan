@@ -10,16 +10,11 @@
 
 .acquire-name {
     display: inline-block;
-    width: 411px;
+    width: 424px;
 }
 
 .acquire-name-input {
     width: 100%;
-}
-
-.acquire-properties label {
-    display: inline-block;
-    min-width: 210px;
 }
 
 .acquire-item-remove {
