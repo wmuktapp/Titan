@@ -1,18 +1,16 @@
 import React from 'react';
-import DatePicker from 'react-datepicker';
+import DateField from './form-field/date-field.jsx';
+import TextField from './form-field/text-field.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import Alert from './alert/alert.jsx';
 import Ajax from '../utils/ajax';
-import moment from 'moment';
 import Select from 'react-select';
 
-import { getAcquireProgramOptions, getExecutionData } from '../utils/data-utils';
+import { getAcquireProgramOptions, getAdhocExecutionData } from '../utils/data-utils';
 
 // Import styles
 import 'react-select/dist/react-select.css';
-import 'react-datepicker/dist/react-datepicker.css';
-import './react-datepicker-overrides.css';
 
 class AdhocForm extends React.Component {
 
@@ -21,50 +19,26 @@ class AdhocForm extends React.Component {
     this.state = {
 
       execution: {
-        ScheduledExecutionKey: 0, // props?
-        ScheduledExecutionName: '',
-        ScheduledExecutionNextScheduled: null,
-        ScheduledExecutionScheduleEnd: null,
-        ScheduledExecutionClientName: '',
-        ScheduledExecutionDataSourceName: '',
-        ScheduledExecutionDataSetName: '',
-        ScheduledExecutionNextLoadDate: null,
-        ScheduledExecutionEnabled: true,
-        ScheduledExecutionUser: '',
-        ScheduledIntervalKey: null,
-        ScheduledIntervalMI: 0,
-        ScheduledIntervalHH: 0,
-        ScheduledIntervalDD: 0,
-        ScheduledMondayEnabled: false,
-        ScheduledTuesdayEnabled: false,
-        ScheduledWednesdayEnabled: false,
-        ScheduledThursdayEnabled: false,
-        ScheduledFridayEnabled: false,
-        ScheduledSaturdayEnabled: false,
-        ScheduledSundayEnabled: false,
+        ExecutionClientName: '',
+        ExecutionDataSourceName: '',
+        ExecutionDataSetName: '',
+        ExecutionLoadDate: null,
+        ExecutionUser: '',
         AcquireProgramKey: 0
       },
-      acquires: [],
+      acquires: [], // TODO make sure properties are appropriately named for adhoc execution
       extract: {
-        ScheduledExtractDestination: null,
+        ScheduledExtractDestination: null,  // TODO rename
         Options: []
       },
 
       schedule: props.schedule,
-      loadDate: null,
-      client: '',
-      dataSource: '',
-      dataSet: '',
-      user: '',
       availablePrograms: [],
 
-      acquireProperties: ['property1', 'property2', 'property3'],
-      acquires: [],
-
-      extractDestination: '',
-      extractFields: [],
-
-      submitted: false
+      acquiresValid: false,
+      extractValid: false,
+      showInvalid: false,
+      triggered: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -93,15 +67,10 @@ class AdhocForm extends React.Component {
         .then(res => res.json())
         .then(result => {
 
-          const execution = result.data.execution;
-
-          // results.loadDate = moment(new Date(results.data.loadDate));
-          execution.ScheduledExecutionNextScheduled = moment(new Date(execution.ScheduledExecutionNextScheduled));
-          execution.ScheduledExecutionScheduleEnd = moment(new Date(execution.ScheduledExecutionScheduleEnd));
-          execution.ScheduledExecutionNextLoadDate = moment(new Date(execution.ScheduledExecutionNextLoadDate));
+          // TODO refactor execution?
 
           this.setState({
-            execution: execution,
+            execution: result.data.execution,
             acquires: result.data.acquires,
             extract: result.data.extract
           });
@@ -123,7 +92,7 @@ class AdhocForm extends React.Component {
 
     const execution = this.state.execution;
     execution.AcquireProgramKey = program ? program.value : 0;
-    execution.ScheduledExecutionDataSourceName = program ? program.dataSource : '';
+    execution.ExecutionDataSourceName = program ? program.dataSource : '';
 
     this.setState({
       execution: execution,
@@ -132,38 +101,57 @@ class AdhocForm extends React.Component {
   }
 
   // Special case for load date
-  // TODO only permit dates in the past?
-  handleLoadDateChange(date) {
-
+  // TODO only permit dates in the past
+  handleLoadDateChange(name, date) {
     const execution = this.state.execution;
-    execution.ScheduledExecutionNextLoadDate = date;
+    execution.ExecutionLoadDate = date;
     this.setState({ execution });
   }
 
-  updateAcquires(acquires) {
-    this.setState({ acquires });
+  updateAcquires(acquires, isInvalid) {
+    this.setState({
+      acquires: acquires,
+      acquiresInvalid: isInvalid
+    });
   }
 
-  onUpdateExtractDestination(destination, options) {
+  onUpdateExtractDestination(destination, options, isValid) {
     const extract = this.state.extract;
     extract.ScheduledExtractDestination = destination;
     extract.Options = options;
-    this.setState({ extract });
+    this.setState({
+      extract: extract,
+      extractValid: isValid
+    });
   }
 
-  onUpdateExtractOptions(options) {
+  onUpdateExtractOptions(options, isValid) {
     const extract = this.state.extract;
     extract.Options = options;
-    this.setState({ extract });
+    this.setState({
+      extract: extract,
+      extractValid: isValid
+    });
   }
 
   handleSubmit(event) {
 
+    event.preventDefault();
+
+    if (!this.validate()) {
+      this.setState({
+        showInvalid: true
+      });
+      return;
+    }
+
     this.setState({
-      submitted: true
+      triggered: true
     });
 
-    const data = getExecutionData(this.state);
+    const data = getAdhocExecutionData(this.state);
+
+    console.log(data)
 
     Ajax.fetch('/api/executions/', {
       method: 'POST',
@@ -173,7 +161,31 @@ class AdhocForm extends React.Component {
         console.log('execution successful!');
       });
 
-    event.preventDefault();
+  }
+
+  validate() {
+
+    if (this.state.acquiresValid || this.state.executionValid) {
+      return false;
+    }
+
+    const requiredFields = [
+      'ExecutionClientName',
+      'ExecutionDataSourceName',
+      'ExecutionDataSetName',
+      'ExecutionLoadDate',
+      'ExecutionUser'
+    ];
+
+    // Validate execution
+    
+    for (let field of requiredFields) {
+      if (!this.state.execution[field].trim()) {
+        return false;
+      }
+    }
+
+    return true; 
   }
 
   render() {
@@ -187,20 +199,20 @@ class AdhocForm extends React.Component {
 
     const extractOptions = this.state.extract.Options;
 
+    const validate = this.state.showInvalid;
+
     // TODO calculate whether to show Execute button based on other values
 
-    if (this.state.submitted) {
-      // TODO update this to contain status of execution (requires result from server)
-      // return <p>Adhoc execution triggered</p>;
-      return (
-        <Alert title="Execution Triggered" type="success">
-          <p>Adhoc execution triggered</p>
-        </Alert>
-      );
-    }
+    // TODO validation
 
     return (
       <form onSubmit={this.handleSubmit}>
+        {
+          this.state.triggered &&
+            <Alert title="Adhoc Execution Triggered" type="success">
+              <p>The execution may take a few minutes to start.  Please check the monitoring page periodically.</p>
+            </Alert>
+        }
         <div>
           <label>Program</label>
           <Select
@@ -210,34 +222,59 @@ class AdhocForm extends React.Component {
             className="titan-react-select"
           />
         </div>
-        <div>
-          <label>Load date</label>
-          <DatePicker selected={execution.ScheduledExecutionNextLoadDate} dateFormat="DD/MM/YYYY" onChange={this.handleLoadDateChange} />
-        </div>
-        <div>
-          <label>Client</label>
-          <input type="text" name="ScheduledExecutionClientName" value={execution.ScheduledExecutionClientName} onChange={this.handleChange} />
-        </div>
-        <div>
-          <label>Data source</label>
-          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.handleChange} disabled={!!program} />
-        </div>
-        <div>
-          <label>Data set</label>
-          <input type="text" name="ScheduledExecutionDataSetName" value={execution.ScheduledExecutionDataSetName} onChange={this.handleChange} />
-        </div>
-        <div>
-          <label>User</label>
-          <input type="text" name="ScheduledExecutionUser" value={execution.ScheduledExecutionUser} onChange={this.handleChange} />
-        </div>
+
+        <DateField
+          label="Load date"
+          value={execution.ExecutionLoadDate}
+          required={true}
+          onChange={this.handleLoadDateChange}
+          validate={validate}
+        />
+
+        <TextField
+          label="Client"
+          name="ExecutionClientName"
+          value={execution.ExecutionClientName}
+          required={true}
+          onChange={this.handleChange}
+          validate={validate}
+        />
+        <TextField
+          label="Data source"
+          name="ExecutionDataSourceName"
+          value={execution.ExecutionDataSourceName}
+          required={true}
+          onChange={this.handleChange}
+          validate={validate}
+        />
+        <TextField
+          label="Data set"
+          name="ExecutionDataSetName"
+          value={execution.ExecutionDataSetName}
+          required={true}
+          onChange={this.handleChange}
+          validate={validate}
+        />
+        <TextField
+          label="User"
+          name="ExecutionUser"
+          value={execution.ExecutionUser}
+          required={true}
+          onChange={this.handleChange}
+          validate={validate}
+        />
+
         <div className="form-section">
           <h6>Acquires</h6>
           {
             program
               ? <AcquireList
+                  adhoc={true}
                   options={program.options}
                   acquires={this.state.acquires}
-                  onChange={this.updateAcquires} />
+                  onChange={this.updateAcquires}
+                  showInvalid={validate}
+                />
               : <p>No acquire program selected</p>
           }
         </div>
@@ -248,6 +285,7 @@ class AdhocForm extends React.Component {
             onDestinationChange={this.onUpdateExtractDestination}
             options={extractOptions}
             onOptionsChange={this.onUpdateExtractOptions}
+            validate={validate}
           />
         </div>
         <div>

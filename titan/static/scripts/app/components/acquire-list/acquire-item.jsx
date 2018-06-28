@@ -55,16 +55,19 @@ class AcquireItem extends React.Component {
         <a onClick={this.remove} className="acquire-item-remove">
           <span className="fas fa-times" />
         </a>
-        <TextField
-          label="Acquire Name"
-          className="acquire-name"
-          inputClassName="acquire-name-input"
-          value={this.props.acquire.ScheduledAcquireName}
-          required={true}
-          validate={this.props.showInvalid}
-          onChange={this.updateName}
-        />
-        <div className="acquire-properties">
+        {
+          !this.props.adhoc &&
+            <TextField
+              label="Acquire Name"
+              className="acquire-name"
+              inputClassName="acquire-name-input"
+              value={this.props.acquire.ScheduledAcquireName}
+              required={true}
+              validate={this.props.showInvalid}
+              onChange={this.updateName}
+            />
+        }
+        <div className="acquire-options">
           <h6>Acquire Options</h6>
           {rows}
         </div>
