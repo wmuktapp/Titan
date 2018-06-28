@@ -1,8 +1,7 @@
-POST /execute
+POST /executions/
 {
     "data": {
         "execution": {
-            "ScheduledExecutionKey": int (req),
             "ExecutionClientName": str (req),
             "ExecutionDataSourceName": str (req),
             "ExecutionLoadDate": str (req),
@@ -271,6 +270,7 @@ POST /schedules/
 POST /executions/retry
 {
     "data": [
+        int
     ]
 }
 
@@ -279,7 +279,7 @@ PUT /schedules/<int:key>
 {
     "data": {
         "execution": {
-            "ScheduledExecutionKey": int,
+            "ScheduledExecutionKey": int (req),
             "ScheduledExecutionName": str,
             "ScheduledExecutionNextScheduled": datetime,
             "ScheduledExecutionScheduleEnd": datetime,

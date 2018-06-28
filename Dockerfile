@@ -33,5 +33,13 @@ WORKDIR /acquire-programs/DSReportDownloader/
 RUN git clone https://github.com/wmuktapp/Titan-DSReportDownloader.git .
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
+WORKDIR /acquire-programs/FTPFileDownloader/
+RUN git clone https://github.com/wmuktapp/Titan-FTPFileDownloader.git .
+RUN pip install --trusted-host pypi.python.org .
+
+WORKDIR /acquire-programs/EmailAttachmentDownloader/
+RUN git clone https://github.com/wmuktapp/Titan-EmailAttachmentDownloader.git .
+RUN pip install --trusted-host pypi.python.org .
+
 ### CLEAN UP ###
 RUN rm -rf /var/tmp/* /tmp/*

@@ -22,11 +22,6 @@ class AcquireProgram(object):
         self.container_name = self._app.config["TITAN_AZURE_BLOB_CONTAINER_NAME"]
         self.logger = self._app.logger
 
-    def get_blob_name(self, name_format=None, **params):
-        if name_format is None:
-            name_format = self._file_name_format
-        return self._blob_prefix + "/" + name_format.format(**self._data, **params)
-
     def append_blob_from_bytes(self, bytes, blob_name=None, count=None):
         if blob_name is None:
             blob_name = self.get_blob_name()
@@ -36,8 +31,19 @@ class AcquireProgram(object):
         self.logger.info("Appending bytes to blob, %s" % blob_name)
         self._append_service.append_blob_from_bytes(self.container_name, blob_name, bytes, count=count)
 
+    def create_blob_from_bytes(self, bytes, blob_name=None, count=None):
+        if blob_name is None:
+            blob_name = self.get_blob_name()
+        self.logger.info("Uploading bytes, %s, to blob storage" % blob_name)
+        self._block_service.create_blob_from_stream(self.container_name, blob_name, bytes, count=count)
+
     def create_blob_from_stream(self, stream, blob_name=None, count=None):
         if blob_name is None:
             blob_name = self.get_blob_name()
-        self.logger.info("Uploading file, %s, to blob storage" % blob_name)
+        self.logger.info("Uploading stream, %s, to blob storage" % blob_name)
         self._block_service.create_blob_from_stream(self.container_name, blob_name, stream, count=count)
+
+    def get_blob_name(self, name_format=None, **params):
+        if name_format is None:
+            name_format = self._file_name_format
+        return self._blob_prefix + "/" + name_format.format(**self._data, **params)
