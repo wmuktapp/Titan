@@ -20,7 +20,7 @@ export function getExecutionData(data) {
   const execution = Object.assign({}, data.execution);
   delete execution.ScheduledIntervalKey;
 
-  // Format dates into strings (YYYY-MM-DD HH:mm:ss)
+  // Format dates to strings (YYYY-MM-DD HH:mm:ss)
   execution.ScheduledExecutionNextScheduled = formatDateTime(execution.ScheduledExecutionNextScheduled);
   execution.ScheduledExecutionScheduleEnd = formatDateTime(execution.ScheduledExecutionScheduleEnd);
   execution.ScheduledExecutionNextLoadDate = formatDateTime(execution.ScheduledExecutionNextLoadDate);
@@ -46,6 +46,43 @@ export function getExecutionData(data) {
   const acquires = data.acquires;
 
   const extract = Object.assign({}, data.extract);
+
+  return {
+    data: {
+      execution: execution,
+      acquires: acquires,
+      extract: extract
+    }
+  };
+}
+
+export function getAdhocExecutionData(data) {
+
+  const execution = Object.assign({}, data.execution);
+
+  // Format load date to string (YYYY-MM-DD HH:mm:ss)
+  execution.ExecutionLoadDate = formatDateTime(execution.ExecutionLoadDate);
+
+  // Restructure acquires into adhoc format
+  const acquires = data.acquires.map(acquire => {
+    return acquire.Options.map(option => {
+      return {
+        AcquireOptionName: option.ScheduledAcquireOptionName,
+        AcquireOptionValue: option.ScheduledAcquireOptionValue
+      };
+    })
+  });
+
+  // Restructure extract into adhoc format
+  const extract = {
+    ExtractDestination: data.extract.ScheduledExtractDestination,
+    Options: data.extract.Options.map(option => {
+      return {
+        ExtractOptionName: option.ScheduledExtractOptionName,
+        ExtractOptionValue: option.ScheduledExtractOptionValue
+      }
+    })
+  }
 
   return {
     data: {

@@ -4,6 +4,7 @@ POST /executions/
         "execution": {
             "ExecutionClientName": str (req),
             "ExecutionDataSourceName": str (req),
+            "ExecutionDataSetName": str (req),
             "ExecutionLoadDate": str (req),
             "ExecutionUser": str (req)
             "AcquireProgramKey": int
