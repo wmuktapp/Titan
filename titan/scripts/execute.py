@@ -32,7 +32,7 @@ def _process_acquire(flask_app, execution_key, acquire_program, acquire, load_da
     acquire["ExecutionKey"] = execution_key
     options = acquire.get("Options", [])
     options.append({"AcquireOptionName": "--load-date", "AcquireOptionValue": load_date})
-    acquire_key = _call_models_function(flask_app, models.start_acquire_log, acquire)["AcquireKey"]
+    acquire_key = _call_models_function(flask_app, models.start_acquire_log, acquire)[0]["AcquireKey"]
     _execute_program(flask_app, acquire_program, models.end_acquire_log, acquire_key,
                      options=options, timeout=flask_app.config.get("TITAN_ACQUIRE_TIMEOUT_SECONDS"))
 
@@ -48,13 +48,14 @@ def _process_acquires(flask_app, data):
     acquires = data["acquires"]
     for acquire in acquires:
         _process_acquire(flask_app, execution_key, acquire_program, acquire=acquire, load_date=load_date)
-        _update_env_var(data)
 
 
-def _process_extract(flask_app, execution_key, extract):
+def _process_extract(flask_app, execution_key, data):
+    extract = data["extract"]
     extract["ExecutionKey"] = execution_key
     extract_key = extract["ExtractKey"] = _call_models_function(flask_app, models.start_extract_log,
                                                                 extract)["ExtractKey"]
+    _update_env_var(data)
     options = extract.get("Options")
     _execute_program(flask_app, extract.get("ExtractDestination"), models.end_extract_log, extract_key, options=options,
                      timeout=flask_app.config.get("TITAN_EXTRACT_TIMEOUT_SECONDS"))
@@ -82,8 +83,7 @@ def main():
             _process_acquires(flask_app, data)
         if extract:
             flask_app.logger.info("Processing extract...")
-            _process_extract(flask_app, execution_key, extract=extract)
-            _update_env_var(data)
+            _process_extract(flask_app, execution_key, data)
     except Exception as exception:
         error = exception
     finally:

@@ -45,10 +45,9 @@ def _insert_scheduled_extract_options(transaction, scheduled_extract_key, option
     return results
 
 
-def delete_scheduled_acquires(transaction, scheduled_execution_key):
+def delete_scheduled_acquires(transaction, params):
     output_params = {"ScheduledAcquireDeleteRowCount": "INT",  "ScheduledAcquireOptionDeleteRowCount": "INT"}
-    return _execute_stored_procedure(transaction, "config.SP_DeleteScheduledAcquires", scheduled_execution_key,
-                                     output_params).fetchone()
+    return _execute_stored_procedure(transaction, "config.SP_DeleteScheduledAcquires", params, output_params).fetchone()
 
 
 def end_acquire_log(key, error_message=None):
@@ -60,19 +59,19 @@ def end_acquire_log(key, error_message=None):
 
 
 def end_execution_log(key, error_message=None):
+    params = {"ExecutionKey": key, "ExecutionErrorMessage": error_message}
+    output_params = {"ExecutionLogUpdateRowCount": "INT", "ScheduledExecutionUpdateRowCount": "INT"}
     with db.engine.begin() as transaction:
-        result = _execute_stored_procedure(transaction, "[log].SP_EndExecutionLog",
-                                           {"ExecutionKey": key, "ExecutionErrorMessage": error_message},
-                                           {"ExecutionLogUpdateRowCount": "INT",
-                                            "ScheduledExecutionUpdateRowCount": "INT"}).fetchone()
-    return result.fetchone()
+        result = _execute_stored_procedure(transaction, "[log].SP_EndExecutionLog", params, output_params)
+        print(result.fetchall())
+    return result
 
 
 def end_extract_log(key, error_message=None):
+    params = {"ExtractKey": key, "ExtractErrorMessage": error_message}
+    output_params = {"UpdateRowCount": "INT"}
     with db.engine.begin() as transaction:
-        result = _execute_stored_procedure(transaction, "[log].SP_EndExtractLog",
-                                           {"ExtractKey": key, "ExtractErrorMessage": error_message},
-                                           {"UpdateRowCount": "INT"}).fetchone()
+        result = _execute_stored_procedure(transaction, "[log].SP_EndExtractLog", params, output_params).fetchone()
     return result
 
 
@@ -112,19 +111,21 @@ def get_queue(max_items=None):
 
 def insert_acquire_program(acquire_program):
     options = acquire_program.pop("Options", ())
+    output_params = {"AcquireProgramKey": "INT"}
     with db.engine.begin() as transaction:
         result = _execute_stored_procedure(transaction, "config.SP_InsertAcquireProgram", acquire_program,
-                                           {"AcquireProgramKey": "INT"}).fetchone()
+                                           output_params).fetchone()
         option_results = _insert_acquire_program_options(transaction, result["AcquireProgramKey"], options)
     return result, option_results
 
 
 def insert_scheduled_acquire(transaction, acquire):
+    output_params = {"ScheduledAcquireKey": "INT"}
     option_results = []
     option_output_params = {"ScheduledAcquireOptionKey": "INT"}
     options = acquire.pop("Options", ())
     result = _execute_stored_procedure(transaction, "config.SP_InsertScheduledAcquire", acquire,
-                                       {"ScheduledAcquireKey": "INT"}).fetchone()
+                                       output_params).fetchone()
     scheduled_acquire_key = result["ScheduledAcquireKey"]
     for option in options:
         option["ScheduledAcquireKey"] = scheduled_acquire_key
@@ -144,12 +145,12 @@ def insert_scheduled_execution(transaction, execution, extract):
 
 
 def start_acquire_log(acquire):
+    output_params = {"AcquireKey": "INT"}
     option_results = []
     option_output_params = {"AcquireOptionKey": "INT"}
     options = acquire.pop("Options", ())
     with db.engine.begin() as transaction:
-        result = _execute_stored_procedure(transaction, "[log].SP_StartAcquireLog", acquire,
-                                           {"AcquireKey": "INT"}).fetchone()
+        result = _execute_stored_procedure(transaction, "[log].SP_StartAcquireLog", acquire, output_params).fetchone()
         acquire_key = result["AcquireKey"]
         for option in options:
             option["AcquireKey"] = acquire_key
@@ -161,17 +162,18 @@ def start_acquire_log(acquire):
 def start_execution_log(execution):
     output_params = {"ExecutionKey": "INT", "ExecutionVersion": "NVARCHAR(10)"}
     with db.engine.begin() as transaction:
-        result = _execute_stored_procedure(transaction, "[log].SP_StartExecutionLog", execution, output_params).fetchone()
+        result = _execute_stored_procedure(transaction, "[log].SP_StartExecutionLog", execution,
+                                           output_params).fetchone()
     return result
 
 
 def start_extract_log(extract):
+    output_params = {"ExtractKey": "INT"}
     option_results = []
     option_output_params = {"ExtractOptionKey": "INT"}
     options = extract.pop("Options", ())
     with db.engine.begin() as transaction:
-        result = _execute_stored_procedure(transaction, "[log].SP_StartExtractLog", extract,
-                                           {"ExtractKey": "INT"}).fetchone()
+        result = _execute_stored_procedure(transaction, "[log].SP_StartExtractLog", extract, output_params).fetchone()
         extract_key = result["ExtractKey"]
         for option in options:
             option["ExtractKey"] = extract_key
@@ -181,24 +183,23 @@ def start_extract_log(extract):
 
 
 def update_acquire_program(acquire_program):
-    delete_result = None
-    option_results = None
-    update_output_params = {"UpdateRowCount": "INT", "DisabledScheduledExecutionsCount": "INT"}
     options = acquire_program.get("Options", _DEFAULT)
+    update_output_params = {"UpdateRowCount": "INT", "DisabledScheduledExecutionsCount": "INT"}
+    delete_result = None
+    delete_output_params = {"DeleteRowCount": "INT"}
+    option_results = None
     with db.engine.begin() as transaction:
         update_result = _execute_stored_procedure(transaction, "config.SP_UpdateAcquireProgram", acquire_program,
                                                   update_output_params).fetchone()
         if options is not _DEFAULT:
             key_param = {"AcquireProgramKey": acquire_program.get("AcquireProgramKey")}
             delete_result = _execute_stored_procedure(transaction, "config.SP_DeleteAcquireProgramOptions", key_param,
-                                                      {"DeleteRowCount": "INT"}).fetchone()
+                                                      delete_output_params).fetchone()
             option_results = _insert_acquire_program_options(transaction, key_param, options)
     return update_result, delete_result, option_results
 
 
 def update_scheduled_execution(transaction, execution, extract):
-    delete_result = None
-    option_results = None
     update_output_params = {
         "ScheduledExecutionUpdateRowCount": "INT",
         "ScheduledExtractUpdateRowCount": "INT",
@@ -207,6 +208,8 @@ def update_scheduled_execution(transaction, execution, extract):
         "ScheduledExtractKey": "INT"
     }
     options = extract.pop("Options", _DEFAULT)
+    delete_result = None
+    option_results = None
     execution.update(extract)
     result = _execute_stored_procedure(transaction, "config.SP_UpdateScheduledExecution", execution,
                                        update_output_params).fetchone()
