@@ -1,10 +1,12 @@
 import React from 'react';
-import DatePicker from 'react-datepicker';
+import DatePicker from 'react-datepicker'; // REMOVE?
+import DateField from './form-field/date-field.jsx';
+import TextField from './form-field/text-field.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import Alert from './alert/alert.jsx';
 import Ajax from '../utils/ajax';
-import moment from 'moment';
+import moment from 'moment';  // REMOVE?
 import Select from 'react-select';
 
 import { getAcquireProgramOptions, getExecutionData } from '../utils/data-utils';
@@ -21,22 +23,16 @@ class AdhocForm extends React.Component {
     this.state = {
 
       execution: {
-        ScheduledExecutionKey: 0, // props?
-        ScheduledExecutionName: '',
-        ScheduledExecutionNextScheduled: null,
-        ScheduledExecutionScheduleEnd: null,
-        ScheduledExecutionClientName: '',
-        ScheduledExecutionDataSourceName: '',
-        ScheduledExecutionDataSetName: '',
-        ScheduledExecutionNextLoadDate: null,
-        ScheduledExecutionEnabled: true,
-        ScheduledExecutionUser: '',
-        ScheduledIntervalKey: null,
+        ExecutionClientName: '',
+        ExecutionDataSourceName: '',
+        ExecutionDataSetName: '',
+        ExecutionLoadDate: null,
+        ExecutionUser: '',
         AcquireProgramKey: 0
       },
-      acquires: [],
+      acquires: [], // TODO make sure properties are appropriately named for adhoc execution
       extract: {
-        ScheduledExtractDestination: null,
+        ScheduledExtractDestination: null,  // TODO rename
         Options: []
       },
 
@@ -102,7 +98,7 @@ class AdhocForm extends React.Component {
 
     const execution = this.state.execution;
     execution.AcquireProgramKey = program ? program.value : 0;
-    execution.ScheduledExecutionDataSourceName = program ? program.dataSource : '';
+    execution.ExecutionDataSourceName = program ? program.dataSource : '';
 
     this.setState({
       execution: execution,
@@ -170,13 +166,14 @@ class AdhocForm extends React.Component {
 
     if (this.state.submitted) {
       // TODO update this to contain status of execution (requires result from server)
-      // return <p>Adhoc execution triggered</p>;
       return (
         <Alert title="Execution Triggered" type="success">
           <p>Adhoc execution triggered</p>
         </Alert>
       );
     }
+
+    // TODO validation
 
     return (
       <form onSubmit={this.handleSubmit}>
@@ -189,25 +186,29 @@ class AdhocForm extends React.Component {
             className="titan-react-select"
           />
         </div>
-        <div>
-          <label>Load date</label>
-          <DatePicker selected={execution.ScheduledExecutionNextLoadDate} dateFormat="DD/MM/YYYY" onChange={this.handleLoadDateChange} />
-        </div>
+
+        <DateField
+          label="Load data"
+          value={execution.ExecutionLoadDate}
+          required={true}
+          onChange={this.handleLoadDateChange}
+        />
+
         <div>
           <label>Client</label>
-          <input type="text" name="ScheduledExecutionClientName" value={execution.ScheduledExecutionClientName} onChange={this.handleChange} />
+          <input type="text" name="ExecutionClientName" value={execution.ExecutionClientName} onChange={this.handleChange} />
         </div>
         <div>
           <label>Data source</label>
-          <input type="text" name="ScheduledExecutionDataSourceName" value={execution.ScheduledExecutionDataSourceName} onChange={this.handleChange} disabled={!!program} />
+          <input type="text" name="ExecutionDataSourceName" value={execution.ExecutionDataSourceName} onChange={this.handleChange} disabled={!!program} />
         </div>
         <div>
           <label>Data set</label>
-          <input type="text" name="ScheduledExecutionDataSetName" value={execution.ScheduledExecutionDataSetName} onChange={this.handleChange} />
+          <input type="text" name="ExecutionDataSetName" value={execution.ScheduledExecutionDataSetName} onChange={this.handleChange} />
         </div>
         <div>
           <label>User</label>
-          <input type="text" name="ScheduledExecutionUser" value={execution.ScheduledExecutionUser} onChange={this.handleChange} />
+          <input type="text" name="ExecutionUser" value={execution.ExecutionUser} onChange={this.handleChange} />
         </div>
         <div className="form-section">
           <h6>Acquires</h6>
