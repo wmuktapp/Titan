@@ -1,5 +1,4 @@
 import React from 'react';
-import DatePicker from 'react-datepicker'; // REMOVE?
 import DateField from './form-field/date-field.jsx';
 import TextField from './form-field/text-field.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
@@ -13,8 +12,6 @@ import { getAcquireProgramOptions, getExecutionData } from '../utils/data-utils'
 
 // Import styles
 import 'react-select/dist/react-select.css';
-import 'react-datepicker/dist/react-datepicker.css';
-import './react-datepicker-overrides.css';
 
 class AdhocForm extends React.Component {
 
