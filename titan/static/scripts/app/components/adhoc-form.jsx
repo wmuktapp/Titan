@@ -206,10 +206,14 @@ class AdhocForm extends React.Component {
           <label>Data set</label>
           <input type="text" name="ExecutionDataSetName" value={execution.ScheduledExecutionDataSetName} onChange={this.handleChange} />
         </div>
-        <div>
-          <label>User</label>
-          <input type="text" name="ExecutionUser" value={execution.ExecutionUser} onChange={this.handleChange} />
-        </div>
+
+        <TextField
+          label="User"
+          name="ExecutionUser"
+          value={execution.ExecutionUser}
+          onChange={this.handleChange}
+        />
+
         <div className="form-section">
           <h6>Acquires</h6>
           {
