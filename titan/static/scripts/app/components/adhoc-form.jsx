@@ -107,11 +107,10 @@ class AdhocForm extends React.Component {
   }
 
   // Special case for load date
-  // TODO only permit dates in the past?
-  handleLoadDateChange(date) {
-
+  // TODO only permit dates in the past
+  handleLoadDateChange(name, date) {
     const execution = this.state.execution;
-    execution.ScheduledExecutionNextLoadDate = date;
+    execution.ExecutionLoadDate = date;
     this.setState({ execution });
   }
 
