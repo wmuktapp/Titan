@@ -15,7 +15,8 @@ class TextField extends React.Component {
     const errorMessage = error ? 'This field is required' : '';
 
     return (
-      <FormRow 
+      <FormRow
+        compact={this.props.compact}
         className={this.props.className}
         required={this.props.required}
         label={this.props.label}

@@ -37,7 +37,7 @@ class AcquireItem extends React.Component {
       return (
         <TextField
           key={index}
-          className="acquire-property"
+          compact={true}
           label={option.AcquireProgramOptionName}
           name={option.AcquireProgramOptionName}
           value={value}

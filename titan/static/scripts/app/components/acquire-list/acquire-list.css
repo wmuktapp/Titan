@@ -17,11 +17,6 @@
     width: 100%;
 }
 
-.acquire-properties label {
-    display: inline-block;
-    min-width: 210px;
-}
-
 .acquire-item-remove {
     float: right;
 }

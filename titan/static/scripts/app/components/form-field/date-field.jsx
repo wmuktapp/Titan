@@ -37,7 +37,11 @@ class DateField extends React.Component {
       + (this.props.includeTime ? ' HH:mm' : '');
 
     return (
-      <FormRow required={this.props.required} label={this.props.label} error={errorMessage}
+      <FormRow
+        compact={this.props.compact}
+        required={this.props.required}
+        label={this.props.label}
+        error={errorMessage}
         tooltip="All dates and times are in UTC">
         <DatePicker
           dateFormat={dateFormat}

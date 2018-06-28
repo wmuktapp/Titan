@@ -1,4 +1,9 @@
 
+.form-row-compact label {
+    display: inline-block;
+    min-width: 210px;
+}
+
 input.input-error {
     border-color: rgba(158, 50, 58, .2);
     background-color: rgba(158, 50, 58, .1);
