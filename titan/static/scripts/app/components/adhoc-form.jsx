@@ -7,7 +7,7 @@ import Alert from './alert/alert.jsx';
 import Ajax from '../utils/ajax';
 import Select from 'react-select';
 
-import { getAcquireProgramOptions, getExecutionData } from '../utils/data-utils';
+import { getAcquireProgramOptions, getAdhocExecutionData } from '../utils/data-utils';
 
 // Import styles
 import 'react-select/dist/react-select.css';
@@ -63,6 +63,9 @@ class AdhocForm extends React.Component {
       Ajax.fetch('/api/schedules/' + this.state.schedule)
         .then(res => res.json())
         .then(result => {
+
+          // TODO refactor execution?
+
           this.setState({
             execution: result.data.execution,
             acquires: result.data.acquires,
@@ -125,7 +128,9 @@ class AdhocForm extends React.Component {
       submitted: true
     });
 
-    const data = getExecutionData(this.state);
+    const data = getAdhocExecutionData(this.state);
+
+    console.log(data)
 
     Ajax.fetch('/api/executions/', {
       method: 'POST',
@@ -175,7 +180,7 @@ class AdhocForm extends React.Component {
         </div>
 
         <DateField
-          label="Load data"
+          label="Load date"
           value={execution.ExecutionLoadDate}
           required={true}
           onChange={this.handleLoadDateChange}
