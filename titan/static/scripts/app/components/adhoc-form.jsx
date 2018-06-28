@@ -190,19 +190,24 @@ class AdhocForm extends React.Component {
           onChange={this.handleLoadDateChange}
         />
 
-        <div>
-          <label>Client</label>
-          <input type="text" name="ExecutionClientName" value={execution.ExecutionClientName} onChange={this.handleChange} />
-        </div>
-        <div>
-          <label>Data source</label>
-          <input type="text" name="ExecutionDataSourceName" value={execution.ExecutionDataSourceName} onChange={this.handleChange} disabled={!!program} />
-        </div>
-        <div>
-          <label>Data set</label>
-          <input type="text" name="ExecutionDataSetName" value={execution.ScheduledExecutionDataSetName} onChange={this.handleChange} />
-        </div>
-
+        <TextField
+          label="Client"
+          name="ExecutionClientName"
+          value={execution.ExecutionClientName}
+          onChange={this.handleChange}
+        />
+        <TextField
+          label="Data source"
+          name="ExecutionDataSourceName"
+          value={execution.ExecutionDataSourceName}
+          onChange={this.handleChange}
+        />
+        <TextField
+          label="Data set"
+          name="ExecutionDataSetName"
+          value={execution.ExecutionDataSetName}
+          onChange={this.handleChange}
+        />
         <TextField
           label="User"
           name="ExecutionUser"
