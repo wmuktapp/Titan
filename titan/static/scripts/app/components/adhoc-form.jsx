@@ -35,6 +35,8 @@ class AdhocForm extends React.Component {
       schedule: props.schedule,
       availablePrograms: [],
 
+      acquiresValid: false,
+      extractValid: false,
       showInvalid: false,
       triggered: false
     };
@@ -106,21 +108,30 @@ class AdhocForm extends React.Component {
     this.setState({ execution });
   }
 
-  updateAcquires(acquires) {
-    this.setState({ acquires });
+  updateAcquires(acquires, isInvalid) {
+    this.setState({
+      acquires: acquires,
+      acquiresInvalid: isInvalid
+    });
   }
 
-  onUpdateExtractDestination(destination, options) {
+  onUpdateExtractDestination(destination, options, isValid) {
     const extract = this.state.extract;
     extract.ScheduledExtractDestination = destination;
     extract.Options = options;
-    this.setState({ extract });
+    this.setState({
+      extract: extract,
+      extractValid: isValid
+    });
   }
 
-  onUpdateExtractOptions(options) {
+  onUpdateExtractOptions(options, isValid) {
     const extract = this.state.extract;
     extract.Options = options;
-    this.setState({ extract });
+    this.setState({
+      extract: extract,
+      extractValid: isValid
+    });
   }
 
   handleSubmit(event) {
@@ -153,6 +164,10 @@ class AdhocForm extends React.Component {
   }
 
   validate() {
+
+    if (this.state.acquiresValid || this.state.executionValid) {
+      return false;
+    }
 
     const requiredFields = [
       'ExecutionClientName',
@@ -258,7 +273,7 @@ class AdhocForm extends React.Component {
                   options={program.options}
                   acquires={this.state.acquires}
                   onChange={this.updateAcquires}
-                  validate={validate}
+                  showInvalid={validate}
                 />
               : <p>No acquire program selected</p>
           }

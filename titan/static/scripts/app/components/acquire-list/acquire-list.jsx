@@ -94,8 +94,8 @@ class AcquireList extends React.Component {
     // Check each acquire
     for (let acquire of this.state.acquires) {
 
-      // Check name
-      if (!acquire.ScheduledAcquireName.trim()) {
+      // Check name (scheduled acquires only)
+      if (!this.props.adhoc && !acquire.ScheduledAcquireName.trim()) {
         return false;
       }
 
