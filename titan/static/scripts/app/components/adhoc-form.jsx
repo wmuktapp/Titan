@@ -157,10 +157,9 @@ class AdhocForm extends React.Component {
     // TODO calculate whether to show Execute button based on other values
 
     if (this.state.submitted) {
-      // TODO update this to contain status of execution (requires result from server)
       return (
-        <Alert title="Execution Triggered" type="success">
-          <p>Adhoc execution triggered</p>
+        <Alert title="Adhoc Execution Triggered" type="success">
+          <p>The execution may take a few minutes to start.  Please check the monitoring page periodically.</p>
         </Alert>
       );
     }
