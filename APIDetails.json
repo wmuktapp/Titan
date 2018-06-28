@@ -2,7 +2,6 @@ POST /executions/
 {
     "data": {
         "execution": {
-            "ScheduledExecutionKey": int (req),
             "ExecutionClientName": str (req),
             "ExecutionDataSourceName": str (req),
             "ExecutionLoadDate": str (req),
