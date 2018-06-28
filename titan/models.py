@@ -62,8 +62,7 @@ def end_execution_log(key, error_message=None):
     params = {"ExecutionKey": key, "ExecutionErrorMessage": error_message}
     output_params = {"ExecutionLogUpdateRowCount": "INT", "ScheduledExecutionUpdateRowCount": "INT"}
     with db.engine.begin() as transaction:
-        result = _execute_stored_procedure(transaction, "[log].SP_EndExecutionLog", params, output_params)
-        print(result.fetchall())
+        result = _execute_stored_procedure(transaction, "[log].SP_EndExecutionLog", params, output_params).fetchone()
     return result
 
 

@@ -9,12 +9,12 @@ import titan
 
 def _execute_program(flask_app, program, end_log_function, log_key, options=(), timeout=None):
     error_message = None
-    args = program.split(" ")
+    args = [program]
     args.extend(options)
     try:
         subprocess.run(args, stderr=subprocess.PIPE, check=True, timeout=timeout)
     except subprocess.CalledProcessError as called_process_error:
-        error_message = called_process_error.stderr
+        error_message = str(called_process_error.stderr)
     except OSError as os_error:
         error_message = "INTERNAL ERROR: %s" % str(os_error)
     except subprocess.TimeoutExpired as timeout_error:
@@ -32,7 +32,7 @@ def _process_acquire(flask_app, execution_key, acquire_program, acquire, load_da
     acquire["ExecutionKey"] = execution_key
     options = acquire.get("Options", [])
     options.append({"AcquireOptionName": "--load-date", "AcquireOptionValue": load_date})
-    acquire_key = _call_models_function(flask_app, models.start_acquire_log, acquire)[0]["AcquireKey"]
+    acquire_key = _call_models_function(flask_app, models.start_acquire_log, acquire)[0]["AcquireKey"]     # WHY THE HELL IS THIS FREAKING LINE CHANGING OPTIONS
     _execute_program(flask_app, acquire_program, models.end_acquire_log, acquire_key,
                      options=options, timeout=flask_app.config.get("TITAN_ACQUIRE_TIMEOUT_SECONDS"))
 
