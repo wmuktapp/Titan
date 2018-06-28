@@ -5,7 +5,6 @@ import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import Alert from './alert/alert.jsx';
 import Ajax from '../utils/ajax';
-import moment from 'moment';  // REMOVE?
 import Select from 'react-select';
 
 import { getAcquireProgramOptions, getExecutionData } from '../utils/data-utils';
@@ -64,16 +63,8 @@ class AdhocForm extends React.Component {
       Ajax.fetch('/api/schedules/' + this.state.schedule)
         .then(res => res.json())
         .then(result => {
-
-          const execution = result.data.execution;
-
-          // results.loadDate = moment(new Date(results.data.loadDate));
-          execution.ScheduledExecutionNextScheduled = moment(new Date(execution.ScheduledExecutionNextScheduled));
-          execution.ScheduledExecutionScheduleEnd = moment(new Date(execution.ScheduledExecutionScheduleEnd));
-          execution.ScheduledExecutionNextLoadDate = moment(new Date(execution.ScheduledExecutionNextLoadDate));
-
           this.setState({
-            execution: execution,
+            execution: result.data.execution,
             acquires: result.data.acquires,
             extract: result.data.extract
           });
