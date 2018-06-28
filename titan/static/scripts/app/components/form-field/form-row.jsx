@@ -7,7 +7,7 @@ class FormRow extends React.Component {
 
     const className = 'form-row'
       + (this.props.compact ? ' form-row-compact' : '')
-      + (this.props.className || '');
+      + ' ' + (this.props.className || '');
 
     return (
       <div className={className}>
