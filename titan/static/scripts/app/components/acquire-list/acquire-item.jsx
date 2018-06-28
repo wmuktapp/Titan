@@ -29,17 +29,19 @@ class AcquireItem extends React.Component {
 
     const rows = this.props.options.map((option, index) => {
 
-      const selectedOption = this.props.acquire.Options
-        .find(_option => _option.ScheduledAcquireOptionName === option.AcquireProgramOptionName);
+      const optionName = option.AcquireProgramOptionName;
 
-      const value = !!selectedOption ? selectedOption.AcquireProgramOptionValue : '';
+      const selectedOption = this.props.acquire.Options
+        .find(_option => _option.ScheduledAcquireOptionName === optionName);
+
+      const value = !!selectedOption ? selectedOption.ScheduledAcquireOptionValue : '';
 
       return (
         <TextField
           key={index}
           compact={true}
-          label={option.AcquireProgramOptionName}
-          name={option.AcquireProgramOptionName}
+          label={optionName}
+          name={optionName}
           value={value}
           required={option.AcquireProgramOptionRequired}
           validate={this.props.showInvalid}
