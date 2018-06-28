@@ -13,13 +13,13 @@ def get_id_token():
 
 def get_security_context():
     # TODO: ENABLE THIS ONCE LIVE and delete the below. credentials = azure_active_directory.MSIAuthentication()
+    # TODO: Enable this subscription_id = next(resource.SubscriptionClient(credentials).subscriptions.list())
     config = flask.current_app.config
     from azure.common.credentials import ServicePrincipalCredentials
     credentials = ServicePrincipalCredentials(client_id=config["TITAN_AZURE_CLIENT_ID"],
                                               secret=config["TITAN_AZURE_CLIENT_SECRET"],
                                               tenant=config["TITAN_AZURE_TENANT_ID"])
-    subscription_id = next(resource.SubscriptionClient(credentials).subscriptions.list())
-    return credentials, subscription_id
+    return credentials, config["TITAN_AZURE_SUBSCRIPTION_ID"]
 
 
 def list_blobs(service, container, prefix):
@@ -32,17 +32,20 @@ def list_blobs(service, container, prefix):
 
 
 def execute(details):
-    flask_app = flask.current_app
-    container_name = flask_app.config["TITAN_AZURE_CONTAINER_NAME"]
+    config = flask.current_app.config
+    container_name = config["TITAN_AZURE_CONTAINER_NAME"]
     launch_container(
-        resource_group_name=flask_app.config["TITAN_AZURE_CONTAINER_RSG_NAME"],
+        resource_group_name=config["TITAN_AZURE_CONTAINER_RSG_NAME"],
         container_group_prefix=container_name,
-        os_type=flask_app.config["TITAN_AZURE_CONTAINER_OS_TYPE"],
-        location=flask_app.config["TITAN_AZURE_CONTAINER_LOCATION"],
+        os_type=config["TITAN_AZURE_CONTAINER_OS_TYPE"],
+        location=config["TITAN_AZURE_CONTAINER_LOCATION"],
         container_name=container_name,
-        image_name=flask_app.config["TITAN_AZURE_CONTAINER_IMAGE_NAME"],
-        memory_in_gb=flask_app.config["TITAN_AZURE_CONTAINER_RAM_GB"],
-        cpu_count=flask_app.config["TITAN_AZURE_CONTAINER_CPU_COUNT"],
+        image_name=config["TITAN_AZURE_CONTAINER_IMAGE_NAME"],
+        image_registry_credentials=models.ImageRegistryCredential(config["TITAN_AZURE_CONTAINER_REGISTRY_SERVER"],
+                                                                  config["TITAN_AZURE_CONTAINER_REGISTRY_USERNAME"],
+                                                                  config["TITAN_AZURE_CONTAINER_REGISTRY_PASSWORD"]),
+        memory_in_gb=config["TITAN_AZURE_CONTAINER_RAM_GB"],
+        cpu_count=config["TITAN_AZURE_CONTAINER_CPU_COUNT"],
         configuration=details
     )
 
@@ -84,8 +87,8 @@ def format_execution(rows):
     return details
 
 
-def launch_container(resource_group_name, container_group_prefix, os_type, location, container_name,
-                     image_name, memory_in_gb, cpu_count, configuration):
+def launch_container(resource_group_name, container_group_prefix, os_type, location, container_name, image_name,
+                     image_registry_credentials, memory_in_gb, cpu_count, configuration):
     container_group_name = "%s_%s" % (container_group_prefix, uuid.uuid4())
     configuration["execution"]["ExecutionContainerGroupName"] = container_group_name
     flask.current_app.logger.info("Preparing to launch container; %s" % container_group_name)
@@ -94,7 +97,8 @@ def launch_container(resource_group_name, container_group_prefix, os_type, locat
                                  environment_variables=[models.EnvironmentVariable("TITAN_STDIN",
                                                                                    json.dumps(configuration))])
     container_group = models.ContainerGroup(containers=[container], os_type=os_type, location=location,
-                                            restart_policy="Never")
+                                            restart_policy="Never",
+                                            image_registry_credentials=[image_registry_credentials])
     credentials, subscription_id = get_security_context()
     client = containerinstance.ContainerInstanceManagementClient(credentials, subscription_id)
     client.container_groups.create_or_update(resource_group_name, container_group_name, container_group)

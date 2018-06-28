@@ -9,7 +9,7 @@ db = flask_sqlalchemy.SQLAlchemy()
 
 def _execute_stored_procedure(transaction, name, params=None, output_params=None):
     sql_text = "EXEC %s " % name
-    sql_text += ", ".join("@%s=:%s" % (param, param) for param in params)
+    sql_text += ", ".join("@%s=:%s" % (param, param) for param in params or {})
     if output_params:
         name_types = output_params.items()
         sql_text_prefix = "DECLARE "
@@ -65,7 +65,7 @@ def end_execution_log(key, error_message=None):
                                            {"ExecutionKey": key, "ExecutionErrorMessage": error_message},
                                            {"ExecutionLogUpdateRowCount": "INT",
                                             "ScheduledExecutionUpdateRowCount": "INT"}).fetchone()
-    return result
+    return result.fetchone()
 
 
 def end_extract_log(key, error_message=None):
@@ -81,11 +81,11 @@ def get_acquire_programs():
 
 
 def get_execution(key):
-    return list(db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetExecution(:key)"), key=key))
+    return list(db.engine.execute(sqlalchemy.text("SELECT * FROM [log].UDF_GetExecution(:key)"), key=key))
 
 
 def get_executions(end_date=None, page_number=1, page_size=100, load_date_count=5):
-    return list(db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetExecutions(:end_date, :page_number, "
+    return list(db.engine.execute(sqlalchemy.text("SELECT * FROM [log].UDF_GetExecutions(:end_date, :page_number, "
                                                   ":page_size, :load_date_count)"),
                                   end_date=end_date, page_number=page_number, page_size=page_size,
                                   load_date_count=load_date_count))
@@ -159,7 +159,7 @@ def start_acquire_log(acquire):
 
 
 def start_execution_log(execution):
-    output_params = {"ExecutionKey": "INT", "ExecutionVersion": "INT"}
+    output_params = {"ExecutionKey": "INT", "ExecutionVersion": "NVARCHAR(10)"}
     with db.engine.begin() as transaction:
         result = _execute_stored_procedure(transaction, "[log].SP_StartExecutionLog", execution, output_params).fetchone()
     return result

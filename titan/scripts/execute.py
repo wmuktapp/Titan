@@ -24,14 +24,14 @@ def _execute_program(flask_app, program, end_log_function, log_key, options=(), 
 
 
 def _call_models_function(flask_app, func, *args, **kwargs):
-    with flask_app.flask_app_context():
+    with flask_app.app_context():
         return func(*args, **kwargs)
 
 
 def _process_acquire(flask_app, execution_key, acquire_program, acquire, load_date):
     acquire["ExecutionKey"] = execution_key
-    options = acquire.get("Options")
-    options["--load-date"] = load_date
+    options = acquire.get("Options", [])
+    options.append({"AcquireOptionName": "--load-date", "AcquireOptionValue": load_date})
     acquire_key = _call_models_function(flask_app, models.start_acquire_log, acquire)["AcquireKey"]
     _execute_program(flask_app, acquire_program, models.end_acquire_log, acquire_key,
                      options=options, timeout=flask_app.config.get("TITAN_ACQUIRE_TIMEOUT_SECONDS"))
@@ -67,8 +67,8 @@ def _update_env_var(data):
 def main():
     data = json.loads(os.getenv("TITAN_STDIN"))
     execution = data["execution"]
-    acquires = data["acquires"]
-    extract = data["extract"]
+    acquires = data.get("acquires")
+    extract = data.get("extract")
     flask_app = titan.create_app("execute")
     flask_app.logger.info("Starting execution log")
     result = _call_models_function(flask_app, models.start_execution_log, execution)
@@ -84,8 +84,8 @@ def main():
             flask_app.logger.info("Processing extract...")
             _process_extract(flask_app, execution_key, extract=extract)
             _update_env_var(data)
-    except Exception as error:
-        error = error
+    except Exception as exception:
+        error = exception
     finally:
         error_message = str(error) if error is not None else None
         _call_models_function(flask_app, models.end_execution_log, execution_key, error_message=error_message)

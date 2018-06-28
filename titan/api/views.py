@@ -19,7 +19,7 @@ def execute():
     data = flask.request.get_json(force=True).get("data", {"execution": {}, "acquires": [], "extract": {}})
     for acquire in data["acquires"]:
         acquire["Options"] = [option for option in acquire["Options"] if option["AcquireOptionValue"] != ""]
-    extract = data["extract"]
+    extract = data.get("extract", {})
     if "Options" in extract:
         extract["Options"] = [option for option in extract["Options"] if option["ExtractOptionValue"] != ""]
     app.execute(data)
@@ -137,9 +137,10 @@ def get_executions():
             params[k] = value
     data = _nested_default_dict()
     for row in models.get_executions(**params):
-        data[row.pop("ExecutionClientName")][row.pop("ExecutionDataSourceName")][row.pop("ExecutionDataSetName")][
-            row.pop("ExecutionLoadDate")] = row
-    return {"data": data}
+        details = dict(row)
+        data[details.pop("ExecutionClientName")][details.pop("ExecutionDataSourceName")][
+            details.pop("ExecutionDataSetName")][details.pop("ExecutionLoadDate").strftime("%Y-%m-%d")] = details
+    return {"data": dict(data)}
 
 
 @api.api_blueprint.route("/extract-programs/", methods=["GET"])
