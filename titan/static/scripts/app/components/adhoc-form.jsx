@@ -35,7 +35,7 @@ class AdhocForm extends React.Component {
       schedule: props.schedule,
       availablePrograms: [],
 
-      submitted: false
+      triggered: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -125,7 +125,7 @@ class AdhocForm extends React.Component {
   handleSubmit(event) {
 
     this.setState({
-      submitted: true
+      triggered: true
     });
 
     const data = getAdhocExecutionData(this.state);
@@ -156,18 +156,16 @@ class AdhocForm extends React.Component {
 
     // TODO calculate whether to show Execute button based on other values
 
-    if (this.state.submitted) {
-      return (
-        <Alert title="Adhoc Execution Triggered" type="success">
-          <p>The execution may take a few minutes to start.  Please check the monitoring page periodically.</p>
-        </Alert>
-      );
-    }
-
     // TODO validation
 
     return (
       <form onSubmit={this.handleSubmit}>
+        {
+          this.state.triggered &&
+            <Alert title="Adhoc Execution Triggered" type="success">
+              <p>The execution may take a few minutes to start.  Please check the monitoring page periodically.</p>
+            </Alert>
+        }
         <div>
           <label>Program</label>
           <Select
