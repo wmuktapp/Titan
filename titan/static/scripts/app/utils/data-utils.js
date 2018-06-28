@@ -63,7 +63,7 @@ export function getAdhocExecutionData(data) {
   // Format load date to string (YYYY-MM-DD HH:mm:ss)
   execution.ExecutionLoadDate = formatDateTime(execution.ExecutionLoadDate);
 
-  // Map acquires into Adhoc format
+  // Restructure acquires into adhoc format
   const acquires = data.acquires.map(acquire => {
     return acquire.Options.map(option => {
       return {
@@ -73,8 +73,16 @@ export function getAdhocExecutionData(data) {
     })
   });
 
-  // TODO restructure this object
-  const extract = Object.assign({}, data.extract);
+  // Restructure extract into adhoc format
+  const extract = {
+    ExtractDestination: data.extract.ScheduledExtractDestination,
+    Options: data.extract.Options.map(option => {
+      return {
+        ExtractOptionName: option.ScheduledExtractOptionName,
+        ExtractOptionValue: option.ScheduledExtractOptionValue
+      }
+    })
+  }
 
   return {
     data: {
