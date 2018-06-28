@@ -32,16 +32,6 @@ class AdhocForm extends React.Component {
         ScheduledExecutionEnabled: true,
         ScheduledExecutionUser: '',
         ScheduledIntervalKey: null,
-        ScheduledIntervalMI: 0,
-        ScheduledIntervalHH: 0,
-        ScheduledIntervalDD: 0,
-        ScheduledMondayEnabled: false,
-        ScheduledTuesdayEnabled: false,
-        ScheduledWednesdayEnabled: false,
-        ScheduledThursdayEnabled: false,
-        ScheduledFridayEnabled: false,
-        ScheduledSaturdayEnabled: false,
-        ScheduledSundayEnabled: false,
         AcquireProgramKey: 0
       },
       acquires: [],
@@ -51,18 +41,7 @@ class AdhocForm extends React.Component {
       },
 
       schedule: props.schedule,
-      loadDate: null,
-      client: '',
-      dataSource: '',
-      dataSet: '',
-      user: '',
       availablePrograms: [],
-
-      acquireProperties: ['property1', 'property2', 'property3'],
-      acquires: [],
-
-      extractDestination: '',
-      extractFields: [],
 
       submitted: false
     };
