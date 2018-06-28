@@ -118,6 +118,7 @@ class AcquireList extends React.Component {
     const acquireItems = this.state.acquires.map((acquire, index) => {
       return <AcquireItem
         key={index}
+        adhoc={this.props.adhoc}
         acquire={acquire}
         index={index}
         remove={this.remove}

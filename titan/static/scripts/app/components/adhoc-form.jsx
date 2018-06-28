@@ -211,6 +211,7 @@ class AdhocForm extends React.Component {
           {
             program
               ? <AcquireList
+                  adhoc={true}
                   options={program.options}
                   acquires={this.state.acquires}
                   onChange={this.updateAcquires} />
