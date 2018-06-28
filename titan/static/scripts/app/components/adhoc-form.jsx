@@ -125,6 +125,15 @@ class AdhocForm extends React.Component {
 
   handleSubmit(event) {
 
+    event.preventDefault();
+
+    if (!this.validate()) {
+      this.setState({
+        showInvalid: true
+      });
+      return;
+    }
+
     this.setState({
       triggered: true
     });
@@ -141,15 +150,26 @@ class AdhocForm extends React.Component {
         console.log('execution successful!');
       });
 
-    event.preventDefault();
   }
 
   validate() {
 
-
+    const requiredFields = [
+      'ExecutionClientName',
+      'ExecutionDataSourceName',
+      'ExecutionDataSetName',
+      'ExecutionLoadDate',
+      'ExecutionUser'
+    ];
 
     // Validate execution
     
+    for (let field of requiredFields) {
+      if (!this.state.execution[field].trim()) {
+        return false;
+      }
+    }
+
     return true; 
   }
 
