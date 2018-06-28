@@ -234,7 +234,8 @@ class ScheduleForm extends React.Component {
 
     // Validate fields
     if (!this.validateFields()) {
-      window.scrollTo(0, 0);
+      console.log('fields invalid')
+      this.goToTop();
       return;
     }
 
@@ -256,9 +257,16 @@ class ScheduleForm extends React.Component {
 
         this.setState({
           execution: execution,
+          showInvalid: false,
           updated: true
         });
       });
+
+    this.goToTop();
+  }
+
+  goToTop() {
+    window.scrollTo(0, 0);
   }
 
   validateFields() {
