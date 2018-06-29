@@ -1,6 +1,7 @@
 import json
 import os
 import posixpath
+import uuid
 
 from azure.storage import blob
 import click
@@ -10,9 +11,14 @@ from titan import app
 import titan
 
 
-def _generate_sql_text(blobs, replace, credential_name, data_source_name, table_name):
+_EXTRACT_KEY_COLUMN_NAME = "TitanExtractKey"
+
+
+def _generate_sql_text(blobs, replace, credential_name, data_source_name, table_name, view_name):
     # We don't care about SQL injection risk as we are connecting to db's that the user provides the connection string
     # of. If they wanted to do harm, they could do it anyway.
+    # We also have to create a 'temporary' (create before and delete after) view that sits on top of the underlying
+    # table because the source won't contain the extract key.
     sql_text = f"""
         IF OBJECT_ID(:credential_name) IS NULL
             CREATE DATABASE SCOPED CREDENTIAL {credential_name} 
@@ -27,6 +33,17 @@ def _generate_sql_text(blobs, replace, credential_name, data_source_name, table_
             );
 
         BEGIN TRANSACTION
+        
+        DECLARE @SQL NVARCHAR(MAX) = 'CREATE VIEW :view_name AS SELECT ' + (
+            SELECT STRING_AGG('[' + COLUMN_NAME + ']', ',') WITHIN GROUP (ORDER BY ORDINAL_POSITION)
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = :schema
+                AND TABLE_NAME = :table_name
+                AND COLUMN_NAME <> :_EXTRACT_KEY_COLUMN_NAME
+            GROUP BY TABLE_NAME
+        ) + ' FROM {table_name}';
+    
+        EXEC(@SQL);
     """
     if replace:
         sql_text += f"""
@@ -53,11 +70,13 @@ def _generate_sql_text(blobs, replace, credential_name, data_source_name, table_
         """
     sql_text += f"""
             UPDATE {table_name}
-            SET TitanExtractKey = :extract_key
-            WHERE TitanExtractKey IS NULL;
+            SET {_EXTRACT_KEY_COLUMN_NAME} = :extract_key
+            WHERE {_EXTRACT_KEY_COLUMN_NAME} IS NULL;
+            
+            DROP VIEW {view_name}
         COMMIT TRANSACTION
     """
-    return sql_text, params
+    return sql_text.replace("\n", " "), params
 
 
 @click.command()
@@ -90,20 +109,26 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
     """
     flask_app = titan.create_app("azuresql")
     container_name = flask_app.config["TITAN_AZURE_BLOB_CONTAINER_NAME"]
-    blob_location = flask_app.config["TITAN_AZURE_BLOB_ENDPOINT"]
+    blob_location = posixpath.join(flask_app.config["TITAN_AZURE_BLOB_ENDPOINT"], container_name)
     sas_token = flask_app.config["TITAN_AZURE_BLOB_SAS_TOKEN"]
     service = blob.BlockBlobService(account_name=flask_app.config["TITAN_AZURE_BLOB_ACCOUNT_NAME"], sas_token=sas_token)
     data = json.loads(os.getenv("TITAN_STDIN"))
     execution = data["execution"]
-    blob_prefix = posixpath.join(container_name, execution["ExecutionClientName"], execution["ExecutionDataSourceName"],
+    blob_prefix = posixpath.join(execution["ExecutionClientName"], execution["ExecutionDataSourceName"],
                                  execution["ExecutionDataSetName"], execution["ExecutionLoadDate"],
                                  execution["ExecutionVersion"])
+    view_name = "%s_%s" % (table_name, uuid.uuid4())
     sql_text, params = _generate_sql_text(app.list_blobs(service, container_name, blob_prefix), replace,
-                                          credential_name, data_source_name, table_name)
+                                          credential_name, data_source_name, table_name, view_name)
     db = sqlalchemy.create_engine(connection_string)
-    flask_app.logger.info("Extracting data to database; %s" % connection_string)
+    flask_app.logger.info("Extracting data to database...")
     blob_key = sas_token[1:] if next(iter(sas_token), None) == "?" else sas_token  # needed because silly microsoft
+    if "." in table_name:
+        schema, table_name = table_name.split(".")
+    else:
+        schema = "dbo"
     db.engine.execute(sqlalchemy.text(sql_text), field_delimiter=field_delimiter, row_delimiter=row_delimiter,
                       text_qualifier=text_qualifier, code_page=code_page, credential_name=credential_name,
-                      data_source_name=data_source_name, blob_key=blob_key, blob_location=blob_location,
-                      extract_key=data["extract"]["ExtractKey"], **params)
+                      data_source_name=data_source_name, blob_key=blob_key, blob_location=blob_location, schema=schema,
+                      extract_key=data["extract"]["ExtractKey"], table_name=table_name, view_name=view_name,
+                      _EXTRACT_KEY_COLUMN_NAME=_EXTRACT_KEY_COLUMN_NAME, **params)
