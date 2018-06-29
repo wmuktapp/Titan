@@ -295,14 +295,6 @@ class ScheduleForm extends React.Component {
       && invalidFields.length === 0;
   }
 
-  isRequired(fieldName) {
-    return requiredExecutionFields.indexOf(fieldName) > -1;
-  }
-
-  isInvalid(fieldName) {
-    return this.state.invalidFields.indexOf(fieldName) > -1;
-  }
-
   executeNow() {
 
     // TODO
@@ -344,8 +336,8 @@ class ScheduleForm extends React.Component {
           label="Name"
           name="ScheduledExecutionName"
           value={execution.ScheduledExecutionName}
-          required={this.isRequired('ScheduledExecutionName')}
-          validate={this.isInvalid('ScheduledExecutionName')}
+          required={true}
+          validate={this.state.showInvalid}
           onChange={this.onExecutionChange}
         />
 
@@ -363,8 +355,8 @@ class ScheduleForm extends React.Component {
           label="Next scheduled"
           name="ScheduledExecutionNextScheduled"
           value={execution.ScheduledExecutionNextScheduled}
-          required={this.isRequired('ScheduledExecutionNextScheduled')}
-          validate={this.isInvalid('ScheduledExecutionNextScheduled')}
+          required={true}
+          validate={this.state.showInvalid}
           onChange={this.updateDateField}
           includeTime={true}
         />
@@ -372,8 +364,8 @@ class ScheduleForm extends React.Component {
           label="Schedule end"
           name="ScheduledExecutionScheduleEnd"
           value={execution.ScheduledExecutionScheduleEnd}
-          required={this.isRequired('ScheduledExecutionScheduleEnd')}
-          validate={this.isInvalid('ScheduledExecutionScheduleEnd')}
+          required={true}
+          validate={this.state.showInvalid}
           onChange={this.updateDateField}
           includeTime={true}
         />
@@ -382,8 +374,8 @@ class ScheduleForm extends React.Component {
           label="Client"
           name="ScheduledExecutionClientName"
           value={execution.ScheduledExecutionClientName}
-          required={this.isRequired('ScheduledExecutionClientName')}
-          validate={this.isInvalid('ScheduledExecutionClientName')}
+          required={true}
+          validate={this.state.showInvalid}
           onChange={this.onExecutionChange}
         />
 
@@ -391,8 +383,8 @@ class ScheduleForm extends React.Component {
           label="Data source"
           name="ScheduledExecutionDataSourceName"
           value={execution.ScheduledExecutionDataSourceName}
-          required={this.isRequired('ScheduledExecutionDataSourceName')}
-          validate={this.isInvalid('ScheduledExecutionDataSourceName')}
+          required={true}
+          validate={this.state.showInvalid}
           disabled={!!program}
           onChange={this.onExecutionChange}
         />
@@ -401,8 +393,8 @@ class ScheduleForm extends React.Component {
           label="Data set"
           name="ScheduledExecutionDataSetName"
           value={execution.ScheduledExecutionDataSetName}
-          required={this.isRequired('ScheduledExecutionDataSetName')}
-          validate={this.isInvalid('ScheduledExecutionDataSetName')}
+          required={true}
+          validate={this.state.showInvalid}
           onChange={this.onExecutionChange}
         />
 
@@ -410,8 +402,8 @@ class ScheduleForm extends React.Component {
           label="Next load date"
           name="ScheduledExecutionNextLoadDate"
           value={execution.ScheduledExecutionNextLoadDate}
-          required={this.isRequired('ScheduledExecutionNextLoadDate')}
-          validate={this.isInvalid('ScheduledExecutionNextLoadDate')}
+          required={true}
+          validate={this.state.showInvalid}
           onChange={this.updateDateField}
         />
 
@@ -419,8 +411,8 @@ class ScheduleForm extends React.Component {
           label="User"
           name="ScheduledExecutionUser"
           value={execution.ScheduledExecutionUser}
-          required={this.isRequired('ScheduledExecutionUser')}
-          validate={this.isInvalid('ScheduledExecutionUser')}
+          required={true}
+          validate={this.state.showInvalid}
           onChange={this.onExecutionChange}
         />
 
