@@ -67,8 +67,10 @@ export function getAdhocExecutionData(data) {
   const acquires = data.acquires.map(acquire => {
     return acquire.Options.map(option => {
       return {
-        AcquireOptionName: option.ScheduledAcquireOptionName,
-        AcquireOptionValue: option.ScheduledAcquireOptionValue
+        Options: {
+          AcquireOptionName: option.ScheduledAcquireOptionName,
+          AcquireOptionValue: option.ScheduledAcquireOptionValue
+        }
       };
     })
   });
