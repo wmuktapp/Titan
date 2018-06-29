@@ -11,7 +11,7 @@ class TextField extends React.Component {
 
     const inputClassName =
       (this.props.inputClassName || '')
-      + (error ? 'input-error' : '');
+      + (error ? ' input-error' : '');
     const errorMessage = error ? 'This field is required' : '';
 
     return (
