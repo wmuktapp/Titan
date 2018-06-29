@@ -104,28 +104,6 @@ function formatDateTime(dateTime) {
   return dateTime.format(dateFormat);
 }
 
-// Fields required for execution
-export const requiredExecutionFields = [
-  'ScheduledExecutionName',
-  'ScheduledExecutionNextScheduled',
-  'ScheduledExecutionClientName',
-  'ScheduledExecutionDataSourceName',
-  'ScheduledExecutionDataSetName',
-  'ScheduledExecutionNextLoadDate',
-  'ScheduledExecutionUser'
-];
-
-export function validateField(value) {
-
-  if (value === null) { // Object values
-    return false;
-  }
-  if (typeof value.trim === 'function') { // String values
-    return value.trim().length > 0;
-  }
-  return true;
-}
-
 // Convert data in execution object into simpler weekday data
 export function getWeekDays(execution) {
   return {

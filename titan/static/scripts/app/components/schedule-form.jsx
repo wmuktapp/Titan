@@ -9,7 +9,9 @@ import DateField from './form-field/date-field.jsx';
 import Label from './label.jsx';
 import Ajax from '../utils/ajax';
 
-import { requiredExecutionFields, getAcquireProgramOptions, getExecutionData, getWeekDays, getExecutionDays, validateField } from '../utils/data-utils';
+import { getAcquireProgramOptions, getExecutionData, getWeekDays, getExecutionDays } from '../utils/data-utils';
+import { validateScheduleData } from '../utils/validation';
+
 
 // Import styles
 import 'react-select/dist/react-select.css';
@@ -261,30 +263,32 @@ class ScheduleForm extends React.Component {
 
   validateFields() {
 
-    let scheduleValid = true;
-
-    // Check that all required fields have a value
-    
-    for (let field of requiredExecutionFields) {
-
-      const value = this.state.execution[field];
-
-      if (!validateField(value)) {
-        scheduleValid = false;
-      }
-    }
+    let scheduleValid = validateScheduleData(this.state);
 
     // We also check acquire and extract fields
     const isValid = this.state.acquiresValid
       && this.state.extractValid
-      && !scheduleValid;
+      && scheduleValid;
 
     this.setState({
-      showInvalid: isValid,
+      showInvalid: !isValid,
       scheduleValid: scheduleValid
     });
 
     return isValid;
+  }
+
+  // TODO move to utils?
+  getProgramConfig() {
+
+    const programOptions = getAcquireProgramOptions(this.state.availablePrograms);
+
+    if (this.state.execution.AcquireProgramKey) {
+      const program = programOptions.find(option => option.value === this.state.execution.AcquireProgramKey);
+      return program && program.options;
+    }
+
+    return [];
   }
 
   executeNow() {
@@ -441,10 +445,9 @@ class ScheduleForm extends React.Component {
           {
             program
               ? <AcquireList
-                  options={program.options}
                   acquires={this.state.acquires}
-                  onChange={this.updateAcquires}
                   options={program.options}
+                  onChange={this.updateAcquires}
                   showInvalid={this.state.showInvalid}
                 />
               : <p>No acquire program selected</p>

@@ -35,6 +35,7 @@ class AdhocForm extends React.Component {
       schedule: props.schedule,
       availablePrograms: [],
 
+      adhocInvalid: false,
       acquiresValid: false,
       extractValid: false,
       showInvalid: false,
@@ -151,8 +152,6 @@ class AdhocForm extends React.Component {
 
     const data = getAdhocExecutionData(this.state);
 
-    console.log(data)
-
     Ajax.fetch('/api/executions/', {
       method: 'POST',
       body: JSON.stringify(data)
@@ -178,14 +177,16 @@ class AdhocForm extends React.Component {
     ];
 
     // Validate execution
+
+    let executionValid = true;
     
     for (let field of requiredFields) {
       if (!this.state.execution[field].trim()) {
-        return false;
+        executionValid = false;
       }
     }
 
-    return true; 
+    return executionValid;
   }
 
   render() {
@@ -202,8 +203,6 @@ class AdhocForm extends React.Component {
     const validate = this.state.showInvalid;
 
     // TODO calculate whether to show Execute button based on other values
-
-    // TODO validation
 
     return (
       <form onSubmit={this.handleSubmit}>
