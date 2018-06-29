@@ -261,7 +261,7 @@ class ScheduleForm extends React.Component {
 
   validateFields() {
 
-    let scheduleValid = validateScheduleData(this.state, this.getProgramConfig());
+    let scheduleValid = validateScheduleData(this.state, this.getAcquireOptionConfig());
 
     // We also check acquire and extract fields
     const isValid = this.state.extractValid
@@ -276,7 +276,7 @@ class ScheduleForm extends React.Component {
   }
 
   // TODO move to utils?
-  getProgramConfig() {
+  getAcquireOptionConfig() {
 
     const programOptions = getAcquireProgramOptions(this.state.availablePrograms);
 
