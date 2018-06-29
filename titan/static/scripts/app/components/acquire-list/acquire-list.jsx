@@ -95,7 +95,7 @@ class AcquireList extends React.Component {
         onNameChange={this.itemNameChange}
         onOptionChange={this.itemOptionChange}
         options={this.props.options}
-        showInvalid={this.props.showInvalid}
+        validate={this.props.validate}
       />
     });
 

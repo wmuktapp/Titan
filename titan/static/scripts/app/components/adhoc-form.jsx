@@ -244,7 +244,7 @@ class AdhocForm extends React.Component {
                   options={program.options}
                   acquires={this.state.acquires}
                   onChange={this.updateAcquires}
-                  showInvalid={!this.state.isFormValid}
+                  validate={!this.state.isFormValid}
                 />
               : <p>No acquire program selected</p>
           }

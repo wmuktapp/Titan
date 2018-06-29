@@ -44,7 +44,7 @@ class AcquireItem extends React.Component {
           name={optionName}
           value={value}
           required={option.AcquireProgramOptionRequired}
-          validate={this.props.showInvalid}
+          validate={this.props.validate}
           onChange={this.updateOption}
         />
       );
@@ -63,7 +63,7 @@ class AcquireItem extends React.Component {
               inputClassName="acquire-name-input"
               value={this.props.acquire.ScheduledAcquireName}
               required={true}
-              validate={this.props.showInvalid}
+              validate={this.props.validate}
               onChange={this.updateName}
             />
         }

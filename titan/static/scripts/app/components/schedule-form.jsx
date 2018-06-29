@@ -437,7 +437,7 @@ class ScheduleForm extends React.Component {
                   acquires={this.state.acquires}
                   options={program.options}
                   onChange={this.updateAcquires}
-                  showInvalid={!this.state.isFormValid}
+                  validate={!this.state.isFormValid}
                 />
               : <p>No acquire program selected</p>
           }
