@@ -22,18 +22,22 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
     # We also have to create a 'temporary' (create before and delete after) view that sits on top of the underlying
     # table because the source won't contain the extract key.
     sql_text = f"""
-        IF OBJECT_ID('{credential_name}') IS NULL
-            CREATE DATABASE SCOPED CREDENTIAL {credential_name} 
-            WITH IDENTITY = 'SHARED ACCESS SIGNATURE', SECRET = '{blob_key}';
+        IF EXISTS(SELECT * FROM sys.database_credentials WHERE name = '{credential_name}')
+            DROP DATABASE SCOPED CREDENTIAL {credential_name};
+        
+        CREATE DATABASE SCOPED CREDENTIAL {credential_name} 
+        WITH IDENTITY = 'SHARED ACCESS SIGNATURE', SECRET = '{blob_key}';
 
-        IF OBJECT_ID('{data_source_name}') IS NULL
-            CREATE EXTERNAL DATA SOURCE {data_source_name}
-            WITH (
-                TYPE = BLOB_STORAGE,
-                LOCATION = '{blob_location}',
-                CREDENTIAL = {credential_name}
-            );
-
+        IF EXISTS(SELECT * FROM sys.external_data_sources WHERE name = '{data_source_name}')
+            DROP EXTERNAL DATA SOURCE {data_source_name};
+        
+        CREATE EXTERNAL DATA SOURCE {data_source_name}
+        WITH (
+            TYPE = BLOB_STORAGE,
+            LOCATION = '{blob_location}',
+            CREDENTIAL = {credential_name}
+        );
+        
         BEGIN TRANSACTION
         
         DECLARE @SQL NVARCHAR(MAX) = 'CREATE VIEW {view_name} AS SELECT ' + (
@@ -51,13 +55,10 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
         sql_text += f"""
             TRUNCATE TABLE {table_name};
         """
-    params = {}
     for index, blob in enumerate(blobs):
-        param_name = "file_name_%s" % index
-        params[param_name] = blob.name
         sql_text += f"""
             BULK INSERT {table_name}
-            FROM '{param_name}'
+            FROM '{blob.name}'
             WITH (
                 CODEPAGE = '{code_page}',
                 DATA_SOURCE = '{data_source_name}',
@@ -78,7 +79,7 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
             DROP VIEW {view_name}
         COMMIT TRANSACTION
     """
-    return sql_text.replace("\n", " "), params
+    return sql_text
 
 
 @click.command()
@@ -127,14 +128,12 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
     view_name = "%s.[%s_%s]" % (schema, table_name_without_schema, uuid.uuid4())
     blob_key = sas_token[1:] if next(iter(sas_token), None) == "?" else sas_token  # needed because silly microsoft
     flask_app.logger.info("Building SQL text...")
-    sql_text, params = _generate_sql_text(app.list_blobs(service, container_name, blob_prefix), replace,
-                                          credential_name=credential_name, blob_key=blob_key,
-                                          data_source_name=data_source_name, blob_location=blob_location,
-                                          view_name=view_name, schema=schema,
-                                          table_name_without_schema=table_name_without_schema, table_name=table_name,
-                                          code_page=code_page, text_qualifier=text_qualifier,
-                                          field_delimiter=field_delimiter, row_delimiter=row_delimiter,
-                                          extract_key=extract_key)
+    sql_text = _generate_sql_text(app.list_blobs(service, container_name, blob_prefix), replace,
+                                  credential_name=credential_name, blob_key=blob_key, data_source_name=data_source_name,
+                                  blob_location=blob_location, view_name=view_name, schema=schema,
+                                  table_name_without_schema=table_name_without_schema, table_name=table_name,
+                                  code_page=code_page, text_qualifier=text_qualifier, field_delimiter=field_delimiter,
+                                  row_delimiter=row_delimiter, extract_key=extract_key)
     db = sqlalchemy.create_engine(connection_string)
     flask_app.logger.info("Extracting data to database...")
     db.engine.execute(sql_text)
