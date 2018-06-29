@@ -145,6 +145,7 @@ class AdhocForm extends React.Component {
     }
 
     this.setState({
+      isFormValid: true,
       triggered: true
     });
 
