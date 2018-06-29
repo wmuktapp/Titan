@@ -35,6 +35,7 @@ class AdhocForm extends React.Component {
 
       schedule: props.schedule,
       availablePrograms: [],
+      extractOptionConfig: [],
 
       isFormValid: true,
       triggered: false
@@ -45,8 +46,8 @@ class AdhocForm extends React.Component {
     this.handleLoadDateChange = this.handleLoadDateChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateAcquires = this.updateAcquires.bind(this);
-    this.onUpdateExtractDestination = this.onUpdateExtractDestination.bind(this);
-    this.onUpdateExtractOptions = this.onUpdateExtractOptions.bind(this);
+    this.updateExtractDestination = this.updateExtractDestination.bind(this);
+    this.updateExtractOptions = this.updateExtractOptions.bind(this);
   }
 
   componentDidMount() {
@@ -113,16 +114,17 @@ class AdhocForm extends React.Component {
     });
   }
 
-  onUpdateExtractDestination(destination, options) {
+  updateExtractDestination(destination, options, optionConfig) {
     const extract = this.state.extract;
     extract.ExtractDestination = destination;
     extract.Options = options;
     this.setState({
-      extract: extract
+      extract: extract,
+      extractOptionConfig: optionConfig
     });
   }
 
-  onUpdateExtractOptions(options) {
+  updateExtractOptions(options) {
     const extract = this.state.extract;
     extract.Options = options;
     this.setState({
@@ -138,7 +140,7 @@ class AdhocForm extends React.Component {
     const data = getAdhocExecutionData(this.state);
 
     if (!this.validate(data.data)) {
-      // TODO scroll to top
+      this.goToTop();
       return;
     }
 
@@ -153,16 +155,33 @@ class AdhocForm extends React.Component {
       .then(() => {
         console.log('execution successful!');
       });
+
+    this.goToTop();
+  }
+
+  goToTop() {
+    window.scrollTo(0, 0);
   }
 
   validate(data) {
 
-    // TODO acquire options, extract options
-    const isFormValid = validateAdhocData(data);
+    const isFormValid = validateAdhocData(data, this.getAcquireOptionConfig(), this.state.extractOptionConfig);
 
     this.setState({ isFormValid });
 
     return isFormValid;
+  }
+
+  getAcquireOptionConfig() {
+
+    const programOptions = getAcquireProgramOptions(this.state.availablePrograms);
+
+    if (this.state.execution.AcquireProgramKey) {
+      const program = programOptions.find(option => option.value === this.state.execution.AcquireProgramKey);
+      return program && program.options;
+    }
+
+    return [];
   }
 
   render() {
@@ -182,6 +201,12 @@ class AdhocForm extends React.Component {
           this.state.triggered &&
             <Alert title="Adhoc Execution Triggered" type="success">
               <p>The execution may take a few minutes to start.  Please check the monitoring page periodically.</p>
+            </Alert>
+        }
+        {
+          !this.state.isFormValid &&
+            <Alert title="Fields Missing" type="error">
+              <p>One or more required fields were not entered.</p>
             </Alert>
         }
         <div>
@@ -253,9 +278,9 @@ class AdhocForm extends React.Component {
           <h6>Extract</h6>
           <ExtractForm
             destination={this.state.extract.ExtractDestination}
-            onDestinationChange={this.onUpdateExtractDestination}
+            onDestinationChange={this.updateExtractDestination}
             options={extractOptions}
-            onOptionsChange={this.onUpdateExtractOptions}
+            onOptionsChange={this.updateExtractOptions}
             validate={!this.state.isFormValid}
           />
         </div>

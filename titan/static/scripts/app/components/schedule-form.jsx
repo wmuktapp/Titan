@@ -271,7 +271,6 @@ class ScheduleForm extends React.Component {
     return isFormValid;
   }
 
-  // TODO move to utils?
   getAcquireOptionConfig() {
 
     const programOptions = getAcquireProgramOptions(this.state.availablePrograms);
