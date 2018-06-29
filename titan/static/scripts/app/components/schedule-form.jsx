@@ -356,6 +356,7 @@ class ScheduleForm extends React.Component {
           onChange={this.updateDateField}
           includeTime={true}
         />
+
         <DateField
           label="Schedule end"
           name="ScheduledExecutionScheduleEnd"
