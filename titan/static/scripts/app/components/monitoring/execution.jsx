@@ -16,6 +16,18 @@ class MonitoringGridExecution extends React.Component {
     this.props.select(this.props.taskId, this.props.date, add);
   }
 
+  getStatusClass(status) {
+    const classes = {
+      'success': 'execution-success',
+      'failure': 'execution-failure',
+      'running': 'execution-running',
+      'not-requested': 'execution-not-requested'
+    };
+    return status
+      ? (' ' + classes[status.toLowerCase()])
+      : '';
+  }
+
   render() {
 
     const SUCCESS = 'success', FAILURE = 'failure';
@@ -23,14 +35,18 @@ class MonitoringGridExecution extends React.Component {
       acquireStatus = execution.AcquireStatus,
       extractStatus = execution.ExtractStatus;
     const showCheckbox = acquireStatus === FAILURE || extractStatus === FAILURE;
-    const className = 'execution' + (dateUtils.isYesterday(this.props.date) ? ' execution-highlight' : '');
+    const className = 'execution'
+      + (dateUtils.isYesterday(this.props.date) ? ' execution-highlight' : '')
+      + this.getStatusClass(execution.ExecutionStatus);
     const title = `Acquire time: ${execution.AcquireStartTime}\nExtract time: ${execution.ExtractStartTime}`;
 
     return (
       <span className={className} title={title}>
         <a href={`/monitoring/executions/${execution.ExecutionKey}`}>
-          <ExecutionPartial status={acquireStatus}>A</ExecutionPartial>
-          <ExecutionPartial status={extractStatus}>E</ExecutionPartial>
+          <span className="execution-parts">
+            <ExecutionPartial status={acquireStatus}>A</ExecutionPartial>
+            <ExecutionPartial status={extractStatus}>E</ExecutionPartial>
+          </span>
         </a>
         {
           showCheckbox &&

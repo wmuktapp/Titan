@@ -7,8 +7,8 @@ class ExecutionPartial extends React.Component {
       'success': 'execution-success',
       'failure': 'execution-failure',
       'running': 'execution-running',
-      'waiting': 'execution-waiting'
-    }
+      'not-requested': 'execution-not-requested'
+    };
     return this.props.status
       ? classes[this.props.status.toLowerCase()]
       : '';
