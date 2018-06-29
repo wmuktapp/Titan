@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
+import Alert from './alert/alert.jsx';
 import RepeatForm from './repeat-form/index.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
@@ -45,10 +46,10 @@ class ScheduleForm extends React.Component {
 
       includeRepeat: false,
 
-      showInvalid: false,
-      invalidFields: [],
+      scheduleValid: true,
       acquiresValid: true,
-      extractValid: true
+      extractValid: true,
+      showInvalid: false
     };
 
     this.onExecutionChange = this.onExecutionChange.bind(this);
@@ -98,16 +99,6 @@ class ScheduleForm extends React.Component {
 
     const execution = this.state.execution;
     execution[name] = value;
-
-    // Remove field validation warning
-    let index;
-    if ((index = this.state.invalidFields.indexOf(name)) > -1) {
-      const invalidFields = this.state.invalidFields;
-      invalidFields.splice(index, 1);
-      this.setState({
-        invalidFields: invalidFields
-      });
-    }
 
     this.setState({
       execution: execution
@@ -234,7 +225,6 @@ class ScheduleForm extends React.Component {
 
     // Validate fields
     if (!this.validateFields()) {
-      console.log('fields invalid')
       this.goToTop();
       return;
     }
@@ -271,28 +261,30 @@ class ScheduleForm extends React.Component {
 
   validateFields() {
 
+    let scheduleValid = true;
+
     // Check that all required fields have a value
     
-    const invalidFields = [];
-
     for (let field of requiredExecutionFields) {
 
       const value = this.state.execution[field];
 
       if (!validateField(value)) {
-        invalidFields.push(field);
+        scheduleValid = false;
       }
     }
 
+    // We also check acquire and extract fields
+    const isValid = this.state.acquiresValid
+      && this.state.extractValid
+      && !scheduleValid;
+
     this.setState({
-      showInvalid: true,
-      invalidFields: invalidFields
+      showInvalid: isValid,
+      scheduleValid: scheduleValid
     });
 
-    // We also check acquire and extract fields
-    return this.state.acquiresValid
-      && this.state.extractValid
-      && invalidFields.length === 0;
+    return isValid;
   }
 
   executeNow() {
@@ -309,6 +301,10 @@ class ScheduleForm extends React.Component {
     // NOTE: Handles both insert and update
 
     const execution = this.state.execution;
+
+    const isValid = this.state.scheduleValid
+      && this.state.acquiresValid
+      && this.state.extractValid;
 
     // Repeat object
     const repeat = {
@@ -331,6 +327,13 @@ class ScheduleForm extends React.Component {
         { this.state.updated && <p>Schedule updated</p> }
 
         <h5>{ execution.ScheduledExecutionKey ? 'Update Schedule' : 'New Schedule' }</h5>
+
+        {
+          !isValid &&
+            <Alert title="Fields Missing" type="error">
+              <p>One or more required fields were not entered.</p>
+            </Alert>
+        }
 
         <TextField
           label="Name"
