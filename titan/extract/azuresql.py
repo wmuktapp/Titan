@@ -51,7 +51,7 @@ def _generate_sql_text(replace, blobs):
         """ % param_name
     sql_text += """
             UPDATE :table_name
-            SET ExtractKey = :extract_key
+            SET TitanExtractKey = :extract_key
             WHERE TitanExtractKey IS NULL;
         COMMIT TRANSACTION
     """
@@ -87,14 +87,15 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
     blob_location = flask_app.config["TITAN_AZURE_BLOB_ENDPOINT"] + "/" + container_name
     service = blob.BlockBlobService(account_name=flask_app.config["TITAN_AZURE_BLOB_ACCOUNT_NAME"],
                                     sas_token=flask_app.config["TITAN_AZURE_BLOB_SAS_TOKEN"])
-    data = json.loads(os.getenv("TITAN_STDIN"))["execution"]
-    blob_prefix = "/".join((data["ExecutionClientName"], data["ExecutionDataSourceName"],
-                            data["DataSetName"], data["ExecutionLoadDate"], data["ExecutionVersion"]))
+    execution = json.loads(os.getenv("TITAN_STDIN"))["execution"]
+    blob_prefix = "/".join((execution["ExecutionClientName"], execution["ExecutionDataSourceName"],
+                            execution["ExecutionDataSetName"], execution["ExecutionLoadDate"], execution["ExecutionVersion"]))
     sql_text, params = _generate_sql_text(replace, app.list_blobs(service, container_name, blob_prefix))
     db = sqlalchemy.create_engine(connection_string)
     flask_app.logger.info("Extracting data to database; %s" % connection_string)
-    db.engine.execute(sqlalchemy.text(sql_text), table_name=table_name, field_delimiter=field_delimiter,
+    print(str(sqlalchemy.text(sql_text)))
+    """ db.engine.execute(sqlalchemy.text(sql_text), table_name=table_name, field_delimiter=field_delimiter,
                       row_delimiter=row_delimiter, text_qualifier=text_qualifier, code_page=code_page,
                       credential_name=credential_name, data_source_name=data_source_name,
-                      blob_key=flask_app.config["TITAN_AZURE_BLOB_SAS"], blob_location=blob_location,
-                      extract_key=data["extract"]["ExtractKey"], **params)
+                      blob_key=flask_app.config["TITAN_AZURE_BLOB_SAS_TOKEN"], blob_location=blob_location,
+                      extract_key=data["extract"]["ExtractKey"], **params) """
