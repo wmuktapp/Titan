@@ -38,7 +38,8 @@ def _insert_acquire_program_options(transaction, acquire_program_key, options=()
 def _insert_scheduled_extract_options(transaction, scheduled_extract_key, options=()):
     results = []
     output_params = {"ScheduledExtractOptionKey": "INT"}
-    for option in options[:]:  # don't mutate inbound object
+    for option in options:
+        option = option.copy()  # don't mutate inbound object
         option["ScheduledExtractKey"] = scheduled_extract_key
         results.append(_execute_stored_procedure(transaction, "config.SP_InsertScheduledExtractOption", option,
                                                  output_params).fetchone())
@@ -152,7 +153,8 @@ def start_acquire_log(acquire):
     with db.engine.begin() as transaction:
         result = _execute_stored_procedure(transaction, "[log].SP_StartAcquireLog", acquire, output_params).fetchone()
         acquire_key = result["AcquireKey"]
-        for option in options[:]:  # don't mutate inbound object
+        for option in options:
+            option = option.copy()  # don't mutate inbound object
             option["AcquireKey"] = acquire_key
             option_results.append(_execute_stored_procedure(transaction, "[log].SP_InsertAcquireOptionLog",
                                                             option, option_output_params).fetchone())
@@ -176,7 +178,8 @@ def start_extract_log(extract):
     with db.engine.begin() as transaction:
         result = _execute_stored_procedure(transaction, "[log].SP_StartExtractLog", extract, output_params).fetchone()
         extract_key = result["ExtractKey"]
-        for option in options[:]:  # don't mutate inbound object
+        for option in options:
+            option = option.copy()  # don't mutate inbound object
             option["ExtractKey"] = extract_key
             option_results.append(_execute_stored_procedure(transaction, "[log].SP_InsertExtractOptionLog",
                                                             option, option_output_params).fetchone())
