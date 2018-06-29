@@ -36,7 +36,6 @@ class AdhocForm extends React.Component {
       availablePrograms: [],
 
       adhocInvalid: false,
-      acquiresValid: false,
       extractValid: false,
       showInvalid: false,
       triggered: false
@@ -109,10 +108,9 @@ class AdhocForm extends React.Component {
     this.setState({ execution });
   }
 
-  updateAcquires(acquires, isInvalid) {
+  updateAcquires(acquires) {
     this.setState({
-      acquires: acquires,
-      acquiresInvalid: isInvalid
+      acquires: acquires
     });
   }
 
@@ -164,7 +162,9 @@ class AdhocForm extends React.Component {
 
   validate() {
 
-    if (this.state.acquiresValid || this.state.executionValid) {
+    // TODO move this logic into ../utils/validate.js
+
+    if (this.state.executionValid) {
       return false;
     }
 
