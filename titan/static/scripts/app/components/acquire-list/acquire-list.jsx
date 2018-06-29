@@ -45,21 +45,21 @@ class AcquireList extends React.Component {
 
     this.setState({ acquires });
 
-    this.props.onChange(acquires, this.isValid());
+    this.props.onChange(acquires);
   }
 
   remove(index) {
     let acquires = this.state.acquires;
     acquires.splice(index, 1);
     this.setState({ acquires });
-    this.props.onChange(acquires, this.isValid());
+    this.props.onChange(acquires);
   }
 
   itemNameChange(index, value) {
     const acquires = this.state.acquires;
     acquires[index].ScheduledAcquireName = value;
     this.setState({ acquires });
-    this.props.onChange(acquires, this.isValid());
+    this.props.onChange(acquires);
   }
 
   itemOptionChange(index, name, value) {
@@ -80,37 +80,7 @@ class AcquireList extends React.Component {
     option.ScheduledAcquireOptionValue = value;
 
     this.setState({ acquires });
-    this.props.onChange(acquires, this.isValid());
-  }
-
-  // Check that this acquire is valid
-  isValid() {
-
-    // Get required options
-    const requiredOptions = this.props.options
-      .filter(option => option.AcquireProgramOptionRequired)
-      .map(option => option.AcquireProgramOptionName);
-
-    // Check each acquire
-    for (let acquire of this.state.acquires) {
-
-      // Check name (scheduled acquires only)
-      if (!this.props.adhoc && !acquire.ScheduledAcquireName.trim()) {
-        return false;
-      }
-
-      // Check mandatory fields
-      for (let optionName of requiredOptions) {
-        const selectedOption = acquire.Options
-          .find(option => option.ScheduledAcquireOptionName === optionName);
-
-        if (!selectedOption || selectedOption.ScheduledAcquireOptionValue.trim().length === 0) {
-          return false;
-        }
-      }
-    }
-
-    return true;
+    this.props.onChange(acquires);
   }
 
   render() {
