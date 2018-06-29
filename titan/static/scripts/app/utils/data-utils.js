@@ -65,14 +65,14 @@ export function getAdhocExecutionData(data) {
 
   // Restructure acquires into adhoc format
   const acquires = data.acquires.map(acquire => {
-    return acquire.Options.map(option => {
-      return {
-        Options: {
+    return {
+      Options: acquire.Options.map(option => {
+        return {
           AcquireOptionName: option.ScheduledAcquireOptionName,
           AcquireOptionValue: option.ScheduledAcquireOptionValue
-        }
-      };
-    })
+        };
+      })
+    }
   });
 
   // Restructure extract into adhoc format
