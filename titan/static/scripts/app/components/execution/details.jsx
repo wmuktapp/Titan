@@ -47,6 +47,13 @@ class ExecutionDetails extends React.Component {
             <input type="checkbox" disabled="disabled" checked={execution.ExecutionSuccessful} />
           </span>
         </div>
+        {
+          execution.ExecutionErrorMessage &&
+            <div>
+              <label>Error Message</label>
+              <span className="execution-value">{execution.ExecutionErrorMessage}</span>
+            </div>
+        }
         <div>
           <label>Load Date</label>
           <span className="execution-value">{execution.ExecutionLoadDate}</span>

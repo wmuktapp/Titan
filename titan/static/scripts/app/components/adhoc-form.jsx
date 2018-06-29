@@ -140,6 +140,10 @@ class AdhocForm extends React.Component {
     const data = getAdhocExecutionData(this.state);
 
     if (!this.validate(data.data)) {
+      this.setState({
+        isFormValid: false,
+        triggered: false
+      });
       this.goToTop();
       return;
     }
@@ -165,12 +169,7 @@ class AdhocForm extends React.Component {
   }
 
   validate(data) {
-
-    const isFormValid = validateAdhocData(data, this.getAcquireOptionConfig(), this.state.extractOptionConfig);
-
-    this.setState({ isFormValid });
-
-    return isFormValid;
+    return validateAdhocData(data, this.getAcquireOptionConfig(), this.state.extractOptionConfig);
   }
 
   getAcquireOptionConfig() {

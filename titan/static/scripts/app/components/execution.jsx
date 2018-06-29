@@ -45,7 +45,6 @@ class Execution extends React.Component {
     const acquires = this.state.acquires.map(
       acquire => <ExecutionAcquireDetails key={acquire.AcquireKey} acquire={acquire} />
     );
-
     return (
       <div className="execution">
         <ExecutionDetails execution={this.state.execution} />
@@ -53,10 +52,13 @@ class Execution extends React.Component {
           <h6>Acquires</h6>
           { acquires }
         </section>
-        <section className="form-section">
-          <h6>Extract</h6>
-          <ExecutionExtractDetails extract={this.state.extract} />
-        </section>
+        {
+          this.state.extract.ExtractKey &&
+            <section className="form-section">
+              <h6>Extract</h6>
+              <ExecutionExtractDetails extract={this.state.extract} />
+            </section>
+        }
         {
           this.state.execution.ScheduledExecutionKey &&
             <section className="form-section">
