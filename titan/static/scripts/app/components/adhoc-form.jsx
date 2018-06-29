@@ -1,13 +1,14 @@
 import React from 'react';
+import Select from 'react-select';
 import DateField from './form-field/date-field.jsx';
 import TextField from './form-field/text-field.jsx';
 import AcquireList from './acquire-list/acquire-list.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import Alert from './alert/alert.jsx';
 import Ajax from '../utils/ajax';
-import Select from 'react-select';
 
 import { getAcquireProgramOptions, getAdhocExecutionData } from '../utils/data-utils';
+import { validateAdhocData } from '../utils/validation';
 
 // Import styles
 import 'react-select/dist/react-select.css';
@@ -35,9 +36,7 @@ class AdhocForm extends React.Component {
       schedule: props.schedule,
       availablePrograms: [],
 
-      adhocInvalid: false,
-      extractValid: false,
-      showInvalid: false,
+      isFormValid: true,
       triggered: false
     };
 
@@ -101,7 +100,7 @@ class AdhocForm extends React.Component {
   }
 
   // Special case for load date
-  // TODO only permit dates in the past
+  // TODO only permit dates in the past?
   handleLoadDateChange(name, date) {
     const execution = this.state.execution;
     execution.ExecutionLoadDate = date;
@@ -114,22 +113,20 @@ class AdhocForm extends React.Component {
     });
   }
 
-  onUpdateExtractDestination(destination, options, isValid) {
+  onUpdateExtractDestination(destination, options) {
     const extract = this.state.extract;
     extract.ExtractDestination = destination;
     extract.Options = options;
     this.setState({
-      extract: extract,
-      extractValid: isValid
+      extract: extract
     });
   }
 
-  onUpdateExtractOptions(options, isValid) {
+  onUpdateExtractOptions(options) {
     const extract = this.state.extract;
     extract.Options = options;
     this.setState({
-      extract: extract,
-      extractValid: isValid
+      extract: extract
     });
   }
 
@@ -137,18 +134,17 @@ class AdhocForm extends React.Component {
 
     event.preventDefault();
 
-    if (!this.validate()) {
-      this.setState({
-        showInvalid: true
-      });
+    // Convert into adhoc format
+    const data = getAdhocExecutionData(this.state);
+
+    if (!this.validate(data.data)) {
+      // TODO scroll to top
       return;
     }
 
     this.setState({
       triggered: true
     });
-
-    const data = getAdhocExecutionData(this.state);
 
     Ajax.fetch('/api/executions/', {
       method: 'POST',
@@ -157,36 +153,16 @@ class AdhocForm extends React.Component {
       .then(() => {
         console.log('execution successful!');
       });
-
   }
 
-  validate() {
+  validate(data) {
 
-    // TODO move this logic into ../utils/validate.js
+    // TODO acquire options, extract options
+    const isFormValid = validateAdhocData(data);
 
-    if (this.state.executionValid) {
-      return false;
-    }
+    this.setState({ isFormValid });
 
-    const requiredFields = [
-      'ExecutionClientName',
-      'ExecutionDataSourceName',
-      'ExecutionDataSetName',
-      'ExecutionLoadDate',
-      'ExecutionUser'
-    ];
-
-    // Validate execution
-
-    let executionValid = true;
-    
-    for (let field of requiredFields) {
-      if (!this.state.execution[field].trim()) {
-        executionValid = false;
-      }
-    }
-
-    return executionValid;
+    return isFormValid;
   }
 
   render() {
@@ -199,10 +175,6 @@ class AdhocForm extends React.Component {
     const program = programOptions.find(option => option.value === execution.AcquireProgramKey);
 
     const extractOptions = this.state.extract.Options;
-
-    const validate = this.state.showInvalid;
-
-    // TODO calculate whether to show Execute button based on other values
 
     return (
       <form onSubmit={this.handleSubmit}>
@@ -227,7 +199,7 @@ class AdhocForm extends React.Component {
           value={execution.ExecutionLoadDate}
           required={true}
           onChange={this.handleLoadDateChange}
-          validate={validate}
+          validate={!this.state.isFormValid}
         />
 
         <TextField
@@ -236,7 +208,7 @@ class AdhocForm extends React.Component {
           value={execution.ExecutionClientName}
           required={true}
           onChange={this.handleChange}
-          validate={validate}
+          validate={!this.state.isFormValid}
         />
         <TextField
           label="Data source"
@@ -244,7 +216,7 @@ class AdhocForm extends React.Component {
           value={execution.ExecutionDataSourceName}
           required={true}
           onChange={this.handleChange}
-          validate={validate}
+          validate={!this.state.isFormValid}
         />
         <TextField
           label="Data set"
@@ -252,7 +224,7 @@ class AdhocForm extends React.Component {
           value={execution.ExecutionDataSetName}
           required={true}
           onChange={this.handleChange}
-          validate={validate}
+          validate={!this.state.isFormValid}
         />
         <TextField
           label="User"
@@ -260,7 +232,7 @@ class AdhocForm extends React.Component {
           value={execution.ExecutionUser}
           required={true}
           onChange={this.handleChange}
-          validate={validate}
+          validate={!this.state.isFormValid}
         />
 
         <div className="form-section">
@@ -272,7 +244,7 @@ class AdhocForm extends React.Component {
                   options={program.options}
                   acquires={this.state.acquires}
                   onChange={this.updateAcquires}
-                  showInvalid={validate}
+                  showInvalid={!this.state.isFormValid}
                 />
               : <p>No acquire program selected</p>
           }
@@ -284,7 +256,7 @@ class AdhocForm extends React.Component {
             onDestinationChange={this.onUpdateExtractDestination}
             options={extractOptions}
             onOptionsChange={this.onUpdateExtractOptions}
-            validate={validate}
+            validate={!this.state.isFormValid}
           />
         </div>
         <div>

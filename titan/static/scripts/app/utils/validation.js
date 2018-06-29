@@ -11,6 +11,16 @@ const requiredScheduleFields = {
   ]
 };
 
+const requiredAdhocFields = {
+  execution: [
+    'ExecutionClientName',
+    'ExecutionDataSourceName',
+    'ExecutionDataSetName',
+    'ExecutionLoadDate',
+    'ExecutionUser'
+  ]
+};
+
 function isValid(value) {
   return !!value
     && typeof value.trim === 'function'
@@ -18,7 +28,6 @@ function isValid(value) {
 }
 
 export function validateScheduleData(data, acquireOptionConfig, extractOptionConfig) {
-
 
   // Validate execution
   for (let field of requiredScheduleFields.execution) {
@@ -69,12 +78,50 @@ export function validateScheduleData(data, acquireOptionConfig, extractOptionCon
   return true;
 }
 
-export function validateAdhocData(data) {
+export function validateAdhocData(data, acquireOptionConfig, extractOptionConfig) {
 
-  // TODO
-  // - Check execution
-  // - Check acquires, if applicable
-  // - Check extract, if applicable
+  // Validate execution
+  for (let field of requiredAdhocFields.execution) {
+    if (!isValid(data.execution[field])) {
+      return false;
+    }
+  }
 
+  const requiredAcquireOptions = acquireOptionConfig
+    ? acquireOptionConfig
+        .filter(option => option.AcquireProgramOptionRequired)
+        .map(option => option.AcquireProgramOptionName)
+    : [];
 
+  // Check acquires, if applicable
+  for (let acquire of data.acquires) {
+
+    // Note: No name supplied for adhoc executions
+
+    // Check required options
+    for (let optionName of requiredAcquireOptions) {
+      const option = acquire.Options
+        .find(option => option.AcquireOptionName === optionName);
+      if (!option || !isValid(option.AcquireOptionValue)) {
+        return false;
+      }
+    }
+  }
+
+  // Check extract options, if applicable
+  if (data.extract.ScheduledExtractDestination) {
+    const requiredExtractOptions = extractOptionConfig
+      .filter(option => option.ExtractProgramOptionRequired)
+      .map(option => option.ExtractProgramOptionName);
+
+    for (let optionName of requiredExtractOptions) {
+      const option = data.extract.Options
+        .find(option => option.ExtractOptionName === optionName);
+      if (option && !isValid(option.ExtractOptionValue)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
