@@ -26,9 +26,9 @@ class AdhocForm extends React.Component {
         ExecutionUser: '',
         AcquireProgramKey: 0
       },
-      acquires: [], // TODO make sure properties are appropriately named for adhoc execution
+      acquires: [],
       extract: {
-        ScheduledExtractDestination: null,  // TODO rename
+        ExtractDestination: null,
         Options: []
       },
 
@@ -67,7 +67,7 @@ class AdhocForm extends React.Component {
         .then(res => res.json())
         .then(result => {
 
-          // TODO refactor execution?
+          // TODO ensure data is in the right format
 
           this.setState({
             execution: result.data.execution,
@@ -117,7 +117,7 @@ class AdhocForm extends React.Component {
 
   onUpdateExtractDestination(destination, options, isValid) {
     const extract = this.state.extract;
-    extract.ScheduledExtractDestination = destination;
+    extract.ExtractDestination = destination;
     extract.Options = options;
     this.setState({
       extract: extract,
@@ -281,7 +281,7 @@ class AdhocForm extends React.Component {
         <div className="form-section">
           <h6>Extract</h6>
           <ExtractForm
-            destination={this.state.extract.ScheduledExtractDestination}
+            destination={this.state.extract.ExtractDestination}
             onDestinationChange={this.onUpdateExtractDestination}
             options={extractOptions}
             onOptionsChange={this.onUpdateExtractOptions}
