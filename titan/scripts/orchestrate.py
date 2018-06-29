@@ -42,7 +42,7 @@ def _clean_up(flask_app):
                         flask_app.logger.critical("Container group, %s has been running for more than the timeout "
                                                   "threshold of %s seconds. Please investigate immediately and "
                                                   "manually terminate the instance if required." % name)
-            else:
+            elif state in ("Terminated", "Failed", "Succeeded"):  # check on exact possible values
                 if execution_key is None:
                     flask_app.logger.info("Deleting terminated container group %s." % name)
                     client.container_groups.delete(rsg_name, name)

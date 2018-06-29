@@ -22,7 +22,10 @@ def execute():
     extract = data.get("extract", {})
     if "Options" in extract:
         extract["Options"] = [option for option in extract["Options"] if option["ExtractOptionValue"] != ""]
-    app.execute(data)
+    try:
+        app.execute(data)
+    except Exception as error:
+        return {"error": {"message": str(error)}}, 400, None
     return {}, 201, None
 
 

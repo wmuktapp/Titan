@@ -11,6 +11,7 @@ def _execute_program(flask_app, program, end_log_function, log_key, options=(), 
     error_message = None
     args = [program]
     args.extend(options)
+    print(options)
     try:
         subprocess.run(args, stderr=subprocess.PIPE, check=True, timeout=timeout)
     except subprocess.CalledProcessError as called_process_error:
@@ -32,7 +33,7 @@ def _process_acquire(flask_app, execution_key, acquire_program, acquire, load_da
     acquire["ExecutionKey"] = execution_key
     options = acquire.get("Options", [])
     options.append({"AcquireOptionName": "--load-date", "AcquireOptionValue": load_date})
-    acquire_key = _call_models_function(flask_app, models.start_acquire_log, acquire)[0]["AcquireKey"]     # WHY THE HELL IS THIS FREAKING LINE CHANGING OPTIONS
+    acquire_key = _call_models_function(flask_app, models.start_acquire_log, acquire)[0]["AcquireKey"]
     _execute_program(flask_app, acquire_program, models.end_acquire_log, acquire_key,
                      options=options, timeout=flask_app.config.get("TITAN_ACQUIRE_TIMEOUT_SECONDS"))
 
@@ -66,22 +67,16 @@ def _update_env_var(data):
 
 
 def main():
+    flask_app = titan.create_app("execute")
     data = json.loads(os.getenv("TITAN_STDIN"))
     execution = data["execution"]
-    acquires = data.get("acquires")
-    extract = data.get("extract")
-    flask_app = titan.create_app("execute")
-    flask_app.logger.info("Starting execution log")
-    result = _call_models_function(flask_app, models.start_execution_log, execution)
-    execution["ExecutionVersion"] = result["ExecutionVersion"]
-    execution_key = execution["ExecutionKey"] = result["ExecutionKey"]
-    _update_env_var(data)
+    execution_key = execution["ExecutionKey"]
     error = None
     try:
-        if acquires:
+        if data.get("acquires"):
             flask_app.logger.info("Processing acquires...")
             _process_acquires(flask_app, data)
-        if extract:
+        if data.get("extract"):
             flask_app.logger.info("Processing extract...")
             _process_extract(flask_app, execution_key, data)
     except Exception as exception:
