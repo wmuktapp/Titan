@@ -23,30 +23,18 @@ class MonitoringGridExecution extends React.Component {
     const execution = this.props.data,
       acquireStatus = execution.AcquireStatus,
       extractStatus = execution.ExtractStatus;
-    const showSelector = acquireStatus === FAILURE || extractStatus === FAILURE;
-    const showLink = acquireStatus === SUCCESS
-      || acquireStatus === FAILURE
-      || extractStatus === SUCCESS
-      || extractStatus === FAILURE;
-
-    const status = showLink
-      ? <a href={`/monitoring/executions/${execution.ExecutionKey}`}>
-          <MonitoringGridExecutionAcquire status={acquireStatus} />
-          <MonitoringGridExecutionExtract status={extractStatus} />
-        </a>
-      : <span>
-          <MonitoringGridExecutionAcquire status={acquireStatus} />
-          <MonitoringGridExecutionExtract status={extractStatus} />
-        </span>;
-
+    const showCheckbox = acquireStatus === FAILURE || extractStatus === FAILURE;
     const className = 'execution' + (dateUtils.isYesterday(this.props.date) ? ' execution-highlight' : '');
     const title = `Acquire time: ${execution.AcquireStartTime}\nExtract time: ${execution.ExtractStartTime}`;
 
     return (
       <span className={className} title={title}>
-        {status}
+        <a href={`/monitoring/executions/${execution.ExecutionKey}`}>
+          <MonitoringGridExecutionAcquire status={acquireStatus} />
+          <MonitoringGridExecutionExtract status={extractStatus} />
+        </a>
         {
-          showSelector &&
+          showCheckbox &&
             <input type="checkbox" checked={execution.selected} className="execution-selector" onChange={this.selectorChange} />
         }
       </span>
