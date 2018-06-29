@@ -2,10 +2,6 @@ import React from 'react';
 
 class MonitoringGridExecutionAcquire extends React.Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   statusClass() {
     const classes = {
       'success': 'execution-success',
@@ -13,7 +9,7 @@ class MonitoringGridExecutionAcquire extends React.Component {
       'running': 'execution-running',
       'waiting': 'execution-waiting'
     }
-    return classes[this.props.status];
+    return classes[this.props.status.toLowerCase()] || '';
   }
 
   render() {
