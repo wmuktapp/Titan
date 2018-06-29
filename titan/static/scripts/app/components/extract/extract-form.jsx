@@ -53,10 +53,7 @@ class ExtractForm extends React.Component {
       ? this.state.availableDestinations
           .find(d => d.ExtractProgramFriendlyName === destination.label)
           .Options.map(option => {
-            return {
-              ScheduledExtractOptionName: option.ExtractProgramOptionName,
-              ScheduledExtractOptionValue: ''
-            };
+            return this.createBlankExtractOption(option.ExtractProgramOptionName);
           })
       : [];
 
@@ -71,16 +68,20 @@ class ExtractForm extends React.Component {
 
     // Option not found?  Add it
     if (!option) {
-      option = {
-        ScheduledExtractOptionName: target.name,
-        ScheduledExtractOptionValue: ''
-      };
+      option = this.createBlankExtractOption(target.name);
       options.push(option);
     }
 
     option.ScheduledExtractOptionValue = target.value;
 
     this.props.onOptionsChange(options, this.isValid());
+  }
+
+  createBlankExtractOption(name) {
+    return {
+      ScheduledExtractOptionName: name,
+      ScheduledExtractOptionValue: ''
+    }
   }
 
   getOptionsConfig() {
