@@ -72,6 +72,7 @@ def get_execution(key):
             "ExecutionStartTime": arbitrary_row["ExecutionStartTime"],
             "ExecutionEndTime": arbitrary_row["ExecutionEndTime"],
             "ExecutionSuccessful": arbitrary_row["ExecutionSuccessful"],
+            "ExecutionErrorMessage": arbitrary_row["ExecutionErrorMessage"],
             "ExecutionClientName": arbitrary_row["ExecutionClientName"],
             "ExecutionDataSourceName": arbitrary_row["ExecutionDataSourceName"],
             "ExecutionDataSetName": arbitrary_row["ExecutionDataSetName"],
