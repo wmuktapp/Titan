@@ -1,6 +1,5 @@
 import React from 'react';
-import MonitoringGridExecutionAcquire from './execution-acquire.jsx';
-import MonitoringGridExecutionExtract from './execution-extract.jsx';
+import ExecutionPartial from './execution-partial.jsx';
 import dateUtils from '../../utils/date-utils';
 
 import './execution.css';
@@ -30,8 +29,8 @@ class MonitoringGridExecution extends React.Component {
     return (
       <span className={className} title={title}>
         <a href={`/monitoring/executions/${execution.ExecutionKey}`}>
-          <MonitoringGridExecutionAcquire status={acquireStatus} />
-          <MonitoringGridExecutionExtract status={extractStatus} />
+          <ExecutionPartial status={acquireStatus}>A</ExecutionPartial>
+          <ExecutionPartial status={extractStatus}>E</ExecutionPartial>
         </a>
         {
           showCheckbox &&
