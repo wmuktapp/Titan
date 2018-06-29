@@ -39,6 +39,7 @@ def _insert_scheduled_extract_options(transaction, scheduled_extract_key, option
     results = []
     output_params = {"ScheduledExtractOptionKey": "INT"}
     for option in options:
+        option = option.copy()  # don't mutate inbound object
         option["ScheduledExtractKey"] = scheduled_extract_key
         results.append(_execute_stored_procedure(transaction, "config.SP_InsertScheduledExtractOption", option,
                                                  output_params).fetchone())
@@ -122,7 +123,7 @@ def insert_scheduled_acquire(transaction, acquire):
     output_params = {"ScheduledAcquireKey": "INT"}
     option_results = []
     option_output_params = {"ScheduledAcquireOptionKey": "INT"}
-    options = acquire.pop("Options", ())
+    options = acquire.pop("Options", ())[:]  # don't mutate inbound object
     result = _execute_stored_procedure(transaction, "config.SP_InsertScheduledAcquire", acquire,
                                        output_params).fetchone()
     scheduled_acquire_key = result["ScheduledAcquireKey"]
@@ -135,8 +136,8 @@ def insert_scheduled_acquire(transaction, acquire):
 
 def insert_scheduled_execution(transaction, execution, extract):
     execution_output_params = {"ScheduledExecutionKey": "INT", "ScheduledExtractKey": "INT"}
-    options = extract.pop("Options", ())
-    execution["ScheduledExtractDestination"] = extract.pop("ScheduledExtractDestination")
+    options = extract.get("Options", ())
+    execution["ScheduledExtractDestination"] = extract.get("ScheduledExtractDestination")
     result = _execute_stored_procedure(transaction, "config.SP_InsertScheduledExecution", execution,
                                        execution_output_params).fetchone()
     option_results = _insert_scheduled_extract_options(transaction, result["ScheduledExtractKey"], options)
@@ -147,11 +148,13 @@ def start_acquire_log(acquire):
     output_params = {"AcquireKey": "INT"}
     option_results = []
     option_output_params = {"AcquireOptionKey": "INT"}
+    acquire = acquire.copy()  # don't mutate inbound object
     options = acquire.pop("Options", ())
     with db.engine.begin() as transaction:
         result = _execute_stored_procedure(transaction, "[log].SP_StartAcquireLog", acquire, output_params).fetchone()
         acquire_key = result["AcquireKey"]
         for option in options:
+            option = option.copy()  # don't mutate inbound object
             option["AcquireKey"] = acquire_key
             option_results.append(_execute_stored_procedure(transaction, "[log].SP_InsertAcquireOptionLog",
                                                             option, option_output_params).fetchone())
@@ -170,11 +173,13 @@ def start_extract_log(extract):
     output_params = {"ExtractKey": "INT"}
     option_results = []
     option_output_params = {"ExtractOptionKey": "INT"}
+    extract = extract.copy()  # don't mutate inbound object
     options = extract.pop("Options", ())
     with db.engine.begin() as transaction:
         result = _execute_stored_procedure(transaction, "[log].SP_StartExtractLog", extract, output_params).fetchone()
         extract_key = result["ExtractKey"]
         for option in options:
+            option = option.copy()  # don't mutate inbound object
             option["ExtractKey"] = extract_key
             option_results.append(_execute_stored_procedure(transaction, "[log].SP_InsertExtractOptionLog",
                                                             option, option_output_params).fetchone())
@@ -206,6 +211,7 @@ def update_scheduled_execution(transaction, execution, extract):
         "ScheduledExtractOptionDeleteRowCount": "INT",
         "ScheduledExtractKey": "INT"
     }
+    extract = extract.copy()  # don't mutate inbound object
     options = extract.pop("Options", _DEFAULT)
     delete_result = None
     option_results = None

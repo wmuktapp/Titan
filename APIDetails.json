@@ -66,6 +66,7 @@ GET /executions/<int:key>
             "ExecutionStartTime": datatime (req),
             "ExecutionEndTime": datetime,
             "ExecutionSuccessful": bool,
+            "ExecutionErrorMessage": str,
             "ExecutionClientName": str (req),
             "ExecutionDataSourceName": str (req),
             "ExecutionDataSetName": str (req),
@@ -116,6 +117,8 @@ GET /executions/?page_number=1&page_size=100
                 "ExecutionDataSetName": {
                     "ExecutionLoadDate": {
                         "ExecutionKey": int (req),
+                        "ExecutionStartTime": datetime (req),
+                        "ExecutionStatus": str (req),
                         "AcquireProgramKey": int,
                         "AcquireStartTime" datetime,
                         "AcquireStatus": str (req),

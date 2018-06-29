@@ -22,7 +22,10 @@ def execute():
     extract = data.get("extract", {})
     if "Options" in extract:
         extract["Options"] = [option for option in extract["Options"] if option["ExtractOptionValue"] != ""]
-    app.execute(data)
+    try:
+        app.execute(data)
+    except Exception as error:
+        return {"error": {"message": str(error)}}, 400, None
     return {}, 201, None
 
 
@@ -72,6 +75,7 @@ def get_execution(key):
             "ExecutionStartTime": arbitrary_row["ExecutionStartTime"],
             "ExecutionEndTime": arbitrary_row["ExecutionEndTime"],
             "ExecutionSuccessful": arbitrary_row["ExecutionSuccessful"],
+            "ExecutionErrorMessage": arbitrary_row["ExecutionErrorMessage"],
             "ExecutionClientName": arbitrary_row["ExecutionClientName"],
             "ExecutionDataSourceName": arbitrary_row["ExecutionDataSourceName"],
             "ExecutionDataSetName": arbitrary_row["ExecutionDataSetName"],

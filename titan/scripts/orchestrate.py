@@ -34,7 +34,7 @@ def _clean_up(flask_app):
                                            "this issue persists, there may be a bug stopping the container from "
                                            "completing." % name)
                     client.container_groups.delete(rsg_name, name)
-                else:
+                else:  # what about creating status?
                     timeout_seconds = flask_app.config["TITAN_EXECUTION_TIMEOUT_SECONDS"]
                     start_time_stamp = models.get_execution(execution_key)[0]["ExecutionStartTime"]
                     start_time = datetime.datetime.strptime(start_time_stamp, "%Y-%m-%d %H:%M%S")
@@ -42,7 +42,7 @@ def _clean_up(flask_app):
                         flask_app.logger.critical("Container group, %s has been running for more than the timeout "
                                                   "threshold of %s seconds. Please investigate immediately and "
                                                   "manually terminate the instance if required." % name)
-            else:
+            elif state in ("Terminated", "Failed", "Succeeded"):  # check on exact possible values
                 if execution_key is None:
                     flask_app.logger.info("Deleting terminated container group %s." % name)
                     client.container_groups.delete(rsg_name, name)

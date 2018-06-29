@@ -16,7 +16,7 @@ class AcquireProgram(object):
                                                     sas_token=self._app.config["TITAN_AZURE_BLOB_SAS_TOKEN"])
         self._data = json.loads(os.getenv("TITAN_STDIN"))["execution"]
         self._blob_prefix = "/".join((self._data["ExecutionClientName"], self._data["ExecutionDataSourceName"],
-                                      self._data["DataSetName"], self._data["ExecutionLoadDate"],
+                                      self._data["ExecutionDataSetName"], self._data["ExecutionLoadDate"],
                                       self._data["ExecutionVersion"]))
         self._file_name_format = "{TITAN_DATA_SET_NAME}_{TITAN_LOAD_DATE}.csv"
         self.container_name = self._app.config["TITAN_AZURE_BLOB_CONTAINER_NAME"]
