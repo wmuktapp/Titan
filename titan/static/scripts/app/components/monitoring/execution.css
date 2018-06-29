@@ -15,6 +15,11 @@
     border-right: 1px solid rgba(249, 174, 66, .2);
 }
 
+.execution-parts {
+    display: inline-block;
+    border: 1px solid #fff;
+}
+
 .execution-partial {
     display: inline-block;
     height: 1em;
@@ -23,6 +28,8 @@
     font-size: 24px;
     line-height: 1;
     text-align: center;
+    background-color: #fff;
+    color: #aaa;
 }
 
 .execution-success {
@@ -40,7 +47,7 @@
     color: #fff;
 }
 
-.execution-waiting {
+.execution-not-requested {
     color: #aaa;
 }
 

@@ -1,6 +1,5 @@
 import React from 'react';
-import MonitoringGridExecutionAcquire from './execution-acquire.jsx';
-import MonitoringGridExecutionExtract from './execution-extract.jsx';
+import ExecutionPartial from './execution-partial.jsx';
 import dateUtils from '../../utils/date-utils';
 
 import './execution.css';
@@ -17,36 +16,40 @@ class MonitoringGridExecution extends React.Component {
     this.props.select(this.props.taskId, this.props.date, add);
   }
 
+  getStatusClass(status) {
+    const classes = {
+      'success': 'execution-success',
+      'failure': 'execution-failure',
+      'running': 'execution-running',
+      'not-requested': 'execution-not-requested'
+    };
+    return status
+      ? (' ' + classes[status.toLowerCase()])
+      : '';
+  }
+
   render() {
 
     const SUCCESS = 'success', FAILURE = 'failure';
     const execution = this.props.data,
       acquireStatus = execution.AcquireStatus,
       extractStatus = execution.ExtractStatus;
-    const showSelector = acquireStatus === FAILURE || extractStatus === FAILURE;
-    const showLink = acquireStatus === SUCCESS
-      || acquireStatus === FAILURE
-      || extractStatus === SUCCESS
-      || extractStatus === FAILURE;
-
-    const status = showLink
-      ? <a href={`/monitoring/executions/${execution.ExecutionKey}`}>
-          <MonitoringGridExecutionAcquire status={acquireStatus} />
-          <MonitoringGridExecutionExtract status={extractStatus} />
-        </a>
-      : <span>
-          <MonitoringGridExecutionAcquire status={acquireStatus} />
-          <MonitoringGridExecutionExtract status={extractStatus} />
-        </span>;
-
-    const className = 'execution' + (dateUtils.isYesterday(this.props.date) ? ' execution-highlight' : '');
+    const showCheckbox = acquireStatus === FAILURE || extractStatus === FAILURE;
+    const className = 'execution'
+      + (dateUtils.isYesterday(this.props.date) ? ' execution-highlight' : '')
+      + this.getStatusClass(execution.ExecutionStatus);
     const title = `Acquire time: ${execution.AcquireStartTime}\nExtract time: ${execution.ExtractStartTime}`;
 
     return (
       <span className={className} title={title}>
-        {status}
+        <a href={`/monitoring/executions/${execution.ExecutionKey}`}>
+          <span className="execution-parts">
+            <ExecutionPartial status={acquireStatus}>A</ExecutionPartial>
+            <ExecutionPartial status={extractStatus}>E</ExecutionPartial>
+          </span>
+        </a>
         {
-          showSelector &&
+          showCheckbox &&
             <input type="checkbox" checked={execution.selected} className="execution-selector" onChange={this.selectorChange} />
         }
       </span>
