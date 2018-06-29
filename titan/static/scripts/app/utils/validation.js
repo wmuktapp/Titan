@@ -29,8 +29,8 @@ export function validateScheduleData(data, acquireOptionConfig, extractOptionCon
 
   const requiredAcquireOptions = acquireOptionConfig
     ? acquireOptionConfig
-      .filter(option => option.AcquireProgramOptionRequired)
-      .map(option => option.AcquireProgramOptionName)
+        .filter(option => option.AcquireProgramOptionRequired)
+        .map(option => option.AcquireProgramOptionName)
     : [];
 
   // Check acquires, if applicable
@@ -51,9 +51,20 @@ export function validateScheduleData(data, acquireOptionConfig, extractOptionCon
     }
   }
 
+  // Check extract options, if applicable
+  if (data.extract.ScheduledExtractDestination) {
+    const requiredExtractOptions = extractOptionConfig
+      .filter(option => option.ExtractProgramOptionRequired)
+      .map(option => option.ExtractProgramOptionName);
 
-  // TODO
-  // - Check extract, if applicable
+    for (let optionName of requiredExtractOptions) {
+      const option = data.extract.Options
+        .find(option => option.ScheduledExtractOptionName === optionName);
+      if (option && !isValid(option.ScheduledExtractOptionValue)) {
+        return false;
+      }
+    }
+  }
 
   return true;
 }

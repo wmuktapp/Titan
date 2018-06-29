@@ -45,12 +45,11 @@ class ScheduleForm extends React.Component {
       },
 
       availablePrograms: [],
+      extractOptionConfig: [],
 
       includeRepeat: false,
 
-      scheduleValid: true,
-      extractValid: true,
-      showInvalid: false
+      isFormValid: true
     };
 
     this.onExecutionChange = this.onExecutionChange.bind(this);
@@ -200,22 +199,21 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  updateExtractDestination(destination, options, isValid) {
+  updateExtractDestination(destination, options, optionConfig) {
     const extract = this.state.extract;
     extract.ScheduledExtractDestination = destination;
     extract.Options = options;
     this.setState({
       extract: extract,
-      extractValid: isValid
+      extractOptionConfig: optionConfig      
     });
   }
 
-  updateExtractOptions(options, isValid) {
+  updateExtractOptions(options) {
     const extract = this.state.extract;
     extract.Options = options;
     this.setState({
-      extract: extract,
-      extractValid: isValid
+      extract: extract
     });
   }
 
@@ -247,7 +245,6 @@ class ScheduleForm extends React.Component {
 
         this.setState({
           execution: execution,
-          showInvalid: false,
           updated: true
         });
       });
@@ -261,18 +258,17 @@ class ScheduleForm extends React.Component {
 
   validateFields() {
 
-    let scheduleValid = validateScheduleData(this.state, this.getAcquireOptionConfig());
-
-    // We also check acquire and extract fields
-    const isValid = this.state.extractValid
-      && scheduleValid;
+    const isFormValid = validateScheduleData(
+      this.state,
+      this.getAcquireOptionConfig(),
+      this.state.extractOptionConfig
+    );
 
     this.setState({
-      showInvalid: !isValid,
-      scheduleValid: scheduleValid
+      isFormValid: isFormValid
     });
 
-    return isValid;
+    return isFormValid;
   }
 
   // TODO move to utils?
@@ -303,9 +299,6 @@ class ScheduleForm extends React.Component {
 
     const execution = this.state.execution;
 
-    const isValid = this.state.scheduleValid
-      && this.state.extractValid;
-
     // Repeat object
     const repeat = {
       interval: {
@@ -329,7 +322,7 @@ class ScheduleForm extends React.Component {
         <h5>{ execution.ScheduledExecutionKey ? 'Update Schedule' : 'New Schedule' }</h5>
 
         {
-          !isValid &&
+          !this.state.isFormValid &&
             <Alert title="Fields Missing" type="error">
               <p>One or more required fields were not entered.</p>
             </Alert>
@@ -340,7 +333,7 @@ class ScheduleForm extends React.Component {
           name="ScheduledExecutionName"
           value={execution.ScheduledExecutionName}
           required={true}
-          validate={this.state.showInvalid}
+          validate={!this.state.isFormValid}
           onChange={this.onExecutionChange}
         />
 
@@ -359,7 +352,7 @@ class ScheduleForm extends React.Component {
           name="ScheduledExecutionNextScheduled"
           value={execution.ScheduledExecutionNextScheduled}
           required={true}
-          validate={this.state.showInvalid}
+          validate={!this.state.isFormValid}
           onChange={this.updateDateField}
           includeTime={true}
         />
@@ -368,7 +361,7 @@ class ScheduleForm extends React.Component {
           name="ScheduledExecutionScheduleEnd"
           value={execution.ScheduledExecutionScheduleEnd}
           required={true}
-          validate={this.state.showInvalid}
+          validate={!this.state.isFormValid}
           onChange={this.updateDateField}
           includeTime={true}
         />
@@ -378,7 +371,7 @@ class ScheduleForm extends React.Component {
           name="ScheduledExecutionClientName"
           value={execution.ScheduledExecutionClientName}
           required={true}
-          validate={this.state.showInvalid}
+          validate={!this.state.isFormValid}
           onChange={this.onExecutionChange}
         />
 
@@ -387,7 +380,7 @@ class ScheduleForm extends React.Component {
           name="ScheduledExecutionDataSourceName"
           value={execution.ScheduledExecutionDataSourceName}
           required={true}
-          validate={this.state.showInvalid}
+          validate={!this.state.isFormValid}
           disabled={!!program}
           onChange={this.onExecutionChange}
         />
@@ -397,7 +390,7 @@ class ScheduleForm extends React.Component {
           name="ScheduledExecutionDataSetName"
           value={execution.ScheduledExecutionDataSetName}
           required={true}
-          validate={this.state.showInvalid}
+          validate={!this.state.isFormValid}
           onChange={this.onExecutionChange}
         />
 
@@ -406,7 +399,7 @@ class ScheduleForm extends React.Component {
           name="ScheduledExecutionNextLoadDate"
           value={execution.ScheduledExecutionNextLoadDate}
           required={true}
-          validate={this.state.showInvalid}
+          validate={!this.state.isFormValid}
           onChange={this.updateDateField}
         />
 
@@ -415,7 +408,7 @@ class ScheduleForm extends React.Component {
           name="ScheduledExecutionUser"
           value={execution.ScheduledExecutionUser}
           required={true}
-          validate={this.state.showInvalid}
+          validate={!this.state.isFormValid}
           onChange={this.onExecutionChange}
         />
 
@@ -444,7 +437,7 @@ class ScheduleForm extends React.Component {
                   acquires={this.state.acquires}
                   options={program.options}
                   onChange={this.updateAcquires}
-                  showInvalid={this.state.showInvalid}
+                  showInvalid={!this.state.isFormValid}
                 />
               : <p>No acquire program selected</p>
           }
@@ -456,7 +449,7 @@ class ScheduleForm extends React.Component {
             onDestinationChange={this.updateExtractDestination}
             options={this.state.extract.Options}
             onOptionsChange={this.updateExtractOptions}
-            validate={this.state.showInvalid}
+            validate={!this.state.isFormValid}
           />
         </div>
 

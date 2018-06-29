@@ -48,16 +48,17 @@ class ExtractForm extends React.Component {
 
     const name = destination ? destination.label : '';
 
-    // Reset options
-    const options = destination
-      ? this.state.availableDestinations
-          .find(d => d.ExtractProgramFriendlyName === destination.label)
-          .Options.map(option => {
-            return this.createBlankExtractOption(option.ExtractProgramOptionName);
-          })
+    // Get option config
+    const optionConfig = destination
+      ? this.state.availableDestinations.find(d => d.ExtractProgramFriendlyName === destination.label).Options
       : [];
 
-    this.props.onDestinationChange(name, options, this.isValid());
+    // Reset options
+    const options = optionConfig.map(option => {
+      return this.createBlankExtractOption(option.ExtractProgramOptionName);
+    });
+
+    this.props.onDestinationChange(name, options, optionConfig);
   }
 
   onOptionChange(e) {
