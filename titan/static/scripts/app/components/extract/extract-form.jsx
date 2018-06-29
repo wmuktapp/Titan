@@ -145,7 +145,7 @@ class ExtractForm extends React.Component {
       // Get a list of all available options
       const optionsConfig = this.getOptionsConfig();
 
-      const optionRows = optionsConfig.map((optionConfig, index) => {
+      rows = optionsConfig.map((optionConfig, index) => {
 
         // Option name
         const name = optionConfig.ExtractProgramOptionName;
@@ -171,8 +171,6 @@ class ExtractForm extends React.Component {
         );
 
       });
-
-      rows = rows.concat(optionRows);
     }
 
     return (
