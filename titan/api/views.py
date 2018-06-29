@@ -25,6 +25,7 @@ def execute():
     try:
         app.execute(data)
     except Exception as error:
+        raise
         return {"error": {"message": str(error)}}, 400, None
     return {}, 201, None
 
@@ -119,7 +120,7 @@ def get_execution(key):
                 }
                 if option not in acquire_options:
                     acquire_options.append(option)
-        extract_option_name = row["ScheduledExtractOptionName"]
+        extract_option_name = row["ExtractOptionName"]
         if extract_option_name is not None:
             option = {
                 "ExtractOptionName": extract_option_name,

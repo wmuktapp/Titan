@@ -18,7 +18,7 @@ class AcquireProgram(object):
         self._blob_prefix = "/".join((self._data["ExecutionClientName"], self._data["ExecutionDataSourceName"],
                                       self._data["ExecutionDataSetName"], self._data["ExecutionLoadDate"],
                                       self._data["ExecutionVersion"]))
-        self._file_name_format = "{TITAN_DATA_SET_NAME}_{TITAN_LOAD_DATE}.csv"
+        self._file_name_format = "{ExecutionDataSetName}_{ExecutionLoadDate}.csv"
         self.container_name = self._app.config["TITAN_AZURE_BLOB_CONTAINER_NAME"]
         self.logger = self._app.logger
 
@@ -35,7 +35,7 @@ class AcquireProgram(object):
         if blob_name is None:
             blob_name = self.get_blob_name()
         self.logger.info("Uploading bytes, %s, to blob storage" % blob_name)
-        self._block_service.create_blob_from_stream(self.container_name, blob_name, bytes, count=count)
+        self._block_service.create_blob_from_bytes(self.container_name, blob_name, bytes, count=count)
 
     def create_blob_from_stream(self, stream, blob_name=None, count=None):
         if blob_name is None:

@@ -6,7 +6,7 @@ from azure.mgmt.containerinstance import models
 from msrestazure import azure_active_directory
 import flask
 
-from titan import models
+from titan import models as titan_models  # avoids name clash with azure.mgmt.containerinstance.models
 
 def get_id_token():
     return "Bearer %s" % flask.request.headers.get("X-MS-TOKEN-AAD-ID-TOKEN", "")
@@ -34,23 +34,26 @@ def list_blobs(service, container, prefix):
 
 def execute(data):
     flask_app = flask.current_app
-    execution = data["execution"]
+    cfg = flask_app.config
     flask_app.logger.info("Starting execution log")
-    result = models.start_execution_log(execution)
+    container_name = cfg["TITAN_AZURE_CONTAINER_NAME"]
+    container_group_name = "%s_%s" % (container_name, uuid.uuid4())
+    execution = data["execution"]
+    execution["ExecutionContainerGroupName"] = container_group_name
+    result = titan_models.start_execution_log(execution)
     execution["ExecutionVersion"] = result["ExecutionVersion"]
     execution_key = execution["ExecutionKey"] = result["ExecutionKey"]
     load_date = execution["ExecutionLoadDate"]
-    for acquire in execution["acquires"]:
+    for acquire in data["acquires"]:
         acquire["Options"].append({
             "AcquireOptionName": "--load-date",
             "AcquireOptionValue": load_date
         })
     try:
-        cfg = flask_app.config
         container_name = cfg["TITAN_AZURE_CONTAINER_NAME"]
         launch_container(
             resource_group_name=cfg["TITAN_AZURE_CONTAINER_RSG_NAME"],
-            container_group_prefix=container_name,
+            container_group_name=container_group_name,
             os_type=cfg["TITAN_AZURE_CONTAINER_OS_TYPE"],
             location=cfg["TITAN_AZURE_CONTAINER_LOCATION"],
             container_name=container_name,
@@ -64,7 +67,7 @@ def execute(data):
         )
     except Exception as error:
         flask_app.logger.info("Ending execution log")
-        models.end_execution_log(execution_key, str(error))
+        titan_models.end_execution_log(execution_key, str(error))
 
 
 def format_execution(rows):
@@ -118,10 +121,8 @@ def format_execution(rows):
     return data
 
 
-def launch_container(resource_group_name, container_group_prefix, os_type, location, container_name, image_name,
+def launch_container(resource_group_name, container_group_name, os_type, location, container_name, image_name,
                      image_registry_credentials, memory_in_gb, cpu_count, data):
-    container_group_name = "%s_%s" % (container_group_prefix, uuid.uuid4())
-    data["execution"]["ExecutionContainerGroupName"] = container_group_name
     flask.current_app.logger.info("Preparing to launch container; %s" % container_group_name)
     resources = models.ResourceRequirements(requests=models.ResourceRequests(memory_in_gb=memory_in_gb, cpu=cpu_count))
     container = models.Container(name=container_name, image=image_name, resources=resources, command=["execute"],
