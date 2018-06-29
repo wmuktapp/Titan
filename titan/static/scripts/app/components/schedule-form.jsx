@@ -49,7 +49,6 @@ class ScheduleForm extends React.Component {
       includeRepeat: false,
 
       scheduleValid: true,
-      acquiresValid: true,
       extractValid: true,
       showInvalid: false
     };
@@ -198,7 +197,6 @@ class ScheduleForm extends React.Component {
   updateAcquires(acquires, valid) {
     this.setState({
       acquires: acquires,
-      acquiresValid: valid
     });
   }
 
@@ -263,11 +261,10 @@ class ScheduleForm extends React.Component {
 
   validateFields() {
 
-    let scheduleValid = validateScheduleData(this.state);
+    let scheduleValid = validateScheduleData(this.state, this.getProgramConfig());
 
     // We also check acquire and extract fields
-    const isValid = this.state.acquiresValid
-      && this.state.extractValid
+    const isValid = this.state.extractValid
       && scheduleValid;
 
     this.setState({
@@ -307,7 +304,6 @@ class ScheduleForm extends React.Component {
     const execution = this.state.execution;
 
     const isValid = this.state.scheduleValid
-      && this.state.acquiresValid
       && this.state.extractValid;
 
     // Repeat object

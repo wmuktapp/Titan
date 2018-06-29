@@ -19,16 +19,41 @@ function isValid(value) {
 
 export function validateScheduleData(data, acquireOptionConfig, extractOptionConfig) {
 
-  // TODO
-  // - Check acquires, if applicable
-  // - Check extract, if applicable
 
   // Validate execution
-  for (let field in requiredScheduleFields.execution) {
+  for (let field of requiredScheduleFields.execution) {
     if (!isValid(data.execution[field])) {
       return false;
     }
   }
+
+  const requiredAcquireOptions = acquireOptionConfig
+    ? acquireOptionConfig
+      .filter(option => option.AcquireProgramOptionRequired)
+      .map(option => option.AcquireProgramOptionName)
+    : [];
+
+  // Check acquires, if applicable
+  for (let acquire of data.acquires) {
+
+    // Check name
+    if (!isValid(acquire.ScheduledAcquireName)) {
+      return false;
+    }
+
+    // Check required options
+    for (let optionName of requiredAcquireOptions) {
+      const option = acquire.Options
+        .find(option => option.ScheduledAcquireOptionName === optionName);
+      if (!option || !isValid(option.ScheduledAcquireOptionValue)) {
+        return false;
+      }
+    }
+  }
+
+
+  // TODO
+  // - Check extract, if applicable
 
   return true;
 }
