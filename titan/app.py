@@ -1,26 +1,24 @@
 import json
 import uuid
 
-from azure.mgmt import containerinstance, resource
+from azure.common.credentials import ServicePrincipalCredentials
+from azure.mgmt import containerinstance
 from azure.mgmt.containerinstance import models
-from msrestazure import azure_active_directory
 import flask
 
 from titan import models as titan_models  # avoids name clash with azure.mgmt.containerinstance.models
+
 
 def get_id_token():
     return "Bearer %s" % flask.request.headers.get("X-MS-TOKEN-AAD-ID-TOKEN", "")
 
 
 def get_security_context():
-    # TODO: ENABLE THIS ONCE LIVE and delete the below. credentials = azure_active_directory.MSIAuthentication()
-    # TODO: Enable this subscription_id = next(resource.SubscriptionClient(credentials).subscriptions.list())
-    config = flask.current_app.config
-    from azure.common.credentials import ServicePrincipalCredentials
-    credentials = ServicePrincipalCredentials(client_id=config["TITAN_AZURE_CLIENT_ID"],
-                                              secret=config["TITAN_AZURE_CLIENT_SECRET"],
-                                              tenant=config["TITAN_AZURE_TENANT_ID"])
-    return credentials, config["TITAN_AZURE_SUBSCRIPTION_ID"]
+    cfg = flask.current_app.config
+    credentials = ServicePrincipalCredentials(client_id=cfg["TITAN_AZURE_CLIENT_ID"],
+                                              secret=cfg["TITAN_AZURE_CLIENT_SECRET"],
+                                              tenant=cfg["TITAN_AZURE_TENANT_ID"])
+    return credentials, cfg["TITAN_AZURE_SUBSCRIPTION_ID"]
 
 
 def list_blobs(service, container, prefix):

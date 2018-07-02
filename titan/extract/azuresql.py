@@ -15,7 +15,7 @@ class BlobsNotFoundError(Exception):
     """No blobs were found for the given extract details."""
 
 
-_EXTRACT_KEY_COLUMN_NAME = "TitanExtractKey"
+_EXTRACT_KEY_COLUMN_NAME = "ExtractKey"
 
 
 def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_name, blob_location,view_name, schema,

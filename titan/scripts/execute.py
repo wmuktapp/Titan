@@ -68,14 +68,7 @@ def main():
     flask_app = titan.create_app("execute")
     data = json.loads(os.getenv("TITAN_STDIN"))
     execution = data["execution"]
-    ## remove between here
-    flask_app.logger.info("Starting execution log")
-    result = _call_models_function(flask_app, models.start_execution_log, execution)
-    execution["ExecutionVersion"] = result["ExecutionVersion"]
-    execution_key = execution["ExecutionKey"] = result["ExecutionKey"]
-    os.putenv("TITAN_STDIN", json.dumps(data))
-    ## remove above and uncomment below
-    # execution_key = execution["ExecutionKey"]
+    execution_key = execution["ExecutionKey"]
     error = None
     all_acquires_succeeded = True
     try:
