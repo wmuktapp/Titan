@@ -25,10 +25,8 @@ class Monitor extends React.Component {
 
     this.state = {
       hasError: false,
-      dates: {
-        start: start,
-        end: end
-      },
+      start: start,
+      end: end,
       loading: true,
       data: [],
       retryList: [],
@@ -53,16 +51,19 @@ class Monitor extends React.Component {
       });
     };
 
-    this.fetchData(this.state.dates, callback);
+    this.fetchData({
+        start: this.state.start,
+        end: this.state.end
+      },
+      callback
+    );
   }
 
   showDates(start, end) {
 
     this.setState({
-      dates: {
-        start: start,
-        end: end
-      },
+      start: start,
+      end: end,
       data: []
     });
 
@@ -83,7 +84,12 @@ class Monitor extends React.Component {
         data: mergeData(this.state.data, result.data)
       });
     };
-    this.fetchData(this.state.dates, callback)
+    this.fetchData({
+        start: this.state.start,
+        end: this.state.end
+      },
+      callback
+    );
   }
 
   fetchData(dates, callback) {
@@ -193,8 +199,17 @@ class Monitor extends React.Component {
 
     return (
       <div className="monitor-grid">
-        <MonitoringControls dates={this.state.dates} selectDates={this.showDates} />
-        <MonitoringGrid dates={this.state.dates} data={this.state.data} select={this.selectExecution} />
+        <MonitoringControls
+          start={this.state.start}
+          end={this.state.end}
+          onSelectDates={this.showDates}
+        />
+        <MonitoringGrid
+          start={this.state.start}
+          end={this.state.end}
+          data={this.state.data}
+          onSelect={this.selectExecution}
+        />
         {
           this.state.loading &&
             <p className="monitor-loading">Loading...</p>

@@ -10,7 +10,15 @@ class MonitoringGridClient extends React.Component {
       const datum = this.props.data[key];
 
       return (
-        <MonitoringGridDataSource key={index} name={key} data={datum} selectExecution={this.props.selectExecution} highlight={this.props.highlight} />
+        <MonitoringGridDataSource
+          key={index}
+          name={key}
+          start={this.props.start}
+          end={this.props.end}
+          data={datum}
+          selectExecution={this.props.selectExecution}
+          highlight={this.props.highlight}
+        />
       );
     });
 

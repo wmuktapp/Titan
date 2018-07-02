@@ -48,7 +48,7 @@ class ExecutionDetails extends React.Component {
           </span>
         </div>
         {
-          execution.ExecutionErrorMessage &&
+          !execution.ExecutionSuccessful &&
             <div>
               <label>Error Message</label>
               <span className="execution-value">{execution.ExecutionErrorMessage}</span>

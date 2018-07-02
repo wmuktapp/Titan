@@ -9,18 +9,26 @@ class MonitoringGrid extends React.Component {
 
   render() {
 
-    const highlight = DateUtils.isYesterday(this.props.dates.end);
+    const highlight = DateUtils.isYesterday(this.props.end);
 
     const rows = Object.keys(this.props.data).map(key => {
 
       const datum = this.props.data[key];
 
-      return <MonitoringGridClient key={key} name={key} data={datum} selectExecution={this.props.select} highlight={highlight} />;
+      return <MonitoringGridClient
+        key={key}
+        name={key}
+        start={this.props.start}
+        end={this.props.end}
+        data={datum}
+        selectExecution={this.props.onSelect}
+        highlight={highlight}
+      />;
     })
 
     return (
       <div className="monitoring-grid">
-        <MonitoringGridHeader dates={this.props.dates} />
+        <MonitoringGridHeader start={this.props.start} end={this.props.end} />
         { rows }
       </div>
     );

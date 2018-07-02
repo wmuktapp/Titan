@@ -9,10 +9,6 @@
     transition-property: background-color;
 }
 
-.schedule-days .schedule-days-label:hover {
-    background-color: rgba(249, 174, 66, .15);
-}
-
 .schedule-days .schedule-days-input {
     display: block;
     margin: 0 auto;
