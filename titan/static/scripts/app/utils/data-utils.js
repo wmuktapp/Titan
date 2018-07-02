@@ -77,7 +77,7 @@ export function getAdhocExecutionData(data) {
 
   // Restructure extract into adhoc format
   const extract = {
-    ExtractDestination: data.extract.ScheduledExtractDestination,
+    ExtractDestination: data.extract.ExtractDestination,
     Options: data.extract.Options.map(option => {
       return {
         ExtractOptionName: option.ScheduledExtractOptionName,
