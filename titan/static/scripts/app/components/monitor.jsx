@@ -117,7 +117,7 @@ class Monitor extends React.Component {
       );
   }
 
-  selectExecution(id, date, add) {
+  selectExecution(executionKey, add) {
 
     // Add or remove execution from list
 
@@ -125,17 +125,12 @@ class Monitor extends React.Component {
 
     if (add) {
       // Add to list
-      list.push({
-        id: id,
-        date: date
-      });
+      list.push(executionKey);
     } else {
       // Remove from list
-      for (const i in list) {
-        if (list[i].id === id && list[i].date === date) {
-          list.splice(i, 1);
-          break;
-        }
+      const index = list.indexOf(executionKey);
+      if (index > -1) {
+        list.splice(index, 1);
       }
     }
 
@@ -196,8 +191,6 @@ class Monitor extends React.Component {
     // TODO pass retryList to MonitoringGrid, use it to handle checked / unchecked state
 
     const dialogOk = this.state.dialogHasOk ? this.onDialogClose : null;
-
-    console.log(isEmpty(this.state.data))
 
     return (
       <div className="monitor-grid">

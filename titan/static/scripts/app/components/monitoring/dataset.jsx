@@ -21,7 +21,7 @@ class MonitoringGridDataSet extends React.Component {
             key={key}
             data={execution}
             select={this.props.selectExecution}
-            taskId={execution.ExecutionKey}
+            executionKey={execution.ExecutionKey}
             date={temp.toDate()}
           />
         );

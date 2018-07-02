@@ -13,7 +13,7 @@ class MonitoringGridExecution extends React.Component {
 
   selectorChange(e) {
     const add = e && e.target && e.target.checked;
-    this.props.select(this.props.taskId, this.props.date, add);
+    this.props.select(this.props.executionKey, add);
   }
 
   getStatusClass(status) {
