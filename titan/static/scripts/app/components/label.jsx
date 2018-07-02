@@ -1,5 +1,5 @@
 import React from 'react';
-import Info from './info.jsx';
+import Info from './info/index.jsx';
 import './label.css';
 
 // Creates a label, handles the 'required' asterisk
