@@ -42,13 +42,11 @@ class ExecutionDetails extends React.Component {
           <span className="execution-value">{execution.ExecutionEndTime}</span>
         </div>
         <div>
-          <label>Successful?</label>
-          <span className="execution-value">
-            <input type="checkbox" disabled="disabled" checked={execution.ExecutionSuccessful} />
-          </span>
+          <label>Status</label>
+          <span className="execution-value">{execution.ExecutionStatus}</span>
         </div>
         {
-          !execution.ExecutionSuccessful &&
+          execution.ExecutionStatus && execution.ExecutionStatus.toUpperCase() === 'FAILURE' &&
             <div>
               <label>Error Message</label>
               <span className="execution-value">{execution.ExecutionErrorMessage}</span>
