@@ -31,10 +31,10 @@ class ExecutionAcquireDetails extends React.Component {
             </span>
           </div>
           {
-            acquire.AcquireErrorMessage &&
+            acquire.AcquireStatus && acquire.AcquireStatus.toUpperCase() === 'FAILURE' &&
               <div>
-                <label>Key</label>
-                <span className="execution-value">{acquire.AcquireKey}</span>
+                <label>Error Message</label>
+                <span className="execution-value">{acquire.AcquireErrorMessage}</span>
               </div>
           }
         </div>

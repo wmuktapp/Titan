@@ -34,6 +34,13 @@ class ExecutionExtractDetails extends React.Component {
               <ExecutionTaskStatus status={extract.ExtractStatus} />
             </span>
           </div>
+          {
+            extract.ExtractStatus && extract.ExtractStatus.toUpperCase() === 'FAILURE' &&
+              <div>
+                <label>Error Message</label>
+                <span className="execution-value">{extract.ExtractErrorMessage}</span>
+              </div>
+          }
         </div>
 
         <ExecutionExtractOptions options={extract.Options} />
