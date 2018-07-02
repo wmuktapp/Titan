@@ -4,13 +4,12 @@
     flex-direction: row;
     align-items: center;
     width: 10.5rem;
-    height: 100%;
     padding: .4em;
     box-sizing: border-box;
 }
 
 .execution-empty {
-    /* TODO */
+    height: 100%;
 }
 
 .execution-highlight {

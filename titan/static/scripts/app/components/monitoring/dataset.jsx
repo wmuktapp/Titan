@@ -1,5 +1,6 @@
 import React from 'react';
 import MonitoringGridExecution from './execution.jsx';
+import DateUtils from '../../utils/date-utils';
 import moment from 'moment';
 
 class MonitoringGridDataSet extends React.Component {
@@ -25,10 +26,12 @@ class MonitoringGridDataSet extends React.Component {
           />
         );
       } else {
+        const className = 'execution execution-empty'
+          + (DateUtils.isYesterday(temp.toDate()) ? ' execution-highlight' : '');
         executions.push(
           <span
             key={key}
-            className="execution execution-empty"
+            className={className}
           />
         );
       }
