@@ -18,6 +18,8 @@ class MonitoringGrid extends React.Component {
       return <MonitoringGridClient
         key={key}
         name={key}
+        start={this.props.start}
+        end={this.props.end}
         data={datum}
         selectExecution={this.props.onSelect}
         highlight={highlight}
