@@ -46,11 +46,11 @@ class ExtractForm extends React.Component {
 
     // Pass the destination and options to the parent
 
-    const name = destination ? destination.label : '';
+    const label = destination ? destination.label : '';
 
     // Get option config
     const optionConfig = destination
-      ? this.state.availableDestinations.find(d => d.ExtractProgramFriendlyName === destination.label).Options
+      ? this.state.availableDestinations.find(d => d.ExtractProgramPythonName === destination.value).Options
       : [];
 
     // Reset options
@@ -58,7 +58,7 @@ class ExtractForm extends React.Component {
       return this.createBlankExtractOption(option.ExtractProgramOptionName);
     });
 
-    this.props.onDestinationChange(name, options, optionConfig);
+    this.props.onDestinationChange(destination ? destination.value : '', options, optionConfig);
   }
 
   onOptionChange(e) {
@@ -86,7 +86,7 @@ class ExtractForm extends React.Component {
   }
 
   getOptionsConfig() {
-    const dest = this.state.availableDestinations.find(d => d.ExtractProgramFriendlyName === this.state.destination);
+    const dest = this.state.availableDestinations.find(d => d.ExtractProgramPythonName === this.state.destination);
     return dest ? dest.Options : [];
   }
 
@@ -138,7 +138,7 @@ class ExtractForm extends React.Component {
     });
 
     // Find the correct object from destinationObjects
-    const destinationValue = destinationOptions.find(o => o.label === this.state.destination);
+    const destinationValue = destinationOptions.find(o => o.value === this.state.destination);
 
     if (this.state.destination) {
 
