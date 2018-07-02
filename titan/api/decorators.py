@@ -1,15 +1,20 @@
+import datetime
+
 import flask
 import wrapt
 
 
 class JSONEncoder(flask.json.JSONEncoder):
     def default(self, o):
-        try:
-            iterable = iter(o)
-        except TypeError:
-            return flask.json.JSONEncoder.default(self, o)
+        if isinstance(o, datetime.date):
+            return o.strftime("%Y-%m-%d")
         else:
-            return list(iterable)
+            try:
+                iterable = iter(o)
+            except TypeError:
+                return flask.json.JSONEncoder.default(self, o)
+            else:
+                return list(iterable)
 
 
 @wrapt.decorator
