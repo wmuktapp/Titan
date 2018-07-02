@@ -17,7 +17,6 @@ class MonitoringGridDataSet extends React.Component {
 
     return (
       <div className="monitoring-dataset">
-        {this.props.children}
         <span className="monitoring-dataset-label">{this.props.name}</span>
         <div className="monitoring-executions">{cells}</div>
       </div>
