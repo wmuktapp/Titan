@@ -94,6 +94,7 @@ def format_execution(rows):
     }
     acquires = {}
     for row in rows:
+        row = dict(row)
         acquire_key = row["%sAcquireKey" % prefix]
         if acquire_key is not None:
             acquire = acquires.get(acquire_key)
