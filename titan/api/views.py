@@ -74,7 +74,7 @@ def get_execution(key):
             "ExecutionScheduledTime": arbitrary_row["ExecutionScheduledTime"],
             "ExecutionStartTime": arbitrary_row["ExecutionStartTime"],
             "ExecutionEndTime": arbitrary_row["ExecutionEndTime"],
-            "ExecutionSuccessful": arbitrary_row["ExecutionSuccessful"],
+            "ExecutionStatus": arbitrary_row["ExecutionStatus"],
             "ExecutionErrorMessage": arbitrary_row["ExecutionErrorMessage"],
             "ExecutionClientName": arbitrary_row["ExecutionClientName"],
             "ExecutionDataSourceName": arbitrary_row["ExecutionDataSourceName"],
@@ -174,6 +174,7 @@ def get_extract_programs():
 @decorators.to_json
 def get_scheduled_execution(key):
     rows = models.get_scheduled_execution(key)
+    print(rows)
     if not rows:
         flask.abort(404)
     arbitrary_row = rows[0]
