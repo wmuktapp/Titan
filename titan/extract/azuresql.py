@@ -45,7 +45,7 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
     main_text = f"""    
         BEGIN TRANSACTION
         
-        DECLARE @SQL NVARCHAR(MAX) = 'CREATE VIEW [{view_name}] AS SELECT ' + (
+        DECLARE @SQL NVARCHAR(MAX) = 'CREATE VIEW {view_name} AS SELECT ' + (
             SELECT STRING_AGG('[' + COLUMN_NAME + ']', ',') WITHIN GROUP (ORDER BY ORDINAL_POSITION)
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_SCHEMA = N'{schema}'
@@ -61,9 +61,10 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
             TRUNCATE TABLE [{table_name}];
         """
     for index, blob in enumerate(blobs):
+        blob_name = blob.name.replace("'", "''")
         main_text += f"""
-            BULK INSERT [{view_name}]
-            FROM N'{blob.name}'
+            BULK INSERT {view_name}
+            FROM N'{blob_name}'
             WITH (
                 CODEPAGE = N'{code_page}',
                 DATA_SOURCE = '{data_source_name}',
@@ -81,7 +82,7 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
         SET [{_EXTRACT_KEY_COLUMN_NAME}] = {extract_key}
         WHERE [{_EXTRACT_KEY_COLUMN_NAME}] IS NULL;
         
-        DROP VIEW [{view_name}];
+        DROP VIEW {view_name};
         COMMIT TRANSACTION
     """
     return pre_text, main_text
@@ -138,7 +139,6 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
     blob_key = sas_token[1:] if next(iter(sas_token), None) == "?" else sas_token  # needed because silly microsoft
     # Manual escaping for now
     blob_key = blob_key.replace("'", "''")
-    blob_location = blob_location.replace("'", "''")
     table_name_without_schema = table_name_without_schema.replace("'", "''")
     text_qualifier = text_qualifier.replace("'", "''")
     # End Manual escaping
