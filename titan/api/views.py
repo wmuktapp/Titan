@@ -174,7 +174,6 @@ def get_extract_programs():
 @decorators.to_json
 def get_scheduled_execution(key):
     rows = models.get_scheduled_execution(key)
-    print(rows)
     if not rows:
         flask.abort(404)
     arbitrary_row = rows[0]
