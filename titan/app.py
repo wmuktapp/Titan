@@ -49,6 +49,9 @@ def execute(data):
         })
     try:
         container_name = cfg["TITAN_AZURE_CONTAINER_NAME"]
+        acr_credential = models.ImageRegistryCredential(server=cfg["TITAN_AZURE_CONTAINER_REGISTRY_SERVER"],
+                                                        username=cfg["TITAN_AZURE_CONTAINER_REGISTRY_USERNAME"],
+                                                        password=cfg["TITAN_AZURE_CONTAINER_REGISTRY_PASSWORD"])
         launch_container(
             resource_group_name=cfg["TITAN_AZURE_CONTAINER_RSG_NAME"],
             container_group_name=container_group_name,
@@ -56,9 +59,7 @@ def execute(data):
             location=cfg["TITAN_AZURE_CONTAINER_LOCATION"],
             container_name=container_name,
             image_name=cfg["TITAN_AZURE_CONTAINER_IMAGE_NAME"],
-            image_registry_credentials=models.ImageRegistryCredential(cfg["TITAN_AZURE_CONTAINER_REGISTRY_SERVER"],
-                                                                      cfg["TITAN_AZURE_CONTAINER_REGISTRY_USERNAME"],
-                                                                      cfg["TITAN_AZURE_CONTAINER_REGISTRY_PASSWORD"]),
+            acr_credential=acr_credential,
             memory_in_gb=cfg["TITAN_AZURE_CONTAINER_RAM_GB"],
             cpu_count=cfg["TITAN_AZURE_CONTAINER_CPU_COUNT"],
             data=data
@@ -120,14 +121,14 @@ def format_execution(rows):
 
 
 def launch_container(resource_group_name, container_group_name, os_type, location, container_name, image_name,
-                     image_registry_credentials, memory_in_gb, cpu_count, data):
+                     acr_credential, memory_in_gb, cpu_count, data):
     flask.current_app.logger.info("Preparing to launch container; %s" % container_group_name)
     resources = models.ResourceRequirements(requests=models.ResourceRequests(memory_in_gb=memory_in_gb, cpu=cpu_count))
     container = models.Container(name=container_name, image=image_name, resources=resources, command=["execute"],
                                  environment_variables=[models.EnvironmentVariable("TITAN_STDIN", json.dumps(data))])
     container_group = models.ContainerGroup(containers=[container], os_type=os_type, location=location,
                                             restart_policy="Never",
-                                            image_registry_credentials=[image_registry_credentials])
+                                            image_registry_credentials=[acr_credential])
     credentials, subscription_id = get_security_context()
     client = containerinstance.ContainerInstanceManagementClient(credentials, subscription_id)
     client.container_groups.create_or_update(resource_group_name, container_group_name, container_group)
