@@ -1,5 +1,5 @@
 import React from 'react';
-import ExecutionTaskStatus from './task-status.jsx';
+import TaskStatus from './task-status.jsx';
 import ExecutionExtractOptions from './extract-options.jsx';
 
 class ExecutionExtractDetails extends React.Component {
@@ -31,7 +31,7 @@ class ExecutionExtractDetails extends React.Component {
           <div>
             <label>Status</label>
             <span className="execution-value">
-              <ExecutionTaskStatus status={extract.ExtractStatus} />
+              <TaskStatus status={extract.ExtractStatus} />
             </span>
           </div>
           {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-class ExecutionTaskStatus extends React.Component {
+class TaskStatus extends React.Component {
 
   render() {
 
@@ -16,8 +16,8 @@ class ExecutionTaskStatus extends React.Component {
       running: 'far fa-clock'   // clock
     };
 
-    const className = classNames[this.props.status] || '';
-    const icon = icons[this.props.status];
+    const className = classNames[this.props.status.toLowerCase()] || '';
+    const icon = icons[this.props.status.toLowerCase()];
 
     return <span className={'task-status ' + className}>
       { icon && <span className={'task-status-icon ' + icon} /> }
@@ -27,4 +27,4 @@ class ExecutionTaskStatus extends React.Component {
   }
 }
 
-export default ExecutionTaskStatus;
+export default TaskStatus;

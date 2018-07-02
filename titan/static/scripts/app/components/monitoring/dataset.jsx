@@ -21,7 +21,7 @@ class MonitoringGridDataSet extends React.Component {
             key={key}
             data={execution}
             select={this.props.selectExecution}
-            taskId={execution.id}
+            taskId={execution.ExecutionKey}
             date={temp.toDate()}
           />
         );
@@ -39,18 +39,6 @@ class MonitoringGridDataSet extends React.Component {
       temp.add(1, 'days');
       key++;
     }
-
-    const cells = Object.keys(this.props.data).map((key) => {
-
-      const datum = this.props.data[key];
-      const id = datum.id, date = new Date(key);
-
-      console.log(id)
-
-      return (
-        <MonitoringGridExecution key={key} data={datum} select={this.props.selectExecution} taskId={id} date={date} />
-      );
-    });
 
     return (
       <div className="monitoring-dataset">
