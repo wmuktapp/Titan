@@ -1,4 +1,5 @@
 import React from 'react';
+import TaskStatus from './task-status.jsx';
 
 class ExecutionDetails extends React.Component {
 
@@ -43,7 +44,9 @@ class ExecutionDetails extends React.Component {
         </div>
         <div>
           <label>Status</label>
-          <span className="execution-value">{execution.ExecutionStatus}</span>
+          <span className="execution-value">
+            <TaskStatus status={execution.ExecutionStatus} />
+          </span>
         </div>
         {
           execution.ExecutionStatus && execution.ExecutionStatus.toUpperCase() === 'FAILURE' &&
