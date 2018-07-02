@@ -7,6 +7,7 @@ from azure.mgmt.containerinstance import models
 import flask
 
 from titan import models as titan_models  # avoids name clash with azure.mgmt.containerinstance.models
+from titan.api import decorators
 
 
 def get_id_token():
@@ -125,10 +126,11 @@ def format_execution(rows):
 
 def launch_container(resource_group_name, container_group_name, os_type, location, container_name, image_name,
                      acr_credential, memory_in_gb, cpu_count, data):
+    details = json.dumps(data, cls=decorators.JSONEncoder)
     flask.current_app.logger.info("Preparing to launch container; %s" % container_group_name)
     resources = models.ResourceRequirements(requests=models.ResourceRequests(memory_in_gb=memory_in_gb, cpu=cpu_count))
     container = models.Container(name=container_name, image=image_name, resources=resources, command=["execute"],
-                                 environment_variables=[models.EnvironmentVariable("TITAN_STDIN", json.dumps(data))])
+                                 environment_variables=[models.EnvironmentVariable("TITAN_STDIN", details)])
     container_group = models.ContainerGroup(containers=[container], os_type=os_type, location=location,
                                             restart_policy="Never",
                                             image_registry_credentials=[acr_credential])
