@@ -97,7 +97,7 @@ export function getAdhocExecutionData(data) {
 
 
 function formatDateTime(dateTime, excludeTime) {
-  const dateFormat = 'YYYY-MM-DD' + excludeTime ? '' : ' HH:mm:ss';
+  const dateFormat = 'YYYY-MM-DD' + (excludeTime ? '' : ' HH:mm:ss');
   if (typeof dateTime === 'string') {
     return moment.utc(dateTime).format(dateFormat);
   } else if (dateTime === null) {
