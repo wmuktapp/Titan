@@ -20,7 +20,6 @@ def monitoring():
 
 @flask_app.route("/monitoring/executions/<int:execution_key>")
 def monitoring_execution(execution_key):
-    # TODO return full set of data for execution?
     data = {"executionKey": execution_key}
     return flask.render_template("execution.html", access_token=app.get_id_token(), data=markupsafe.Markup(data))
 
@@ -32,7 +31,6 @@ def schedules():
 
 @flask_app.route("/schedules/<int:schedule_key>")
 def schedule_details(schedule_key):
-    # NOTE: "run now" button, links to the adhoc page pre-filled (if possible)
     data = {"scheduleKey": schedule_key}
     return flask.render_template("schedule.html", access_token=app.get_id_token(), data=markupsafe.Markup(data))
 

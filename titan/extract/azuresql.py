@@ -15,54 +15,54 @@ class BlobsNotFoundError(Exception):
     """No blobs were found for the given extract details."""
 
 
-_EXTRACT_KEY_COLUMN_NAME = "ExtractKey"
+_EXTRACT_KEY_COLUMN_NAME = "ExtractKey"   # is not escaped so must not include single quote
 
 
 def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_name, blob_location,view_name, schema,
-                                          table_name_without_schema, table_name,code_page, text_qualifier,
-                                          field_delimiter, row_delimiter, extract_key):
+                       table_name_without_schema, table_name, code_page, text_qualifier, field_delimiter, row_delimiter,
+                       extract_key):
     # We don't care about SQL injection risk as we are connecting to db's that the user provides the connection string
     # of. If they wanted to do harm, they could do it anyway.
     # We also have to create a 'temporary' (create before and delete after) view that sits on top of the underlying
     # table because the source won't contain the extract key.
     pre_text = f"""
         IF EXISTS(SELECT * FROM sys.external_data_sources WHERE name = N'{data_source_name}')
-            DROP EXTERNAL DATA SOURCE {data_source_name};
+            DROP EXTERNAL DATA SOURCE [{data_source_name}];
             
         IF EXISTS(SELECT * FROM sys.database_credentials WHERE name = N'{credential_name}')
-            DROP DATABASE SCOPED CREDENTIAL {credential_name};
+            DROP DATABASE SCOPED CREDENTIAL [{credential_name}];
         
-        CREATE DATABASE SCOPED CREDENTIAL {credential_name} 
+        CREATE DATABASE SCOPED CREDENTIAL [{credential_name}]
         WITH IDENTITY = 'SHARED ACCESS SIGNATURE', SECRET = N'{blob_key}';
         
-        CREATE EXTERNAL DATA SOURCE {data_source_name}
+        CREATE EXTERNAL DATA SOURCE [{data_source_name}]
         WITH (
             TYPE = BLOB_STORAGE,
             LOCATION = N'{blob_location}',
-            CREDENTIAL = {credential_name}
+            CREDENTIAL = [{credential_name}]
         );"""
 
     main_text = f"""    
         BEGIN TRANSACTION
         
-        DECLARE @SQL NVARCHAR(MAX) = 'CREATE VIEW {view_name} AS SELECT ' + (
+        DECLARE @SQL NVARCHAR(MAX) = 'CREATE VIEW [{view_name}] AS SELECT ' + (
             SELECT STRING_AGG('[' + COLUMN_NAME + ']', ',') WITHIN GROUP (ORDER BY ORDINAL_POSITION)
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_SCHEMA = N'{schema}'
                 AND TABLE_NAME = N'{table_name_without_schema}'
                 AND COLUMN_NAME <> '{_EXTRACT_KEY_COLUMN_NAME}'
             GROUP BY TABLE_NAME
-        ) + ' FROM {table_name_without_schema}';
+        ) + ' FROM [{table_name}]';
     
         EXEC(@SQL);
     """
     if replace:
         main_text += f"""
-            TRUNCATE TABLE {table_name};
+            TRUNCATE TABLE [{table_name}];
         """
     for index, blob in enumerate(blobs):
         main_text += f"""
-            BULK INSERT {view_name}
+            BULK INSERT [{view_name}]
             FROM N'{blob.name}'
             WITH (
                 CODEPAGE = N'{code_page}',
@@ -77,11 +77,11 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
             );
         """
     main_text += f"""
-        UPDATE {table_name}
-        SET {_EXTRACT_KEY_COLUMN_NAME} = {extract_key}
-        WHERE {_EXTRACT_KEY_COLUMN_NAME} IS NULL;
+        UPDATE [{table_name}]
+        SET [{_EXTRACT_KEY_COLUMN_NAME}] = {extract_key}
+        WHERE [{_EXTRACT_KEY_COLUMN_NAME}] IS NULL;
         
-        DROP VIEW {view_name};
+        DROP VIEW [{view_name}];
         COMMIT TRANSACTION
     """
     return pre_text, main_text
@@ -130,12 +130,18 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
         schema, table_name_without_schema = table_name.split(".")
     else:
         schema, table_name_without_schema = "dbo", table_name
-    view_name = "%s.[%s_%s]" % (schema, table_name_without_schema, uuid.uuid4())
-    blob_key = sas_token[1:] if next(iter(sas_token), None) == "?" else sas_token  # needed because silly microsoft
+    view_name = "[%s].[%s_%s]" % (schema, table_name_without_schema, uuid.uuid4())
     blobs = list(app.list_blobs(service, container_name, blob_prefix))
     if not blobs:
         raise BlobsNotFoundError("No blobs were found @ the prefix; %s" % blob_prefix)
     flask_app.logger.info("Building SQL text...")
+    blob_key = sas_token[1:] if next(iter(sas_token), None) == "?" else sas_token  # needed because silly microsoft
+    # Manual escaping for now
+    blob_key = blob_key.replace("'", "''")
+    blob_location = blob_location.replace("'", "''")
+    table_name_without_schema = table_name_without_schema.replace("'", "''")
+    text_qualifier = text_qualifier.replace("'", "''")
+    # End Manual escaping
     sql_texts = _generate_sql_text(blobs, replace,
                                    credential_name=credential_name, blob_key=blob_key,
                                    data_source_name=data_source_name, blob_location=blob_location, view_name=view_name,
