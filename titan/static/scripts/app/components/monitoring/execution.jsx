@@ -28,13 +28,14 @@ class MonitoringGridExecution extends React.Component {
       : '';
   }
 
+  isFailure() {
+    return this.props.data.ExecutionStatus.toLowerCase() === 'failure';
+  }
+
   render() {
 
     const SUCCESS = 'success', FAILURE = 'failure';
-    const execution = this.props.data,
-      acquireStatus = execution.AcquireStatus,
-      extractStatus = execution.ExtractStatus;
-    const showCheckbox = acquireStatus === FAILURE || extractStatus === FAILURE;
+    const execution = this.props.data;
     const className = 'execution'
       + (dateUtils.isYesterday(this.props.date) ? ' execution-highlight' : '')
       + this.getStatusClass(execution.ExecutionStatus);
@@ -44,12 +45,12 @@ class MonitoringGridExecution extends React.Component {
       <span className={className} title={title}>
         <a href={`/monitoring/executions/${execution.ExecutionKey}`}>
           <span className="execution-parts">
-            <ExecutionPartial status={acquireStatus}>A</ExecutionPartial>
-            <ExecutionPartial status={extractStatus}>E</ExecutionPartial>
+            <ExecutionPartial status={execution.AcquireStatus}>A</ExecutionPartial>
+            <ExecutionPartial status={execution.ExtractStatus}>E</ExecutionPartial>
           </span>
         </a>
         {
-          showCheckbox &&
+          this.isFailure() &&
             <input type="checkbox" checked={execution.selected} className="execution-selector" onChange={this.selectorChange} />
         }
       </span>
