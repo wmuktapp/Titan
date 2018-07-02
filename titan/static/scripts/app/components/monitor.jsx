@@ -4,7 +4,7 @@ import MonitoringGrid from './monitoring/grid.jsx';
 import MonitoringFooter from './monitoring/footer.jsx';
 import Alert from './alert/alert.jsx'
 import Ajax from '../utils/ajax';
-import { mergeData } from '../utils/data-utils';
+import { isEmpty, mergeData } from '../utils/data-utils';
 import dateUtils from '../utils/date-utils';
 import Dialog from '../utils/dialog.jsx';
 
@@ -158,7 +158,7 @@ class Monitor extends React.Component {
     fetch('/api/executions/retry', {
       method: 'post',
       body: JSON.stringify({
-        'executions': this.state.retryList
+        'data': this.state.retryList
       })
     }).then(res => res.json())
       .then(result => {
@@ -197,6 +197,8 @@ class Monitor extends React.Component {
 
     const dialogOk = this.state.dialogHasOk ? this.onDialogClose : null;
 
+    console.log(isEmpty(this.state.data))
+
     return (
       <div className="monitor-grid">
         <MonitoringControls
@@ -215,12 +217,12 @@ class Monitor extends React.Component {
             <p className="monitor-loading">Loading...</p>
         }
         {
-          !!this.state.data.length &&
+          !isEmpty(this.state.data) &&
             <MonitoringFooter retryList={this.state.retryList}
               showMore={this.showMore} retryExecutions={this.retryExecutions} />
         }
         {
-          !!this.state.data && !this.state.loading &&
+          isEmpty(this.state.data) && !this.state.loading &&
             <p className="monitor-empty">No monitoring data found</p>
         }
         {

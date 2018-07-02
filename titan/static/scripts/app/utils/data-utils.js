@@ -152,6 +152,15 @@ export function getExecutionDays(days) {
   }
 }
 
+export function isEmpty(dataObj) {
+  for (let key in dataObj) {
+    if (dataObj.hasOwnProperty(key)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 // Merge two data objects 
 export function mergeData(data1, data2) {
   return __mergeObjects(data1, data2);
