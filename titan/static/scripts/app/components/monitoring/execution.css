@@ -9,6 +9,10 @@
     box-sizing: border-box;
 }
 
+.execution-empty {
+    /* TODO */
+}
+
 .execution-highlight {
     background-color: rgba(249, 174, 66, .15);
     border-left: 1px solid rgba(249, 174, 66, .2);

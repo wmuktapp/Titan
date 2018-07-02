@@ -17,12 +17,12 @@ class MonitoringControls extends React.Component {
     start.setDate(start.getDate() - 4);
     const end = value.toDate();
 
-    this.props.selectDates(start, end);
+    this.props.onSelectDates(start, end);
   }
 
   render() {
 
-    const date = moment(this.props.dates.end);
+    const date = moment(this.props.end);
 
     return (
       <section className="controls">
