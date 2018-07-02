@@ -2,7 +2,6 @@
 const requiredScheduleFields = {
   execution: [
     'ScheduledExecutionName',
-    'ScheduledExecutionNextScheduled',
     'ScheduledExecutionClientName',
     'ScheduledExecutionDataSourceName',
     'ScheduledExecutionDataSetName',
@@ -22,6 +21,11 @@ const requiredAdhocFields = {
 };
 
 function isValid(value) {
+
+  if (typeof value === 'object') {
+    return true;
+  }
+
   return !!value
     && typeof value.trim === 'function'
     && !!value.trim().length;
@@ -32,6 +36,7 @@ export function validateScheduleData(data, acquireOptionConfig, extractOptionCon
   // Validate execution
   for (let field of requiredScheduleFields.execution) {
     if (!isValid(data.execution[field])) {
+      console.log('execution: ' + field);
       return false;
     }
   }

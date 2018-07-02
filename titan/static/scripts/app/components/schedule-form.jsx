@@ -339,7 +339,6 @@ class ScheduleForm extends React.Component {
           label="Next scheduled"
           name="ScheduledExecutionNextScheduled"
           value={execution.ScheduledExecutionNextScheduled}
-          required={true}
           validate={!this.state.isFormValid}
           onChange={this.updateDateField}
           includeTime={true}
@@ -349,7 +348,6 @@ class ScheduleForm extends React.Component {
           label="Schedule end"
           name="ScheduledExecutionScheduleEnd"
           value={execution.ScheduledExecutionScheduleEnd}
-          required={true}
           validate={!this.state.isFormValid}
           onChange={this.updateDateField}
           includeTime={true}

@@ -23,7 +23,7 @@ export function getExecutionData(data) {
   // Format dates to strings (YYYY-MM-DD HH:mm:ss)
   execution.ScheduledExecutionNextScheduled = formatDateTime(execution.ScheduledExecutionNextScheduled);
   execution.ScheduledExecutionScheduleEnd = formatDateTime(execution.ScheduledExecutionScheduleEnd);
-  execution.ScheduledExecutionNextLoadDate = formatDateTime(execution.ScheduledExecutionNextLoadDate);
+  execution.ScheduledExecutionNextLoadDate = formatDateTime(execution.ScheduledExecutionNextLoadDate, true);
 
   // Remove interval values, if applicable
   if (execution.ScheduledIntervalMI === 0
@@ -61,7 +61,7 @@ export function getAdhocExecutionData(data) {
   const execution = Object.assign({}, data.execution);
 
   // Format load date to string (YYYY-MM-DD HH:mm:ss)
-  execution.ExecutionLoadDate = formatDateTime(execution.ExecutionLoadDate);
+  execution.ExecutionLoadDate = formatDateTime(execution.ExecutionLoadDate, true);
 
   // Restructure acquires into adhoc format
   const acquires = data.acquires.map(acquire => {
@@ -95,9 +95,9 @@ export function getAdhocExecutionData(data) {
   };
 }
 
-const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
-function formatDateTime(dateTime) {
+function formatDateTime(dateTime, excludeTime) {
+  const dateFormat = 'YYYY-MM-DD' + excludeTime ? '' : ' HH:mm:ss';
   if (typeof dateTime === 'string') {
     return moment.utc(dateTime).format(dateFormat);
   } else if (dateTime === null) {

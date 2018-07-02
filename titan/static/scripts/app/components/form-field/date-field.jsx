@@ -42,7 +42,7 @@ class DateField extends React.Component {
         required={this.props.required}
         label={this.props.label}
         error={errorMessage}
-        tooltip="All dates and times are in UTC">
+        tooltip="All dates and times are in GMT">
         <DatePicker
           dateFormat={dateFormat}
           className={className}
