@@ -106,6 +106,26 @@ function formatDateTime(dateTime) {
   return dateTime.format(dateFormat);
 }
 
+export function createInterval(days, hours, minutes) {
+  return {
+    ScheduledIntervalDD: days,
+    ScheduledIntervalHH: hours,
+    ScheduledIntervalMI: minutes
+  };
+}
+
+export function createBlankIntervalDays() {
+  return {
+    ScheduledMondayEnabled: true,
+    ScheduledTuesdayEnabled: true,
+    ScheduledWednesdayEnabled: true,
+    ScheduledThursdayEnabled: true,
+    ScheduledFridayEnabled: true,
+    ScheduledSaturdayEnabled: false,
+    ScheduledSundayEnabled: false
+  };
+}
+
 // Convert data in execution object into simpler weekday data
 export function getWeekDays(execution) {
   return {

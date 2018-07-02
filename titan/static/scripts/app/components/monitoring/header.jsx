@@ -7,7 +7,7 @@ class MonitoringGridHeader extends React.Component {
 
   render() {
 
-    const start = this.props.dates.start, end = this.props.dates.end;
+    const start = this.props.start, end = this.props.end;
 
     let labels = [], i = 1, temp = new Date(start);
 

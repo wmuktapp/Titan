@@ -9,7 +9,14 @@ import DateField from './form-field/date-field.jsx';
 import Label from './label.jsx';
 import Ajax from '../utils/ajax';
 
-import { getAcquireProgramOptions, getExecutionData, getWeekDays, getExecutionDays } from '../utils/data-utils';
+import {
+  createBlankIntervalDays,
+  createInterval,
+  getAcquireProgramOptions,
+  getExecutionData,
+  getWeekDays,
+  getExecutionDays
+} from '../utils/data-utils';
 import { validateScheduleData } from '../utils/validation';
 
 
@@ -131,18 +138,7 @@ class ScheduleForm extends React.Component {
 
     // Add default interval and day values to this.state
     const execution = Object.assign(
-      this.state.execution, {
-        ScheduledIntervalDD: 0,
-        ScheduledIntervalHH: 0,
-        ScheduledIntervalMI: 0,
-        ScheduledMondayEnabled: true,
-        ScheduledTuesdayEnabled: true,
-        ScheduledWednesdayEnabled: true,
-        ScheduledThursdayEnabled: true,
-        ScheduledFridayEnabled: true,
-        ScheduledSaturdayEnabled: true,
-        ScheduledSundayEnabled: true
-      }
+      this.state.execution, createInterval(0, 0, 0), createBlankIntervalDays()
     );
 
     this.setState({
@@ -155,11 +151,7 @@ class ScheduleForm extends React.Component {
 
     // Set interval values to zero (they'll be cleared in DataUtils later)
     const execution = this.state.execution;
-    Object.assign(execution, {
-        ScheduledIntervalDD: 0,
-        ScheduledIntervalHH: 0,
-        ScheduledIntervalMI: 0
-    });
+    Object.assign(execution, createInterval(0, 0, 0));
 
     this.setState({
       execution: execution,
@@ -172,12 +164,9 @@ class ScheduleForm extends React.Component {
     const execution = this.state.execution;
 
     Object.assign(
-      execution, {
-        // Update interval
-        ScheduledIntervalDD: repeat.interval.days,
-        ScheduledIntervalHH: repeat.interval.hours,
-        ScheduledIntervalMI: repeat.interval.minutes
-      },
+      execution,
+      // Update interval
+      createInterval(repeat.interval.days, repeat.interval.hours, repeat.interval.minutes),
       // Update days
       getExecutionDays(repeat.days)
     );
