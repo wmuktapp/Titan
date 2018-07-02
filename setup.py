@@ -8,6 +8,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         "applicationinsights",
+        "azure-common",
         "azure-mgmt-containerinstance",
         "azure-mgmt-resource",
         "azure-storage-blob",
