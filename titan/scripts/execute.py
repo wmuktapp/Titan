@@ -24,6 +24,7 @@ def _execute_program(flask_app, program, end_log_function, log_key, options=(), 
         error_message = "%s: %s" %(type(error).__name__, str(error))
     finally:
         _call_models_function(flask_app, end_log_function, log_key, error_message=error_message)
+    return error_message is None
 
 
 def _call_models_function(flask_app, func, *args, **kwargs):
@@ -34,8 +35,9 @@ def _call_models_function(flask_app, func, *args, **kwargs):
 def _process_acquire(flask_app, execution_key, acquire_program, acquire):
     acquire["ExecutionKey"] = execution_key
     acquire_key = _call_models_function(flask_app, models.start_acquire_log, acquire)[0]["AcquireKey"]
-    _execute_program(flask_app, acquire_program, models.end_acquire_log, acquire_key,
-                     options=acquire.get("Options", []), timeout=flask_app.config.get("TITAN_ACQUIRE_TIMEOUT_SECONDS"))
+    return _execute_program(flask_app, acquire_program, models.end_acquire_log, acquire_key,
+                            options=acquire.get("Options", []),
+                            timeout=flask_app.config.get("TITAN_ACQUIRE_TIMEOUT_SECONDS"))
 
 
 def _process_acquires(flask_app, data):
@@ -45,19 +47,21 @@ def _process_acquires(flask_app, data):
                         for row in _call_models_function(flask_app, models.get_acquire_programs)}
     acquire_program = acquire_programs[acquire_program_key]
     acquires = data["acquires"]
+    success_states = set()
     for acquire in acquires:
-        _process_acquire(flask_app, execution["ExecutionKey"], acquire_program, acquire=acquire)
+        success_states.add(_process_acquire(flask_app, execution["ExecutionKey"], acquire_program, acquire=acquire))
+    return all(success_states)
 
 
 def _process_extract(flask_app, execution_key, data):
     extract = data["extract"]
     extract["ExecutionKey"] = execution_key
     extract_key = extract["ExtractKey"] = _call_models_function(flask_app, models.start_extract_log,
-                                                                extract)["ExtractKey"]
+                                                                extract)[0]["ExtractKey"]
     os.putenv("TITAN_STDIN", json.dumps(data))  # ExtractKey must be accessible from the extract program
-    options = extract.get("Options")
-    _execute_program(flask_app, extract.get("ExtractDestination"), models.end_extract_log, extract_key, options=options,
-                     timeout=flask_app.config.get("TITAN_EXTRACT_TIMEOUT_SECONDS"))
+    return _execute_program(flask_app, extract.get("ExtractDestination"), models.end_extract_log, extract_key,
+                            options=extract.get("Options", []),
+                            timeout=flask_app.config.get("TITAN_EXTRACT_TIMEOUT_SECONDS"))
 
 
 def main():
@@ -73,11 +77,12 @@ def main():
     ## remove above and uncomment below
     # execution_key = execution["ExecutionKey"]
     error = None
+    all_acquires_succeeded = True
     try:
         if data.get("acquires"):
             flask_app.logger.info("Processing acquires...")
-            _process_acquires(flask_app, data)
-        if data.get("extract"):
+            all_acquires_succeeded = _process_acquires(flask_app, data)
+        if data.get("extract") and all_acquires_succeeded:
             flask_app.logger.info("Processing extract...")
             _process_extract(flask_app, execution_key, data)
     except Exception as exception:

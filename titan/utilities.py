@@ -35,13 +35,15 @@ class AcquireProgram(object):
         if blob_name is None:
             blob_name = self.get_blob_name()
         self.logger.info("Uploading bytes, %s, to blob storage" % blob_name)
-        self._block_service.create_blob_from_bytes(self.container_name, blob_name, bytes, count=count)
+        self._block_service.create_blob_from_bytes(self.container_name, blob_name, bytes, count=count,
+                                                   if_none_match="*")
 
     def create_blob_from_stream(self, stream, blob_name=None, count=None):
         if blob_name is None:
             blob_name = self.get_blob_name()
         self.logger.info("Uploading stream, %s, to blob storage" % blob_name)
-        self._block_service.create_blob_from_stream(self.container_name, blob_name, stream, count=count)
+        self._block_service.create_blob_from_stream(self.container_name, blob_name, stream, count=count,
+                                                    if_none_match="*")
 
     def get_blob_name(self, name_format=None, **params):
         if name_format is None:

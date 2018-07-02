@@ -11,6 +11,10 @@ from titan import app
 import titan
 
 
+class BlobsNotFoundError(Exception):
+    """No blobs were found for the given extract details."""
+
+
 _EXTRACT_KEY_COLUMN_NAME = "TitanExtractKey"
 
 
@@ -72,12 +76,12 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
                 TABLOCK
             );
         """
-        main_text += f"""
-            UPDATE {table_name}
-            SET {_EXTRACT_KEY_COLUMN_NAME} = {extract_key}
-            WHERE {_EXTRACT_KEY_COLUMN_NAME} IS NULL;
-            
-            DROP VIEW {view_name}
+    main_text += f"""
+        UPDATE {table_name}
+        SET {_EXTRACT_KEY_COLUMN_NAME} = {extract_key}
+        WHERE {_EXTRACT_KEY_COLUMN_NAME} IS NULL;
+        
+        DROP VIEW {view_name};
         COMMIT TRANSACTION
     """
     return pre_text, main_text
@@ -128,8 +132,11 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
         schema, table_name_without_schema = "dbo", table_name
     view_name = "%s.[%s_%s]" % (schema, table_name_without_schema, uuid.uuid4())
     blob_key = sas_token[1:] if next(iter(sas_token), None) == "?" else sas_token  # needed because silly microsoft
+    blobs = list(app.list_blobs(service, container_name, blob_prefix))
+    if not blobs:
+        raise BlobsNotFoundError("No blobs were found @ the prefix; %s" % blob_prefix)
     flask_app.logger.info("Building SQL text...")
-    sql_texts = _generate_sql_text(app.list_blobs(service, container_name, blob_prefix), replace,
+    sql_texts = _generate_sql_text(blobs, replace,
                                    credential_name=credential_name, blob_key=blob_key,
                                    data_source_name=data_source_name, blob_location=blob_location, view_name=view_name,
                                    schema=schema, table_name_without_schema=table_name_without_schema,
