@@ -42,6 +42,11 @@
     vertical-align: text-bottom;
 }
 
+.monitoring-executions {
+    display: flex;
+    flex-direction: row;
+}
+
 .monitoring-title-highlight {
     position: relative;
 }
