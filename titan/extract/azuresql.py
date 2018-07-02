@@ -21,30 +21,31 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
     # of. If they wanted to do harm, they could do it anyway.
     # We also have to create a 'temporary' (create before and delete after) view that sits on top of the underlying
     # table because the source won't contain the extract key.
-    sql_text = f"""
-        IF EXISTS(SELECT * FROM sys.database_credentials WHERE name = '{credential_name}')
+    pre_text = f"""
+        IF EXISTS(SELECT * FROM sys.external_data_sources WHERE name = N'{data_source_name}')
+            DROP EXTERNAL DATA SOURCE {data_source_name};
+            
+        IF EXISTS(SELECT * FROM sys.database_credentials WHERE name = N'{credential_name}')
             DROP DATABASE SCOPED CREDENTIAL {credential_name};
         
         CREATE DATABASE SCOPED CREDENTIAL {credential_name} 
-        WITH IDENTITY = 'SHARED ACCESS SIGNATURE', SECRET = '{blob_key}';
-
-        IF EXISTS(SELECT * FROM sys.external_data_sources WHERE name = '{data_source_name}')
-            DROP EXTERNAL DATA SOURCE {data_source_name};
+        WITH IDENTITY = 'SHARED ACCESS SIGNATURE', SECRET = N'{blob_key}';
         
         CREATE EXTERNAL DATA SOURCE {data_source_name}
         WITH (
             TYPE = BLOB_STORAGE,
-            LOCATION = '{blob_location}',
+            LOCATION = N'{blob_location}',
             CREDENTIAL = {credential_name}
-        );
-        
+        );"""
+
+    main_text = f"""    
         BEGIN TRANSACTION
         
         DECLARE @SQL NVARCHAR(MAX) = 'CREATE VIEW {view_name} AS SELECT ' + (
             SELECT STRING_AGG('[' + COLUMN_NAME + ']', ',') WITHIN GROUP (ORDER BY ORDINAL_POSITION)
             FROM INFORMATION_SCHEMA.COLUMNS
-            WHERE TABLE_SCHEMA = '{schema}'
-                AND TABLE_NAME = '{table_name_without_schema}'
+            WHERE TABLE_SCHEMA = N'{schema}'
+                AND TABLE_NAME = N'{table_name_without_schema}'
                 AND COLUMN_NAME <> '{_EXTRACT_KEY_COLUMN_NAME}'
             GROUP BY TABLE_NAME
         ) + ' FROM {table_name_without_schema}';
@@ -52,26 +53,26 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
         EXEC(@SQL);
     """
     if replace:
-        sql_text += f"""
+        main_text += f"""
             TRUNCATE TABLE {table_name};
         """
     for index, blob in enumerate(blobs):
-        sql_text += f"""
-            BULK INSERT {table_name}
-            FROM '{blob.name}'
+        main_text += f"""
+            BULK INSERT {view_name}
+            FROM N'{blob.name}'
             WITH (
-                CODEPAGE = '{code_page}',
+                CODEPAGE = N'{code_page}',
                 DATA_SOURCE = '{data_source_name}',
-                FIELDQUOTE = '{text_qualifier}',
-                FIELDTERMINATOR = '{field_delimiter}',
+                FIELDQUOTE = N'{text_qualifier}',
+                FIELDTERMINATOR = N'{field_delimiter}',
                 FIRSTROW = 2,
-                FORMAT = 'CSV',
+                FORMAT = N'CSV',
                 MAXERRORS = 1,
-                ROWTERMINATOR = '{row_delimiter}',
+                ROWTERMINATOR = N'{row_delimiter}',
                 TABLOCK
             );
         """
-    sql_text += f"""
+        main_text += f"""
             UPDATE {table_name}
             SET {_EXTRACT_KEY_COLUMN_NAME} = {extract_key}
             WHERE {_EXTRACT_KEY_COLUMN_NAME} IS NULL;
@@ -79,7 +80,7 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
             DROP VIEW {view_name}
         COMMIT TRANSACTION
     """
-    return sql_text
+    return pre_text, main_text
 
 
 @click.command()
@@ -128,12 +129,14 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
     view_name = "%s.[%s_%s]" % (schema, table_name_without_schema, uuid.uuid4())
     blob_key = sas_token[1:] if next(iter(sas_token), None) == "?" else sas_token  # needed because silly microsoft
     flask_app.logger.info("Building SQL text...")
-    sql_text = _generate_sql_text(app.list_blobs(service, container_name, blob_prefix), replace,
-                                  credential_name=credential_name, blob_key=blob_key, data_source_name=data_source_name,
-                                  blob_location=blob_location, view_name=view_name, schema=schema,
-                                  table_name_without_schema=table_name_without_schema, table_name=table_name,
-                                  code_page=code_page, text_qualifier=text_qualifier, field_delimiter=field_delimiter,
-                                  row_delimiter=row_delimiter, extract_key=extract_key)
+    sql_texts = _generate_sql_text(app.list_blobs(service, container_name, blob_prefix), replace,
+                                   credential_name=credential_name, blob_key=blob_key,
+                                   data_source_name=data_source_name, blob_location=blob_location, view_name=view_name,
+                                   schema=schema, table_name_without_schema=table_name_without_schema,
+                                   table_name=table_name, code_page=code_page, text_qualifier=text_qualifier,
+                                   field_delimiter=field_delimiter, row_delimiter=row_delimiter,
+                                   extract_key=extract_key)
     db = sqlalchemy.create_engine(connection_string)
     flask_app.logger.info("Extracting data to database...")
-    db.engine.execute(sql_text)
+    for sql_text in sql_texts:
+        db.engine.execute(sqlalchemy.text(sql_text).execution_options(autocommit=True))
