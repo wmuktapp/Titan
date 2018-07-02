@@ -7,10 +7,10 @@ import titan
 
 
 def _clean_up(flask_app):
-    client = containerinstance.ContainerInstanceManagementClient(*app.get_security_context())
     prefix = flask_app.config["TITAN_AZURE_CONTAINER_NAME"]
     rsg_name = flask_app.config["TITAN_AZURE_CONTAINER_RSG_NAME"]
     with flask_app.app_context():
+        client = containerinstance.ContainerInstanceManagementClient(*app.get_security_context())
         logged_container_groups = {row["ExecutionContainerGroupName"]: {"ExecutionKey": row["ExecutionKey"]}
                                    for row in models.get_running_container_groups()}
         azure_container_groups = {cg.name: {"State": client.container_groups.get(rsg_name, cg.name).instance_view.state}
@@ -34,7 +34,7 @@ def _clean_up(flask_app):
                                            "this issue persists, there may be a bug stopping the container from "
                                            "completing." % name)
                     client.container_groups.delete(rsg_name, name)
-                else:  # what about creating status?
+                else:
                     timeout_seconds = flask_app.config["TITAN_EXECUTION_TIMEOUT_SECONDS"]
                     start_time_stamp = models.get_execution(execution_key)[0]["ExecutionStartTime"]
                     start_time = datetime.datetime.strptime(start_time_stamp, "%Y-%m-%d %H:%M%S")
@@ -62,7 +62,7 @@ def main():
     try:
         _clean_up(flask_app)
     except Exception as error:
-        flask_app.logger("Error encountered whilst performing clean up tasks.")
+        flask_app.logger.info("Error encountered whilst performing clean up tasks.")
         flask_app.logger.exception(str(error))
     flask_app.logger.info("Processing queue...")
     _process_queue(flask_app)

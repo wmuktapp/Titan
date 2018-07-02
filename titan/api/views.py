@@ -25,7 +25,6 @@ def execute():
     try:
         app.execute(data)
     except Exception as error:
-        raise
         return {"error": {"message": str(error)}}, 400, None
     return {}, 201, None
 

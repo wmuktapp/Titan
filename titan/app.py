@@ -66,7 +66,9 @@ def execute(data):
         )
     except Exception as error:
         flask_app.logger.info("Ending execution log")
+        flask_app.logger.exception(str(error))
         titan_models.end_execution_log(execution_key, str(error))
+        raise
 
 
 def format_execution(rows):
