@@ -65,7 +65,7 @@ GET /executions/<int:key>
             "ExecutionScheduledTime": datetime (req),
             "ExecutionStartTime": datatime (req),
             "ExecutionEndTime": datetime,
-            "ExecutionSuccessful": bool,
+            "ExecutionStatus": bool,
             "ExecutionErrorMessage": str,
             "ExecutionClientName": str (req),
             "ExecutionDataSourceName": str (req),
