@@ -18,16 +18,19 @@ def _nested_default_dict():
 @decorators.to_json
 def execute():
     data = flask.request.get_json(force=True).get("data", {"execution": {}, "acquires": [], "extract": {}})
+    execution = data.get("execution", {})
+    if execution.get("AcquireProgramKey") == 0:
+        del execution["AcquireProgramKey"]
     for acquire in data["acquires"]:
         acquire["Options"] = [option for option in acquire["Options"] if option["AcquireOptionValue"] != ""]
     extract = data.get("extract", {})
     if "Options" in extract:
         extract["Options"] = [option for option in extract["Options"] if option["ExtractOptionValue"] != ""]
     try:
-        app.execute(data)
+        execution_key = app.execute(data)
     except Exception as error:
         return {"error": {"message": str(error)}}, 400, None
-    return {}, 201, None
+    return {}, 201, {"Location": flask.url_for("api.executions", key=execution_key)}
 
 
 @api.api_blueprint.route("/acquire-programs/", methods=["GET"])
@@ -258,6 +261,8 @@ def insert_scheduled_execution():
     data = flask.request.get_json(force=True).get("data", {})
     execution = data.get("execution", {})
     acquires = data.get("acquires", [])
+    if execution.get("AcquireProgramKey") == 0:
+        del execution["AcquireProgramKey"]
     for acquire in acquires:
         acquire["Options"] = [option for option in acquire["Options"] if option["ScheduledAcquireOptionValue"] != ""]
     extract = data.get("extract", {})
@@ -301,6 +306,8 @@ def update_scheduled_execution(key):
     execution = data.get("execution", {})
     execution.update(params)
     acquires = data.get("acquires", [])
+    if execution.get("AcquireProgramKey") == 0:
+        del execution["AcquireProgramKey"]
     for acquire in acquires:
         acquire["Options"] = [option for option in acquire["Options"] if option["ScheduledAcquireOptionValue"] != ""]
     extract = data.get("extract", {})

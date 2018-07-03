@@ -72,6 +72,7 @@ def execute(data):
         flask_app.logger.exception(str(error))
         titan_models.end_execution_log(execution_key, str(error))
         raise
+    return execution_key
 
 
 def launch_container(resource_group_name, container_group_name, os_type, location, container_name, image_name,
