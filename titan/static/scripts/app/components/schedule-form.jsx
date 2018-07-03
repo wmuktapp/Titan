@@ -56,6 +56,7 @@ class ScheduleForm extends React.Component {
 
       includeRepeat: false,
 
+      scheduleAddedOrUpdated: false,
       isFormValid: true
     };
 
@@ -234,7 +235,7 @@ class ScheduleForm extends React.Component {
 
         this.setState({
           execution: execution,
-          updated: true
+          scheduleAddedOrUpdated: true
         });
       });
 
@@ -305,7 +306,16 @@ class ScheduleForm extends React.Component {
     return (
       <form className="schedule-form" onSubmit={this.onSubmit}>
 
-        { this.state.updated && <p>Schedule updated</p> }
+        {
+          this.state.scheduleAddedOrUpdated &&
+            <p>
+              {
+                this.props.id
+                  ? 'Schedule updated'
+                  : 'Schedule added'
+              }
+            </p>
+        }
 
         <h5>{ execution.ScheduledExecutionKey ? 'Update Schedule' : 'New Schedule' }</h5>
 
