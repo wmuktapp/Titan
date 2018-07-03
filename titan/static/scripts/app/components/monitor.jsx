@@ -25,6 +25,7 @@ class Monitor extends React.Component {
 
     this.state = {
       hasError: false,
+      pageNumber: 1,
       start: start,
       end: end,
       loading: true,
@@ -51,12 +52,7 @@ class Monitor extends React.Component {
       });
     };
 
-    this.fetchData({
-        start: this.state.start,
-        end: this.state.end
-      },
-      callback
-    );
+    this.fetchData(this.state.end, callback);
   }
 
   showDates(start, end) {
@@ -74,7 +70,7 @@ class Monitor extends React.Component {
       });
     }
 
-    this.fetchData({ start: start, end: end }, callback);
+    this.fetchData(end, callback);
   }
 
   showMore() {
@@ -84,15 +80,10 @@ class Monitor extends React.Component {
         data: mergeData(this.state.data, result.data)
       });
     };
-    this.fetchData({
-        start: this.state.start,
-        end: this.state.end
-      },
-      callback
-    );
+    this.fetchData(this.state.end, callback);
   }
 
-  fetchData(dates, callback) {
+  fetchData(date, callback) {
 
     this.setState({
       hasError: false,
@@ -101,7 +92,7 @@ class Monitor extends React.Component {
 
     // TODO make this dynamic, add page number
     const url = '/api/executions/'
-      + '?end_date=' + DateUtils.dateToIso8601(dates.end);
+      + '?end_date=' + DateUtils.dateToIso8601(date);
 
     // Request data
     Ajax.fetch(url)
