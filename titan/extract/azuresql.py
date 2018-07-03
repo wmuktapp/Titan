@@ -95,11 +95,11 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
               required=True)
 @click.option("-a", "--replace", type=bool, default=False, help="Whether or not the extract table contents will be "
               "replaced or appended to. Defaults to False (appended to).")
-@click.option("-f", "--field-delimiter", default=",", help="The delimiter character(s) to split columns / fields by."
+@click.option("-f", "--field-delimiter", default=",", help="The delimiter character(s) to split columns / fields by. "
               "Defaults to ,")
 @click.option("-r", "--row-delimiter", default="0x0a", help="The delimiter character(s) to split rows by. Defaults to "
               "line feed character (\n) expressed as a hex value to get around Microsoft bug. For the same reason, if "
-              "file ends with carraige return and line feed, pass \n, not \r\n as \n is interpreted as both.")
+              "file ends with carraige return and line feed, pass \\n, not \\r\\n as \\n is interpreted as both.")
 @click.option("-q", "--text-qualifier", default="\"", help="The text qualifier / field quote character. Defaults to \"")
 @click.option("-p", "--code_page", default=65001, help="The code page used to interpret the character set for text "
               "fields. Defaults to 65001.")
