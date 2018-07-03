@@ -38,9 +38,11 @@ class MonitoringGridHeader extends React.Component {
       temp.setDate(temp.getDate() + 1);
     }
 
+    const separator = <span className="fas fa-angle-right header-description-separator" />
+
     return (
       <div className="header">
-        <h4 className="header-description">Client, Data Source, Data Set</h4>
+        <h4 className="header-description">Client {separator} Data Source {separator} Data Set</h4>
         {labels}
       </div>
     );

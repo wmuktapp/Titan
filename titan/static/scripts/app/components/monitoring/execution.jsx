@@ -52,6 +52,8 @@ class MonitoringGridExecution extends React.Component {
 
   render() {
 
+    // TODO update tooltips
+
     const SUCCESS = 'success', FAILURE = 'failure';
     const execution = this.props.data;
     const className = 'execution'

@@ -180,7 +180,7 @@ function __mergeObjects(object1, object2) {
 
     if (object2.hasOwnProperty(key)) {
       // Ooooh recursion.  Be careful!
-      mergedObject[key] = this.__mergeObjects(object1[key], object2[key]);
+      mergedObject[key] = __mergeObjects(object1[key], object2[key]);
     } else {
       // Only in object 1 - just add to the object
       mergedObject[key] = object1[key];

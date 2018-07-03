@@ -25,6 +25,7 @@ class Monitor extends React.Component {
 
     this.state = {
       hasError: false,
+      pageNumber: 1,
       start: start,
       end: end,
       loading: true,
@@ -51,17 +52,15 @@ class Monitor extends React.Component {
       });
     };
 
-    this.fetchData({
-        start: this.state.start,
-        end: this.state.end
-      },
-      callback
-    );
+    this.fetchData(this.state.end, this.state.pageNumber, callback);
   }
 
   showDates(start, end) {
 
+    const pageNumber = 1;
+
     this.setState({
+      pageNumber: pageNumber,
       start: start,
       end: end,
       data: []
@@ -74,25 +73,26 @@ class Monitor extends React.Component {
       });
     }
 
-    this.fetchData({ start: start, end: end }, callback);
+    this.fetchData(end, pageNumber, callback);
   }
 
   showMore() {
+
+    const pageNumber = this.state.pageNumber + 1;
+    this.setState({
+      pageNumber: pageNumber
+    });
+
     const callback = (result) => {
       this.setState({
         loading: false,
         data: mergeData(this.state.data, result.data)
       });
     };
-    this.fetchData({
-        start: this.state.start,
-        end: this.state.end
-      },
-      callback
-    );
+    this.fetchData(this.state.end, pageNumber, callback);
   }
 
-  fetchData(dates, callback) {
+  fetchData(date, pageNumber, callback) {
 
     this.setState({
       hasError: false,
@@ -101,7 +101,8 @@ class Monitor extends React.Component {
 
     // TODO make this dynamic, add page number
     const url = '/api/executions/'
-      + '?end_date=' + DateUtils.dateToIso8601(dates.end);
+      + '?end_date=' + DateUtils.dateToIso8601(date)
+      + '&page_number=' + pageNumber;
 
     // Request data
     Ajax.fetch(url)
