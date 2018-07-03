@@ -21,6 +21,7 @@
 .execution-parts {
     display: inline-block;
     border: 1px solid #fff;
+    background: #fff;
 }
 
 .execution-partial {
