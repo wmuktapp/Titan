@@ -105,13 +105,6 @@ class Monitor extends React.Component {
 
     // Request data
     Ajax.fetch(url)
-      .then(res => {
-        res.headers.forEach((h, i) => {
-          console.log(h)
-          console.log(i)
-        })
-        return res;
-      })
       .then(res => res.json())
       .then(
         callback,
