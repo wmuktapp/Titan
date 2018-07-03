@@ -4,6 +4,17 @@
     justify-content: flex-end;
 }
 
+.header-description {
+    text-transform: none;
+    color: #aaa;
+    font-size: 14px;
+    align-self: center;
+    justify-self: flex-start;
+    margin: 0;
+    font-style: italic;
+    flex-grow: 1;
+}
+
 .header-label {
     display: inline-block;
     width: 10.5rem;
