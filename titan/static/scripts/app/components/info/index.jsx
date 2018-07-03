@@ -1,4 +1,5 @@
 import React from 'react';
+import Tooltip from '../tooltip/index.jsx';
 import './index.css';
 
 class Info extends React.Component {
@@ -34,7 +35,7 @@ class Info extends React.Component {
         <span className={className} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut} />
         {
           this.state.showTooltip &&
-            <div className="info-tooltip">{this.props.tooltip}</div>
+            <Tooltip offsetX={30} offsetY={-7}>{this.props.tooltip}</Tooltip>
         }
       </span>
     );

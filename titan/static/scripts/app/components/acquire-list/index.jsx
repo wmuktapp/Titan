@@ -1,7 +1,7 @@
 import React from 'react';
-import AcquireItem from './acquire-item.jsx';
+import AcquireItem from './item.jsx';
 
-import './acquire-list.css';
+import './index.css';
 
 class AcquireList extends React.Component {
 
