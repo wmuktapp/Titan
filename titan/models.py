@@ -83,6 +83,11 @@ def get_execution(key):
     return list(db.engine.execute(sqlalchemy.text("SELECT * FROM [log].UDF_GetExecution(:key)"), key=key))
 
 
+def get_execution_json(key):
+    return db.engine.execute(sqlalchemy.text("SELECT [log].UDF_GetExecutionJSON(:key) AS ExecutionJSON"),
+                             key=key).fetchone()
+
+
 def get_executions(end_date=None, page_number=1, page_size=100, load_date_count=5):
     return list(db.engine.execute(sqlalchemy.text("SELECT * FROM [log].UDF_GetExecutions(:end_date, :page_number, "
                                                   ":page_size, :load_date_count)"),

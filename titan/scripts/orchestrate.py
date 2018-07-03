@@ -48,11 +48,61 @@ def _clean_up(flask_app):
                     client.container_groups.delete(rsg_name, name)
 
 
+def _format_scheduled_execution(rows):
+    arbitrary_row = rows[0]
+    extract_options = []
+    data = {
+        "execution": {
+            "ScheduledExecutionKey": arbitrary_row["ScheduledExecutionKey"],
+            "ExecutionClientName": arbitrary_row["ScheduledExecutionClientName"],
+            "ExecutionDataSourceName": arbitrary_row["ScheduledExecutionDataSourceName"],
+            "ExecutionDataSetName": arbitrary_row["ScheduledExecutionDataSetName"],
+            "ExecutionLoadDate": arbitrary_row["ScheduledExecutionLoadDate"],
+            "ExecutionUser": arbitrary_row["ScheduledExecutionUser"],
+            "AcquireProgramKey": arbitrary_row["AcquireProgramKey"]
+        },
+        "acquires": [],
+        "extract": {
+            "ExtractDestination": arbitrary_row["ScheduledExtractDestination"],
+            "Options": extract_options
+        } if arbitrary_row["ScheduledExtractKey"] is not None else {}
+    }
+    acquires = {}
+    for row in rows:
+        row = dict(row)
+        acquire_key = row["ScheduledAcquireKey"]
+        if acquire_key is not None:
+            acquire = acquires.get(acquire_key)
+            if acquire is None:
+                acquire = acquires[acquire_key] = {
+                    "Options": []
+                }
+            acquire_options = acquire["Options"]
+            acquire_option_name = row.get("ScheduledAcquireOptionName")
+            if acquire_option_name is not None:
+                option = {
+                    "AcquireOptionName": acquire_option_name,
+                    "AcquireOptionValue": row["ScheduledAcquireOptionValue"]
+                }
+                if option not in acquire_options:
+                    acquire_options.append(option)
+        extract_option_name = row.get("ScheduledExtractOptionName")
+        if extract_option_name is not None:
+            option = {
+                "ExtractOptionName": extract_option_name,
+                "ExtractOptionValue": row["ScheduledExtractOptionValue"]
+            }
+            if option not in extract_options:
+                extract_options.append(option)
+    data["acquires"].extend(acquires.values())
+    return data
+
+
 def _process_queue(flask_app):
     with flask_app.app_context():
         for execution in models.get_queue():
             rows = models.get_scheduled_execution(execution["ScheduledExecutionKey"])
-            app.execute(app.format_execution(rows))
+            app.execute(_format_scheduled_execution(rows))
 
 
 def main():

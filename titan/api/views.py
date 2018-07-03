@@ -1,5 +1,6 @@
 import collections
 import importlib
+import json
 
 from sqlalchemy import exc
 import flask
@@ -282,13 +283,13 @@ def retry_executions():
     invalid_keys = []
     valid_execution_details = []
     for key in flask.request.get_json(force=True)["data"]:
-        rows = models.get_execution(key)
-        valid_execution_details.append(rows) if rows else invalid_keys.append(key)
+        execution_json = models.get_execution_json(key)["ExecutionJSON"]
+        valid_execution_details.append(execution_json) if execution_json else invalid_keys.append(key)
     if invalid_keys:
         return {"error": {"message": "the following keys are invalid as no execution details could be located: %s" %
                 invalid_keys}}, 400, None
-    for rows in valid_execution_details:
-        app.execute(app.format_execution(rows))
+    for execution_json in valid_execution_details:
+        app.execute(json.loads(execution_json))
     return {}, 201, None
 
 

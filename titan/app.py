@@ -35,11 +35,13 @@ def execute(data):
     flask_app = flask.current_app
     cfg = flask_app.config
     flask_app.logger.info("Starting execution log")
+    execution = data["execution"]
+    execution["ExecutionJSON"] = json.dumps(data, cls=decorators.JSONEncoder)
     container_name = cfg["TITAN_AZURE_CONTAINER_NAME"]
     container_group_name = "%s_%s" % (container_name, uuid.uuid4())
-    execution = data["execution"]
     execution["ExecutionContainerGroupName"] = container_group_name
     result = titan_models.start_execution_log(execution)
+    del execution["ExecutionJSON"]  # not needed and don't want to double the size of the env variable set in container
     execution["ExecutionVersion"] = result["ExecutionVersion"]
     execution_key = execution["ExecutionKey"] = result["ExecutionKey"]
     load_date = execution["ExecutionLoadDate"]
@@ -70,58 +72,6 @@ def execute(data):
         flask_app.logger.exception(str(error))
         titan_models.end_execution_log(execution_key, str(error))
         raise
-
-
-def format_execution(rows):
-    arbitrary_row = rows[0]
-    scheduled_execution_key = arbitrary_row["ScheduledExecutionKey"]
-    prefix = "Scheduled" if scheduled_execution_key is not None else ""
-    extract_options = []
-    data = {
-        "execution": {
-            "ScheduledExecutionKey": scheduled_execution_key,
-            "ExecutionClientName": arbitrary_row["%sExecutionClientName" % prefix],
-            "ExecutionDataSourceName": arbitrary_row["%sExecutionDataSourceName" % prefix],
-            "ExecutionDataSetName": arbitrary_row["%sExecutionDataSetName" % prefix],
-            "ExecutionLoadDate": arbitrary_row["%sExecutionLoadDate" % prefix],
-            "ExecutionUser": arbitrary_row["%sExecutionUser" % prefix],
-            "AcquireProgramKey": arbitrary_row["AcquireProgramKey"]
-        },
-        "acquires": [],
-        "extract": {
-            "ExtractDestination": arbitrary_row["%sExtractDestination"  % prefix],
-            "Options": extract_options
-        } if arbitrary_row["%sExtractKey" % prefix] is not None else {}
-    }
-    acquires = {}
-    for row in rows:
-        row = dict(row)
-        acquire_key = row["%sAcquireKey" % prefix]
-        if acquire_key is not None:
-            acquire = acquires.get(acquire_key)
-            if acquire is None:
-                acquire = acquires[acquire_key] = {
-                    "Options": []
-                }
-            acquire_options = acquire["Options"]
-            acquire_option_name = row.get("%sAcquireOptionName" % prefix)
-            if acquire_option_name is not None:
-                option = {
-                    "AcquireOptionName": acquire_option_name,
-                    "AcquireOptionValue": row["%sAcquireOptionValue" % prefix]
-                }
-                if option not in acquire_options:
-                    acquire_options.append(option)
-        extract_option_name = row.get("%sExtractOptionName" % prefix)
-        if extract_option_name is not None:
-            option = {
-                "ExtractOptionName": extract_option_name,
-                "ExtractOptionValue": row["%sExtractOptionValue" % prefix]
-            }
-            if option not in extract_options:
-                extract_options.append(option)
-    data["acquires"].extend(acquires.values())
-    return data
 
 
 def launch_container(resource_group_name, container_group_name, os_type, location, container_name, image_name,
