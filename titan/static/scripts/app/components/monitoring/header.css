@@ -11,8 +11,12 @@
     align-self: center;
     justify-self: flex-start;
     margin: 0;
-    font-style: italic;
     flex-grow: 1;
+}
+
+.header-description-separator {
+    margin: 0 5px;
+    font-size: 12px;
 }
 
 .header-label {
