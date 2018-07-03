@@ -52,12 +52,15 @@ class Monitor extends React.Component {
       });
     };
 
-    this.fetchData(this.state.end, callback);
+    this.fetchData(this.state.end, this.state.pageNumber, callback);
   }
 
   showDates(start, end) {
 
+    const pageNumber = 1;
+
     this.setState({
+      pageNumber: pageNumber,
       start: start,
       end: end,
       data: []
@@ -70,20 +73,26 @@ class Monitor extends React.Component {
       });
     }
 
-    this.fetchData(end, callback);
+    this.fetchData(end, pageNumber, callback);
   }
 
   showMore() {
+
+    const pageNumber = this.state.pageNumber + 1;
+    this.setState({
+      pageNumber: pageNumber
+    });
+
     const callback = (result) => {
       this.setState({
         loading: false,
         data: mergeData(this.state.data, result.data)
       });
     };
-    this.fetchData(this.state.end, callback);
+    this.fetchData(this.state.end, pageNumber, callback);
   }
 
-  fetchData(date, callback) {
+  fetchData(date, pageNumber, callback) {
 
     this.setState({
       hasError: false,
@@ -92,7 +101,8 @@ class Monitor extends React.Component {
 
     // TODO make this dynamic, add page number
     const url = '/api/executions/'
-      + '?end_date=' + DateUtils.dateToIso8601(date);
+      + '?end_date=' + DateUtils.dateToIso8601(date)
+      + '&page_number=' + pageNumber;
 
     // Request data
     Ajax.fetch(url)
