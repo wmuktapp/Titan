@@ -38,21 +38,40 @@
 }
 
 .execution-success {
-    background-color: #548235;
+    background-color: rgba(84, 130, 53, .7);
     color: #fff;
 }
 
 .execution-failure {
-    background-color: #9e323a;
+    background-color: rgba(158, 50, 58, .7);
     color: #fff;
 }
 
 .execution-running {
-    background-color: #f9ae42;
+    background-color: rgba(249, 174, 66, .7);
     color: #fff;
 }
 
 .execution-not-requested {
+    color: #aaa;
+}
+
+.execution-partial-success {
+    background-color: #548235;
+    color: #fff;
+}
+
+.execution-partial-failure {
+    background-color: #9e323a;
+    color: #fff;
+}
+
+.execution-partial-running {
+    background-color: #f9ae42;
+    color: #fff;
+}
+
+.execution-partial-not-requested {
     color: #aaa;
 }
 
