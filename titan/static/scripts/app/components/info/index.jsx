@@ -35,7 +35,7 @@ class Info extends React.Component {
         <span className={className} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut} />
         {
           this.state.showTooltip &&
-            <Tooltip>{this.props.tooltip}</Tooltip>
+            <Tooltip offsetX={30} offsetY={-7}>{this.props.tooltip}</Tooltip>
         }
       </span>
     );
