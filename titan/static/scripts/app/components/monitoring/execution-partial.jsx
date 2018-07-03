@@ -4,10 +4,10 @@ class ExecutionPartial extends React.Component {
 
   statusClass() {
     const classes = {
-      'success': 'execution-success',
-      'failure': 'execution-failure',
-      'running': 'execution-running',
-      'not-requested': 'execution-not-requested'
+      'success': 'execution-partial-success',
+      'failure': 'execution-partial-failure',
+      'running': 'execution-partial-running',
+      'not-requested': 'execution-partial-not-requested'
     };
     return this.props.status
       ? classes[this.props.status.toLowerCase()]

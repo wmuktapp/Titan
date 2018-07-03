@@ -2,7 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 import DateField from './form-field/date-field.jsx';
 import TextField from './form-field/text-field.jsx';
-import AcquireList from './acquire-list/acquire-list.jsx';
+import AcquireList from './acquire-list/index.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import Alert from './alert/alert.jsx';
 import Ajax from '../utils/ajax';
@@ -158,6 +158,7 @@ class AdhocForm extends React.Component {
       body: JSON.stringify(data)
     })
       .then(() => {
+        // TODO get URL for execution details page (res.headers.get('Location'))
         console.log('execution successful!');
       });
 

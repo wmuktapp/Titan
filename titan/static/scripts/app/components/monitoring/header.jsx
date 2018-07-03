@@ -38,7 +38,12 @@ class MonitoringGridHeader extends React.Component {
       temp.setDate(temp.getDate() + 1);
     }
 
-    return <div className="header">{labels}</div>;
+    return (
+      <div className="header">
+        <h4 className="header-description">Client, Data Source, Data Set</h4>
+        {labels}
+      </div>
+    );
   }
 
 }

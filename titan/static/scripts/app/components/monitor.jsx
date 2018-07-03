@@ -5,7 +5,7 @@ import MonitoringFooter from './monitoring/footer.jsx';
 import Alert from './alert/alert.jsx'
 import Ajax from '../utils/ajax';
 import { isEmpty, mergeData } from '../utils/data-utils';
-import dateUtils from '../utils/date-utils';
+import DateUtils from '../utils/date-utils';
 import Dialog from '../utils/dialog.jsx';
 
 import './monitor.css';
@@ -101,7 +101,7 @@ class Monitor extends React.Component {
 
     // TODO make this dynamic, add page number
     const url = '/api/executions/'
-      + '?end_date=' + dateUtils.dateToIso8601(dates.end);
+      + '?end_date=' + DateUtils.dateToIso8601(dates.end);
 
     // Request data
     Ajax.fetch(url)

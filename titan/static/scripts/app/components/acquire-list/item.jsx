@@ -45,6 +45,7 @@ class AcquireItem extends React.Component {
           value={value}
           required={option.AcquireProgramOptionRequired}
           validate={this.props.validate}
+          tooltip={option.AcquireProgramOptionHelp}
           onChange={this.updateOption}
         />
       );
