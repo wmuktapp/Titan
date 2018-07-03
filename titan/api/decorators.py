@@ -6,6 +6,8 @@ import wrapt
 
 class JSONEncoder(flask.json.JSONEncoder):
     def default(self, o):
+        if isinstance(o, datetime.datetime):
+            return flask.json.JSONEncoder.default(self, o)
         if isinstance(o, datetime.date):
             return o.strftime("%Y-%m-%d")
         else:

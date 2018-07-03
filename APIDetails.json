@@ -105,6 +105,9 @@ GET /executions/<int:key>
                 }
             ]
         }
+    },
+    "previous_versions": {
+        execution_version - str (req): execution_key - int (req)
     }
 }
 
@@ -118,11 +121,14 @@ GET /executions/?page_number=1&page_size=100
                     "ExecutionLoadDate": {
                         "ExecutionKey": int (req),
                         "ExecutionStartTime": datetime (req),
+                        "ExecutionEndTime": datetime,
                         "ExecutionStatus": str (req),
                         "AcquireProgramKey": int,
                         "AcquireStartTime" datetime,
+                        "AcquireEndTime": datetime,
                         "AcquireStatus": str (req),
                         "ExtractStartTime": datetime,
+                        "ExtractEndTime": datetime,
                         "ExtractStatus": str (req)
                     }
                 }
@@ -274,7 +280,7 @@ POST /schedules/
 POST /executions/retry
 {
     "data": [
-        int
+        execution_key - int
     ]
 }
 

@@ -89,10 +89,23 @@ def get_execution_json(key):
 
 
 def get_executions(end_date=None, page_number=1, page_size=100, load_date_count=5):
-    return list(db.engine.execute(sqlalchemy.text("SELECT * FROM [log].UDF_GetExecutions(:end_date, :page_number, "
-                                                  ":page_size, :load_date_count)"),
-                                  end_date=end_date, page_number=page_number, page_size=page_size,
-                                  load_date_count=load_date_count))
+    text = "SELECT * FROM [log].UDF_GetExecutions(:end_date, :page_number, :page_size, :load_date_count)"
+    return list(db.engine.execute(sqlalchemy.text(text), end_date=end_date, page_number=page_number,
+                                  page_size=page_size, load_date_count=load_date_count))
+
+
+def get_previous_versions(client_name, data_source_name, data_set_name, load_date, exclude_execution_key):
+    text = ("SELECT * FROM [log].UDF_GetPreviousVersions(:client_name, :data_source_name, :data_set_name, :load_date, "
+            ":exclude_execution_key)")
+    return list(db.engine.execute(sqlalchemy.text(text), client_name=client_name, data_source_name=data_source_name,
+                                  data_set_name=data_set_name, load_date=load_date,
+                                  exclude_execution_key=exclude_execution_key))
+
+
+def get_queue(max_items=None):
+    params = {} if max_items is None else {"MaxItems": max_items}
+    with db.engine.begin() as transaction:
+        return list(_execute_stored_procedure(transaction, "dbo.SP_GetQueue", params))
 
 
 def get_running_container_groups():
@@ -104,14 +117,8 @@ def get_scheduled_execution(key):
 
 
 def get_scheduled_executions(page_number=1, page_size=100):
-    return list(db.engine.execute(sqlalchemy.text("SELECT * FROM config.UDF_GetScheduledExecutions(:page_number, "
-                                                  ":page_size)"), page_number=page_number, page_size=page_size))
-
-
-def get_queue(max_items=None):
-    params = {} if max_items is None else {"MaxItems": max_items}
-    with db.engine.begin() as transaction:
-        return list(_execute_stored_procedure(transaction, "dbo.SP_GetQueue", params))
+    text = "SELECT * FROM config.UDF_GetScheduledExecutions(:page_number, :page_size)"
+    return list(db.engine.execute(sqlalchemy.text(text), page_number=page_number, page_size=page_size))
 
 
 def insert_acquire_program(acquire_program):

@@ -30,7 +30,7 @@ def execute():
         execution_key = app.execute(data)
     except Exception as error:
         return {"error": {"message": str(error)}}, 400, None
-    return {}, 201, {"Location": flask.url_for("api.executions", key=execution_key)}
+    return {}, 201, {"Location": flask.url_for("api.get_executions", key=execution_key)}
 
 
 @api.api_blueprint.route("/acquire-programs/", methods=["GET"])
@@ -68,11 +68,16 @@ def get_execution(key):
     if not rows:
         flask.abort(404)
     arbitrary_row = rows[0]
+    client_name = arbitrary_row["ExecutionClientName"]
+    data_source_name = arbitrary_row["ExecutionDataSourceName"]
+    data_set_name = arbitrary_row["ExecutionDataSetName"]
+    load_date = arbitrary_row["ExecutionLoadDate"]
+    execution_key = arbitrary_row["ExecutionKey"]
     extract_key = arbitrary_row["ExtractKey"]
     extract_options = []
     data = {
         "execution": {
-            "ExecutionKey": arbitrary_row["ExecutionKey"],
+            "ExecutionKey": execution_key,
             "ExecutionContainerGroupName": arbitrary_row["ExecutionContainerGroupName"],
             "ScheduledExecutionKey": arbitrary_row["ScheduledExecutionKey"],
             "ExecutionScheduledTime": arbitrary_row["ExecutionScheduledTime"],
@@ -80,10 +85,10 @@ def get_execution(key):
             "ExecutionEndTime": arbitrary_row["ExecutionEndTime"],
             "ExecutionStatus": arbitrary_row["ExecutionStatus"],
             "ExecutionErrorMessage": arbitrary_row["ExecutionErrorMessage"],
-            "ExecutionClientName": arbitrary_row["ExecutionClientName"],
-            "ExecutionDataSourceName": arbitrary_row["ExecutionDataSourceName"],
-            "ExecutionDataSetName": arbitrary_row["ExecutionDataSetName"],
-            "ExecutionLoadDate": arbitrary_row["ExecutionLoadDate"],
+            "ExecutionClientName": client_name,
+            "ExecutionDataSourceName": data_source_name,
+            "ExecutionDataSetName": data_set_name,
+            "ExecutionLoadDate": load_date,
             "ExecutionVersion": arbitrary_row["ExecutionVersion"],
             "ExecutionUser": arbitrary_row["ExecutionUser"],
             "AcquireProgramKey": arbitrary_row["AcquireProgramKey"],
@@ -132,7 +137,12 @@ def get_execution(key):
             if option not in extract_options:
                 extract_options.append(option)
     data["acquires"].extend(acquires.values())
-    return {"data": data}
+    previous_versions = {
+        row["ExecutionVersion"]: flask.url_for("api.get_executions", key=row["ExecutionKey"])
+        for row in models.get_previous_versions(client_name, data_source_name, data_set_name,
+                                                load_date.strftime("%Y-%m-%d"), execution_key)
+    }
+    return {"data": data, "previous_versions": previous_versions}
 
 
 @api.api_blueprint.route("/executions/", methods=["GET"])
