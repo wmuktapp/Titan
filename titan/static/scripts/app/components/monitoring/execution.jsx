@@ -57,7 +57,8 @@ class MonitoringGridExecution extends React.Component {
     const className = 'execution'
       + (DateUtils.isYesterday(this.props.date) ? ' execution-highlight' : '')
       + this.getStatusClass(execution.ExecutionStatus);
-    const title = `Acquire time: ${execution.AcquireStartTime}\nExtract time: ${execution.ExtractStartTime}`;
+
+    const errorMessage = 'Unable to access blah blah blah'; // TODO
 
     return (
       <span className={className}>
@@ -73,7 +74,24 @@ class MonitoringGridExecution extends React.Component {
         }
         {
           this.state.showTooltip &&
-            <Tooltip offsetY={50}>{title}</Tooltip>
+            <Tooltip offsetY={50}>
+              <p>
+                <label>Execution time:</label> {execution.ExecutionStartTime || '-'}
+              </p>
+              <p>
+                <label>Acquire time:</label> {execution.AcquireStartTime || '-'}
+              </p>
+              <p>
+                <label>Extract time:</label> {execution.ExtractStartTime || '-'}
+              </p>
+              {
+                errorMessage &&
+                  <p className="tooltip-error">
+                    <span className="fas fa-exclamation-triangle tooltip-error-icon" />
+                    Unable to access blah blah blah
+                  </p>
+              }
+            </Tooltip>
         }
       </span>
     );
