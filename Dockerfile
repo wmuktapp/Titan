@@ -5,13 +5,13 @@ WORKDIR /titan/
 ADD . /titan/
 # System Utilities
 RUN apt-get update && \
-    apt-get install -y apt-transport-https && \
+    apt-get --no-install-recommends install -y apt-transport-https && \
     rm -rf /var/lib/apt/lists/*
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
 RUN curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list
 # PYODBC dependencies
 RUN apt-get update && \
-    ACCEPT_EULA=Y apt-get install -y msodbcsql17 unixodbc-dev && \
+    ACCEPT_EULA=Y apt-get install --no-install-recommends -y msodbcsql17 unixodbc-dev && \
     rm -rf /var/lib/apt/lists/*
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
