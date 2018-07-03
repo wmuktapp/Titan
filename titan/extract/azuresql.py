@@ -124,9 +124,11 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
     data = json.loads(os.getenv("TITAN_STDIN"))
     extract_key = data["extract"]["ExtractKey"]
     execution = data["execution"]
+    # If this execution includes acquires, that is what we want to extract else the last successful execution version
+    execution_version = execution["ExecutionVersion" if execution.get("acquires") else "LastSuccessfulExecutionVersion"]
     blob_prefix = posixpath.join(execution["ExecutionClientName"], execution["ExecutionDataSourceName"],
                                  execution["ExecutionDataSetName"], execution["ExecutionLoadDate"],
-                                 execution["ExecutionVersion"])
+                                 execution_version)
     if "." in table_name:
         schema, table_name_without_schema = table_name.split(".")
     else:

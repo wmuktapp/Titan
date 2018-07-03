@@ -43,6 +43,7 @@ def execute(data):
     result = titan_models.start_execution_log(execution)
     del execution["ExecutionJSON"]  # not needed and don't want to double the size of the env variable set in container
     execution["ExecutionVersion"] = result["ExecutionVersion"]
+    execution["LastSuccessfulExecutionVersion"] = result["LastSuccessfulExecutionVersion"]
     execution_key = execution["ExecutionKey"] = result["ExecutionKey"]
     load_date = execution["ExecutionLoadDate"]
     for acquire in data["acquires"]:
