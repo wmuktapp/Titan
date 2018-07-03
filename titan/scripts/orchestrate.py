@@ -51,30 +51,31 @@ def _clean_up(flask_app):
 def _format_scheduled_execution(rows):
     arbitrary_row = rows[0]
     extract_options = []
+    scheduled_extract_destination = arbitrary_row["ScheduledExtractDestination"]
     data = {
         "execution": {
             "ScheduledExecutionKey": arbitrary_row["ScheduledExecutionKey"],
             "ExecutionClientName": arbitrary_row["ScheduledExecutionClientName"],
             "ExecutionDataSourceName": arbitrary_row["ScheduledExecutionDataSourceName"],
             "ExecutionDataSetName": arbitrary_row["ScheduledExecutionDataSetName"],
-            "ExecutionLoadDate": arbitrary_row["ScheduledExecutionLoadDate"],
+            "ExecutionLoadDate": arbitrary_row["ScheduledExecutionNextLoadDate"],
             "ExecutionUser": arbitrary_row["ScheduledExecutionUser"],
             "AcquireProgramKey": arbitrary_row["AcquireProgramKey"]
         },
         "acquires": [],
         "extract": {
-            "ExtractDestination": arbitrary_row["ScheduledExtractDestination"],
+            "ExtractDestination": scheduled_extract_destination,
             "Options": extract_options
-        } if arbitrary_row["ScheduledExtractKey"] is not None else {}
+        } if arbitrary_row["ScheduledExtractDestination"] is not None else {}
     }
     acquires = {}
     for row in rows:
         row = dict(row)
-        acquire_key = row["ScheduledAcquireKey"]
-        if acquire_key is not None:
-            acquire = acquires.get(acquire_key)
+        acquire_identifier = row["ScheduledAcquireName"]
+        if acquire_identifier is not None:
+            acquire = acquires.get(acquire_identifier)
             if acquire is None:
-                acquire = acquires[acquire_key] = {
+                acquire = acquires[acquire_identifier] = {
                     "Options": []
                 }
             acquire_options = acquire["Options"]
@@ -101,8 +102,9 @@ def _format_scheduled_execution(rows):
 def _process_queue(flask_app):
     with flask_app.app_context():
         for execution in models.get_queue():
-            rows = models.get_scheduled_execution(execution["ScheduledExecutionKey"])
-            app.execute(_format_scheduled_execution(rows))
+            if not execution["IsRunning"]:
+                rows = models.get_scheduled_execution(execution["ScheduledExecutionKey"])
+                app.execute(_format_scheduled_execution(rows))
 
 
 def main():
