@@ -45,25 +45,25 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
     main_text = f"""    
         BEGIN TRANSACTION
         
-        DECLARE @SQL NVARCHAR(MAX) = 'CREATE VIEW {schema}.{view_name} AS SELECT ' + (
+        DECLARE @SQL NVARCHAR(MAX) = 'CREATE VIEW [{schema}].[{view_name}] AS SELECT ' + (
             SELECT STRING_AGG('[' + COLUMN_NAME + ']', ',') WITHIN GROUP (ORDER BY ORDINAL_POSITION)
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_SCHEMA = N'{schema}'
                 AND TABLE_NAME = N'{table_name}'
                 AND COLUMN_NAME <> '{_EXTRACT_KEY_COLUMN_NAME}'
             GROUP BY TABLE_NAME
-        ) + ' FROM {schema}.{table_name}';
+        ) + ' FROM [{schema}].[{table_name}]';
     
         EXEC(@SQL);
     """
     if replace:
         main_text += f"""
-            TRUNCATE TABLE {schema}.{table_name};
+            TRUNCATE TABLE [{schema}].[{table_name}];
         """
     for index, blob in enumerate(blobs):
         blob_name = blob.name.replace("'", "''")
         main_text += f"""
-            BULK INSERT {schema}.{view_name}
+            BULK INSERT [{schema}].[{view_name}]
             FROM N'{blob_name}'
             WITH (
                 CODEPAGE = N'{code_page}',
@@ -78,11 +78,11 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
             );
         """
     main_text += f"""
-        UPDATE {schema}.{table_name}
+        UPDATE [{schema}].[{table_name}]
         SET [{_EXTRACT_KEY_COLUMN_NAME}] = {extract_key}
         WHERE [{_EXTRACT_KEY_COLUMN_NAME}] IS NULL;
         
-        DROP VIEW {schema}.{view_name};
+        DROP VIEW [{schema}].[{view_name}];
         COMMIT TRANSACTION
     """
     return pre_text, main_text
@@ -140,15 +140,14 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
     blob_key = sas_token[1:] if next(iter(sas_token), None) == "?" else sas_token  # needed because silly microsoft
     # Manual escaping for now
     blob_key = blob_key.replace("'", "''")
-    table_name = table_name.replace("'", "''")
     text_qualifier = text_qualifier.replace("'", "''")
     # End Manual escaping
     view_name = "%s_%s" % (table_name, uuid.uuid4())
     sql_texts = _generate_sql_text(blobs, replace,
                                    credential_name=credential_name, blob_key=blob_key,
                                    data_source_name=data_source_name, blob_location=blob_location,
-                                   view_name="[%s]" % view_name, schema="[%s]" % schema, table_name="[%s]" % table_name,
-                                   code_page=code_page, text_qualifier=text_qualifier, field_delimiter=field_delimiter,
+                                   view_name=view_name, schema=schema, table_name=table_name, code_page=code_page,
+                                   text_qualifier=text_qualifier, field_delimiter=field_delimiter,
                                    row_delimiter=row_delimiter, extract_key=extract_key)
     db = sqlalchemy.create_engine(connection_string)
     flask_app.logger.info("Extracting data to database...")
