@@ -150,16 +150,20 @@ class AdhocForm extends React.Component {
 
     this.setState({
       isFormValid: true,
-      triggered: true
+      triggered: true,
+      executionKey: null
     });
 
     Ajax.fetch('/api/executions/', {
       method: 'POST',
       body: JSON.stringify(data)
     })
-      .then(() => {
+      .then(response => {
         // TODO get URL for execution details page (res.headers.get('Location'))
-        console.log('execution successful!');
+        console.log(response.headers.get('Location'));
+        this.setState({
+          executionKey: response.headers.get('Location')
+        })
       });
 
     this.goToTop();
@@ -187,6 +191,36 @@ class AdhocForm extends React.Component {
 
   render() {
 
+    const alerts = [];
+
+    // Form submitted
+    if (this.state.triggered) {
+      if (this.state.executionKey) {
+        alerts.push(
+          <Alert key={0} title="Adhoc Execution Triggered" type="success">
+            <p>
+              <a href={`/monitoring/executions/${this.state.executionKey}`}>Go to execution</a>
+            </p>
+          </Alert>
+        );
+      } else {
+        alerts.push(
+          <Alert key={1} title="Starting Adhoc Execution" type="success">
+            <p>This may take a few moments...</p>
+          </Alert>
+        );
+      }
+    }
+
+    // Form invalid
+    if (!this.state.isFormValid) {
+      alerts.push(
+        <Alert key={2} title="Fields Missing" type="error">
+          <p>One or more required fields were not entered.</p>
+        </Alert>
+      );
+    }
+
     const execution = this.state.execution;
 
     // Acquire program dropdown options
@@ -198,18 +232,9 @@ class AdhocForm extends React.Component {
 
     return (
       <form onSubmit={this.handleSubmit}>
-        {
-          this.state.triggered &&
-            <Alert title="Adhoc Execution Triggered" type="success">
-              <p>The execution may take a few minutes to start.  Please check the monitoring page periodically.</p>
-            </Alert>
-        }
-        {
-          !this.state.isFormValid &&
-            <Alert title="Fields Missing" type="error">
-              <p>One or more required fields were not entered.</p>
-            </Alert>
-        }
+
+        { alerts }
+
         <div>
           <label>Program</label>
           <Select
