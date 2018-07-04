@@ -84,10 +84,13 @@ class Execution extends React.Component {
             ? <p className="execution-loading">Loading...</p>
             : <div>
                 <ExecutionDetails execution={this.state.execution} />
-                  <section className="form-section">
-                    <h6>Acquires</h6>
-                    { acquires }
-                  </section>
+                  {
+                    !!this.state.acquires.length &&
+                      <section className="form-section">
+                        <h6>Acquires</h6>
+                        { acquires }
+                      </section>
+                  }
                   {
                     this.state.extract.ExtractKey &&
                       <section className="form-section">
