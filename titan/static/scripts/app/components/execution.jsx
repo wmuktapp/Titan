@@ -31,11 +31,11 @@ class Execution extends React.Component {
           execution: data.execution,
           acquires: data.acquires,
           extract: data.extract,
-          history: result.previous_versions
+          history: result.other_versions
         });
       },
       (error) => {
-        console.log('Unable to find information on excecution for task: ' + this.props.taskId);
+        console.log('Unable to find information on excecution: ' + this.props.executionKey);
       });
   }
 
@@ -51,8 +51,13 @@ class Execution extends React.Component {
     return (
       <div className="execution">
 
-        <section>
-          <ExecutionHistory versions={this.state.history} />
+        <section className="controls">
+          <a href="/monitoring">
+            <span className="fas fa-angle-left" /> Back to Monitoring
+          </a>
+          <div className="execution-control-additional">
+            <ExecutionHistory versions={this.state.history} />
+          </div>
         </section>
 
         <ExecutionDetails execution={this.state.execution} />
