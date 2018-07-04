@@ -94,12 +94,10 @@ def get_executions(end_date=None, page_number=1, page_size=100, load_date_count=
                                   page_size=page_size, load_date_count=load_date_count))
 
 
-def get_other_versions(client_name, data_source_name, data_set_name, load_date, exclude_execution_key):
-    text = ("SELECT * FROM [log].UDF_GetOtherVersions(:client_name, :data_source_name, :data_set_name, :load_date, "
-            ":exclude_execution_key)")
+def get_versions(client_name, data_source_name, data_set_name, load_date):
+    text = "SELECT * FROM [log].UDF_GetVersions(:client_name, :data_source_name, :data_set_name, :load_date)"
     return list(db.engine.execute(sqlalchemy.text(text), client_name=client_name, data_source_name=data_source_name,
-                                  data_set_name=data_set_name, load_date=load_date,
-                                  exclude_execution_key=exclude_execution_key))
+                                  data_set_name=data_set_name, load_date=load_date))
 
 
 def get_queue(max_items=None):

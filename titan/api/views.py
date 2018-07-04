@@ -72,12 +72,12 @@ def get_execution(key):
     data_source_name = arbitrary_row["ExecutionDataSourceName"]
     data_set_name = arbitrary_row["ExecutionDataSetName"]
     load_date = arbitrary_row["ExecutionLoadDate"]
-    execution_key = arbitrary_row["ExecutionKey"]
+    current_version = arbitrary_row["ExecutionVersion"]
     extract_key = arbitrary_row["ExtractKey"]
     extract_options = []
     data = {
         "execution": {
-            "ExecutionKey": execution_key,
+            "ExecutionKey": arbitrary_row["ExecutionKey"],
             "ExecutionContainerGroupName": arbitrary_row["ExecutionContainerGroupName"],
             "ScheduledExecutionKey": arbitrary_row["ScheduledExecutionKey"],
             "ExecutionScheduledTime": arbitrary_row["ExecutionScheduledTime"],
@@ -89,7 +89,7 @@ def get_execution(key):
             "ExecutionDataSourceName": data_source_name,
             "ExecutionDataSetName": data_set_name,
             "ExecutionLoadDate": load_date,
-            "ExecutionVersion": arbitrary_row["ExecutionVersion"],
+            "ExecutionVersion": current_version,
             "ExecutionUser": arbitrary_row["ExecutionUser"],
             "AcquireProgramKey": arbitrary_row["AcquireProgramKey"],
             "AcquireProgramFriendlyName": arbitrary_row["AcquireProgramFriendlyName"]
@@ -137,12 +137,12 @@ def get_execution(key):
             if option not in extract_options:
                 extract_options.append(option)
     data["acquires"].extend(acquires.values())
-    other_versions = {
+    versions = {
         row["ExecutionVersion"]: row["ExecutionKey"]
-        for row in models.get_other_versions(client_name, data_source_name, data_set_name,
-                                             load_date.strftime("%Y-%m-%d"), execution_key)
+        for row in models.get_versions(client_name, data_source_name, data_set_name, load_date.strftime("%Y-%m-%d"))
     }
-    return {"data": data, "other_versions": other_versions}
+    del versions[current_version]
+    return {"data": data, "other_versions": versions}
 
 
 @api.api_blueprint.route("/executions/", methods=["GET"])
