@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
+import moment from 'moment';
 import DateField from './form-field/date-field.jsx';
 import TextField from './form-field/text-field.jsx';
 import AcquireList from './acquire-list/index.jsx';
@@ -230,6 +231,9 @@ class AdhocForm extends React.Component {
 
     const extractOptions = this.state.extract.Options;
 
+    // Max load date: yesterday
+    const maxLoadDate = moment().subtract(1, 'days');
+
     return (
       <form onSubmit={this.handleSubmit}>
 
@@ -251,6 +255,7 @@ class AdhocForm extends React.Component {
           required={true}
           onChange={this.handleLoadDateChange}
           validate={!this.state.isFormValid}
+          maxDate={maxLoadDate}
         />
 
         <TextField

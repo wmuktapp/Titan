@@ -52,6 +52,8 @@ class DateField extends React.Component {
           disabled={this.props.disabled}
           onChange={this.handleChange}
           showTimeSelect={this.props.includeTime}
+          minDate={this.props.minDate}
+          maxDate={this.props.maxDate}
         />
       </FormRow>
     );
