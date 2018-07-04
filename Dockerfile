@@ -11,6 +11,7 @@ RUN apt-get update && \
     apt-get update && \
     ACCEPT_EULA=Y apt-get install --no-install-recommends -y msodbcsql17 unixodbc-dev && \
     rm -rf /var/lib/apt/lists/* /var/tmp/* /tmp/* && \
+    touch /root/.ssh/known_hosts && \
     ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts && \
     chmod 700 /root/.ssh/id_rsa && \
     chown -R root:root /root/.ssh && \
