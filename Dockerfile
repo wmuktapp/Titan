@@ -23,7 +23,7 @@ RUN git clone https://github.com/wmuktapp/Titan-AdWordsReportDownloader.git . &&
     pip install --trusted-host pypi.python.org .
 
 WORKDIR /acquire-programs/DBMReportDownloader/
-RUN git clone https://github.com/wmuktapp/Titan-DBMReportDownloader.git . && \
+RUN git clone git@bitbucket.org:adamcunnington/titan-dbmreportdownloader.git . && \
     pip install --trusted-host pypi.python.org -r requirements.txt
 
 WORKDIR /acquire-programs/DCMReportDownloader/
@@ -31,7 +31,7 @@ RUN git clone git@bitbucket.org:adamcunnington/titan-dcmreportdownloader.git . &
     pip install --trusted-host pypi.python.org -r requirements.txt
 
 WORKDIR /acquire-programs/DSReportDownloader/
-RUN git clone https://github.com/wmuktapp/Titan-DSReportDownloader.git . && \
+RUN git clone git@bitbucket.org:adamcunnington/titan-dsreportdownloader.git . && \
     pip install --trusted-host pypi.python.org -r requirements.txt
 
 WORKDIR /acquire-programs/FTPFileDownloader/
