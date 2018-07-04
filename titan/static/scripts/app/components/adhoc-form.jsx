@@ -199,7 +199,7 @@ class AdhocForm extends React.Component {
         alerts.push(
           <Alert key={0} title="Adhoc Execution Triggered" type="success">
             <p>
-              <a href={this.state.executionUrl}>Go to execution</a>
+              <a href={this.state.executionUrl}>Click here</a> to see the execution details
             </p>
           </Alert>
         );
