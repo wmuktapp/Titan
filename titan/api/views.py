@@ -137,12 +137,12 @@ def get_execution(key):
             if option not in extract_options:
                 extract_options.append(option)
     data["acquires"].extend(acquires.values())
-    previous_versions = {
+    other_versions = {
         row["ExecutionVersion"]: row["ExecutionKey"]
         for row in models.get_previous_versions(client_name, data_source_name, data_set_name,
                                                 load_date.strftime("%Y-%m-%d"), execution_key)
     }
-    return {"data": data, "previous_versions": previous_versions}
+    return {"data": data, "other_versions": other_versions}
 
 
 @api.api_blueprint.route("/executions/", methods=["GET"])
