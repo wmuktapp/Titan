@@ -151,7 +151,7 @@ class AdhocForm extends React.Component {
     this.setState({
       isFormValid: true,
       triggered: true,
-      executionKey: null
+      executionUrl: null
     });
 
     Ajax.fetch('/api/executions/', {
@@ -162,7 +162,7 @@ class AdhocForm extends React.Component {
         // TODO get URL for execution details page (res.headers.get('Location'))
         console.log(response.headers.get('Location'));
         this.setState({
-          executionKey: response.headers.get('Location')
+          executionUrl: response.headers.get('Location')
         })
       });
 
@@ -195,11 +195,11 @@ class AdhocForm extends React.Component {
 
     // Form submitted
     if (this.state.triggered) {
-      if (this.state.executionKey) {
+      if (this.state.executionUrl) {
         alerts.push(
           <Alert key={0} title="Adhoc Execution Triggered" type="success">
             <p>
-              <a href={`/monitoring/executions/${this.state.executionKey}`}>Go to execution</a>
+              <a href={this.state.executionUrl}>Go to execution</a>
             </p>
           </Alert>
         );
