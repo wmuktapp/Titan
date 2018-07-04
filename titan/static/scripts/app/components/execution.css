@@ -3,6 +3,10 @@
     float: right;
 }
 
+.execution-loading {
+    text-align: center;
+}
+
 .execution label {
     display: inline-block;
     width: 200px;

@@ -12,17 +12,39 @@ class Execution extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      key: this.props.executionKey,
       loading: true,
       execution: null,
-      acquires: null,
+      acquires: [],
       extract: null,
       history: {}
     };
+    this.selectAnotherVersion = this.selectAnotherVersion.bind(this);
   }
 
   componentDidMount() {
+    this.getData(this.props.executionKey);
+  }
 
-    Ajax.fetch('/api/executions/' + this.props.executionKey)
+  selectAnotherVersion(version) {
+
+    const key = version ? version.value : this.props.executionKey;
+
+    this.setState({
+      key: key
+    });
+
+    // NOTE: State not updated yet
+    this.getData(key);
+  }
+
+  getData(key) {
+
+    this.setState({
+      loading: true
+    });
+
+    Ajax.fetch('/api/executions/' + key)
       .then(res => res.json())
       .then(result => {
         const data = result.data;
@@ -41,45 +63,49 @@ class Execution extends React.Component {
 
   render() {
 
-    if (this.state.loading) {
-      return <p>Loading...</p>;
-    }
-
     const acquires = this.state.acquires.map(
       acquire => <ExecutionAcquireDetails key={acquire.AcquireKey} acquire={acquire} />
     );
+
     return (
       <div className="execution">
 
-        <section className="controls">
+        <section className="controls u-cf">
           <a href="/monitoring">
             <span className="fas fa-angle-left" /> Back to Monitoring
           </a>
           <div className="execution-control-additional">
-            <ExecutionHistory versions={this.state.history} />
+            <ExecutionHistory versions={this.state.history} onChange={this.selectAnotherVersion} />
           </div>
         </section>
 
-        <ExecutionDetails execution={this.state.execution} />
-        <section className="form-section">
-          <h6>Acquires</h6>
-          { acquires }
-        </section>
         {
-          this.state.extract.ExtractKey &&
-            <section className="form-section">
-              <h6>Extract</h6>
-              <ExecutionExtractDetails extract={this.state.extract} />
-            </section>
+          this.state.loading
+            ? <p className="execution-loading">Loading...</p>
+            : <div>
+                <ExecutionDetails execution={this.state.execution} />
+                  <section className="form-section">
+                    <h6>Acquires</h6>
+                    { acquires }
+                  </section>
+                  {
+                    this.state.extract.ExtractKey &&
+                      <section className="form-section">
+                        <h6>Extract</h6>
+                        <ExecutionExtractDetails extract={this.state.extract} />
+                      </section>
+                  }
+                  {
+                    this.state.execution.ScheduledExecutionKey &&
+                      <section className="form-section">
+                        <a href={`/schedules/${this.state.execution.ScheduledExecutionKey}`}>
+                          Go to schedule <span className="fas fa-angle-right" />
+                        </a>
+                      </section>
+                  }
+              </div>
         }
-        {
-          this.state.execution.ScheduledExecutionKey &&
-            <section className="form-section">
-              <a href={`/schedules/${this.state.execution.ScheduledExecutionKey}`}>
-                Go to schedule <span className="fas fa-angle-right" />
-              </a>
-            </section>
-        }
+        
       </div>
     );
   }

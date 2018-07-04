@@ -5,6 +5,21 @@ import 'react-select/dist/react-select.css';
 
 class ExecutionHistory extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: null
+    };
+    this.change = this.change.bind(this);
+  }
+
+  change(value) {
+    this.setState({
+      value: value
+    });
+    this.props.onChange(...arguments);
+  }
+
   render() {
 
     const options = Object.keys(this.props.versions).map(key => {
@@ -18,7 +33,8 @@ class ExecutionHistory extends React.Component {
       <div className="execution-history">
         <Select
           options={options}
-          onChange={this.props.onChange}
+          value={this.state.value}
+          onChange={this.change}
           className="titan-react-select"
         />
       </div>
