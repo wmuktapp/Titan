@@ -17,7 +17,7 @@ import titan
               "program.", required=True)
 @click.option("-c", "--click-command-func", required=True, help="The full name (including namespaces) of the function "
               "decorated by click that represents the entry point for the acquire program.")
-@click.option("-e", "--enabled", is_flag=True)
+@click.option("-e", "--enabled", type=bool, required=True, help="Whether or not the acquire program should be enabled.")
 @click.option("-k", "--acquire-program-key", type=int, help="The id (database primary key) of the acquire program to "
               "update. If not provided, the details will be registered as a new acquire program.")
 def main(python_name, friendly_name, data_source_name, author, click_command_func, enabled, acquire_program_key):

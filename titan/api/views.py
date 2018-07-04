@@ -24,7 +24,9 @@ def execute():
     for acquire in data["acquires"]:
         acquire["Options"] = [option for option in acquire["Options"] if option["AcquireOptionValue"] != ""]
     extract = data.get("extract", {})
-    if "Options" in extract:
+    if extract.get("ExtractDestination") == "":
+        del execution["extract"]
+    else:
         extract["Options"] = [option for option in extract["Options"] if option["ExtractOptionValue"] != ""]
     try:
         execution_key = app.execute(data)
@@ -278,8 +280,10 @@ def insert_scheduled_execution():
     extract = data.get("extract", {})
     if extract.get("ScheduledExtractDestination") == "":
         extract["ScheduledExtractDestination"] = None
-    if "Options" in extract:
-        extract["Options"] = [option for option in extract["Options"] if option["ScheduledExtractOptionValue"] != ""]
+    if extract.get("ExtractDestination") == "":
+        del execution["extract"]
+    else:
+        extract["Options"] = [option for option in extract["Options"] if option["ExtractOptionValue"] != ""]
     try:
         with models.db.engine.begin() as transaction:
             result = models.insert_scheduled_execution(transaction, execution, extract)[0]
@@ -323,8 +327,10 @@ def update_scheduled_execution(key):
     extract = data.get("extract", {})
     if extract.get("ScheduledExtractDestination") == "":
         extract["ScheduledExtractDestination"] = None
-    if "Options" in extract:
-        extract["Options"] = [option for option in extract["Options"] if option["ScheduledExtractOptionValue"] != ""]
+    if extract.get("ExtractDestination") == "":
+        del execution["extract"]
+    else:
+        extract["Options"] = [option for option in extract["Options"] if option["ExtractOptionValue"] != ""]
     try:
         with models.db.engine.begin() as transaction:
             models.update_scheduled_execution(transaction, execution, extract)
