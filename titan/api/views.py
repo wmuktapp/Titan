@@ -139,8 +139,8 @@ def get_execution(key):
     data["acquires"].extend(acquires.values())
     other_versions = {
         row["ExecutionVersion"]: row["ExecutionKey"]
-        for row in models.get_previous_versions(client_name, data_source_name, data_set_name,
-                                                load_date.strftime("%Y-%m-%d"), execution_key)
+        for row in models.get_other_versions(client_name, data_source_name, data_set_name,
+                                             load_date.strftime("%Y-%m-%d"), execution_key)
     }
     return {"data": data, "other_versions": other_versions}
 
