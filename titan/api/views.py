@@ -279,8 +279,6 @@ def insert_scheduled_execution():
         acquire["Options"] = [option for option in acquire["Options"] if option["ScheduledAcquireOptionValue"] != ""]
     extract = data.get("extract", {})
     if extract.get("ScheduledExtractDestination") == "":
-        extract["ScheduledExtractDestination"] = None
-    if extract.get("ExtractDestination") == "":
         del execution["extract"]
     else:
         extract["Options"] = [option for option in extract["Options"] if option["ExtractOptionValue"] != ""]
@@ -326,8 +324,6 @@ def update_scheduled_execution(key):
         acquire["Options"] = [option for option in acquire["Options"] if option["ScheduledAcquireOptionValue"] != ""]
     extract = data.get("extract", {})
     if extract.get("ScheduledExtractDestination") == "":
-        extract["ScheduledExtractDestination"] = None
-    if extract.get("ExtractDestination") == "":
         del execution["extract"]
     else:
         extract["Options"] = [option for option in extract["Options"] if option["ExtractOptionValue"] != ""]
