@@ -30,7 +30,7 @@ def execute():
         execution_key = app.execute(data)
     except Exception as error:
         return {"error": {"message": str(error)}}, 400, None
-    return {}, 201, {"Location": flask.url_for("api.get_executions", key=execution_key)}
+    return {}, 201, {"Location": flask.url_for("monitoring_execution", execution_key=execution_key)}
 
 
 @api.api_blueprint.route("/acquire-programs/", methods=["GET"])

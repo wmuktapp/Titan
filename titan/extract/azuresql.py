@@ -18,8 +18,8 @@ class BlobsNotFoundError(Exception):
 _EXTRACT_KEY_COLUMN_NAME = "ExtractKey"   # is not escaped so must not include single quote
 
 
-def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_name, blob_location,view_name, schema,
-                       table_name_without_schema, table_name, code_page, text_qualifier, field_delimiter, row_delimiter,
+def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_name, blob_location, view_name, schema,
+                       table_name, code_page, text_qualifier, field_delimiter, row_delimiter,
                        extract_key):
     # We don't care about SQL injection risk as we are connecting to db's that the user provides the connection string
     # of. If they wanted to do harm, they could do it anyway.
@@ -45,25 +45,25 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
     main_text = f"""    
         BEGIN TRANSACTION
         
-        DECLARE @SQL NVARCHAR(MAX) = 'CREATE VIEW {view_name} AS SELECT ' + (
+        DECLARE @SQL NVARCHAR(MAX) = 'CREATE VIEW [{schema}].[{view_name}] AS SELECT ' + (
             SELECT STRING_AGG('[' + COLUMN_NAME + ']', ',') WITHIN GROUP (ORDER BY ORDINAL_POSITION)
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_SCHEMA = N'{schema}'
-                AND TABLE_NAME = N'{table_name_without_schema}'
+                AND TABLE_NAME = N'{table_name}'
                 AND COLUMN_NAME <> '{_EXTRACT_KEY_COLUMN_NAME}'
             GROUP BY TABLE_NAME
-        ) + ' FROM [{table_name}]';
+        ) + ' FROM [{schema}].[{table_name}]';
     
         EXEC(@SQL);
     """
     if replace:
         main_text += f"""
-            TRUNCATE TABLE [{table_name}];
+            TRUNCATE TABLE [{schema}].[{table_name}];
         """
     for index, blob in enumerate(blobs):
         blob_name = blob.name.replace("'", "''")
         main_text += f"""
-            BULK INSERT {view_name}
+            BULK INSERT [{schema}].[{view_name}]
             FROM N'{blob_name}'
             WITH (
                 CODEPAGE = N'{code_page}',
@@ -78,11 +78,11 @@ def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_na
             );
         """
     main_text += f"""
-        UPDATE [{table_name}]
+        UPDATE [{schema}].[{table_name}]
         SET [{_EXTRACT_KEY_COLUMN_NAME}] = {extract_key}
         WHERE [{_EXTRACT_KEY_COLUMN_NAME}] IS NULL;
         
-        DROP VIEW {view_name};
+        DROP VIEW [{schema}].[{view_name}];
         COMMIT TRANSACTION
     """
     return pre_text, main_text
@@ -125,15 +125,14 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
     extract_key = data["extract"]["ExtractKey"]
     execution = data["execution"]
     # If this execution includes acquires, that is what we want to extract else the last successful execution version
-    execution_version = execution["ExecutionVersion" if execution.get("acquires") else "LastSuccessfulExecutionVersion"]
+    execution_version = execution["ExecutionVersion" if data.get("acquires") else "LastSuccessfulExecutionVersion"]
     blob_prefix = posixpath.join(execution["ExecutionClientName"], execution["ExecutionDataSourceName"],
                                  execution["ExecutionDataSetName"], execution["ExecutionLoadDate"],
                                  execution_version)
     if "." in table_name:
-        schema, table_name_without_schema = table_name.split(".")
+        schema, table_name = table_name.split(".")
     else:
-        schema, table_name_without_schema = "dbo", table_name
-    view_name = "[%s].[%s_%s]" % (schema, table_name_without_schema, uuid.uuid4())
+        schema, table_name = "dbo", table_name
     blobs = list(app.list_blobs(service, container_name, blob_prefix))
     if not blobs:
         raise BlobsNotFoundError("No blobs were found @ the prefix; %s" % blob_prefix)
@@ -141,16 +140,15 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
     blob_key = sas_token[1:] if next(iter(sas_token), None) == "?" else sas_token  # needed because silly microsoft
     # Manual escaping for now
     blob_key = blob_key.replace("'", "''")
-    table_name_without_schema = table_name_without_schema.replace("'", "''")
     text_qualifier = text_qualifier.replace("'", "''")
     # End Manual escaping
+    view_name = "%s_%s" % (table_name, uuid.uuid4())
     sql_texts = _generate_sql_text(blobs, replace,
                                    credential_name=credential_name, blob_key=blob_key,
-                                   data_source_name=data_source_name, blob_location=blob_location, view_name=view_name,
-                                   schema=schema, table_name_without_schema=table_name_without_schema,
-                                   table_name=table_name, code_page=code_page, text_qualifier=text_qualifier,
-                                   field_delimiter=field_delimiter, row_delimiter=row_delimiter,
-                                   extract_key=extract_key)
+                                   data_source_name=data_source_name, blob_location=blob_location,
+                                   view_name=view_name, schema=schema, table_name=table_name, code_page=code_page,
+                                   text_qualifier=text_qualifier, field_delimiter=field_delimiter,
+                                   row_delimiter=row_delimiter, extract_key=extract_key)
     db = sqlalchemy.create_engine(connection_string)
     flask_app.logger.info("Extracting data to database...")
     for sql_text in sql_texts:
