@@ -121,3 +121,6 @@ node_modules/
 
 ### Public JS ###
 titan/static/scripts/public/
+
+### Private SSH Key ###
+.ssh/
