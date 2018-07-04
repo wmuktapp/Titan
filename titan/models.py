@@ -198,19 +198,20 @@ def start_extract_log(extract):
 
 
 def update_acquire_program(acquire_program):
-    options = acquire_program.get("Options", _DEFAULT)
+    options = acquire_program.pop("Options", _DEFAULT)
     update_output_params = {"UpdateRowCount": "INT", "DisabledScheduledExecutionsCount": "INT"}
     delete_result = None
     delete_output_params = {"DeleteRowCount": "INT"}
     option_results = None
+    acquire_program_key = acquire_program.get("AcquireProgramKey")
     with db.engine.begin() as transaction:
         update_result = _execute_stored_procedure(transaction, "config.SP_UpdateAcquireProgram", acquire_program,
                                                   update_output_params).fetchone()
         if options is not _DEFAULT:
-            key_param = {"AcquireProgramKey": acquire_program.get("AcquireProgramKey")}
+            key_param = {"AcquireProgramKey": acquire_program_key}
             delete_result = _execute_stored_procedure(transaction, "config.SP_DeleteAcquireProgramOptions", key_param,
                                                       delete_output_params).fetchone()
-            option_results = _insert_acquire_program_options(transaction, key_param, options)
+            option_results = _insert_acquire_program_options(transaction, acquire_program_key, options)
     return update_result, delete_result, option_results
 
 
