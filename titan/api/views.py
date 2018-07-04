@@ -138,7 +138,7 @@ def get_execution(key):
                 extract_options.append(option)
     data["acquires"].extend(acquires.values())
     previous_versions = {
-        row["ExecutionVersion"]: flask.url_for("api.get_executions", key=row["ExecutionKey"])
+        row["ExecutionVersion"]: row["ExecutionKey"]
         for row in models.get_previous_versions(client_name, data_source_name, data_set_name,
                                                 load_date.strftime("%Y-%m-%d"), execution_key)
     }
