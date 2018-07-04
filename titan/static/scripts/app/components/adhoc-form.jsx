@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
+import moment from 'moment';
 import DateField from './form-field/date-field.jsx';
 import TextField from './form-field/text-field.jsx';
 import AcquireList from './acquire-list/index.jsx';
@@ -150,16 +151,20 @@ class AdhocForm extends React.Component {
 
     this.setState({
       isFormValid: true,
-      triggered: true
+      triggered: true,
+      executionUrl: null
     });
 
     Ajax.fetch('/api/executions/', {
       method: 'POST',
       body: JSON.stringify(data)
     })
-      .then(() => {
+      .then(response => {
         // TODO get URL for execution details page (res.headers.get('Location'))
-        console.log('execution successful!');
+        console.log(response.headers.get('Location'));
+        this.setState({
+          executionUrl: response.headers.get('Location')
+        })
       });
 
     this.goToTop();
@@ -187,6 +192,36 @@ class AdhocForm extends React.Component {
 
   render() {
 
+    const alerts = [];
+
+    // Form submitted
+    if (this.state.triggered) {
+      if (this.state.executionUrl) {
+        alerts.push(
+          <Alert key={0} title="Adhoc Execution Triggered" type="success">
+            <p>
+              <a href={this.state.executionUrl}>Click here</a> to see the execution details
+            </p>
+          </Alert>
+        );
+      } else {
+        alerts.push(
+          <Alert key={1} title="Starting Adhoc Execution" type="success">
+            <p>This may take a few moments...</p>
+          </Alert>
+        );
+      }
+    }
+
+    // Form invalid
+    if (!this.state.isFormValid) {
+      alerts.push(
+        <Alert key={2} title="Fields Missing" type="error">
+          <p>One or more required fields were not entered.</p>
+        </Alert>
+      );
+    }
+
     const execution = this.state.execution;
 
     // Acquire program dropdown options
@@ -196,20 +231,14 @@ class AdhocForm extends React.Component {
 
     const extractOptions = this.state.extract.Options;
 
+    // Max load date: yesterday
+    const maxLoadDate = moment().subtract(1, 'days');
+
     return (
       <form onSubmit={this.handleSubmit}>
-        {
-          this.state.triggered &&
-            <Alert title="Adhoc Execution Triggered" type="success">
-              <p>The execution may take a few minutes to start.  Please check the monitoring page periodically.</p>
-            </Alert>
-        }
-        {
-          !this.state.isFormValid &&
-            <Alert title="Fields Missing" type="error">
-              <p>One or more required fields were not entered.</p>
-            </Alert>
-        }
+
+        { alerts }
+
         <div>
           <label>Program</label>
           <Select
@@ -226,6 +255,7 @@ class AdhocForm extends React.Component {
           required={true}
           onChange={this.handleLoadDateChange}
           validate={!this.state.isFormValid}
+          maxDate={maxLoadDate}
         />
 
         <TextField

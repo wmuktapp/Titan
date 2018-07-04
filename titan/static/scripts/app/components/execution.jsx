@@ -26,6 +26,42 @@ class Execution extends React.Component {
     this.getData(this.props.executionKey);
   }
 
+  componentWillUnmount() {
+    this.clearReload();
+  }
+
+  executionIsRunning() {
+    return this.state.execution
+      && this.state.execution.ExecutionStatus.toUpperCase() === 'RUNNING';
+  }
+
+  // Automatically reload data every ten seconds, if this task is still running
+  setupReload() {
+    if (this.executionIsRunning() && !this.timerId) {
+      this.timerId = setInterval(
+        () => this.doReload(),
+        10000
+      );
+    }
+  }
+
+  doReload() {
+    // Only reload if this is a running execution
+    if (this.executionIsRunning()) {
+      this.getData(this.state.key, true);
+    }
+    else {
+      this.clearReload();
+    }
+  }
+
+  // Cleanup
+  clearReload() {
+    if (this.timerId) {
+      clearInterval(this.timerId);
+    }
+  }
+
   selectAnotherVersion(version) {
 
     const key = version ? version.value : this.props.executionKey;
@@ -38,11 +74,13 @@ class Execution extends React.Component {
     this.getData(key);
   }
 
-  getData(key) {
+  getData(key, doSilently) {
 
-    this.setState({
-      loading: true
-    });
+    if (!doSilently) {
+      this.setState({
+        loading: true
+      });
+    }
 
     Ajax.fetch('/api/executions/' + key)
       .then(res => res.json())
@@ -55,6 +93,10 @@ class Execution extends React.Component {
           extract: data.extract,
           history: result.other_versions
         });
+
+        // Set up polling of the server
+        this.setupReload();
+
       },
       (error) => {
         console.log('Unable to find information on excecution: ' + this.props.executionKey);
