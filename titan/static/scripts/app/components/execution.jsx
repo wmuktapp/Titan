@@ -2,6 +2,7 @@ import React from 'react';
 import ExecutionDetails from './execution/details.jsx';
 import ExecutionAcquireDetails from './execution/acquire-details.jsx';
 import ExecutionExtractDetails from './execution/extract-details.jsx';
+import ExecutionHistory from './execution-history/index.jsx';
 import Ajax from '../utils/ajax';
 
 import './execution.css';
@@ -14,7 +15,8 @@ class Execution extends React.Component {
       loading: true,
       execution: null,
       acquires: null,
-      extract: null
+      extract: null,
+      history: {}
     };
   }
 
@@ -28,7 +30,8 @@ class Execution extends React.Component {
           loading: false,
           execution: data.execution,
           acquires: data.acquires,
-          extract: data.extract
+          extract: data.extract,
+          history: result.previous_versions
         });
       },
       (error) => {
@@ -47,6 +50,11 @@ class Execution extends React.Component {
     );
     return (
       <div className="execution">
+
+        <section>
+          <ExecutionHistory versions={this.state.history} />
+        </section>
+
         <ExecutionDetails execution={this.state.execution} />
         <section className="form-section">
           <h6>Acquires</h6>
