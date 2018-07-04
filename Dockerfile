@@ -41,4 +41,3 @@ RUN git clone https://github.com/wmuktapp/Titan-FTPFileDownloader.git . && \
 WORKDIR /acquire-programs/EmailAttachmentDownloader/
 RUN git clone https://github.com/wmuktapp/Titan-EmailAttachmentDownloader.git . && \
     pip install --trusted-host pypi.python.org .
-

@@ -22,28 +22,30 @@ class AcquireProgram(object):
         self.container_name = self._app.config["TITAN_AZURE_BLOB_CONTAINER_NAME"]
         self.logger = self._app.logger
 
-    def append_blob_from_bytes(self, bytes, blob_name=None, count=None):
+    def append_blob_from_bytes(self, bytes, blob_name=None, **kwargs):
         if blob_name is None:
             blob_name = self.get_blob_name()
         if blob_name not in self._append_blobs:
             self._append_service.create_blob(self.container_name, blob_name, if_none_match="*")
             self._append_blobs.add(blob_name)
         self.logger.info("Appending bytes to blob, %s" % blob_name)
-        self._append_service.append_blob_from_bytes(self.container_name, blob_name, bytes, count=count)
+        self._append_service.append_blob_from_bytes(self.container_name, blob_name, bytes, **kwargs)
 
-    def create_blob_from_bytes(self, bytes, blob_name=None, count=None):
+    def create_blob_from_bytes(self, bytes, blob_name=None, **kwargs):
+        if_none_match = kwargs.pop("if_none_match", "*")
         if blob_name is None:
             blob_name = self.get_blob_name()
         self.logger.info("Uploading bytes, %s, to blob storage" % blob_name)
-        self._block_service.create_blob_from_bytes(self.container_name, blob_name, bytes, count=count,
-                                                   if_none_match="*")
+        self._block_service.create_blob_from_bytes(self.container_name, blob_name, bytes, if_none_match=if_none_match,
+                                                   **kwargs)
 
-    def create_blob_from_stream(self, stream, blob_name=None, count=None):
+    def create_blob_from_stream(self, stream, blob_name=None, **kwargs):
+        if_none_match = kwargs.pop("if_none_match", "*")
         if blob_name is None:
             blob_name = self.get_blob_name()
         self.logger.info("Uploading stream, %s, to blob storage" % blob_name)
-        self._block_service.create_blob_from_stream(self.container_name, blob_name, stream, count=count,
-                                                    if_none_match="*")
+        self._block_service.create_blob_from_stream(self.container_name, blob_name, stream, if_none_match=if_none_match,
+                                                    **kwargs)
 
     def get_blob_name(self, name_format=None, **params):
         if name_format is None:
