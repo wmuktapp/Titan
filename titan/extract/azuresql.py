@@ -11,11 +11,11 @@ from titan import app
 import titan
 
 
+_EXTRACT_KEY_COLUMN_NAME = "ExtractKey"   # is not escaped so must not include single quote
+
+
 class BlobsNotFoundError(Exception):
     """No blobs were found for the given extract details."""
-
-
-_EXTRACT_KEY_COLUMN_NAME = "ExtractKey"   # is not escaped so must not include single quote
 
 
 def _generate_sql_text(blobs, replace, credential_name, blob_key, data_source_name, blob_location, view_name, schema,
