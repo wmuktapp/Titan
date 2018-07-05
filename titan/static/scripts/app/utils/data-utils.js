@@ -95,6 +95,38 @@ export function getAdhocExecutionData(data) {
   };
 }
 
+// Converts schedule data into the correct format for the adhoc form
+export function convertScheduleToAdhoc(scheduleData) {
+
+  // Populate execution object
+  const execution = {
+    ExecutionClientName: scheduleData.execution.ScheduledExecutionClientName,
+    ExecutionDataSourceName: scheduleData.execution.ScheduledExecutionDataSourceName,
+    ExecutionDataSetName: scheduleData.execution.ScheduledExecutionDataSetName,
+    ExecutionLoadDate: null,
+    ExecutionUser: '',
+    AcquireProgramKey: scheduleData.execution.AcquireProgramKey
+  };
+
+  // Populate acquires array - this should be in the same format
+  const acquires = scheduleData.acquires;
+
+  // Populate extract object
+  const extract = {
+    ExtractDestination: scheduleData.extract.ScheduledExtractDestination,
+    Options: scheduleData.extract.Options
+  };
+
+  // Build the complete object
+  const adhocData = {
+    execution: execution,
+    acquires: acquires,
+    extract: extract
+  };
+
+  return adhocData;
+}
+
 
 function formatDateTime(dateTime, excludeTime) {
   const dateFormat = 'YYYY-MM-DD' + (excludeTime ? '' : ' HH:mm:ss');
