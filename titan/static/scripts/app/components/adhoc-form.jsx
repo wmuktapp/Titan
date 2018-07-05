@@ -8,7 +8,11 @@ import ExtractForm from './extract/extract-form.jsx';
 import Alert from './alert/alert.jsx';
 import Ajax from '../utils/ajax';
 
-import { getAcquireProgramOptions, getAdhocExecutionData } from '../utils/data-utils';
+import {
+  getAcquireProgramOptions,
+  getAdhocExecutionData,
+  convertScheduleToAdhoc
+} from '../utils/data-utils';
 import { validateAdhocData } from '../utils/validation';
 
 // Import styles
@@ -68,12 +72,13 @@ class AdhocForm extends React.Component {
         .then(res => res.json())
         .then(result => {
 
-          // TODO ensure data is in the right format
+          // Convert data from schedule to adhoc data
+          const data = convertScheduleToAdhoc(result.data);
 
           this.setState({
-            execution: result.data.execution,
-            acquires: result.data.acquires,
-            extract: result.data.extract
+            execution: data.execution,
+            acquires: data.acquires,
+            extract: data.extract
           });
         });
     }
