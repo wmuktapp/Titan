@@ -49,6 +49,7 @@ class ExecutionHistory extends React.Component {
           value={this.state.value}
           onChange={this.change}
           className="titan-react-select"
+          placeholder="Select another version..."
         />
       </div>
     );
