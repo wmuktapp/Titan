@@ -107,7 +107,6 @@ class AdhocForm extends React.Component {
   }
 
   // Special case for load date
-  // TODO only permit dates in the past?
   handleLoadDateChange(name, date) {
     const execution = this.state.execution;
     execution.ExecutionLoadDate = date;
@@ -140,6 +139,7 @@ class AdhocForm extends React.Component {
 
   handleSubmit(event) {
 
+    // Stop the form from submitting
     event.preventDefault();
 
     // Convert into adhoc format
@@ -165,8 +165,6 @@ class AdhocForm extends React.Component {
       body: JSON.stringify(data)
     })
       .then(response => {
-        // TODO get URL for execution details page (res.headers.get('Location'))
-        console.log(response.headers.get('Location'));
         this.setState({
           executionUrl: response.headers.get('Location')
         })
@@ -236,9 +234,6 @@ class AdhocForm extends React.Component {
 
     const extractOptions = this.state.extract.Options;
 
-    // Max load date: yesterday
-    const maxLoadDate = moment().subtract(1, 'days');
-
     return (
       <form onSubmit={this.handleSubmit}>
 
@@ -260,7 +255,7 @@ class AdhocForm extends React.Component {
           required={true}
           onChange={this.handleLoadDateChange}
           validate={!this.state.isFormValid}
-          maxDate={maxLoadDate}
+          maxDate={moment().subtract(1, 'days')}
         />
 
         <TextField
