@@ -26,7 +26,7 @@ def execute():
         acquire["Options"] = [option for option in acquire["Options"] if option["AcquireOptionValue"] != ""]
     extract = data.get("extract", {})
     if extract.get("ExtractDestination") is None:
-        extract = {}
+        extract.clear()
     else:
         extract["Options"] = [option for option in extract["Options"] if option["ExtractOptionValue"] != ""]
     if not acquires and not extract:
