@@ -36,6 +36,10 @@ class MonitoringGridExecution extends React.Component {
       : '';
   }
 
+  isSuccess() {
+    return this.props.data.ExecutionStatus.toLowerCase() === 'success';
+  }
+
   isFailure() {
     return this.props.data.ExecutionStatus.toLowerCase() === 'failure';
   }
@@ -110,7 +114,6 @@ class MonitoringGridExecution extends React.Component {
 
   render() {
 
-    const SUCCESS = 'success', FAILURE = 'failure';
     const execution = this.props.data;
     const className = 'execution'
       + (this.state.executionHover ? ' execution-hover' : '')
@@ -125,7 +128,7 @@ class MonitoringGridExecution extends React.Component {
           </span>
         </a>
         {
-          this.isFailure() &&
+          (this.isSuccess() || this.isFailure()) &&
             <input type="checkbox" checked={execution.selected} className="execution-selector" onChange={this.selectorChange} />
         }
         { this.getTooltip() }
