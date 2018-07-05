@@ -31,6 +31,7 @@ class Monitor extends React.Component {
       loading: true,
       data: [],
       retryList: [],
+      showMoreButton: true,
       message: null,
       dialogHasOk: true
     };
@@ -85,6 +86,7 @@ class Monitor extends React.Component {
 
     const callback = (result) => {
       this.setState({
+        showMoreButton: (result.data.length > 0),
         loading: false,
         data: mergeData(this.state.data, result.data)
       });
@@ -99,7 +101,6 @@ class Monitor extends React.Component {
       loading: true
     });
 
-    // TODO make this dynamic, add page number
     const url = '/api/executions/'
       + '?end_date=' + DateUtils.dateToIso8601(date)
       + '&page_number=' + pageNumber;
@@ -152,7 +153,7 @@ class Monitor extends React.Component {
     });
 
     fetch('/api/executions/retry', {
-      method: 'post',
+      method: 'POST',
       body: JSON.stringify({
         'data': this.state.retryList
       })
@@ -160,8 +161,6 @@ class Monitor extends React.Component {
       .then(result => {
           this.setState({
             retryList: [],
-            requestingRetry: false,
-            data: result.data,
             message: 'Executions restarted.  Check back in a few minutes to see progress.',
             dialogHasOk: true
           });
@@ -212,8 +211,11 @@ class Monitor extends React.Component {
         }
         {
           !isEmpty(this.state.data) &&
-            <MonitoringFooter retryList={this.state.retryList}
-              showMore={this.showMore} retryExecutions={this.retryExecutions} />
+            <MonitoringFooter
+              retryList={this.state.retryList}
+              showMore={this.state.showMoreButton && this.showMore}
+              retryExecutions={this.retryExecutions}
+            />
         }
         {
           isEmpty(this.state.data) && !this.state.loading &&

@@ -11,6 +11,7 @@ class ScheduleList extends React.Component {
     this.state = {
       schedules: [],
       loading: true,
+      pageNumber: 0,
       selectedExecutions: [],
       selectedNextScheduledDate: null,
       selectedClients: [],
@@ -32,26 +33,49 @@ class ScheduleList extends React.Component {
 
   componentDidMount() {
 
-    // On page load, retrieve a list of schedules
+    // On page load, retrieve the page data
+    this.fetchNextData()
+  }
 
-    Ajax.fetch('/api/schedules/')
+  fetchNextData() {
+
+    // Next page
+    const pageNumber = this.state.pageNumber + 1;
+
+    Ajax.fetch('/api/schedules/?page_size=100&page_number=' + pageNumber)
       .then(res => res.json())
       .then(results => {
 
-        const schedules = results.data.map(schedule => {
+        // Convert date properties into their correct data type
+        let schedules = results.data.map(schedule => {
           schedule.ScheduledExecutionNextScheduled = new Date(schedule.ScheduledExecutionNextScheduled);
           schedule.ScheduledExecutionNextLoadDate = new Date(schedule.ScheduledExecutionNextLoadDate);
           return schedule;
         });
 
+        // Merge with existing data
+        schedules = this.state.schedules.concat(schedules);
+
         this.setState({
-          schedules: schedules,
-          loading: false,
-          selectedExecutions: this.getUniqueExecutions(results.data),
-          selectedClients: this.getUniqueClients(results.data),
-          selectedDataSets: this.getUniqueDataSets(results.data)
+          schedules: schedules
         });
+
+        if (results.data.length > 0) {
+          // Is there more data?  Go and get it
+          this.fetchNextData();
+        } else {
+          // Finished retrieving data
+          this.setState({
+            loading: false,
+            selectedExecutions: this.getUniqueExecutions(schedules),
+            selectedClients: this.getUniqueClients(schedules),
+            selectedDataSets: this.getUniqueDataSets(schedules)
+          });
+        }
       });
+
+    // Update page number (denotes most recent page requested)
+    this.setState({ pageNumber })
   }
 
   // Filter update methods
