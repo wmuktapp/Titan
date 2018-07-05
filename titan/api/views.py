@@ -21,13 +21,16 @@ def execute():
     execution = data.get("execution", {})
     if execution.get("AcquireProgramKey") == 0:
         del execution["AcquireProgramKey"]
-    for acquire in data["acquires"]:
+    acquires = data.get("acquires", [])
+    for acquire in acquires:
         acquire["Options"] = [option for option in acquire["Options"] if option["AcquireOptionValue"] != ""]
     extract = data.get("extract", {})
-    if extract.get("ExtractDestination") == "":
-        del execution["extract"]
+    if extract.get("ExtractDestination") is None:
+        extract = {}
     else:
         extract["Options"] = [option for option in extract["Options"] if option["ExtractOptionValue"] != ""]
+    if not acquires and not extract:
+        return {"error": {"message": "Neither an acquire or an extract were provided."}}, 400, None
     try:
         execution_key = app.execute(data)
     except Exception as error:
