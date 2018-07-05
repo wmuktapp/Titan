@@ -6,4 +6,9 @@
 
 .schedule-table {
     width: 100%;
+    font-size: 12px;
+}
+
+.schedule-table td {
+    padding: 12px 0;
 }
