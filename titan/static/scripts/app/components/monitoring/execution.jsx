@@ -1,6 +1,5 @@
 import React from 'react';
 import ExecutionPartial from './execution-partial.jsx';
-import DateUtils from '../../utils/date-utils';
 import Tooltip from './tooltip.jsx';
 
 import './execution.css';
