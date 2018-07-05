@@ -204,20 +204,18 @@ class Monitor extends React.Component {
           data={this.state.data}
           onSelect={this.selectExecution}
         />
-        {
-          this.state.loading &&
-            <p className="monitor-loading">Loading...</p>
-        }
-        {
-          !isEmpty(this.state.data) &&
-            <MonitoringFooter
-              showMore={this.state.showMoreButton && this.showMore}
-            />
-        }
-        {
-          isEmpty(this.state.data) && !this.state.loading &&
-            <p className="monitor-empty">No monitoring data found</p>
-        }
+        <MonitoringFooter>
+          {
+            this.state.loading
+              ? <p className="monitor-loading">Loading...</p>
+              : this.state.showMoreButton && 
+                  <a onClick={this.showMore} className="monitoring-control-more">Show more</a>
+          }
+          {
+            isEmpty(this.state.data) && !this.state.loading &&
+              <p className="monitor-empty">No monitoring data found</p>
+          }
+        </MonitoringFooter>
         {
           this.state.message &&
             <Dialog onClose={this.onDialogClose} onOk={dialogOk}>
