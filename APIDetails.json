@@ -123,13 +123,16 @@ GET /executions/?page_number=1&page_size=100
                         "ExecutionStartTime": datetime (req),
                         "ExecutionEndTime": datetime,
                         "ExecutionStatus": str (req),
+                        "ExecutionErrorMessage": str,
                         "AcquireProgramKey": int,
                         "AcquireStartTime" datetime,
                         "AcquireEndTime": datetime,
                         "AcquireStatus": str (req),
+                        "AcquireErrorMessage": str,
                         "ExtractStartTime": datetime,
                         "ExtractEndTime": datetime,
-                        "ExtractStatus": str (req)
+                        "ExtractStatus": str (req),
+                        "ExtractErrorMessage": str,
                     }
                 }
             }
