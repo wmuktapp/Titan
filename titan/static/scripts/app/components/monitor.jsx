@@ -101,7 +101,6 @@ class Monitor extends React.Component {
       loading: true
     });
 
-    // TODO make this dynamic, add page number
     const url = '/api/executions/'
       + '?end_date=' + DateUtils.dateToIso8601(date)
       + '&page_number=' + pageNumber;
