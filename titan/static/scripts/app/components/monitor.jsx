@@ -31,6 +31,7 @@ class Monitor extends React.Component {
       loading: true,
       data: [],
       retryList: [],
+      showMoreButton: true,
       message: null,
       dialogHasOk: true
     };
@@ -85,6 +86,7 @@ class Monitor extends React.Component {
 
     const callback = (result) => {
       this.setState({
+        showMoreButton: (result.data.length > 0),
         loading: false,
         data: mergeData(this.state.data, result.data)
       });
@@ -212,8 +214,11 @@ class Monitor extends React.Component {
         }
         {
           !isEmpty(this.state.data) &&
-            <MonitoringFooter retryList={this.state.retryList}
-              showMore={this.showMore} retryExecutions={this.retryExecutions} />
+            <MonitoringFooter
+              retryList={this.state.retryList}
+              showMore={this.state.showMoreButton && this.showMore}
+              retryExecutions={this.retryExecutions}
+            />
         }
         {
           isEmpty(this.state.data) && !this.state.loading &&
