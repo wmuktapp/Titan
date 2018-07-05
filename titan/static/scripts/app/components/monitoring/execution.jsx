@@ -10,7 +10,8 @@ class MonitoringGridExecution extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tooltip: null
+      tooltip: null,
+      executionHover: false
     };
     this.handleExecutionHover = this.handleExecutionHover.bind(this);
     this.handleAcquireHover = this.handleAcquireHover.bind(this);
