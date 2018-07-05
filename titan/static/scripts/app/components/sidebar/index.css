@@ -1,0 +1,19 @@
+
+.sidebar {
+    position: fixed;
+    padding: 1em;
+    background-color: #fff;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, .08);
+}
+
+.sidebar-left {
+    top: 0;
+    left: 0;
+    border-radius: 0 .5em .5em 0;
+}
+
+.sidebar-right {
+    top: 0;
+    right: 0;
+    border-radius: .5em 0 0 .5em;
+}

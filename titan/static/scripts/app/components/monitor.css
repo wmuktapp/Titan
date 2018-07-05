@@ -17,10 +17,6 @@
 }
 
 .monitor-btn-retry {
-    float: right;
-}
-
-.monitor-btn-disabled {
-    opacity: .5;
-    cursor: default;
+    padding: 0 10px;
+    margin: 0;
 }
