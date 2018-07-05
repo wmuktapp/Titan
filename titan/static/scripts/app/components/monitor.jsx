@@ -153,7 +153,7 @@ class Monitor extends React.Component {
     });
 
     fetch('/api/executions/retry', {
-      method: 'post',
+      method: 'POST',
       body: JSON.stringify({
         'data': this.state.retryList
       })
@@ -161,8 +161,6 @@ class Monitor extends React.Component {
       .then(result => {
           this.setState({
             retryList: [],
-            requestingRetry: false,
-            data: result.data,
             message: 'Executions restarted.  Check back in a few minutes to see progress.',
             dialogHasOk: true
           });
