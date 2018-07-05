@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import ScheduleList from './components/schedules/list.jsx';
+import ScheduleList from './components/schedules/index.jsx';
 
 class SchedulesApp extends React.Component {
   render() {
