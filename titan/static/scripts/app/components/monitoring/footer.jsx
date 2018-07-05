@@ -5,11 +5,7 @@ class MonitoringFooter extends React.Component {
   render() {
     return (
       <div className="monitor-controls-footer">
-        {
-          this.props.showMore &&
-            <a onClick={this.props.showMore} className="monitoring-control-more">Show more</a>
-        }
-        <a onClick={this.props.retryExecutions} className={'monitor-btn-retry' + (!!this.props.retryList.length ? '' : ' monitor-btn-disabled')}>Retry</a>
+        { this.props.children }
       </div>
     );
   }

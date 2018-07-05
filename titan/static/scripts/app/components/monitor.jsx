@@ -7,6 +7,7 @@ import Ajax from '../utils/ajax';
 import { isEmpty, mergeData } from '../utils/data-utils';
 import DateUtils from '../utils/date-utils';
 import Dialog from '../utils/dialog.jsx';
+import SideBar from './sidebar/index.jsx';
 
 import './monitor.css';
 
@@ -86,7 +87,7 @@ class Monitor extends React.Component {
 
     const callback = (result) => {
       this.setState({
-        showMoreButton: (result.data.length > 0),
+        showMoreButton: !isEmpty(result.data),
         loading: false,
         data: mergeData(this.state.data, result.data)
       });
@@ -188,8 +189,6 @@ class Monitor extends React.Component {
       );
     }
 
-    // TODO pass retryList to MonitoringGrid, use it to handle checked / unchecked state
-
     const dialogOk = this.state.dialogHasOk ? this.onDialogClose : null;
 
     return (
@@ -205,27 +204,31 @@ class Monitor extends React.Component {
           data={this.state.data}
           onSelect={this.selectExecution}
         />
-        {
-          this.state.loading &&
-            <p className="monitor-loading">Loading...</p>
-        }
-        {
-          !isEmpty(this.state.data) &&
-            <MonitoringFooter
-              retryList={this.state.retryList}
-              showMore={this.state.showMoreButton && this.showMore}
-              retryExecutions={this.retryExecutions}
-            />
-        }
-        {
-          isEmpty(this.state.data) && !this.state.loading &&
-            <p className="monitor-empty">No monitoring data found</p>
-        }
+        <MonitoringFooter>
+          {
+            this.state.loading
+              ? <p className="monitor-loading">Loading...</p>
+              : this.state.showMoreButton && 
+                  <a onClick={this.showMore} className="monitoring-control-more">Show more</a>
+          }
+          {
+            isEmpty(this.state.data) && !this.state.loading &&
+              <p className="monitor-empty">No monitoring data found</p>
+          }
+        </MonitoringFooter>
         {
           this.state.message &&
             <Dialog onClose={this.onDialogClose} onOk={dialogOk}>
               <p>{this.state.message}</p>
             </Dialog>
+        }
+        {
+          !!this.state.retryList.length &&
+            <SideBar orient="right" offsetTop={100}>
+              <a className="button button-primary monitor-btn-retry" onClick={this.retryExecutions}>
+                Retry ({this.state.retryList.length})
+              </a>
+            </SideBar>
         }
       </div>
     );

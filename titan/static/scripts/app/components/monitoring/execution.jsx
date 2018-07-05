@@ -1,7 +1,6 @@
 import React from 'react';
 import ExecutionPartial from './execution-partial.jsx';
-import Tooltip from '../tooltip/index.jsx';
-import DateUtils from '../../utils/date-utils';
+import Tooltip from './tooltip.jsx';
 
 import './execution.css';
 
@@ -10,23 +9,14 @@ class MonitoringGridExecution extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showTooltip: false
+      tooltip: null,
+      executionHover: false
     };
-    this.mouseOver = this.mouseOver.bind(this);
-    this.mouseOut = this.mouseOut.bind(this);
+    this.handleExecutionHover = this.handleExecutionHover.bind(this);
+    this.handleAcquireHover = this.handleAcquireHover.bind(this);
+    this.handleExtractHover = this.handleExtractHover.bind(this);
+    this.clearTooltip = this.clearTooltip.bind(this);
     this.selectorChange = this.selectorChange.bind(this);
-  }
-
-  mouseOver() {
-    this.setState({
-      showTooltip: true
-    });
-  }
-
-  mouseOut() {
-    this.setState({
-      showTooltip: false
-    });
   }
 
   selectorChange(e) {
@@ -46,55 +36,102 @@ class MonitoringGridExecution extends React.Component {
       : '';
   }
 
+  isSuccess() {
+    return this.props.data.ExecutionStatus.toLowerCase() === 'success';
+  }
+
   isFailure() {
     return this.props.data.ExecutionStatus.toLowerCase() === 'failure';
   }
 
+  handleExecutionHover() {
+    this.setState({
+      tooltip: 'execution',
+      executionHover: true
+    });
+    event.stopPropagation();
+  }
+
+  handleAcquireHover(event) {
+    this.setState({
+      tooltip: 'acquire',
+      executionHover: false
+    });
+    event.stopPropagation();
+  }
+
+  handleExtractHover(event) {
+    this.setState({
+      tooltip: 'extract',
+      executionHover: false
+    });
+    event.stopPropagation();
+  }
+
+  clearTooltip() {
+    this.setState({
+      tooltip: null,
+      executionHover: false
+    });
+  }
+
+  getTooltip() {
+
+    const execution = this.props.data;
+
+    switch(this.state.tooltip) {
+      case 'execution':
+        return (
+          <Tooltip
+            title="Execution"
+            startTime={execution.ExecutionStartTime}
+            endTime={execution.ExecutionEndTime}
+            error={execution.ExecutionErrorMessage}
+          />
+        );
+      case 'acquire':
+        return (
+          <Tooltip
+            title="Acquire"
+            startTime={execution.AcquireStartTime}
+            endTime={execution.AcquireEndTime}
+            error={execution.AcquireErrorMessage}
+          />
+        );
+      case 'extract':
+        return (
+          <Tooltip
+            title="Extract"
+            startTime={execution.ExtractStartTime}
+            endTime={execution.ExtractEndTime}
+            error={execution.ExtractErrorMessage}
+          />
+        );
+    }
+
+    return null;
+  }
+
   render() {
 
-    // TODO update tooltips
-
-    const SUCCESS = 'success', FAILURE = 'failure';
     const execution = this.props.data;
     const className = 'execution'
-      + (DateUtils.isYesterday(this.props.date) ? ' execution-highlight' : '')
+      + (this.state.executionHover ? ' execution-hover' : '')
       + this.getStatusClass(execution.ExecutionStatus);
 
-    const errorMessage = 'Unable to access blah blah blah'; // TODO
-
     return (
-      <span className={className}>
-        <a href={`/monitoring/executions/${execution.ExecutionKey}`} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
+      <span className={className} onMouseOver={this.handleExecutionHover} onMouseOut={this.clearTooltip}>
+        <a href={`/monitoring/executions/${execution.ExecutionKey}`}>
           <span className="execution-parts">
-            <ExecutionPartial status={execution.AcquireStatus}>A</ExecutionPartial>
-            <ExecutionPartial status={execution.ExtractStatus}>E</ExecutionPartial>
+            <ExecutionPartial status={execution.AcquireStatus} onMouseOver={this.handleAcquireHover}>A</ExecutionPartial>
+            <ExecutionPartial status={execution.ExtractStatus} onMouseOver={this.handleExtractHover}>E</ExecutionPartial>
           </span>
         </a>
         {
-          this.isFailure() &&
+          (this.isSuccess() || this.isFailure()) &&
             <input type="checkbox" checked={execution.selected} className="execution-selector" onChange={this.selectorChange} />
         }
-        {
-          this.state.showTooltip &&
-            <Tooltip offsetY={50}>
-              <p>
-                <label>Execution time:</label> {execution.ExecutionStartTime || '-'}
-              </p>
-              <p>
-                <label>Acquire time:</label> {execution.AcquireStartTime || '-'}
-              </p>
-              <p>
-                <label>Extract time:</label> {execution.ExtractStartTime || '-'}
-              </p>
-              {
-                errorMessage &&
-                  <p className="tooltip-error">
-                    <span className="fas fa-exclamation-triangle tooltip-error-icon" />
-                    Unable to access blah blah blah
-                  </p>
-              }
-            </Tooltip>
-        }
+        { this.getTooltip() }
       </span>
     );
   }

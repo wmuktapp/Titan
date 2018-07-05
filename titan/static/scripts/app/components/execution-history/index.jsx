@@ -22,11 +22,24 @@ class ExecutionHistory extends React.Component {
 
   render() {
 
-    const options = Object.keys(this.props.versions).map(key => {
+    let options = Object.keys(this.props.versions).map(key => {
       return {
         label: key,
         value: this.props.versions[key]
       };
+    });
+
+    // Sort options by number
+    options = options.sort((a, b) => {
+      const numA = Number(a.label.replace('v', '')),
+        numB = Number(b.label.replace('v', ''));
+      if (numA < numB) {
+        return -1;
+      }
+      if (numA > numB) {
+        return 1;
+      }
+      return 0;
     });
 
     return (
@@ -36,6 +49,7 @@ class ExecutionHistory extends React.Component {
           value={this.state.value}
           onChange={this.change}
           className="titan-react-select"
+          placeholder="Select another version..."
         />
       </div>
     );

@@ -16,7 +16,7 @@ class ExecutionPartial extends React.Component {
 
   render() {
     return (
-      <span className={'execution-partial ' + this.statusClass()}>
+      <span className={'execution-partial ' + this.statusClass()} onMouseOver={this.props.onMouseOver}>
         { this.props.children }
       </span>
     );

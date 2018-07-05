@@ -153,8 +153,8 @@ export function createBlankIntervalDays() {
     ScheduledWednesdayEnabled: true,
     ScheduledThursdayEnabled: true,
     ScheduledFridayEnabled: true,
-    ScheduledSaturdayEnabled: false,
-    ScheduledSundayEnabled: false
+    ScheduledSaturdayEnabled: true,
+    ScheduledSundayEnabled: true
   };
 }
 

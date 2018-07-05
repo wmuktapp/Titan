@@ -41,7 +41,7 @@ class ScheduleForm extends React.Component {
         ScheduledExecutionDataSetName: '',
         ScheduledExecutionNextLoadDate: null,
         ScheduledExecutionUser: '',
-        ScheduledExecutionEnabled: true,
+        ScheduledExecutionEnabled: false,
         AcquireProgramKey: 0
       },
 
@@ -411,7 +411,7 @@ class ScheduleForm extends React.Component {
 
         <div className="form-checkbox-field">
           <label>
-            <input type="checkbox" name="ScheduledExecutionEnabled" checked={this.ScheduledExecutionEnabled} onChange={this.onExecutionChange} />
+            <input type="checkbox" name="ScheduledExecutionEnabled" checked={execution.ScheduledExecutionEnabled} onChange={this.onExecutionChange} />
             <span className="label-body">Enabled</span>
           </label>
         </div>

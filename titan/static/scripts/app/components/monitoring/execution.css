@@ -17,6 +17,12 @@
     background-color: rgba(249, 174, 66, .15);
 }
 
+.execution-hover {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid #f9ae42;
+}
+
 .execution-parts {
     display: inline-block;
     border: 1px solid #fff;
@@ -33,6 +39,12 @@
     text-align: center;
     background-color: #fff;
     color: #aaa;
+}
+
+.execution-partial:hover {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid #f9ae42;
 }
 
 .execution-success {
