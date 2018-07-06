@@ -56,6 +56,8 @@ class ScheduleForm extends React.Component {
 
       includeRepeat: false,
 
+      hasDataError: false,
+
       scheduleAddedOrUpdated: false,
       isFormValid: true
     };
@@ -93,7 +95,12 @@ class ScheduleForm extends React.Component {
             execution: result.data.execution,
             acquires: result.data.acquires,
             extract: result.data.extract,
-            includeRepeat: this.shouldIncludeRepeat(result.data.execution)
+            includeRepeat: this.shouldIncludeRepeat(result.data.execution),
+            hasDataError: false
+          });
+        }, error => {
+          this.setState({
+            hasDataError: true
           });
         });
     }
@@ -280,6 +287,14 @@ class ScheduleForm extends React.Component {
   }
 
   render() {
+
+    if (this.state.hasDataError) {
+      return (
+        <Alert title="Unable to retrieve data" type="error" canDismiss={false}>
+          <p>We were unable to pull any data from the server.  Refresh the page to try again.</p>
+        </Alert>
+      );
+    }
 
     // NOTE: Handles both insert and update
 
