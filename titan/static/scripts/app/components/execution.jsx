@@ -19,9 +19,13 @@ class Execution extends React.Component {
       acquires: [],
       extract: null,
       history: {},
-      hasDataError: false
+      hasDataError: false,
+      didRetry: false,
+      retrying: false
     };
     this.selectAnotherVersion = this.selectAnotherVersion.bind(this);
+    this.retry = this.retry.bind(this);
+    this.retryDismissed = this.retryDismissed.bind(this);
   }
 
   componentDidMount() {
@@ -110,9 +114,50 @@ class Execution extends React.Component {
       });
   }
 
+  shouldAllowRetry() {
+    const status = this.state.execution && this.state.execution.ExecutionStatus.toUpperCase();
+    return status === 'SUCCESS' || status === 'FAILURE';
+  }
+
+  retry() {
+
+    if (!this.shouldAllowRetry) {
+      return;
+    }
+
+    this.setState({
+      didRetry: false,
+      retrying: true
+    });
+
+    Ajax.fetch('/api/executions/retry', {
+      method: 'POST',
+      body: JSON.stringify({
+        data: [ this.state.execution.ExecutionKey ]
+      })
+    })
+      .then(response => response.json())
+      .then(response => {
+        this.setState({
+          didRetry: true,
+          retrying: false
+        });
+
+        this.getData(this.state.execution.ExecutionKey);
+      });
+
+    // Scroll to top
+    window.scrollTo(0, 0);
+  }
+
+  retryDismissed() {
+    this.setState({
+      didRetry: false,
+      retrying: false
+    })
+  }
+
   render() {
-
-
 
     const acquires = this.state.acquires.map(
       acquire => <ExecutionAcquireDetails key={acquire.AcquireKey} acquire={acquire} />
@@ -134,6 +179,24 @@ class Execution extends React.Component {
           this.state.hasDataError &&
             <Alert title="Unable to retrieve data" type="error" canDismiss={false}>
               <p>An error occurred when retrieving data for execution with ID {this.props.executionKey}.  Refresh the page to try again.</p>
+            </Alert>
+        }
+
+        {
+          this.state.retrying &&
+            <Alert title="Retrying..." type="info" canDismiss={false}>
+              <p>Give us a second...</p>
+            </Alert>
+        }
+
+        {
+          this.state.didRetry &&
+            <Alert title="Execution retried" type="info" onClose={this.retryDismissed}>
+              {
+                this.executionIsRunning
+                  ? <p>Check back in a few minutes to see progress.</p>
+                  : <p>The task was rerun - see below for details</p>
+              }
             </Alert>
         }
 
@@ -165,6 +228,15 @@ class Execution extends React.Component {
                       </section>
                   }
               </div>
+        }
+
+        {
+          this.shouldAllowRetry() &&
+            <div className="form-section">
+              <a className="button" onClick={this.retry}>
+                Retry<span className="fas fa-sync-alt execution-retry" />
+              </a>
+            </div>
         }
         
       </div>
