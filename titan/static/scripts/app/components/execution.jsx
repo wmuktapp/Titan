@@ -74,6 +74,9 @@ class Execution extends React.Component {
 
     // NOTE: State not updated yet
     this.getData(key);
+
+    // Update URL
+    history.pushState({}, null, `/monitoring/executions/${key}`);
   }
 
   getData(key, doSilently) {
