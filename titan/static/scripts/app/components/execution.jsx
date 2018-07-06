@@ -94,7 +94,7 @@ class Execution extends React.Component {
           acquires: data.acquires,
           extract: data.extract,
           history: result.other_versions,
-          hasDataError: true
+          hasDataError: false
         });
 
         // Set up polling of the server
