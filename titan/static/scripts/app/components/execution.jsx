@@ -3,6 +3,7 @@ import ExecutionDetails from './execution/details.jsx';
 import ExecutionAcquireDetails from './execution/acquire-details.jsx';
 import ExecutionExtractDetails from './execution/extract-details.jsx';
 import ExecutionHistory from './execution-history/index.jsx';
+import Alert from './alert/alert.jsx';
 import Ajax from '../utils/ajax';
 
 import './execution.css';
@@ -17,7 +18,8 @@ class Execution extends React.Component {
       execution: null,
       acquires: [],
       extract: null,
-      history: {}
+      history: {},
+      hasDataError: false
     };
     this.selectAnotherVersion = this.selectAnotherVersion.bind(this);
   }
@@ -91,19 +93,23 @@ class Execution extends React.Component {
           execution: data.execution,
           acquires: data.acquires,
           extract: data.extract,
-          history: result.other_versions
+          history: result.other_versions,
+          hasDataError: true
         });
 
         // Set up polling of the server
         this.setupReload();
 
-      },
-      (error) => {
-        console.log('Unable to find information on excecution: ' + this.props.executionKey);
+      }, error => {
+        this.setState({
+          hasDataError: true
+        })
       });
   }
 
   render() {
+
+
 
     const acquires = this.state.acquires.map(
       acquire => <ExecutionAcquireDetails key={acquire.AcquireKey} acquire={acquire} />
@@ -120,6 +126,13 @@ class Execution extends React.Component {
             <ExecutionHistory versions={this.state.history} onChange={this.selectAnotherVersion} />
           </div>
         </section>
+
+        {
+          this.state.hasDataError &&
+            <Alert title="Unable to retrieve data" type="error" canDismiss={false}>
+              <p>An error occurred when retrieving data for execution with ID {this.props.executionKey}.  Refresh the page to try again.</p>
+            </Alert>
+        }
 
         {
           this.state.loading
