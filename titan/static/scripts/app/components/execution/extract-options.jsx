@@ -20,7 +20,7 @@ class ExecutionExtractOptions extends React.Component {
 
   render() {
 
-    const icon = this.state.expanded ? 'fa-angle-left' : 'fa-angle-right';
+    const icon = this.state.expanded ? 'fa-angle-down' : 'fa-angle-up';
 
     const optionsList = this.props.options.map(
       (option, index) => <ExecutionTaskOption key={index} name={option.ExtractOptionName} value={option.ExtractOptionValue} />

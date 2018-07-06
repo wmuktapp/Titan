@@ -71,7 +71,8 @@ class Monitor extends React.Component {
     const callback = (result) => {
       this.setState({
         loading: false,
-        data: result.data
+        data: result.data,
+        showMoreButton: !isEmpty(result.data)
       });
     }
 

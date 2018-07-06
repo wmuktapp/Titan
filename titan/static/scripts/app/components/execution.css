@@ -13,8 +13,11 @@
     margin-right: 10px;
 }
 
+.execution-retry {
+    margin-left: 1em;
+}
+
 .acquire-details {
-    display: flex;
     padding-bottom: 10px;
 }
 
@@ -24,35 +27,33 @@
 }
 
 .acquire-info {
-    width: 320px;
 }
 
 .acquire-options {
-    display: flex;
+    overflow: hidden;
 }
 
 .acquire-options-toggle-wrap {
-    margin-right: 10px;
+    margin-bottom: 10px;
 }
 
 .extract-details {
-    display: flex;
 }
 
 .extract-info {
-    width: 320px;
 }
 
 .extract-options {
-    display: flex;
+    overflow: hidden;
 }
 
 .extract-options-toggle-wrap {
-    margin-right: 10px;
+    margin-bottom: 10px;
 }
 
 .execution-option-label {
     width: 180px;
+    color: #888;
 }
 
 .task-status {

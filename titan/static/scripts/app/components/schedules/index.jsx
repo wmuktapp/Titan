@@ -1,6 +1,8 @@
 import React from 'react';
 import ScheduleTable from './table.jsx';
+import Alert from '../alert/alert.jsx';
 import Ajax from '../../utils/ajax';
+import DateUtils from '../../utils/date-utils';
 
 import './schedule.css';
 
@@ -20,7 +22,8 @@ class ScheduleList extends React.Component {
       selectedEnabled: {
         selectedTrue: true,
         selectedFalse: true
-      }
+      },
+      hasDataError: false
     };
 
     this.onNextScheduledDateFilterChange = this.onNextScheduledDateFilterChange.bind(this);
@@ -48,8 +51,8 @@ class ScheduleList extends React.Component {
 
         // Convert date properties into their correct data type
         let schedules = results.data.map(schedule => {
-          schedule.ScheduledExecutionNextScheduled = new Date(schedule.ScheduledExecutionNextScheduled);
-          schedule.ScheduledExecutionNextLoadDate = new Date(schedule.ScheduledExecutionNextLoadDate);
+          schedule.ScheduledExecutionNextScheduled = DateUtils.dateFromString(schedule.ScheduledExecutionNextScheduled);
+          schedule.ScheduledExecutionNextLoadDate = DateUtils.dateFromString(schedule.ScheduledExecutionNextLoadDate);
           return schedule;
         });
 
@@ -69,9 +72,14 @@ class ScheduleList extends React.Component {
             loading: false,
             selectedExecutions: this.getUniqueExecutions(schedules),
             selectedClients: this.getUniqueClients(schedules),
-            selectedDataSets: this.getUniqueDataSets(schedules)
+            selectedDataSets: this.getUniqueDataSets(schedules),
+            hasDataError: false
           });
         }
+      }, error => {
+        this.setState({
+          hasDataError: true
+        })
       });
 
     // Update page number (denotes most recent page requested)
@@ -147,6 +155,14 @@ class ScheduleList extends React.Component {
   }
 
   render() {
+
+    if (this.state.hasDataError) {
+      return (
+        <Alert title="Error retrieving data" type="error" canDismiss={false}>
+          <p>An error occurred while retrieving data.  Refresh the page to try again.</p>
+        </Alert>
+      );
+    }
 
     // TODO can we remove the need for these?
     const

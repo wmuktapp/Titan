@@ -30,6 +30,12 @@
     margin: 0;
 }
 
+.alert-info {
+    border-color: rgba(91, 160, 181, .2);
+    color: rgba(91, 160, 181, 1);
+    background-color: rgba(91, 160, 181, .1);
+}
+
 .alert-success {
     border-color: rgba(16, 162, 49, .2);
     color: #10a231;

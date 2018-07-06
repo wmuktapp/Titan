@@ -25,7 +25,7 @@ class ExecutionAcquireOptions extends React.Component {
       return null;
     }
 
-    const icon = this.state.expanded ? 'fa-angle-left' : 'fa-angle-right';
+    const icon = this.state.expanded ? 'fa-angle-down' : 'fa-angle-up';
 
     const options = this.props.options.map(
       (option, index) => <ExecutionTaskOption key={index} name={option.AcquireOptionName} value={option.AcquireOptionValue} />

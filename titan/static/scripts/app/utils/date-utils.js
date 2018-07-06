@@ -7,7 +7,11 @@ const dateUtils = {
   },
 
   // Return the date in UK format (DD-MM-YYYY)
-  dateToString(date) {
+  dateToString(date, blankValue) {
+
+    if (!date) {
+      return blankValue || '';
+    }
 
     let day = date.getDate(),
       month = date.getMonth() + 1,
@@ -21,6 +25,12 @@ const dateUtils = {
     }
 
     return day + '-' + month + '-' + year;
+  },
+
+  dateFromString(dateString) {
+    return dateString
+      ? new Date(dateString)
+      : null;
   },
 
   getWeekday(date) {
