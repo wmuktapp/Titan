@@ -1,6 +1,7 @@
 import React from 'react';
 import ScheduleTable from './table.jsx';
 import Ajax from '../../utils/ajax';
+import DateUtils from '../../utils/date-utils';
 
 import './schedule.css';
 
@@ -48,8 +49,8 @@ class ScheduleList extends React.Component {
 
         // Convert date properties into their correct data type
         let schedules = results.data.map(schedule => {
-          schedule.ScheduledExecutionNextScheduled = new Date(schedule.ScheduledExecutionNextScheduled);
-          schedule.ScheduledExecutionNextLoadDate = new Date(schedule.ScheduledExecutionNextLoadDate);
+          schedule.ScheduledExecutionNextScheduled = DateUtils.dateFromString(schedule.ScheduledExecutionNextScheduled);
+          schedule.ScheduledExecutionNextLoadDate = DateUtils.dateFromString(schedule.ScheduledExecutionNextLoadDate);
           return schedule;
         });
 
