@@ -73,7 +73,8 @@ class ExtractForm extends React.Component {
 
     option.ScheduledExtractOptionValue = target.value;
 
-    this.props.onOptionsChange(options, this.isValid());
+    // NOTE: Pass options config to parent, just in case it's not there
+    this.props.onOptionsChange(options, this.getOptionsConfig());
   }
 
   createBlankExtractOption(name) {
@@ -83,8 +84,9 @@ class ExtractForm extends React.Component {
     }
   }
 
-  getOptionsConfig() {
-    const dest = this.state.availableDestinations.find(d => d.ExtractProgramPythonName === this.state.destination);
+  getOptionsConfig(destinations) {
+    const availableDestinations = destinations || this.state.availableDestinations;  // Use state if not specified
+    const dest = availableDestinations.find(d => d.ExtractProgramPythonName === this.state.destination);
     return dest ? dest.Options : [];
   }
 
@@ -93,30 +95,6 @@ class ExtractForm extends React.Component {
     return this.getOptionsConfig()
       .filter(config => config.ExtractProgramOptionRequired)
       .map(config => config.ExtractProgramOptionName);
-  }
-
-  // Check that the extract is valid
-  isValid() {
-
-    // If destination is blank, this is fine
-    if (!this.state.destination) {
-      return true;
-    }
-
-    const invalidOptions = [];
-    const requiredOptions = this.getRequiredOptions();
-    
-    // Cross-reference options with a list of required options
-    for (let optionName of requiredOptions) {
-
-      const option = this.state.options.find(option => option.ScheduledExtractOptionName === optionName);
-
-      if (!option || !option.ScheduledExtractOptionValue) {
-        invalidOptions.push(optionName);
-      }
-    }
-
-    return invalidOptions.length === 0;
   }
 
   render() {

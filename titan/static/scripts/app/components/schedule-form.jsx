@@ -133,8 +133,6 @@ class ScheduleForm extends React.Component {
       > 0;
   }
 
-  // TODO move this logic into RepeatForm
-
   addRepeat() {
 
     // Add default interval and day values to this.state
@@ -199,11 +197,12 @@ class ScheduleForm extends React.Component {
     });
   }
 
-  updateExtractOptions(options) {
+  updateExtractOptions(options, optionConfig) {
     const extract = this.state.extract;
     extract.Options = options;
     this.setState({
-      extract: extract
+      extract: extract,
+      extractOptionConfig: optionConfig || this.state.extractOptionConfig
     });
   }
 
@@ -227,8 +226,6 @@ class ScheduleForm extends React.Component {
     })
       .then(res => res.json())
       .then(response => {
-
-        // TODO handle returned execution data
 
         const execution = this.state.execution;
         execution.ScheduledExecutionKey = execution.ScheduledExecutionKey || response.ScheduledExecutionKey;
