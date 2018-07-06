@@ -16,6 +16,9 @@ class Alert extends React.Component {
     this.setState({
       removed: true
     });
+    if (this.props.onClose) {
+      this.props.onClose();
+    }
   }
 
   getClassName() {
