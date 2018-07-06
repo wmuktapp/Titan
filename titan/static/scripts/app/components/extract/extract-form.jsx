@@ -49,9 +49,7 @@ class ExtractForm extends React.Component {
     const label = destination ? destination.label : '';
 
     // Get option config
-    const optionConfig = destination
-      ? this.state.availableDestinations.find(d => d.ExtractProgramPythonName === destination.value).Options
-      : [];
+    const optionConfig = this.getOptionsConfig();
 
     // Reset options
     const options = optionConfig.map(option => {
