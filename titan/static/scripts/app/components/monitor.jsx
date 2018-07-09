@@ -35,9 +35,10 @@ class Monitor extends React.Component {
     };
 
     // Bind events
-    this.selectExecution = this.selectExecution.bind(this);
     this.showDates = this.showDates.bind(this);
     this.showMore = this.showMore.bind(this);
+    this.selectExecution = this.selectExecution.bind(this);
+    this.clearRetries = this.clearRetries.bind(this);
   }
 
   componentDidMount() {
@@ -138,6 +139,12 @@ class Monitor extends React.Component {
     });
   }
 
+  clearRetries() {
+    this.setState({
+      retryList: []
+    });
+  }
+
   render() {
 
     if (this.state.hasError) {
@@ -160,6 +167,7 @@ class Monitor extends React.Component {
           end={this.state.end}
           data={this.state.data}
           onSelect={this.selectExecution}
+          retryList={this.state.retryList}
         />
         <MonitoringFooter>
           {
@@ -173,7 +181,7 @@ class Monitor extends React.Component {
               <p className="monitor-empty">No monitoring data found</p>
           }
         </MonitoringFooter>
-        <Retry ids={this.state.retryList} />
+        <Retry ids={this.state.retryList} onRetry={this.clearRetries} />
       </div>
     );
   }

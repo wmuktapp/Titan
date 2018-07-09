@@ -29,14 +29,23 @@ class Retry extends React.Component {
     });
 
     doRetry(this.props.ids, result => {
+      
+      // Successfully started
       this.setState({
         retryState: RETRY_STATE.STARTED
       });
+
+      // Call parent method, if applicable
+      if (!!this.props.onRetry) {
+        this.props.onRetry();
+      }
     }, error => {
+      // Failed to start retry
       this.setState({
         retryState: RETRY_STATE.FAILED
       });
     });
+
   }
 
   clearDialog() {
@@ -83,7 +92,8 @@ class Retry extends React.Component {
 }
 
 Retry.propTypes = {
-  ids: PropTypes.arrayOf(PropTypes.number).isRequired
+  ids: PropTypes.arrayOf(PropTypes.number).isRequired,
+  onRetry: PropTypes.func
 }
 
 export default Retry;
