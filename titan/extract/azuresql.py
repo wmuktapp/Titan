@@ -125,7 +125,7 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
     extract_key = data["extract"]["ExtractKey"]
     execution = data["execution"]
     # If this execution includes acquires, that is what we want to extract else the last successful execution version
-    execution_version = execution["ExecutionVersion" if data.get("acquires") else "LastSuccessfulExecutionVersion"]
+    execution_version = str(execution["ExecutionVersion" if data.get("acquires") else "LastSuccessfulExecutionVersion"])
     blob_prefix = posixpath.join(execution["ExecutionClientName"], execution["ExecutionDataSourceName"],
                                  execution["ExecutionDataSetName"], execution["ExecutionLoadDate"],
                                  execution_version)
