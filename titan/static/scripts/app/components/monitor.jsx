@@ -36,7 +36,6 @@ class Monitor extends React.Component {
 
     // Bind events
     this.selectExecution = this.selectExecution.bind(this);
-    this.retryExecutions = this.retryExecutions.bind(this);
     this.showDates = this.showDates.bind(this);
     this.showMore = this.showMore.bind(this);
   }
@@ -174,7 +173,7 @@ class Monitor extends React.Component {
               <p className="monitor-empty">No monitoring data found</p>
           }
         </MonitoringFooter>
-        <Retry ids={this.state.retryList} onRetry={this.retryExecutions} />
+        <Retry ids={this.state.retryList} />
       </div>
     );
   }

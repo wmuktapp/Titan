@@ -28,7 +28,6 @@ class Retry extends React.Component {
       retryState: RETRY_STATE.REQUESTED
     });
 
-    // TODO call server
     doRetry(this.props.ids, result => {
       this.setState({
         retryState: RETRY_STATE.STARTED
@@ -84,8 +83,7 @@ class Retry extends React.Component {
 }
 
 Retry.propTypes = {
-  ids: PropTypes.arrayOf(PropTypes.number).isRequired,
-  onRetry: PropTypes.func.isRequired
+  ids: PropTypes.arrayOf(PropTypes.number).isRequired
 }
 
 export default Retry;

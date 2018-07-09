@@ -5,7 +5,7 @@ const URLS = {
   retryExecutions: '/api/executions/retry'
 };
 
-export function doRetry(ids, callback) {
+export function doRetry(ids, onSuccess, onError) {
   
   return Ajax.fetch(URLS.retryExecutions, {
     method: 'POST',
@@ -14,5 +14,5 @@ export function doRetry(ids, callback) {
     })
   })
     .then(response => response.json())
-    .then(callback);
+    .then(onSuccess, onError);
 }
