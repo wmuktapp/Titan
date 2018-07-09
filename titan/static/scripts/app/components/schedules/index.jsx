@@ -82,7 +82,7 @@ class ScheduleList extends React.Component {
       });
 
     // Update page number (denotes most recent page requested)
-    this.setState({ pageNumber })
+    this.setState({ pageNumber });
   }
 
   // Filter update methods
