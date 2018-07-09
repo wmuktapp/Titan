@@ -154,7 +154,7 @@ class Monitor extends React.Component {
       dialogHasOk: false
     });
 
-    fetch('/api/executions/retry', {
+    Ajax.fetch('/api/executions/retry', {
       method: 'POST',
       body: JSON.stringify({
         'data': this.state.retryList
