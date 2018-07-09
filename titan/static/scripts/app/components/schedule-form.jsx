@@ -7,7 +7,6 @@ import ExtractForm from './extract/extract-form.jsx';
 import TextField from './form-field/text-field.jsx';
 import DateField from './form-field/date-field.jsx';
 import Label from './label.jsx';
-import Ajax from '../utils/ajax';
 
 import {
   createBlankIntervalDays,
@@ -17,9 +16,12 @@ import {
   getWeekDays,
   getExecutionDays
 } from '../utils/data-utils';
+import {
+  fetchSchedule,
+  fetchAcquires,
+  insertOrUpdateSchedule
+} from '../services/data';
 import { validateScheduleData } from '../utils/validation';
-import { fetchSchedule } from '../services/data';
-
 
 // Import styles
 import 'react-select/dist/react-select.css';
@@ -78,14 +80,12 @@ class ScheduleForm extends React.Component {
 
   componentDidMount() {
 
-    // Get acquire prohrams
-    Ajax.fetch('/api/acquire-programs/')
-      .then(res => res.json())
-      .then(result => {
-        this.setState({
-          availablePrograms: result.data
-        });
+    // Get acquire programs from data service
+    fetchAcquires(result => {
+      this.setState({
+        availablePrograms: result.data
       });
+    });
 
     if (this.state.execution.ScheduledExecutionKey) {
 
@@ -225,25 +225,23 @@ class ScheduleForm extends React.Component {
       return;
     }
 
+    // Format data for API
     const data = getExecutionData(this.state);
-    const key = this.state.execution.ScheduledExecutionKey;
 
-    // Send insert/update to server
-    Ajax.fetch('/api/schedules/' + (key || ''), {
-      method: key ? 'PUT' : 'POST',
-      body: JSON.stringify(data)
-    })
-      .then(res => res.json())
-      .then(response => {
+    // Send insert/update to server via data service
+    insertOrUpdateSchedule(
+      data,
+      this.state.execution.ScheduledExecutionKey,
+      result => {
 
-        const execution = this.state.execution;
-        execution.ScheduledExecutionKey = execution.ScheduledExecutionKey || response.ScheduledExecutionKey;
+      const execution = this.state.execution;
+      execution.ScheduledExecutionKey = execution.ScheduledExecutionKey || result.ScheduledExecutionKey;
 
-        this.setState({
-          execution: execution,
-          scheduleAddedOrUpdated: true
-        });
+      this.setState({
+        execution: execution,
+        scheduleAddedOrUpdated: true
       });
+    });
 
     this.goToTop();
   }

@@ -4,7 +4,9 @@ import DateUtils from './../utils/date-utils';
 const URLS = {
   fetchExecutions: '/api/executions/',
   retryExecutions: '/api/executions/retry',
-  fetchSchedules: '/api/schedules/'
+  fetchSchedules: '/api/schedules/',
+  changeSchedules: '/api/schedules/',
+  fetchAcquirePrograms: '/api/acquire-programs/'
 };
 
 export function doRetry(ids, onSuccess, onError) {
@@ -49,6 +51,21 @@ export function fetchSchedules(pageNumber, onSuccess, onError) {
 export function fetchSchedule(key, onSuccess, onError) {
 
   return Ajax.fetch(URLS.fetchSchedules + key)
+    .then(response => response.json())
+    .then(onSuccess, onError);
+}
+
+export function fetchAcquires(onSuccess, onError) {
+  return Ajax.fetch(URLS.fetchAcquirePrograms)
+    .then(response => response.json())
+    .then(onSuccess, onError);
+}
+
+export function insertOrUpdateSchedule(data, key, onSuccess, onError) {
+  return Ajax.fetch(URLS.changeSchedules + (key || ''), {
+    method: key ? 'PUT' : 'POST',
+    body: JSON.stringify(data)
+  })
     .then(response => response.json())
     .then(onSuccess, onError);
 }
