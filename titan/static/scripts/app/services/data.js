@@ -45,3 +45,10 @@ export function fetchSchedules(pageNumber, onSuccess, onError) {
     .then(response => response.json())
     .then(onSuccess, onError);
 }
+
+export function fetchSchedule(key, onSuccess, onError) {
+
+  return Ajax.fetch(URLS.fetchSchedules + key)
+    .then(response => response.json())
+    .then(onSuccess, onError);
+}

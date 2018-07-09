@@ -18,6 +18,7 @@ import {
   getExecutionDays
 } from '../utils/data-utils';
 import { validateScheduleData } from '../utils/validation';
+import { fetchSchedule } from '../services/data';
 
 
 // Import styles
@@ -88,9 +89,10 @@ class ScheduleForm extends React.Component {
 
     if (this.state.execution.ScheduledExecutionKey) {
 
-      Ajax.fetch(`/api/schedules/${this.state.execution.ScheduledExecutionKey}`)
-        .then(res => res.json())
-        .then(result => {
+      // Get schedule data from data service
+      fetchSchedule(
+        this.state.execution.ScheduledExecutionKey,
+        result => {
           this.setState({
             execution: result.data.execution,
             acquires: result.data.acquires,
