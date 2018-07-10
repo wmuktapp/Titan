@@ -51,9 +51,9 @@ def adhoc():
 
 @flask_app.errorhandler(404)
 def resource_not_found(_):
-    return flask.render_template("404.html")
+    return flask.render_template("404.html"), 404, None
 
 
 @flask_app.errorhandler(500)
 def internal_server_error(_):
-    return flask.render_template("500.html")
+    return flask.render_template("500.html"), 500, None
