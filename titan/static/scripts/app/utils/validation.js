@@ -23,7 +23,7 @@ const requiredAdhocFields = {
 function isValid(value) {
 
   if (typeof value === 'object') {
-    return true;
+    return value != null;
   }
 
   return !!value
