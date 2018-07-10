@@ -153,6 +153,8 @@ class Execution extends React.Component {
 
   render() {
 
+    const scheduleKey = this.state.execution ? this.state.execution.ExecutionKey : null;
+
     return (
       <div className="execution">
 
@@ -197,25 +199,23 @@ class Execution extends React.Component {
                 <ExecutionDetails execution={this.state.execution} />
                 <ExecutionAcquireSection acquires={this.state.acquires} />
                 <ExecutionExtractSection extract={this.state.extract} />
-                {
-                  this.state.execution.ScheduledExecutionKey &&
-                    <section className="form-section">
-                      <a href={`/schedules/${this.state.execution.ScheduledExecutionKey}`}>
-                        Go to schedule <span className="fas fa-angle-right" />
-                      </a>
-                    </section>
-                }
               </div>
         }
 
-        {
-          this.shouldAllowRetry() &&
-            <div className="form-section">
+        <div className="form-section">
+          {
+            this.shouldAllowRetry() &&
               <a className="button" onClick={this.retry}>
                 Retry<span className="fas fa-sync-alt execution-retry" />
               </a>
-            </div>
-        }
+          }
+          {
+            !!scheduleKey &&
+              <a href={`/schedules/${scheduleKey}`} className="button">
+                Go to schedule <span className="fas fa-angle-right" />
+              </a>
+          }
+        </div>
         
       </div>
     );
