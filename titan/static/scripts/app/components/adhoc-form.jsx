@@ -7,6 +7,7 @@ import AcquireList from './acquire-list/index.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import Alert from './alert/alert.jsx';
 import Ajax from '../utils/ajax';
+import { fetchAcquires } from '../services/data';
 
 import {
   getAcquireProgramOptions,
@@ -57,14 +58,12 @@ class AdhocForm extends React.Component {
 
   componentDidMount() {
 
-    // Get available acquire programs
-    Ajax.fetch('/api/acquire-programs/')
-      .then(res => res.json())
-      .then(result => {
-        this.setState({
-          availablePrograms: result.data
-        });
+    // Get available acquire programs from data service
+    fetchAcquires(result => {
+      this.setState({
+        availablePrograms: result.data
       });
+    });
 
     if (this.state.schedule) {
 
