@@ -11,10 +11,11 @@ from titan.api import decorators
 
 
 def get_id_token():
-
-    print(flask.request.headers.get("X-MS-TOKEN-AAD-REFRESH-TOKEN", ""))
-
     return "Bearer %s" % flask.request.headers.get("X-MS-TOKEN-AAD-ID-TOKEN", "")
+
+
+def get_refresh_token():
+    return flask.request.headers.get("X-MS-TOKEN-AAD-REFRESH-TOKEN", "")
 
 
 def get_security_context():
