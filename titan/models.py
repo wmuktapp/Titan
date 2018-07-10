@@ -103,7 +103,7 @@ def get_versions(client_name, data_source_name, data_set_name, load_date):
 def get_queue(max_items=None):
     params = {} if max_items is None else {"MaxItems": max_items}
     with db.engine.begin() as transaction:
-        return list(_execute_stored_procedure(transaction, "dbo.SP_GetQueue", params))
+        return list(_execute_stored_procedure(transaction, "config.SP_GetQueue", params))
 
 
 def get_running_container_groups():
