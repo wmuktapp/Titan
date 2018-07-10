@@ -1,7 +1,7 @@
 import React from 'react';
 import ExecutionDetails from './execution/details.jsx';
-import ExecutionAcquireDetails from './execution/acquire-details.jsx';
-import ExecutionExtractDetails from './execution/extract-details.jsx';
+import ExecutionAcquireSection from './execution/acquire-section.jsx';
+import ExecutionExtractSection from './execution/extract-section.jsx';
 import ExecutionHistory from './execution-history/index.jsx';
 import Alert from './alert/alert.jsx';
 import { doRetry, fetchExecution } from '../services/data';
@@ -153,9 +153,7 @@ class Execution extends React.Component {
 
   render() {
 
-    const acquires = this.state.acquires.map(
-      acquire => <ExecutionAcquireDetails key={acquire.AcquireKey} acquire={acquire} />
-    );
+    const scheduleKey = this.state.execution ? this.state.execution.ExecutionKey : null;
 
     return (
       <div className="execution">
@@ -199,39 +197,25 @@ class Execution extends React.Component {
             ? <p className="execution-loading">Loading...</p>
             : <div>
                 <ExecutionDetails execution={this.state.execution} />
-                  {
-                    !!this.state.acquires.length &&
-                      <section className="form-section">
-                        <h6>Acquires</h6>
-                        { acquires }
-                      </section>
-                  }
-                  {
-                    this.state.extract.ExtractKey &&
-                      <section className="form-section">
-                        <h6>Extract</h6>
-                        <ExecutionExtractDetails extract={this.state.extract} />
-                      </section>
-                  }
-                  {
-                    this.state.execution.ScheduledExecutionKey &&
-                      <section className="form-section">
-                        <a href={`/schedules/${this.state.execution.ScheduledExecutionKey}`}>
-                          Go to schedule <span className="fas fa-angle-right" />
-                        </a>
-                      </section>
-                  }
+                <ExecutionAcquireSection acquires={this.state.acquires} />
+                <ExecutionExtractSection extract={this.state.extract} />
               </div>
         }
 
-        {
-          this.shouldAllowRetry() &&
-            <div className="form-section">
+        <div className="form-section">
+          {
+            this.shouldAllowRetry() &&
               <a className="button" onClick={this.retry}>
                 Retry<span className="fas fa-sync-alt execution-retry" />
               </a>
-            </div>
-        }
+          }
+          {
+            !!scheduleKey &&
+              <a href={`/schedules/${scheduleKey}`} className="button">
+                Go to schedule <span className="fas fa-angle-right" />
+              </a>
+          }
+        </div>
         
       </div>
     );

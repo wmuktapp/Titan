@@ -36,7 +36,6 @@ export function validateScheduleData(data, acquireOptionConfig, extractOptionCon
   // Validate execution
   for (let field of requiredScheduleFields.execution) {
     if (!isValid(data.execution[field])) {
-      console.log('execution: ' + field);
       return false;
     }
   }
