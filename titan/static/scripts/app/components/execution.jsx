@@ -4,7 +4,7 @@ import ExecutionAcquireDetails from './execution/acquire-details.jsx';
 import ExecutionExtractDetails from './execution/extract-details.jsx';
 import ExecutionHistory from './execution-history/index.jsx';
 import Alert from './alert/alert.jsx';
-import Ajax from '../utils/ajax';
+import { doRetry, fetchExecution } from '../services/data';
 
 import './execution.css';
 
@@ -91,9 +91,9 @@ class Execution extends React.Component {
       });
     }
 
-    Ajax.fetch('/api/executions/' + key)
-      .then(res => res.json())
-      .then(result => {
+    fetchExecution(
+      key,
+      result => {
         const data = result.data;
         this.setState({
           loading: false,
@@ -130,19 +130,13 @@ class Execution extends React.Component {
       retrying: true
     });
 
-    Ajax.fetch('/api/executions/retry', {
-      method: 'POST',
-      body: JSON.stringify({
-        data: [ this.state.execution.ExecutionKey ]
-      })
-    })
-      .then(response => response.json())
-      .then(response => {
+    doRetry(
+      this.state.execution.ExecutionKey,
+      response => {
         this.setState({
           didRetry: true,
           retrying: false
         });
-
         this.getData(this.state.execution.ExecutionKey);
       });
 
