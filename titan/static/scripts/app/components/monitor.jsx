@@ -3,9 +3,8 @@ import MonitoringControls from './monitoring/controls.jsx';
 import MonitoringGrid from './monitoring/grid.jsx';
 import MonitoringFooter from './monitoring/footer.jsx';
 import Alert from './alert/alert.jsx'
-import Ajax from '../utils/ajax';
 import { isEmpty, mergeData } from '../utils/data-utils';
-import DateUtils from '../utils/date-utils';
+import { fetchMonitorData } from '../services/data';
 import Retry from './monitoring/retry/index.jsx';
 
 import './monitor.css';
@@ -99,22 +98,14 @@ class Monitor extends React.Component {
       loading: true
     });
 
-    const url = '/api/executions/'
-      + '?end_date=' + DateUtils.dateToIso8601(date)
-      + '&page_number=' + pageNumber;
+    // Fetch data using data service
+    fetchMonitorData(date, pageNumber, callback, error => {
+      console.error(error.message);
+      this.setState({
+        hasError: true
+      });
+    });
 
-    // Request data
-    Ajax.fetch(url)
-      .then(response => response.json())
-      .then(
-        callback,
-        error => {
-          console.error(error.message);
-          this.setState({
-            hasError: true
-          });
-        }
-      );
   }
 
   selectExecution(executionKey, add) {

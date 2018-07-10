@@ -70,8 +70,8 @@
 
 .filter-menu-row input[type=checkbox] {
     position: absolute;
-    left: .7em;
-    top: .65em;
+    left: .5em;
+    top: .5em;
 }
 
 .filter-menu-row label {

@@ -2,7 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 import Label from '../label.jsx';
 import TextField from '../form-field/text-field.jsx';
-import Ajax from '../../utils/ajax';
+import { fetchExtracts } from '../../services/data';
 
 class ExtractForm extends React.Component {
 
@@ -20,13 +20,12 @@ class ExtractForm extends React.Component {
   }
 
   componentDidMount() {
-    Ajax.fetch('/api/extract-programs/')
-      .then(res => res.json())
-      .then(result => {
-        this.setState({
-          availableDestinations: result.data
-        });
+    // Get extract destinations from data service
+    fetchExtracts(result => {
+      this.setState({
+        availableDestinations: result.data
       });
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -88,13 +87,6 @@ class ExtractForm extends React.Component {
     const availableDestinations = destinations || this.state.availableDestinations;  // Use state if not specified
     const dest = availableDestinations.find(d => d.ExtractProgramPythonName === this.state.destination);
     return dest ? dest.Options : [];
-  }
-
-  // Get a list of the fields which are required
-  getRequiredOptions() {
-    return this.getOptionsConfig()
-      .filter(config => config.ExtractProgramOptionRequired)
-      .map(config => config.ExtractProgramOptionName);
   }
 
   render() {

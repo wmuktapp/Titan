@@ -15,7 +15,7 @@ def index():
 
 @flask_app.route("/monitoring")
 def monitoring():
-    return flask.render_template("monitoring.html", access_token=app.get_id_token())
+    return flask.render_template("monitoring.html", access_token=app.get_id_token(), refresh_token=app.get_refresh_token())
 
 
 @flask_app.route("/monitoring/executions/<int:execution_key>")

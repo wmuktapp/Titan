@@ -1,7 +1,7 @@
 import React from 'react';
 import ScheduleTable from './table.jsx';
 import Alert from '../alert/alert.jsx';
-import Ajax from '../../utils/ajax';
+import { fetchSchedules } from '../../services/data';
 import DateUtils from '../../utils/date-utils';
 
 import './schedule.css';
@@ -45,9 +45,8 @@ class ScheduleList extends React.Component {
     // Next page
     const pageNumber = this.state.pageNumber + 1;
 
-    Ajax.fetch('/api/schedules/?page_size=100&page_number=' + pageNumber)
-      .then(res => res.json())
-      .then(results => {
+    // Fetch schedules from data service
+    fetchSchedules(pageNumber, results => {
 
         // Convert date properties into their correct data type
         let schedules = results.data.map(schedule => {
@@ -79,11 +78,11 @@ class ScheduleList extends React.Component {
       }, error => {
         this.setState({
           hasDataError: true
-        })
+        });
       });
 
     // Update page number (denotes most recent page requested)
-    this.setState({ pageNumber })
+    this.setState({ pageNumber });
   }
 
   // Filter update methods

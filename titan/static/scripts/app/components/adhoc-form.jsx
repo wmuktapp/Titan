@@ -6,13 +6,17 @@ import TextField from './form-field/text-field.jsx';
 import AcquireList from './acquire-list/index.jsx';
 import ExtractForm from './extract/extract-form.jsx';
 import Alert from './alert/alert.jsx';
-import Ajax from '../utils/ajax';
 
 import {
   getAcquireProgramOptions,
   getAdhocExecutionData,
   convertScheduleToAdhoc
 } from '../utils/data-utils';
+import {
+  createExecution,
+  fetchAcquires,
+  fetchSchedule
+} from '../services/data';
 import { validateAdhocData } from '../utils/validation';
 
 // Import styles
@@ -57,20 +61,16 @@ class AdhocForm extends React.Component {
 
   componentDidMount() {
 
-    // Get available acquire programs
-    Ajax.fetch('/api/acquire-programs/')
-      .then(res => res.json())
-      .then(result => {
-        this.setState({
-          availablePrograms: result.data
-        });
+    // Get available acquire programs from data service
+    fetchAcquires(result => {
+      this.setState({
+        availablePrograms: result.data
       });
+    });
 
     if (this.state.schedule) {
 
-      Ajax.fetch('/api/schedules/' + this.state.schedule)
-        .then(res => res.json())
-        .then(result => {
+      fetchSchedule(this.state.schedule, result => {
 
           // Convert data from schedule to adhoc data
           const data = convertScheduleToAdhoc(result.data);
@@ -160,15 +160,12 @@ class AdhocForm extends React.Component {
       executionUrl: null
     });
 
-    Ajax.fetch('/api/executions/', {
-      method: 'POST',
-      body: JSON.stringify(data)
-    })
-      .then(response => {
-        this.setState({
-          executionUrl: response.headers.get('Location')
-        })
-      });
+    // Send new execution via data service
+    createExecution(data, response => {
+      this.setState({
+        executionUrl: response.headers.get('Location')
+      })
+    });
 
     this.goToTop();
   }
