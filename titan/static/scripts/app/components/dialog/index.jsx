@@ -1,6 +1,5 @@
 import React from 'react';
-
-require('./dialog.css');
+import './dialog.css';
 
 class Dialog extends React.Component {
   
@@ -13,10 +12,16 @@ class Dialog extends React.Component {
   }
 
   close() {
+    if (!this.props.canDismiss) {
+      return;
+    }
     this.props.onClose();
   }
 
   ok() {
+    if (!this.props.canDismiss) {
+      return;
+    }
     this.props.onOk();
   }
 
@@ -41,5 +46,9 @@ class Dialog extends React.Component {
 
   }  
 }
+
+Dialog.defaultProps = {
+  canDismiss: true
+};
 
 export default Dialog;

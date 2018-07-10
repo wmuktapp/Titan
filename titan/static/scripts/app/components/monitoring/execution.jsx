@@ -129,7 +129,7 @@ class MonitoringGridExecution extends React.Component {
         </a>
         {
           (this.isSuccess() || this.isFailure()) &&
-            <input type="checkbox" checked={execution.selected} className="execution-selector" onChange={this.selectorChange} />
+            <input type="checkbox" checked={this.props.isSelected} className="execution-selector" onChange={this.selectorChange} />
         }
         { this.getTooltip() }
       </span>

@@ -6,8 +6,7 @@ import Alert from './alert/alert.jsx'
 import Ajax from '../utils/ajax';
 import { isEmpty, mergeData } from '../utils/data-utils';
 import DateUtils from '../utils/date-utils';
-import Dialog from '../utils/dialog.jsx';
-import SideBar from './sidebar/index.jsx';
+import Retry from './monitoring/retry/index.jsx';
 
 import './monitor.css';
 
@@ -32,17 +31,14 @@ class Monitor extends React.Component {
       loading: true,
       data: [],
       retryList: [],
-      showMoreButton: true,
-      message: null,
-      dialogHasOk: true
+      showMoreButton: true
     };
 
     // Bind events
-    this.selectExecution = this.selectExecution.bind(this);
-    this.retryExecutions = this.retryExecutions.bind(this);
     this.showDates = this.showDates.bind(this);
     this.showMore = this.showMore.bind(this);
-    this.onDialogClose = this.onDialogClose.bind(this);
+    this.selectExecution = this.selectExecution.bind(this);
+    this.clearRetries = this.clearRetries.bind(this);
   }
 
   componentDidMount() {
@@ -109,10 +105,10 @@ class Monitor extends React.Component {
 
     // Request data
     Ajax.fetch(url)
-      .then(res => res.json())
+      .then(response => response.json())
       .then(
         callback,
-        (error) => {
+        error => {
           console.error(error.message);
           this.setState({
             hasError: true
@@ -143,40 +139,9 @@ class Monitor extends React.Component {
     });
   }
 
-  retryExecutions() {
-
-    if (this.state.retryList.length === 0) {
-      return;
-    }
-
+  clearRetries() {
     this.setState({
-      message: 'Restarting executions...',
-      dialogHasOk: false
-    });
-
-    Ajax.fetch('/api/executions/retry', {
-      method: 'POST',
-      body: JSON.stringify({
-        'data': this.state.retryList
-      })
-    }).then(res => res.json())
-      .then(result => {
-          this.setState({
-            retryList: [],
-            message: 'Executions restarted.  Check back in a few minutes to see progress.',
-            dialogHasOk: true
-          });
-        },
-        (error) => {
-          // TODO error handling
-          console.log('Error retrieving data');
-        }
-      );
-  }
-
-  onDialogClose() {
-    this.setState({
-      message: null
+      retryList: []
     });
   }
 
@@ -190,8 +155,6 @@ class Monitor extends React.Component {
       );
     }
 
-    const dialogOk = this.state.dialogHasOk ? this.onDialogClose : null;
-
     return (
       <div className="monitor-grid">
         <MonitoringControls
@@ -204,6 +167,7 @@ class Monitor extends React.Component {
           end={this.state.end}
           data={this.state.data}
           onSelect={this.selectExecution}
+          retryList={this.state.retryList}
         />
         <MonitoringFooter>
           {
@@ -217,20 +181,7 @@ class Monitor extends React.Component {
               <p className="monitor-empty">No monitoring data found</p>
           }
         </MonitoringFooter>
-        {
-          this.state.message &&
-            <Dialog onClose={this.onDialogClose} onOk={dialogOk}>
-              <p>{this.state.message}</p>
-            </Dialog>
-        }
-        {
-          !!this.state.retryList.length &&
-            <SideBar orient="right" offsetTop={100}>
-              <a className="button button-primary monitor-btn-retry" onClick={this.retryExecutions}>
-                Retry ({this.state.retryList.length})
-              </a>
-            </SideBar>
-        }
+        <Retry ids={this.state.retryList} onRetry={this.clearRetries} />
       </div>
     );
   }

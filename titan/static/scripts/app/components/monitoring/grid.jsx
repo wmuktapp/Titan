@@ -22,6 +22,7 @@ class MonitoringGrid extends React.Component {
         end={this.props.end}
         data={datum}
         selectExecution={this.props.onSelect}
+        retryList={this.props.retryList}
         highlight={highlight}
       />;
     })

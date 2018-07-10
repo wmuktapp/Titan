@@ -16,11 +16,13 @@ class MonitoringGridDataSet extends React.Component {
       const execution = this.props.data[temp.format('YYYY-MM-DD')];
 
       if (execution) {
+        const isSelected = this.props.retryList.indexOf(execution.ExecutionKey) > -1;
         executions.push(
           <MonitoringGridExecution
             key={key}
             data={execution}
             select={this.props.selectExecution}
+            isSelected={isSelected}
             executionKey={execution.ExecutionKey}
             date={temp.toDate()}
           />

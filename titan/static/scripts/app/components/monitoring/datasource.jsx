@@ -17,6 +17,7 @@ class MonitoringGridDataSource extends React.Component {
           end={this.props.end}
           data={datum}
           selectExecution={this.props.selectExecution}
+          retryList={this.props.retryList}
         />
       );
     });
