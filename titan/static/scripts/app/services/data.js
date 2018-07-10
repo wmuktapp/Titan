@@ -4,6 +4,7 @@ import DateUtils from './../utils/date-utils';
 const URLS = {
   fetchExecutions: '/api/executions/',
   retryExecutions: '/api/executions/retry',
+  changeExecutions: '/api/executions',
   fetchSchedules: '/api/schedules/',
   changeSchedules: '/api/schedules/',
   fetchAcquirePrograms: '/api/acquire-programs/',
@@ -37,6 +38,15 @@ export function fetchExecution(key, onSuccess, onError) {
 
   return Ajax.fetch(URLS.fetchExecutions + key)
     .then(response => response.json())
+    .then(onSuccess, onError);
+}
+
+export function createExecution(data, onSuccess, onError) {
+
+  return Ajax.fetch(URLS.changeExecutions, {
+    method: 'POST',
+    body: JSON.stringify(data)
+  })
     .then(onSuccess, onError);
 }
 
