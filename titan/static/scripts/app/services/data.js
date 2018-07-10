@@ -6,7 +6,8 @@ const URLS = {
   retryExecutions: '/api/executions/retry',
   fetchSchedules: '/api/schedules/',
   changeSchedules: '/api/schedules/',
-  fetchAcquirePrograms: '/api/acquire-programs/'
+  fetchAcquirePrograms: '/api/acquire-programs/',
+  fetchExtractPrograms: '/api/extract-programs/'
 };
 
 export function doRetry(ids, onSuccess, onError) {
@@ -57,6 +58,12 @@ export function fetchSchedule(key, onSuccess, onError) {
 
 export function fetchAcquires(onSuccess, onError) {
   return Ajax.fetch(URLS.fetchAcquirePrograms)
+    .then(response => response.json())
+    .then(onSuccess, onError);
+}
+
+export function fetchExtracts(onSuccess, onError) {
+  return Ajax.fetch(URLS.fetchExtractPrograms)
     .then(response => response.json())
     .then(onSuccess, onError);
 }
