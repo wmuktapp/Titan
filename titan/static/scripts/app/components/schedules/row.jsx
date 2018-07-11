@@ -1,5 +1,6 @@
 import React from 'react';
 import DateUtils from '../../utils/date-utils';
+import moment from 'moment';
 
 class ScheduleTableRow extends React.Component {
 
@@ -7,6 +8,7 @@ class ScheduleTableRow extends React.Component {
 
     const schedule = this.props.schedule;
     const nextDate = DateUtils.dateToString(schedule.ScheduledExecutionNextScheduled, '-'),
+      nextTime = DateUtils.toTimeString(schedule.ScheduledExecutionNextScheduled),
       loadDate = DateUtils.dateToString(schedule.ScheduledExecutionNextLoadDate, '-');
 
     return (
@@ -14,7 +16,11 @@ class ScheduleTableRow extends React.Component {
         <td>
           <a href={`/schedules/${schedule.ScheduledExecutionKey}`}>{schedule.ScheduledExecutionName}</a>
         </td>
-        <td>{nextDate}</td>
+        <td>
+          {nextDate}
+          <br />
+          <span className="schedule-time">{nextTime}</span>
+        </td>
         <td>{schedule.ScheduledExecutionClientName}</td>
         <td>{schedule.ScheduledExecutionDataSetName}</td>
         <td>{loadDate}</td>

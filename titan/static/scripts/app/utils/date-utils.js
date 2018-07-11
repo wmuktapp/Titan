@@ -1,3 +1,4 @@
+import moment from 'moment';
 
 const dateUtils = {
 
@@ -25,6 +26,13 @@ const dateUtils = {
     }
 
     return day + '-' + month + '-' + year;
+  },
+
+  toTimeString(date) {
+    if (!date) {
+      return '';
+    }
+    return moment(date).format('HH:mm');
   },
 
   dateFromString(dateString) {
