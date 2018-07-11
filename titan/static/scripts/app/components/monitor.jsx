@@ -9,6 +9,8 @@ import Retry from './monitoring/retry/index.jsx';
 
 import './monitor.css';
 
+const NUMBER_OF_DAYS = 5;
+
 class Monitor extends React.Component {
 
   constructor() {
@@ -18,7 +20,7 @@ class Monitor extends React.Component {
     const days = 5;
 
     const start = new Date();
-    start.setDate(start.getDate() - days);
+    start.setDate(start.getDate() - NUMBER_OF_DAYS);
     const end = new Date();
     end.setDate(end.getDate() - 1);
 
