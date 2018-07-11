@@ -9,6 +9,7 @@
     font-size: 12px;
 }
 
+.schedule-table th,
 .schedule-table td {
     padding: 12px 0;
 }
