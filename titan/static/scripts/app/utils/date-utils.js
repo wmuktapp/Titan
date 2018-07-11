@@ -8,7 +8,7 @@ const dateUtils = {
   },
 
   // Return the date in UK format (DD-MM-YYYY)
-  dateToString(date, blankValue) {
+  toDateString(date, blankValue) {
 
     if (!date) {
       return blankValue || '';
