@@ -11,13 +11,9 @@ class MonitoringControls extends React.Component {
     this.selectDate = this.selectDate.bind(this);
   }
 
+  // New date selected
   selectDate(value) {
-    
-    const start = value.toDate();
-    start.setDate(start.getDate() - 4);
-    const end = value.toDate();
-
-    this.props.onSelectDates(start, end);
+    this.props.onSelectDate(value.toDate());
   }
 
   render() {

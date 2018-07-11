@@ -17,18 +17,13 @@ class Monitor extends React.Component {
 
     super();
 
-    const days = 5;
-
-    const start = new Date();
-    start.setDate(start.getDate() - NUMBER_OF_DAYS);
-    const end = new Date();
-    end.setDate(end.getDate() - 1);
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
 
     this.state = {
       hasError: false,
       pageNumber: 1,
-      start: start,
-      end: end,
+      endDate: yesterday,
       loading: true,
       data: [],
       retryList: [],
@@ -36,7 +31,7 @@ class Monitor extends React.Component {
     };
 
     // Bind events
-    this.showDates = this.showDates.bind(this);
+    this.selectDate = this.selectDate.bind(this);
     this.showMore = this.showMore.bind(this);
     this.selectExecution = this.selectExecution.bind(this);
     this.clearRetries = this.clearRetries.bind(this);
@@ -51,17 +46,16 @@ class Monitor extends React.Component {
       });
     };
 
-    this.fetchData(this.state.end, this.state.pageNumber, callback);
+    this.fetchData(this.state.endDate, this.state.pageNumber, callback);
   }
 
-  showDates(start, end) {
+  selectDate(date) {
 
     const pageNumber = 1;
 
     this.setState({
       pageNumber: pageNumber,
-      start: start,
-      end: end,
+      endDate: date,
       data: []
     });
 
@@ -73,7 +67,7 @@ class Monitor extends React.Component {
       });
     }
 
-    this.fetchData(end, pageNumber, callback);
+    this.fetchData(date, pageNumber, callback);
   }
 
   showMore() {
@@ -90,7 +84,7 @@ class Monitor extends React.Component {
         data: mergeData(this.state.data, result.data)
       });
     };
-    this.fetchData(this.state.end, pageNumber, callback);
+    this.fetchData(this.state.endDate, pageNumber, callback);
   }
 
   fetchData(date, pageNumber, callback) {
@@ -148,16 +142,19 @@ class Monitor extends React.Component {
       );
     }
 
+    const startDate = new Date(this.state.endDate);
+    startDate.setDate(startDate.getDate() - NUMBER_OF_DAYS + 1);
+
     return (
       <div className="monitor-grid">
         <MonitoringControls
-          start={this.state.start}
-          end={this.state.end}
-          onSelectDates={this.showDates}
+          start={startDate}
+          end={this.state.endDate}
+          onSelectDate={this.selectDate}
         />
         <MonitoringGrid
-          start={this.state.start}
-          end={this.state.end}
+          start={startDate}
+          end={this.state.endDate}
           data={this.state.data}
           onSelect={this.selectExecution}
           retryList={this.state.retryList}
