@@ -138,17 +138,18 @@ th, td {
 .tab {
     display: inline-block;
     border-radius: .5em;
-    transition: background-color .2s;
+    color: #aaa;
+    transition: color .1s;
 }
 
-.tab:not(.tab-selected):hover {
-    background-color: #fcfcfc;
+.tab:hover {
+    color: #3d413d;
 }
 
 .tab a {
     display: inline-block;
     padding: .5em 1em;
-    color: #aaa;
+    color: inherit;
     text-decoration: none;
 }
 
