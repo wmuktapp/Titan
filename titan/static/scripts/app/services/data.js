@@ -106,8 +106,9 @@ function getAuthorisationUri(response) {
   const header = response.headers.get('WWW-Authenticate');
 
   if (header) {
-    return header.split(' ')
-      .find(value => value.startsWith('authorization_uri')).substring(0);
+    let authUri = header.split(' ')
+      .find(value => value.startsWith('authorization_uri'));
+    return authUri.substring(19, authUri.length - 1)
   }
 
   return null;
