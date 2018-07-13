@@ -8,6 +8,15 @@ class ExecutionAcquireDetails extends React.Component {
 
     const acquire = this.props.acquire;
 
+    const errorMessage = acquire.AcquireErrorMessage
+      ? acquire.AcquireErrorMessage.split('\n').map((line, key) => {
+        return <span key={key}>
+          {line}
+          <br />
+        </span>;
+      })
+      : [];
+
     return (
       <div className="acquire-details">
 
@@ -34,7 +43,7 @@ class ExecutionAcquireDetails extends React.Component {
             acquire.AcquireStatus && acquire.AcquireStatus.toUpperCase() === 'FAILURE' &&
               <div>
                 <label>Error Message</label>
-                <span className="execution-value">{acquire.AcquireErrorMessage}</span>
+                <span className="execution-value">{errorMessage}</span>
               </div>
           }
         </div>
