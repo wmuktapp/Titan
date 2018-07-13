@@ -93,12 +93,8 @@ function fetch(url, options = {}, count = 0) {
         const iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         iframe.setAttribute('src', '/.auth/login/aad?prompt=none&domain_hint=wmglobal.com')
-        iframe.onload = function() {
-          // Retry
-          fetch(url, options, count + 1);
-        }
         document.body.append(iframe);
-
+        return;
       }
 
       if (response.status === 404) {
