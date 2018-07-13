@@ -1,6 +1,8 @@
 import Ajax from './../utils/ajax';
 import DateUtils from './../utils/date-utils';
 
+const NOT_FOUND_PAGE = '/404';
+
 const URLS = {
   fetchExecutions: '/api/executions/',
   retryExecutions: '/api/executions/retry',
@@ -60,9 +62,7 @@ export function fetchSchedules(pageNumber, onSuccess, onError) {
 }
 
 export function fetchSchedule(key, onSuccess, onError) {
-
-  return Ajax.fetch(URLS.fetchSchedules + key)
-    .then(response => response.json())
+  return fetch(URLS.fetchSchedules + key)
     .then(onSuccess, onError);
 }
 
@@ -86,3 +86,17 @@ export function insertOrUpdateSchedule(data, key, onSuccess, onError) {
     .then(response => response.json())
     .then(onSuccess, onError);
 }
+
+function fetch(url, options = {}) {
+  return Ajax.fetch(url, options)
+    .then(response => {
+
+      if (response.status === 404) {
+        window.location.href = NOT_FOUND_PAGE;
+        return;
+      }
+
+      return response.json();
+    });
+}
+
