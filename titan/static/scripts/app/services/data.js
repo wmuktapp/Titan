@@ -79,16 +79,26 @@ export function insertOrUpdateSchedule(data, key, onSuccess, onError) {
     .then(onSuccess, onError);
 }
 
-function fetch(url, options = {}) {
+function fetch(url, options = {}, count = 0) {
   return Ajax.fetch(url, options)
     .then(response => {
 
       if (response.status === 401) {
-        // Get the authentication URL
-        const authorization_uri = getAuthorisationUri(response);
-        if (authorization_uri) {
-          window.location.href = authorization_uri;
+        
+        if (count > 5) {
+          return;
         }
+
+        // Hidden iframe reconnects
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.setAttribute('src', '/.auth/login/aad?prompt=none&domain_hint=wmglobal.com')
+        iframe.onload = function() {
+          // Retry
+          fetch(url, options, count + 1);
+        }
+        document.body.append(iframe);
+
       }
 
       if (response.status === 404) {
@@ -98,18 +108,4 @@ function fetch(url, options = {}) {
 
       return response.json();
     });
-}
-
-
-function getAuthorisationUri(response) {
-
-  const header = response.headers.get('WWW-Authenticate');
-
-  if (header) {
-    let authUri = header.split(' ')
-      .find(value => value.startsWith('authorization_uri'));
-    return authUri.substring(19, authUri.length - 1)
-  }
-
-  return null;
 }
