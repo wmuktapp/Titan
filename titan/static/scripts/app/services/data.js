@@ -83,6 +83,14 @@ function fetch(url, options = {}) {
   return Ajax.fetch(url, options)
     .then(response => {
 
+      if (response.status === 401) {
+        // Get the authentication URL
+        const authorization_uri = getAuthorisationUri(response);
+        if (authorization_uri) {
+          window.location.href = authorization_uri;
+        }
+      }
+
       if (response.status === 404) {
         window.location.href = NOT_FOUND_PAGE;
         return;
@@ -92,3 +100,15 @@ function fetch(url, options = {}) {
     });
 }
 
+
+function getAuthorisationUri(response) {
+
+  const header = response.headers.get('WWW-Authenticate');
+
+  if (header) {
+    return header.split(' ')
+      .find(value => value.startsWith('authorization_uri')).substring(0);
+  }
+
+  return null;
+}
