@@ -1,5 +1,5 @@
 import React from 'react';
-import dateUtils from '../../utils/date-utils';
+import DateUtils from '../../utils/date-utils';
 
 import './header.css';
 
@@ -17,20 +17,20 @@ class MonitoringGridHeader extends React.Component {
       let dateLabel = '', className = 'header-label';
 
       // Special case for yesterday and today
-      if (dateUtils.isToday(temp)) {
+      if (DateUtils.isToday(temp)) {
         dateLabel = 'Today';
-      } else if (dateUtils.isYesterday(temp)) {
+      } else if (DateUtils.isYesterday(temp)) {
         dateLabel = 'Yesterday';
         className += ' header-highlight';
       } else {
-        dateLabel = dateUtils.dateToString(temp);
+        dateLabel = DateUtils.toDateString(temp);
       }
 
       // Add header cell with (formatted) date
       labels.push(
         <span key={i++} className={className}>
           <label className="header-date">{dateLabel}</label>
-          <label className="header-day">{dateUtils.getWeekday(temp)}</label>
+          <label className="header-day">{DateUtils.getWeekday(temp)}</label>
         </span>
       );
 
