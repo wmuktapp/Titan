@@ -50,4 +50,5 @@ class AcquireProgram(object):
     def get_blob_name(self, name_format=None, **params):
         if name_format is None:
             name_format = self._file_name_format
-        return self._blob_prefix + "/" + name_format.format(**self._data, **params)
+        return self._blob_prefix + "/" + name_format.format(**self._data, **params).replace("\r\n", "").replace("\n",
+                                                                                                                "")
