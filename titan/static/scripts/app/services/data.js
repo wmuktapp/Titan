@@ -6,7 +6,7 @@ const NOT_FOUND_PAGE = '/404';
 const URLS = {
   fetchExecutions: '/api/executions/',
   retryExecutions: '/api/executions/retry',
-  changeExecutions: '/api/executions',
+  changeExecutions: '/api/executions/',
   fetchSchedules: '/api/schedules/',
   changeSchedules: '/api/schedules/',
   fetchAcquirePrograms: '/api/acquire-programs/',
@@ -72,7 +72,8 @@ export function fetchExtracts(onSuccess, onError) {
 }
 
 export function insertOrUpdateSchedule(data, key, onSuccess, onError) {
-  return fetch(URLS.changeSchedules + (key || ''), {
+  // NOTE: Don't use local fetch() method as we need to return the full response
+  return Ajax.fetch(URLS.changeSchedules + (key || ''), {
     method: key ? 'PUT' : 'POST',
     body: JSON.stringify(data)
   })
