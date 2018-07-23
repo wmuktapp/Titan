@@ -6,7 +6,7 @@ const NOT_FOUND_PAGE = '/404';
 const URLS = {
   fetchExecutions: '/api/executions/',
   retryExecutions: '/api/executions/retry',
-  changeExecutions: '/api/executions',
+  changeExecutions: '/api/executions/',
   fetchSchedules: '/api/schedules/',
   changeSchedules: '/api/schedules/',
   fetchAcquirePrograms: '/api/acquire-programs/',
