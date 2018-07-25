@@ -149,7 +149,7 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
                                    view_name=view_name, schema=schema, table_name=table_name, code_page=code_page,
                                    text_qualifier=text_qualifier, field_delimiter=field_delimiter,
                                    row_delimiter=row_delimiter, extract_key=extract_key)
-    db = sqlalchemy.create_engine(connection_string, connect_args={'wait_timeout': 1800, 'interactive_timeout': 1800})
+    db = sqlalchemy.create_engine(connection_string, connect_args={'DBPROP_INIT_TIMEOUT': 1800})
     flask_app.logger.info("Extracting data to database...")
     for sql_text in sql_texts:
         db.engine.execute(sqlalchemy.text(sql_text).execution_options(autocommit=True))
