@@ -79,6 +79,7 @@ def main():
             flask_app.logger.info("Processing extract...")
             _process_extract(flask_app, execution_key, data)
     except Exception as exception:
+        flask_app.logger.error(str(exception))
         error = exception
     finally:
         error_message = str(error) if error is not None else None
