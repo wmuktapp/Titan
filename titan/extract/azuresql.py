@@ -152,4 +152,4 @@ def main(connection_string, table_name, replace, field_delimiter, row_delimiter,
     db = sqlalchemy.create_engine(connection_string)
     flask_app.logger.info("Extracting data to database...")
     for sql_text in sql_texts:
-        db.engine.execute(sqlalchemy.text(sql_text).execution_options(autocommit=True,timeout=1800))
+        db.engine.execute(sqlalchemy.text(sql_text).execution_options(autocommit=True))
