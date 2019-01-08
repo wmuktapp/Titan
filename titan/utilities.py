@@ -1,5 +1,7 @@
 import json
 import os
+import time
+import datetime
 
 from azure.storage import blob
 
@@ -18,7 +20,8 @@ class AcquireProgram(object):
         self._blob_prefix = "/".join((self._data["ExecutionClientName"], self._data["ExecutionDataSourceName"],
                                       self._data["ExecutionDataSetName"], self._data["ExecutionLoadDate"],
                                       self._data["ExecutionVersion"]))
-        self._file_name_format = "{ExecutionDataSetName}_{ExecutionLoadDate}.csv"
+        # self._file_name_format = "{ExecutionDataSetName}_{ExecutionLoadDate}.csv"
+        self._file_name_format = "{ExecutionDataSetName}_%s.csv" % datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
         self.container_name = self._app.config["TITAN_AZURE_BLOB_CONTAINER_NAME"]
         self.logger = self._app.logger
 
